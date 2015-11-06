@@ -5,8 +5,9 @@ import java.io.Serializable;
 import java.net.URL;
 import java.util.List;
 
-public class Company implements Serializable {
+public class Company extends Subject implements Serializable {
 
+    private int id;
     private String name;
     private User user;
     private String phoneNumber;
@@ -21,6 +22,14 @@ public class Company implements Serializable {
     private List<Deal> deals;
 
     public Company() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {

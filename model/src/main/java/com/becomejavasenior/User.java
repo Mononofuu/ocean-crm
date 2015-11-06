@@ -6,6 +6,7 @@ import java.util.Set;
 
 public class User implements Serializable {
 
+    private int id;
     private String name;
     private String login;
     private String password;
@@ -21,6 +22,14 @@ public class User implements Serializable {
     private List<File> files;
 
     public User() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {

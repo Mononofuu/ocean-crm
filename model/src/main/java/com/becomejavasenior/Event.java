@@ -5,6 +5,7 @@ import java.io.Serializable;
 
 public class Event implements Serializable {
 
+    private int id;
     private User user;
     private OperationType operationType;
     private String eventContent;
@@ -14,6 +15,14 @@ public class Event implements Serializable {
 
     public User getUser() {
         return user;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public void setUser(User user) {

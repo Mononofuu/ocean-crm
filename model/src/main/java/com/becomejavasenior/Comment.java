@@ -5,7 +5,7 @@ import java.util.Date;
 
 public class Comment implements Serializable {
 
-    private String name;
+    private Subject subject;
     private User user;
     private String text;
     private Date period;
@@ -13,12 +13,12 @@ public class Comment implements Serializable {
     public Comment() {
     }
 
-    public String getName() {
-        return name;
+    public Subject getSubject() {
+        return subject;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setSubject(Subject subject) {
+        this.subject = subject;
     }
 
     public User getUser() {

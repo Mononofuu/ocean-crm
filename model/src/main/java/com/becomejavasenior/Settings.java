@@ -6,10 +6,19 @@ import java.util.TimeZone;
 
 public class Settings implements Serializable {
 
+    private int id;
     private Currency currency;
     private TimeZone timeZone;
 
     public Settings() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public Currency getCurrency() {

@@ -3,31 +3,29 @@ package com.becomejavasenior;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 public class Task implements Serializable {
 
-    private String name;
+    private Subject subject;
     private User user;
     private Date period;
     private TaskType type;
+    private String comment;
 
     private Company company;
     private Deal deal;
     private Contact contact;
 
-    private List<Comment> comments;
-    private List<File> files;
 
     public Task() {
     }
 
-    public String getName() {
-        return name;
+    public Subject getSubject() {
+        return subject;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setSubject(Subject subject) {
+        this.subject = subject;
     }
 
     public User getUser() {
@@ -54,6 +52,14 @@ public class Task implements Serializable {
         this.type = type;
     }
 
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
     public Company getCompany() {
         return company;
     }
@@ -76,21 +82,5 @@ public class Task implements Serializable {
 
     public void setContact(Contact contact) {
         this.contact = contact;
-    }
-
-    public List<Comment> getComments() {
-        return comments;
-    }
-
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
-    }
-
-    public List<File> getFiles() {
-        return files;
-    }
-
-    public void setFiles(List<File> files) {
-        this.files = files;
     }
 }

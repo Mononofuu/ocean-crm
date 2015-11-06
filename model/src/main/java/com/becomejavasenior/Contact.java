@@ -5,13 +5,14 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
-public class Contact implements Serializable {
+public class Contact extends Subject implements Serializable {
 
+    private int id;
     private String name;
     private Company company;
     private String post;
     private User user;
-    private Set<String> tags;
+    private Set<Tag> tags;
     private PhoneType phoneType;
     private String phone;
     private String email;
@@ -24,6 +25,14 @@ public class Contact implements Serializable {
     private List<Event> events;
 
     public Contact() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -58,11 +67,11 @@ public class Contact implements Serializable {
         this.user = user;
     }
 
-    public Set<String> getTags() {
+    public Set<Tag> getTags() {
         return tags;
     }
 
-    public void setTags(Set<String> tags) {
+    public void setTags(Set<Tag> tags) {
         this.tags = tags;
     }
 
