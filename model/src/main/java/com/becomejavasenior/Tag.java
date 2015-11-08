@@ -1,13 +1,13 @@
 package com.becomejavasenior;
 
-
 import java.io.Serializable;
 
-//Class that represent owner for comments, files and tasks.
-
-public abstract class Subject implements Serializable {
+public class Tag implements Serializable {
     private int id;
     private String name;
+
+    public Tag() {
+    }
 
     public int getId() {
         return id;

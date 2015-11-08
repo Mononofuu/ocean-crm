@@ -1,14 +1,10 @@
 package com.becomejavasenior;
 
-
-import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
-public class Contact extends Subject implements Serializable {
+public class Contact extends Subject {
 
-    private int id;
-    private String name;
     private Company company;
     private String post;
     private User user;
@@ -25,22 +21,6 @@ public class Contact extends Subject implements Serializable {
     private List<Event> events;
 
     public Contact() {
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public Company getCompany() {

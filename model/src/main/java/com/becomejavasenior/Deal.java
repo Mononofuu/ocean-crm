@@ -1,15 +1,11 @@
 package com.becomejavasenior;
 
-
-import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-public class Deal extends Subject implements Serializable {
+public class Deal extends Subject {
 
-    private int id;
-    private String dealName;
     private DealStatus status;
     private Set<Tag> tags;
     private User user;
@@ -23,22 +19,6 @@ public class Deal extends Subject implements Serializable {
     private List<File> files;
 
     public Deal() {
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getDealName() {
-        return dealName;
-    }
-
-    public void setDealName(String dealName) {
-        this.dealName = dealName;
     }
 
     public DealStatus getStatus() {
