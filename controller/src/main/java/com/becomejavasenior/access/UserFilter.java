@@ -4,17 +4,19 @@ package com.becomejavasenior.access;
 import com.becomejavasenior.user.dto.User;
 
 import javax.servlet.*;
+import javax.servlet.annotation.WebFilter;
+import javax.servlet.annotation.WebInitParam;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
-public class RoleFilter implements Filter{
-
+@WebFilter (filterName = "UserFilter", initParams = @WebInitParam(name = "roles", value = "user,admin"))
+public class UserFilter implements Filter{
     private ArrayList<String> roles;
 
+    @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         String rawRoles = filterConfig.getInitParameter("roles");
         StringTokenizer tokenizer = new StringTokenizer(rawRoles, ",");
@@ -24,22 +26,19 @@ public class RoleFilter implements Filter{
         }
     }
 
+    @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        HttpServletRequest request = (HttpServletRequest) servletRequest;
-        HttpSession session = request.getSession();
-        User loggedUser = (User)session.getAttribute("user");
-        if(loggedUser != null){
-            if (roles.contains(loggedUser.getRole())) {
-                filterChain.doFilter(request, servletResponse);
-                return;
-            } else{
-                ((HttpServletResponse)servletResponse).sendRedirect("/");
-                return;
-            }
+        HttpServletResponse response = (HttpServletResponse)servletResponse;
+        User loggedUser = ((User)(((HttpServletRequest) servletRequest).getSession().getAttribute("user")));
+        if (roles.contains(loggedUser.getRole())) {
+            filterChain.doFilter(servletRequest, servletResponse);
+        } else{
+            response.sendRedirect(response.encodeRedirectURL("/"));
         }
-        ((HttpServletResponse)servletResponse).sendRedirect("/login");
     }
 
+    @Override
     public void destroy() {
+
     }
 }

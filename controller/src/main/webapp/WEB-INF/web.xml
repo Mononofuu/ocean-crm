@@ -43,21 +43,35 @@
     </filter>
 
     <filter-mapping>
-        <filter-name>LoginFilter</filter-name>
-        <url-pattern>/login</url-pattern>
+        <filter-name>UnauthorizedFilter</filter-name>
+        <servlet-name>SignUp</servlet-name>
     </filter-mapping>
     <filter-mapping>
-        <filter-name>LogoutFilter</filter-name>
-        <url-pattern>/logout</url-pattern>
+        <filter-name>UnauthorizedFilter</filter-name>
+        <servlet-name>SignIn</servlet-name>
     </filter-mapping>
 
     <filter-mapping>
-        <filter-name>RoleFilter</filter-name>
-        <url-pattern>/user</url-pattern>
+        <filter-name>AuthorizedFilter</filter-name>
+        <servlet-name>SignOut</servlet-name>
     </filter-mapping>
     <filter-mapping>
-        <filter-name>AdminRoleFilter</filter-name>
-        <url-pattern>/admin</url-pattern>
+        <filter-name>AuthorizedFilter</filter-name>
+        <servlet-name>user</servlet-name>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>AuthorizedFilter</filter-name>
+        <servlet-name>admin</servlet-name>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>UserFilter</filter-name>
+        <servlet-name>user</servlet-name>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>AdminFilter</filter-name>
+        <servlet-name>admin</servlet-name>
     </filter-mapping>
 
     <welcome-file-list>
