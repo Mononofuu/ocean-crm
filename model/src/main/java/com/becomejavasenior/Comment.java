@@ -5,12 +5,23 @@ import java.util.Date;
 
 public class Comment implements Serializable {
 
+    private static final long serialVersionUID = 5409233407264547377L;
+
+    private int id;
     private Subject subject;
     private User user;
     private String text;
-    private Date period;
+    private Date dateCreated;
 
     public Comment() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public Subject getSubject() {
@@ -37,11 +48,11 @@ public class Comment implements Serializable {
         this.text = text;
     }
 
-    public Date getPeriod() {
-        return period;
+    public Date getDateCreated() {
+        return dateCreated;
     }
 
-    public void setPeriod(Date period) {
-        this.period = period;
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
     }
 }

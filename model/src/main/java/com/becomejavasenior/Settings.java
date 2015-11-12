@@ -2,13 +2,14 @@ package com.becomejavasenior;
 
 
 import java.io.Serializable;
-import java.util.TimeZone;
 
 public class Settings implements Serializable {
 
+    private static final long serialVersionUID = -7443218529958802240L;
+
     private int id;
-    private Currency currency;
-    private TimeZone timeZone;
+    private String setting;
+    private String value;
 
     public Settings() {
     }
@@ -21,19 +22,19 @@ public class Settings implements Serializable {
         this.id = id;
     }
 
-    public Currency getCurrency() {
-        return currency;
+    public String getSetting() {
+        return setting;
     }
 
-    public void setCurrency(Currency currency) {
-        this.currency = currency;
+    public void setSetting(String setting) {
+        this.setting = setting;
     }
 
-    public TimeZone getTimeZone() {
-        return timeZone;
+    public String getValue() {
+        return value;
     }
 
-    public void setTimeZone(TimeZone timeZone) {
-        this.timeZone = timeZone;
+    public void setValue(String value) {
+        this.value = value;
     }
 }

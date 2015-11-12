@@ -5,7 +5,8 @@ import java.util.List;
 
 public class Company extends Subject {
 
-    private User user;
+    private static final long serialVersionUID = 6412485489253693564L;
+
     private String phoneNumber;
     private String email;
     private URL web;
@@ -13,19 +14,12 @@ public class Company extends Subject {
 
     private List<Comment> comments;
     private List<File> files;
+    private List<Task> tasks;
 
     private List<Contact> contacts;
     private List<Deal> deals;
 
     public Company() {
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public String getPhoneNumber() {
@@ -74,6 +68,14 @@ public class Company extends Subject {
 
     public void setFiles(List<File> files) {
         this.files = files;
+    }
+
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
     }
 
     public List<Contact> getContacts() {

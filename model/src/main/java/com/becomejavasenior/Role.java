@@ -1,12 +1,16 @@
 package com.becomejavasenior;
 
 import java.io.Serializable;
+import java.util.Set;
 
 public class Role implements Serializable {
+
+    private static final long serialVersionUID = 8681711728307488038L;
 
     private int id;
     private String name;
     private String description;
+    private Set<Grants> grantsSet;
 
     public Role() {
     }
@@ -33,5 +37,13 @@ public class Role implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Set<Grants> getGrantsSet() {
+        return grantsSet;
+    }
+
+    public void setGrantsSet(Set<Grants> grantsSet) {
+        this.grantsSet = grantsSet;
     }
 }

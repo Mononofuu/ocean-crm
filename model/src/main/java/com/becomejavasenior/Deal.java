@@ -6,10 +6,12 @@ import java.util.Set;
 
 public class Deal extends Subject {
 
+    private static final long serialVersionUID = -5045712962652077587L;
+
+    private Contact mainContact;
     private DealStatus status;
-    private Set<Tag> tags;
-    private User user;
     private int budget;
+    private Currency currency;
     private Date dateWhenDealClose;
 
     private List<Contact> contacts;
@@ -17,8 +19,17 @@ public class Deal extends Subject {
 
     private List<String> comments;
     private List<File> files;
+    private List<Task> tasks;
 
     public Deal() {
+    }
+
+    public Contact getMainContact() {
+        return mainContact;
+    }
+
+    public void setMainContact(Contact mainContact) {
+        this.mainContact = mainContact;
     }
 
     public DealStatus getStatus() {
@@ -29,28 +40,20 @@ public class Deal extends Subject {
         this.status = status;
     }
 
-    public Set<Tag> getTags() {
-        return tags;
-    }
-
-    public void setTags(Set<Tag> tags) {
-        this.tags = tags;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public int getBudget() {
         return budget;
     }
 
     public void setBudget(int budget) {
         this.budget = budget;
+    }
+
+    public Currency getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(Currency currency) {
+        this.currency = currency;
     }
 
     public Date getDateWhenDealClose() {
@@ -91,5 +94,13 @@ public class Deal extends Subject {
 
     public void setFiles(List<File> files) {
         this.files = files;
+    }
+
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
     }
 }

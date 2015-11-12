@@ -6,18 +6,25 @@ import java.util.Date;
 
 public class Task implements Serializable {
 
+    private static final long serialVersionUID = 5383049602322141163L;
+
+    private int id;
     private Subject subject;
     private User user;
-    private Date period;
+    private Date dateCreated;
+    private Date dueTime;
     private TaskType type;
     private String comment;
 
-    private Company company;
-    private Deal deal;
-    private Contact contact;
-
-
     public Task() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public Subject getSubject() {
@@ -36,12 +43,20 @@ public class Task implements Serializable {
         this.user = user;
     }
 
-    public Date getPeriod() {
-        return period;
+    public Date getDateCreated() {
+        return dateCreated;
     }
 
-    public void setPeriod(Date period) {
-        this.period = period;
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    public Date getDueTime() {
+        return dueTime;
+    }
+
+    public void setDueTime(Date dueTime) {
+        this.dueTime = dueTime;
     }
 
     public TaskType getType() {
@@ -58,29 +73,5 @@ public class Task implements Serializable {
 
     public void setComment(String comment) {
         this.comment = comment;
-    }
-
-    public Company getCompany() {
-        return company;
-    }
-
-    public void setCompany(Company company) {
-        this.company = company;
-    }
-
-    public Deal getDeal() {
-        return deal;
-    }
-
-    public void setDeal(Deal deal) {
-        this.deal = deal;
-    }
-
-    public Contact getContact() {
-        return contact;
-    }
-
-    public void setContact(Contact contact) {
-        this.contact = contact;
     }
 }

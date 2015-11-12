@@ -5,10 +5,11 @@ import java.util.Set;
 
 public class Contact extends Subject {
 
+    private static final long serialVersionUID = -5553010181244222836L;
+
     private Company company;
     private String post;
     private User user;
-    private Set<Tag> tags;
     private PhoneType phoneType;
     private String phone;
     private String email;
@@ -16,9 +17,9 @@ public class Contact extends Subject {
 
     private List<Comment> comments;
     private List<File> files;
+    private List<Task> tasks;
 
     private List<Deal> deals;
-    private List<Event> events;
 
     public Contact() {
     }
@@ -45,14 +46,6 @@ public class Contact extends Subject {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public Set<Tag> getTags() {
-        return tags;
-    }
-
-    public void setTags(Set<Tag> tags) {
-        this.tags = tags;
     }
 
     public PhoneType getPhoneType() {
@@ -103,19 +96,19 @@ public class Contact extends Subject {
         this.files = files;
     }
 
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
+    }
+
     public List<Deal> getDeals() {
         return deals;
     }
 
     public void setDeals(List<Deal> deals) {
         this.deals = deals;
-    }
-
-    public List<Event> getEvents() {
-        return events;
-    }
-
-    public void setEvents(List<Event> events) {
-        this.events = events;
     }
 }

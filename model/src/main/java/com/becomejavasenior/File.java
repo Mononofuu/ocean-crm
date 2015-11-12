@@ -7,16 +7,26 @@ import java.util.Date;
 
 public class File implements Serializable {
 
+    private static final long serialVersionUID = -2959672203378534217L;
+
+    private int id;
     private Subject subject;
     private String name;
     private User user;
-    private byte[] contentFromDB;
-    private java.io.File contentObject;
-    private URL contentURL;
-    private Date period;
+    private byte[] fileFromDB;
+    private URL fileLink;
+    private Date dateCreated;
     private int size;
 
     public File() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public Subject getSubject() {
@@ -39,40 +49,32 @@ public class File implements Serializable {
         return user;
     }
 
+    public byte[] getFileFromDB() {
+        return fileFromDB;
+    }
+
+    public void setFileFromDB(byte[] fileFromDB) {
+        this.fileFromDB = fileFromDB;
+    }
+
+    public URL getFileLink() {
+        return fileLink;
+    }
+
+    public void setFileLink(URL fileLink) {
+        this.fileLink = fileLink;
+    }
+
     public void setUser(User user) {
         this.user = user;
     }
 
-    public byte[] getContentFromDB() {
-        return contentFromDB;
+    public Date getDateCreated() {
+        return dateCreated;
     }
 
-    public void setContentFromDB(byte[] contentFromDB) {
-        this.contentFromDB = contentFromDB;
-    }
-
-    public java.io.File getContentObject() {
-        return contentObject;
-    }
-
-    public void setContentObject(java.io.File contentObject) {
-        this.contentObject = contentObject;
-    }
-
-    public URL getContentURL() {
-        return contentURL;
-    }
-
-    public void setContentURL(URL contentURL) {
-        this.contentURL = contentURL;
-    }
-
-    public Date getPeriod() {
-        return period;
-    }
-
-    public void setPeriod(Date period) {
-        this.period = period;
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
     }
 
     public int getSize() {

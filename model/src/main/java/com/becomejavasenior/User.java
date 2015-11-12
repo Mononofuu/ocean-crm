@@ -6,6 +6,8 @@ import java.util.Set;
 
 public class User implements Serializable {
 
+    private static final long serialVersionUID = 2976681857111953842L;
+
     private int id;
     private String name;
     private String login;
@@ -15,11 +17,13 @@ public class User implements Serializable {
     private String email;
     private String phoneWork;
     private String phoneHome;
-    private Set<Role> roles;
+    private Set<Grants> grantsSet;
     private Language language;
+    private List<Event> events;
 
     private List<Comment> comments;
     private List<File> files;
+    private List<Task> tasks;
 
     public User() {
     }
@@ -88,12 +92,12 @@ public class User implements Serializable {
         this.phoneHome = phoneHome;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
+    public Set<Grants> getGrantsSet() {
+        return grantsSet;
     }
 
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
+    public void setGrantsSet(Set<Grants> GrantsSet) {
+        this.grantsSet = GrantsSet;
     }
 
     public Language getLanguage() {
@@ -102,6 +106,14 @@ public class User implements Serializable {
 
     public void setLanguage(Language language) {
         this.language = language;
+    }
+
+    public List<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(List<Event> events) {
+        this.events = events;
     }
 
     public List<Comment> getComments() {
@@ -118,5 +130,13 @@ public class User implements Serializable {
 
     public void setFiles(List<File> files) {
         this.files = files;
+    }
+
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
     }
 }
