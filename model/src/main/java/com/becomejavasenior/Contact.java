@@ -9,7 +9,6 @@ public class Contact extends Subject {
 
     private Company company;
     private String post;
-    private User user;
     private PhoneType phoneType;
     private String phone;
     private String email;
@@ -38,14 +37,6 @@ public class Contact extends Subject {
 
     public void setPost(String post) {
         this.post = post;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public PhoneType getPhoneType() {
