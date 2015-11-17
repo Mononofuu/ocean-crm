@@ -1,0 +1,12 @@
+.myBackground{
+    background: #92c8ec;
+}
+
+#phoneNumber{
+    width: 55%;
+    margin-right: 5%;
+}
+
+#phoneType{
+    width: 38%;
+}
