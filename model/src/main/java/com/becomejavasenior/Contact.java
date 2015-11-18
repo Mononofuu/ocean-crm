@@ -102,8 +102,6 @@ public class Contact extends Subject implements Tagable{
     public void setDeals(List<Deal> deals) {
         this.deals = deals;
     }
-<<<<<<< a299759788ba94f5a461c385af562019ac491830
-=======
 
     @Override
     public boolean equals(Object o) {
@@ -139,5 +137,4 @@ public class Contact extends Subject implements Tagable{
         result = 31 * result + (deals != null ? deals.hashCode() : 0);
         return result;
     }
->>>>>>> added dao for Contact with simple test
 }
