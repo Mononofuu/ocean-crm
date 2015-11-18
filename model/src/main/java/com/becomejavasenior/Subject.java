@@ -45,4 +45,25 @@ public abstract class Subject implements Serializable {
     public void setTags(Set<Tag> tags) {
         this.tags = tags;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Subject subject = (Subject) o;
+
+        if (name != null ? !name.equals(subject.name) : subject.name != null) return false;
+        if (user != null ? !user.equals(subject.user) : subject.user != null) return false;
+        return !(tags != null ? !tags.equals(subject.tags) : subject.tags != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (user != null ? user.hashCode() : 0);
+        result = 31 * result + (tags != null ? tags.hashCode() : 0);
+        return result;
+    }
 }

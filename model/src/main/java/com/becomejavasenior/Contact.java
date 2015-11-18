@@ -3,7 +3,7 @@ package com.becomejavasenior;
 import java.util.List;
 import java.util.Set;
 
-public class Contact extends Subject {
+public class Contact extends Subject implements Tagable{
 
     private static final long serialVersionUID = -5553010181244222836L;
 
@@ -102,4 +102,42 @@ public class Contact extends Subject {
     public void setDeals(List<Deal> deals) {
         this.deals = deals;
     }
+<<<<<<< a299759788ba94f5a461c385af562019ac491830
+=======
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Contact contact = (Contact) o;
+
+        if (company != null ? !company.equals(contact.company) : contact.company != null) return false;
+        if (post != null ? !post.equals(contact.post) : contact.post != null) return false;
+        if (phoneType != contact.phoneType) return false;
+        if (phone != null ? !phone.equals(contact.phone) : contact.phone != null) return false;
+        if (email != null ? !email.equals(contact.email) : contact.email != null) return false;
+        if (skype != null ? !skype.equals(contact.skype) : contact.skype != null) return false;
+        if (comments != null ? !comments.equals(contact.comments) : contact.comments != null) return false;
+        if (files != null ? !files.equals(contact.files) : contact.files != null) return false;
+        if (tasks != null ? !tasks.equals(contact.tasks) : contact.tasks != null) return false;
+        return !(deals != null ? !deals.equals(contact.deals) : contact.deals != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = company != null ? company.hashCode() : 0;
+        result = 31 * result + (post != null ? post.hashCode() : 0);
+        result = 31 * result + (phoneType != null ? phoneType.hashCode() : 0);
+        result = 31 * result + (phone != null ? phone.hashCode() : 0);
+        result = 31 * result + (email != null ? email.hashCode() : 0);
+        result = 31 * result + (skype != null ? skype.hashCode() : 0);
+        result = 31 * result + (comments != null ? comments.hashCode() : 0);
+        result = 31 * result + (files != null ? files.hashCode() : 0);
+        result = 31 * result + (tasks != null ? tasks.hashCode() : 0);
+        result = 31 * result + (deals != null ? deals.hashCode() : 0);
+        return result;
+    }
+>>>>>>> added dao for Contact with simple test
 }
