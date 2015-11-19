@@ -1,0 +1,88 @@
+body {
+    background-color: #696969;
+}
+
+.tablename {
+    display: block;
+    margin: 20px 0 0 20px;
+    color: aliceblue;
+}
+
+.frame {
+    display: inline-block;
+    background-color: antiquewhite;
+    width: 380px;
+    padding-top: 15px;
+    padding-bottom: 10px;
+    padding-right: 10px;
+    margin-left: 20px;
+    border: 2px solid black;
+    border-radius: 10px;
+}
+
+.rightframe {
+    width: 210px;
+}
+
+.field {
+    display: block;
+    margin: 0px 15px 10px 15px;
+    width: 180px;
+    padding: 5px;
+}
+
+.phone, .phonetype {
+    display: inline-block;
+    margin-right: 0px;
+}
+
+.phonetype, .period {
+    width: 100px;
+    display: inline;
+    margin-right: 0px;
+}
+
+.time {
+    width: 70px;
+}
+
+.tags, .bigtext {
+    width: 350px;
+}
+
+.smaltext {
+    font-size: 12px;
+}
+
+.right {
+    position: absolute;
+    left: 430px;
+    top: 40px;
+}
+
+.budget {
+    width: 100px;
+    display: inline;
+}
+
+.companyadd {
+    margin-top: 25px;
+}
+
+.button {
+    display: block;
+    margin-top: 50px;
+    width: 225px;
+    background-color: forestgreen;
+    font-size: 16px;
+    padding: 10px;
+    cursor: pointer;
+    text-decoration: none;
+    color: black;
+    text-align: center;
+}
+
+.cancel {
+    width: 200px;
+    background-color: darksalmon;
+}

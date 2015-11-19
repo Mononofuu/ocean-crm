@@ -93,4 +93,39 @@ public class Company extends Subject {
     public void setDeals(List<Deal> deals) {
         this.deals = deals;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        Company company = (Company) o;
+
+        if (phoneNumber != null ? !phoneNumber.equals(company.phoneNumber) : company.phoneNumber != null) return false;
+        if (email != null ? !email.equals(company.email) : company.email != null) return false;
+        if (web != null ? !web.equals(company.web) : company.web != null) return false;
+        if (adress != null ? !adress.equals(company.adress) : company.adress != null) return false;
+        if (comments != null ? !comments.equals(company.comments) : company.comments != null) return false;
+        if (files != null ? !files.equals(company.files) : company.files != null) return false;
+        if (tasks != null ? !tasks.equals(company.tasks) : company.tasks != null) return false;
+        if (contacts != null ? !contacts.equals(company.contacts) : company.contacts != null) return false;
+        return !(deals != null ? !deals.equals(company.deals) : company.deals != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (phoneNumber != null ? phoneNumber.hashCode() : 0);
+        result = 31 * result + (email != null ? email.hashCode() : 0);
+        result = 31 * result + (web != null ? web.hashCode() : 0);
+        result = 31 * result + (adress != null ? adress.hashCode() : 0);
+        result = 31 * result + (comments != null ? comments.hashCode() : 0);
+        result = 31 * result + (files != null ? files.hashCode() : 0);
+        result = 31 * result + (tasks != null ? tasks.hashCode() : 0);
+        result = 31 * result + (contacts != null ? contacts.hashCode() : 0);
+        result = 31 * result + (deals != null ? deals.hashCode() : 0);
+        return result;
+    }
 }

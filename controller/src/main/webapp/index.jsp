@@ -7,5 +7,7 @@
 </head>
 <body>
 CRM System
+<br>
+<a href="newcontact.jsp">New Contact</a>
 </body>
 </html>
