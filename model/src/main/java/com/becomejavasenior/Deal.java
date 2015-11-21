@@ -17,7 +17,7 @@ public class Deal extends Subject {
     private List<Contact> contacts;
     private Company dealCompany;
 
-    private List<String> comments;
+    private List<Comment> comments;
     private List<File> files;
     private List<Task> tasks;
 
@@ -80,11 +80,11 @@ public class Deal extends Subject {
         this.dealCompany = dealCompany;
     }
 
-    public List<String> getComments() {
+    public List<Comment> getComments() {
         return comments;
     }
 
-    public void setComments(List<String> comments) {
+    public void setComments(List<Comment> comments) {
         this.comments = comments;
     }
 
