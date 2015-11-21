@@ -1,0 +1,33 @@
+.button {
+    display: block;
+    margin-top: 50px;
+    width: 225px;
+    background-color: forestgreen;
+    font-size: 16px;
+    padding: 10px;
+    cursor: pointer;
+    text-decoration: none;
+    color: black;
+    text-align: center;
+}
+
+.frame {
+    display: inline-block;
+    background-color: antiquewhite;
+    width: 380px;
+    padding-top: 15px;
+    padding-bottom: 10px;
+    padding-right: 10px;
+    margin-left: 20px;
+    border: 2px solid black;
+    border-radius: 10px;
+}
+
+.rightframe {
+    width: 210px;
+}
+
+.cancel {
+    width: 200px;
+    background-color: darksalmon;
+}
