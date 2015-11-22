@@ -9,7 +9,7 @@ body {
 }
 
 .frame {
-    display: inline-block;
+/*    display: inline-block;*/
     background-color: antiquewhite;
     width: 380px;
     padding-top: 15px;
@@ -20,10 +20,9 @@ body {
     border-radius: 10px;
 }
 
-.rightframe {
+.rightframe{
     width: 210px;
 }
-
 .field {
     display: block;
     margin: 0px 15px 10px 15px;
@@ -48,16 +47,15 @@ body {
 
 .tags, .bigtext {
     width: 350px;
+    display: inline-block;
 }
 
 .smaltext {
     font-size: 12px;
 }
 
-.right {
-    position: absolute;
-    left: 430px;
-    top: 40px;
+.row {
+    float: left;
 }
 
 .budget {
@@ -70,19 +68,32 @@ body {
 }
 
 .button {
-    display: block;
-    margin-top: 50px;
-    width: 225px;
+    display: inline-block;
+    width: 150px;
     background-color: forestgreen;
     font-size: 16px;
-    padding: 10px;
     cursor: pointer;
     text-decoration: none;
     color: black;
     text-align: center;
+    border: 2px solid black;
+    border-radius: 5px;
+    margin-left: 15px;
+    margin-bottom: 5px;
+    padding: 4px;
 }
 
 .cancel {
-    width: 200px;
+    width: 130px;
     background-color: darksalmon;
+    padding: 5px 10px;
+}
+
+.addbutton{
+    display: block;
+}
+.companyselect{
+    margin: 40px 0 0 20px;
+    width: 220px;
+    
 }

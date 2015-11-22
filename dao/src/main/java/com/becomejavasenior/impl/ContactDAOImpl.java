@@ -4,10 +4,7 @@ package com.becomejavasenior.impl;
 import com.becomejavasenior.*;
 import com.becomejavasenior.interfacedao.ContactDAO;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,7 +75,11 @@ public class ContactDAOImpl extends AbstractJDBCDao<Contact> implements ContactD
             statement.setString(4, object.getPhone());
             statement.setString(5, object.getEmail());
             statement.setString(6, object.getSkype());
-            statement.setInt(7, object.getCompany().getId());
+            if(object.getCompany()!=null){
+                statement.setInt(7, object.getCompany().getId());
+            }else{
+                statement.setNull(7, Types.INTEGER);
+            }
         } catch (SQLException e) {
             throw new DataBaseException(e);
         }
