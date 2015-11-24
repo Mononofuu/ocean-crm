@@ -37,7 +37,7 @@ public class SubjectDAOImpl extends AbstractJDBCDao<Subject> implements SubjectD
                 Subject subject = new Subject() {
                 };
 //                GenericDao userDao =  getDaoFromCurrentFactory(User.class);
-//                User user = (User)userDao.read(rs.getInt("user_id"));
+//                User user = (User)userDao.read(rs.getInt("content_owner_id"));
 //                subject.setUser(user);
                 subject.setId(rs.getInt("id"));
                 subject.setName(rs.getString("name"));
@@ -51,7 +51,7 @@ public class SubjectDAOImpl extends AbstractJDBCDao<Subject> implements SubjectD
 
     @Override
     public String getCreateQuery() {
-        return "INSERT INTO subject (name) VALUES (?);"; //user_id пока убран
+        return "INSERT INTO subject (name) VALUES (?);"; //content_owner_id пока убран
     }
 
     @Override
@@ -66,7 +66,7 @@ public class SubjectDAOImpl extends AbstractJDBCDao<Subject> implements SubjectD
 
     @Override
     public String getUpdateQuery() {
-        return "UPDATE subject SET name = ? WHERE id = ?;"; //, user_id  = ?
+        return "UPDATE subject SET name = ? WHERE id = ?;"; //, content_owner_id  = ?
     }
 
     @Override

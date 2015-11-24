@@ -30,18 +30,25 @@ public class ContactDAOImplTest {
         contact.setPhone("testphone");
         contact.setEmail("testemail");
         contact.setSkype("testskype");
-        Set<Tag> tags = new HashSet<>();
+        Set<Tag> contactTags = new HashSet<>();
         for (int i = 0; i < 3; i++) {
             Tag tag = new Tag();
             tag.setName("testtag" + i);
-            tags.add(tag);
+            contactTags.add(tag);
         }
-        contact.setTags(tags);
+        contact.setTags(contactTags);
         Company company = new Company();
         company.setName("testcompanyname");
         company.setPhoneNumber("testcompanuphone");
         company.setEmail("testcompanyemail");
         company.setAdress("setcompanyaddress");
+        Set<Tag> companyTags = new HashSet<>();
+        for (int i = 3; i < 6; i++) {
+            Tag tag = new Tag();
+            tag.setName("testtag" + i);
+            companyTags.add(tag);
+        }
+        company.setTags(companyTags);
         try {
             company.setWeb(new URL("https://www.google.com.ua"));
         } catch (MalformedURLException e) {
@@ -68,6 +75,8 @@ public class ContactDAOImplTest {
         contactDao.delete(contactFromDB.getId());
         List listAfter = contactDao.readAll();
         assertEquals(listBefore.size(), listAfter.size() + 1);
+        GenericDao<Company> companyDao = daoFactory.getDao(connection, Company.class);
+        companyDao.delete(contactFromDB.getCompany().getId());
     }
 
 }

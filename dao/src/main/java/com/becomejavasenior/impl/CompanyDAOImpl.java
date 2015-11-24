@@ -89,4 +89,10 @@ public class CompanyDAOImpl extends AbstractJDBCDao<Company> implements CompanyD
             throw new DataBaseException(e);
         }
     }
+
+    @Override
+    public void delete(int id) throws DataBaseException {
+        GenericDao<Subject> subjectDao = getDaoFromCurrentFactory(Subject.class);
+        subjectDao.delete(id);
+    }
 }

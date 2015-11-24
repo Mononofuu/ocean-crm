@@ -95,13 +95,6 @@ public abstract class AbstractJDBCDao<T> implements GenericDao<T> {
             rs.next();
             int key = rs.getInt(1);
             result = read(key);
-
-            //Обработка обьектов, содержащих тэги.
-            if (result instanceof Tagable) {
-                Set<Tag> tags = ((Tagable) object).getTags();
-                createTags(tags, (Subject) result);
-            }
-
         } catch (SQLException e) {
             throw new DataBaseException(e);
         }
@@ -149,7 +142,7 @@ public abstract class AbstractJDBCDao<T> implements GenericDao<T> {
         return result;
     }
 
-    /*
+    /**
      * Возвращает dao для переданного класса с текущим connection и daoFactory
      */
     protected GenericDao getDaoFromCurrentFactory(Class clazz) throws DataBaseException {
@@ -162,14 +155,15 @@ public abstract class AbstractJDBCDao<T> implements GenericDao<T> {
     protected <T extends Subject> int createSubject(T object) throws DataBaseException {
         if (object instanceof Subject) {
             GenericDao<Subject> subjectDao = getDaoFromCurrentFactory(Subject.class);
-            int result = subjectDao.create(object).getId();
-            return result;
+            Subject subject = subjectDao.create(object);
+            createTags(object.getTags(), subject);
+            return subject.getId();
         } else {
             throw new DataBaseException();
         }
     }
 
-    private <T extends Subject> void createTags(Set<Tag> tags, T object) throws DataBaseException {
+    private  <T extends Subject> void createTags(Set<Tag> tags, T object) throws DataBaseException {
         if (tags == null) {
             return;
         } else {
