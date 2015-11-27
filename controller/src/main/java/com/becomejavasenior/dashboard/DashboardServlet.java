@@ -16,8 +16,8 @@ import java.util.Map;
 /**
  * @author Lybachevskiy.Vladislav
  */
-@WebServlet(name = "DashboardDealsServlet")
-public class DashboardDealsServlet extends HttpServlet {
+@WebServlet(name = "dashboardServlet")
+public class DashboardServlet extends HttpServlet {
 
     private static DaoFactory myDaoFactory;
     private static Connection myConnection;
@@ -41,7 +41,7 @@ public class DashboardDealsServlet extends HttpServlet {
     }
 
 
-    public DashboardDealsServlet() throws DataBaseException {
+    public DashboardServlet() throws DataBaseException {
         myDaoFactory = new PostgreSqlDaoFactory();
         myConnection = myDaoFactory.getConnection();
     }
