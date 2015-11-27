@@ -28,7 +28,7 @@
 
                             <div class="row-fluid" style="width: 100%;">
                                 <div style="float:left; alignment: left;">Бюджет:</div>
-                                <div style="float: right;alignment: right;">${getDealsBudget}</div>
+                                <div style="float: right;alignment: right;">${dealsBudget}</div>
                             </div>
                         </fieldset>
                     </div>
@@ -37,13 +37,13 @@
                             <legend class="scheduler-border"><strong>Сделки без задач</strong></legend>
                             <div class="row-fluid" style="width: 100%;">
                                 <div style="float: left;alignment: left;">Сделок без задач:</div>
-                                <div style="float: right;alignment: right;">${getDealsWithoutTasks}</div>
+                                <div style="float: right;alignment: right;">${dealsWithoutTasks}</div>
                             </div>
                             <br>
 
                             <div class="row-fluid" style="width: 100%;">
                                 <div style="float:left; alignment: left;">Сделок с задачами:</div>
-                                <div style="float: right;alignment: right;">${getDealWithTasks}</div>
+                                <div style="float: right;alignment: right;">${dealWithTasks}</div>
                             </div>
                         </fieldset>
                     </div>
