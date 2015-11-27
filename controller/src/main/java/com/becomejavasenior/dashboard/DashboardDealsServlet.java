@@ -37,6 +37,7 @@ public class DashboardDealsServlet extends HttpServlet {
         addApiFunction(new DashboardOverdueTasks());
         addApiFunction(new DashboardContacts());
         addApiFunction(new DashboardCompanies());
+        addApiFunction(new DashboardEvents());
     }
 
 
@@ -315,6 +316,25 @@ public class DashboardDealsServlet extends HttpServlet {
             }
             assert companies != null;
             request.setAttribute(getName(), companies.size());
+        }
+    }
+
+    private static class DashboardEvents implements DashboardFunction {
+        @Override
+        public String getName() {
+            return "events";
+        }
+
+        @Override
+        public void execute(HttpServletRequest request) throws IOException {
+            GenericDao eventsDao = getGenericDao(Event.class);
+            List events = null;
+            try {
+                events = eventsDao.readAll();
+            } catch (DataBaseException e) {
+                e.printStackTrace();
+            }
+            request.setAttribute(getName(), events);
         }
     }
 }
