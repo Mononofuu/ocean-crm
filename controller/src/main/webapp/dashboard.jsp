@@ -22,13 +22,13 @@
                             <legend class="scheduler-border"><strong>Сделки</strong></legend>
                             <div class="row-fluid" style="width: 100%;">
                                 <div style="float: left;alignment: left;">Всего сделок:</div>
-                                <div style="float: right;alignment: right;">5000</div>
+                                <div style="float: right;alignment: right;">${allDeals}</div>
                             </div>
                             <br>
 
                             <div class="row-fluid" style="width: 100%;">
                                 <div style="float:left; alignment: left;">Бюджет:</div>
-                                <div style="float: right;alignment: right;">2000000</div>
+                                <div style="float: right;alignment: right;">${getDealsBudget}</div>
                             </div>
                         </fieldset>
                     </div>
@@ -37,13 +37,13 @@
                             <legend class="scheduler-border"><strong>Сделки без задач</strong></legend>
                             <div class="row-fluid" style="width: 100%;">
                                 <div style="float: left;alignment: left;">Сделок без задач:</div>
-                                <div style="float: right;alignment: right;">50</div>
+                                <div style="float: right;alignment: right;">${getDealsWithoutTasks}</div>
                             </div>
                             <br>
 
                             <div class="row-fluid" style="width: 100%;">
                                 <div style="float:left; alignment: left;">Сделок с задачами:</div>
-                                <div style="float: right;alignment: right;">20</div>
+                                <div style="float: right;alignment: right;">${getDealWithTasks}</div>
                             </div>
                         </fieldset>
                     </div>
@@ -52,13 +52,13 @@
                             <legend class="scheduler-border"><strong>Успешные сделки</strong></legend>
                             <div class="row-fluid" style="width: 100%;">
                                 <div style="float: left;alignment: left;">Успешных сделок:</div>
-                                <div style="float: right;alignment: right;">50</div>
+                                <div style="float: right;alignment: right;">${successDeals}</div>
                             </div>
                             <br>
 
                             <div class="row-fluid" style="width: 100%;">
                                 <div style="float:left; alignment: left;">Нереализовано:</div>
-                                <div style="float: right;alignment: right;">20</div>
+                                <div style="float: right;alignment: right;">${unsuccessClosedDeals}</div>
                             </div>
                         </fieldset>
                     </div>
@@ -70,19 +70,19 @@
                             <legend class="scheduler-border"><strong>Задачи в работе и выполненые</strong></legend>
                             <div class="row-fluid" style="width: 100%;">
                                 <div style="float: left;alignment: left;">Задачи в работе:</div>
-                                <div style="float: right;alignment: right;">5000</div>
+                                <div style="float: right;alignment: right;">${tasksInProgress}</div>
                             </div>
                             <br>
 
                             <div class="row-fluid" style="width: 100%;">
                                 <div style="float:left; alignment: left;">Выполненные:</div>
-                                <div style="float: right;alignment: right;">2000</div>
+                                <div style="float: right;alignment: right;">${finishedTasks}</div>
                             </div>
                             <br>
 
                             <div class="row-fluid" style="width: 100%;">
                                 <div style="float:left; alignment: left;">Просроченные:</div>
-                                <div style="float: right;alignment: right;">200</div>
+                                <div style="float: right;alignment: right;">${overdueTasks}</div>
                             </div>
                         </fieldset>
                     </div>
@@ -91,13 +91,13 @@
                             <legend class="scheduler-border"><strong>Всего контактов и Всего компаний</strong></legend>
                             <div class="row-fluid" style="width: 100%;">
                                 <div style="float: left;alignment: left;">Контактов:</div>
-                                <div style="float: right;alignment: right;">50</div>
+                                <div style="float: right;alignment: right;">${contacts}</div>
                             </div>
                             <br>
 
                             <div class="row-fluid" style="width: 100%;">
                                 <div style="float:left; alignment: left;">Компаний:</div>
-                                <div style="float: right;alignment: right;">20</div>
+                                <div style="float: right;alignment: right;">${companies}</div>
                             </div>
                         </fieldset>
                     </div>
@@ -108,47 +108,18 @@
     <div style="float:left;width:20%;height: 100%;">
         <fieldset class="scheduler-border" style="height: auto;">
             <legend class="scheduler-border"><strong>Последние события</strong></legend>
-            <fieldset class="scheduler-border">
-                <small><a href="">2015-11-22 15:30</a><br>
-                    <a href="">Vladislav</a><br>
-                    Добавление нового контакта:<br>
-                    <a href="">Vasian Petrovich</a><br></small>
-            </fieldset>
-            <fieldset class="scheduler-border">
-                <small><a href="">2015-11-22 15:30</a><br>
-                    <a href="">Vladislav</a><br>
-                    Добавление нового контакта:<br>
-                    <a href="">Vasian Petrovich</a><br></small>
-            </fieldset>
-            <fieldset class="scheduler-border">
-                <small><a href="">2015-11-22 15:30</a><br>
-                    <a href="">Vladislav</a><br>
-                    Добавление нового контакта:<br>
-                    <a href="">Vasian Petrovich</a><br></small>
-            </fieldset>
-            <fieldset class="scheduler-border">
-                <small><a href="">2015-11-22 15:30</a><br>
-                    <a href="">Vladislav</a><br>
-                    Добавление нового контакта:<br>
-                    <a href="">Vasian Petrovich</a><br></small>
-            </fieldset>
-            <fieldset class="scheduler-border">
-                <small><a href="">2015-11-22 15:30</a><br>
-                    <a href="">Vladislav</a><br>
-                    Добавление нового контакта:<br>
-                    <a href="">Vasian Petrovich</a><br></small>
-            </fieldset>
-            <fieldset class="scheduler-border">
-                <small><a href="">2015-11-22 15:30</a><br>
-                    <a href="">Vladislav</a><br>
-                    Добавление нового контакта:<br>
-                    <a href="">Vasian Petrovich</a><br></small>
-            </fieldset>
-
+            <c:forEach var="event" items="${events}">
+                <fieldset class="scheduler-border">
+                    <small><a href="">${event.getEventDate()}</a><br>
+                        <a href="">${event.getUser().getName()}</a><br>
+                            ${event.getOperationType()}:<br>
+                        <a href="">${event.getEventContent()}</a><br></small>
+                </fieldset>
+            </c:forEach>
         </fieldset>
     </div>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script src="/js/bootstrap.min.js"></script>
+<script src="/js/bootstrap.js"></script>
 </body>
 </html>
