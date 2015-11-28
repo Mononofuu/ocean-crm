@@ -9,17 +9,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>CRM_OCEAN - Dashboard</title>
     <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/crm-ocean.css" rel="stylesheet">
+
 </head>
 <body>
 <div class="row-fluid">
     <div style="float:left;width:80%;height: 100%;">
         <fieldset class="scheduler-border">
-            <legend class="scheduler-border"><strong>Виджеты</strong></legend>
+            <legend class="scheduler-border">Виджеты</legend>
             <div class="row-fluid">
                 <div id="widgetsInLeft" style="float:left;width:50%;height: auto;">
                     <div id="widgetDeals">
                         <fieldset class="scheduler-border">
-                            <legend class="scheduler-border"><strong>Сделки</strong></legend>
+                            <legend class="scheduler-border">Сделки</legend>
                             <div class="row-fluid" style="width: 100%;">
                                 <div style="float: left;alignment: left;">Всего сделок:</div>
                                 <div style="float: right;alignment: right;">${allDeals}</div>
@@ -34,7 +36,7 @@
                     </div>
                     <div id="widgetDealsWithoutTasks">
                         <fieldset class="scheduler-border">
-                            <legend class="scheduler-border"><strong>Сделки без задач</strong></legend>
+                            <legend class="scheduler-border">Сделки без задач</legend>
                             <div class="row-fluid" style="width: 100%;">
                                 <div style="float: left;alignment: left;">Сделок без задач:</div>
                                 <div style="float: right;alignment: right;">${dealsWithoutTasks}</div>
@@ -49,7 +51,7 @@
                     </div>
                     <div id="widgetSuccessDeals">
                         <fieldset class="scheduler-border">
-                            <legend class="scheduler-border"><strong>Успешные сделки</strong></legend>
+                            <legend class="scheduler-border">Успешные сделки</legend>
                             <div class="row-fluid" style="width: 100%;">
                                 <div style="float: left;alignment: left;">Успешных сделок:</div>
                                 <div style="float: right;alignment: right;">${successDeals}</div>
@@ -67,7 +69,7 @@
                 <div id="widgetsIntRight" style="float:left;width:50%;height: auto;">
                     <div id="widgetTasksInProgressAndClosed">
                         <fieldset class="scheduler-border">
-                            <legend class="scheduler-border"><strong>Задачи в работе и выполненые</strong></legend>
+                            <legend class="scheduler-border">Задачи в работе и выполненые</legend>
                             <div class="row-fluid" style="width: 100%;">
                                 <div style="float: left;alignment: left;">Задачи в работе:</div>
                                 <div style="float: right;alignment: right;">${tasksInProgress}</div>
@@ -88,7 +90,7 @@
                     </div>
                     <div id="widgetAllContactsAllCompanies">
                         <fieldset class="scheduler-border">
-                            <legend class="scheduler-border"><strong>Всего контактов и Всего компаний</strong></legend>
+                            <legend class="scheduler-border">Всего контактов и Всего компаний</legend>
                             <div class="row-fluid" style="width: 100%;">
                                 <div style="float: left;alignment: left;">Контактов:</div>
                                 <div style="float: right;alignment: right;">${contacts}</div>
@@ -107,12 +109,12 @@
     </div>
     <div style="float:left;width:20%;height: 100%;">
         <fieldset class="scheduler-border" style="height: auto;">
-            <legend class="scheduler-border"><strong>Последние события</strong></legend>
+            <legend class="scheduler-border">Последние события</legend>
             <c:forEach var="event" items="${events}">
                 <fieldset class="scheduler-border">
                     <small><a href="">${event.getEventDate()}</a><br>
                         <a href="">${event.getUser().getName()}</a><br>
-                            ${event.getOperationType()}:<br>
+                            ${event.getOperationType()}<br>
                         <a href="">${event.getEventContent()}</a><br></small>
                 </fieldset>
             </c:forEach>
