@@ -1,0 +1,97 @@
+body {
+    background-color: #F5F5F5;
+   
+}
+button {
+    border-radius: 5px; 
+}
+#header {
+    margin-top: 1%;
+    margin-left: 85%;
+    position: relative;
+}
+h4 {
+    margin: 4px 2% 2% 40%; 
+    position: absolute;
+    color:cornflowerblue; 
+}
+
+#filter {
+    margin-top: -30px;
+}
+#viewallcontacts {
+    position: relative;
+    margin-right: 1%; 
+    margin-top: 1%;
+    width: 72%;
+    float: right;
+    border: 2px groove darkgray;
+    border-radius: 6px; 
+}
+#left {
+    position: relative;
+    width: 24%;
+    float: left;
+    display:inline-block;
+    margin-left: 2%;
+    margin-top: 1%;
+    height: 70%;
+    border: 2px groove darkgray;
+    border-radius: 6px; 
+}
+p {
+    position:relative;
+    margin-left: 3%; 
+    margin-top: 5%;
+}
+#left #deffilt {
+    width: 98%;
+    margin-right: 3px; 
+    margin-top: 5px;
+    margin-left: 30px; 
+    margin-bottom: 1px;
+    border-radius: 6px;
+} 
+select {
+    float:right; 
+    width: 60%; 
+    height:12px;
+    margin-right: 3px;
+    margin-top: -10%;
+    position: relative; 
+}
+#left #applybuttons {
+    float: left;
+    margin-left: 3%;
+    margin-top: 15px;
+} 
+#left #clearbuttons {
+    float: right;
+    margin-right: 37%; 
+    margin-top: 15px;
+} 
+#radio {
+    position: relative;
+    margin-left: 40%;
+    margin-bottom: -4%;
+    margin-top: -2%;
+}
+
+#multiSelect span {
+    display:block; 
+    margin-left: 40%;
+    font-size: 12px;
+}
+a {
+    display:inline-block; 
+    margin-left: 39%;
+    font-size: 13px;
+    margin-top: -27px; 
+    color: black;
+    background: white; 
+    padding: 1% 3px 1% 3px; 
+    border-radius: 4px;
+}
+
+
+
