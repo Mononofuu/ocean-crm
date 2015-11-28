@@ -41,8 +41,8 @@ public class DashboardServlet extends HttpServlet {
         request.setAttribute("successDeals", getSuccessDeals());
         request.setAttribute("unsuccessClosedDeals", getUnsuccessClosedDeals());
         request.setAttribute("tasksInProgress", tasksInProgress());
-        request.setAttribute("finishedTasks", getTaskProcessingWithParameters("Завершено"));
-        request.setAttribute("overdueTasks", getTaskProcessingWithParameters("Не завершено"));
+        request.setAttribute("finishedTasks", getFinishedTasks());
+        request.setAttribute("overdueTasks", getOverdueTasks());
         request.setAttribute("contacts", getContacts());
         request.setAttribute("companies", getCompanies());
         request.setAttribute("events", getEvents());
@@ -83,13 +83,7 @@ public class DashboardServlet extends HttpServlet {
     }
 
     private int tasksInProgress() {
-        GenericDao tasksDao = getGenericDao(Task.class);
-        List tasks = null;
-        try {
-            tasks = tasksDao.readAll();
-        } catch (DataBaseException e) {
-            e.printStackTrace();
-        }
+        List tasks = getAllTasks();
         return tasks != null ? tasks.size() : 0;
     }
 
@@ -176,7 +170,35 @@ public class DashboardServlet extends HttpServlet {
         return deals;
     }
 
-    private int getTaskProcessingWithParameters(String status) {
+    private int getFinishedTasks() {
+        List tasks = getAllTasks();
+        int completedTasks = 0;
+        assert tasks != null;
+        for (Object task : tasks) {
+            if (task instanceof Task) {
+                if (((Task) task).getType().name().equals("Completed")) {
+                    completedTasks++;
+                }
+            }
+        }
+        return completedTasks;
+    }
+
+    private int getOverdueTasks() {
+        List tasks = getAllTasks();
+        int overdueTasks = 0;
+        assert tasks != null;
+        for (Object task : tasks) {
+            if (task instanceof Task) {
+                if (((Task) task).getType().name().equals("Not completed")) {
+                    overdueTasks++;
+                }
+            }
+        }
+        return overdueTasks;
+    }
+
+    private List getAllTasks() {
         GenericDao tasksDao = getGenericDao(Task.class);
         List tasks = null;
         try {
@@ -184,16 +206,7 @@ public class DashboardServlet extends HttpServlet {
         } catch (DataBaseException e) {
             e.printStackTrace();
         }
-        int processingTasksCount = 0;
-        assert tasks != null;
-        for (Object task : tasks) {
-            if (task instanceof Task) {
-                if (((Task) task).getType().name().equals(status)) {
-                    processingTasksCount++;
-                }
-            }
-        }
-        return processingTasksCount;
+        return tasks;
     }
 
 }
