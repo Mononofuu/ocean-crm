@@ -33,6 +33,7 @@ public class CurrencyDAOImpl extends AbstractJDBCDao<Currency> implements Curren
         try{
             while (rs.next()){
                 Currency currency = new Currency();
+                currency.setId(rs.getInt("id"));
                 currency.setCode(rs.getString("code"));
                 currency.setName(rs.getString("name"));
                 result.add(currency);

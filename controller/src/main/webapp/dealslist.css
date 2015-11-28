@@ -1,7 +1,7 @@
 .button {
     display: block;
-    margin-top: 50px;
-    width: 225px;
+    margin-top: 0px;
+    width: 150px;
     background-color: forestgreen;
     font-size: 16px;
     padding: 10px;
@@ -9,12 +9,14 @@
     text-decoration: none;
     color: black;
     text-align: center;
+    border: 2px solid black;
+
 }
 
 .frame {
     display: inline-block;
     background-color: antiquewhite;
-    width: 380px;
+    width: 200px;
     padding-top: 15px;
     padding-bottom: 10px;
     padding-right: 10px;
@@ -24,10 +26,68 @@
 }
 
 .rightframe {
-    width: 210px;
+    width: 250px;
 }
 
-.cancel {
-    width: 200px;
-    background-color: darksalmon;
+.tablename {
+    display: block;
+    margin: 10px 0 0 0px;
+    width: 100%
+}
+
+table {
+    font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+    font-size: 14px;
+    text-align: center;
+}
+
+th {
+    font-weight: normal;
+    color: #039;
+    padding: 5px 5px;
+}
+
+td {
+    color: #669;
+    padding: 5px 5px;
+}
+
+tr:nth-child(2n) {
+    background: #e8edff;
+}
+
+caption {
+    caption-side: bottom;
+    text-align: right;
+    padding: 10px 0;
+    font-size: 14px;
+}
+
+.right{
+    position: relative;
+    left: 1200px;
+    top: 0px;
+}
+
+.divbutton {
+    height: 20px;
+}
+
+
+.row {
+    float: left;
+    width: 1300px;
+
+}
+.row2 {
+    float: left;
+    width: 1000px;
+    height: 600px;
+    overflow: scroll;
+}
+
+.row3 {
+    float: left;
+    width: 300px;
+
 }

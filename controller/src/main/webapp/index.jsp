@@ -11,6 +11,8 @@ CRM System
 <a href="newcontact.jsp">New Contact</a>
 <p><a href="newdeal?action=add">Add new Deal</a></p>
 <p><a href="dealslist?action=add">View list of deals</a></p>
+<p><a href="dealcontroller?action=add">Deal controller</a></p>
+<p><a href="s?action=add">Test</a></p>
 
 </body>
 </html>

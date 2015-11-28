@@ -33,6 +33,7 @@ public class DealStatusDAOImpl extends AbstractJDBCDao<DealStatus> implements De
         try{
             while (rs.next()){
                 DealStatus dealStatus= new DealStatus();
+                dealStatus.setId(rs.getInt("id"));
                 dealStatus.setName(rs.getString("name"));
                 result.add(dealStatus);
             }
