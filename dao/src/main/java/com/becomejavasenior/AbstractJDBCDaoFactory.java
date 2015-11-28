@@ -60,9 +60,12 @@ public abstract class AbstractJDBCDaoFactory implements DaoFactory {
 
     private void initializeDaoClasses(Connection connection) throws DataBaseException {
         daoclasses.put(Contact.class, new ContactDAOImpl(this, connection));
+        daoclasses.put(Currency.class, new CurrencyDAOImpl(this, connection));
+        daoclasses.put(Deal.class, new DealDAOImpl(this, connection));
         daoclasses.put(Subject.class, new SubjectDAOImpl(this, connection));
         daoclasses.put(Company.class, new CompanyDAOImpl(this, connection));
         daoclasses.put(PhoneType.class, new PhoneTypeDAOImpl(this, connection));
+        daoclasses.put(DealStatus.class, new DealStatusDAOImpl(this, connection));
         daoclasses.put(SubjectTag.class, new SubjectTagDAOImpl(this, connection));
         daoclasses.put(Tag.class, new TagDAOImpl(this, connection));
         daoclasses.put(User.class, new UserDAOImpl(this, connection));

@@ -30,31 +30,30 @@ public class ContactDAOImpl extends AbstractJDBCDao<Contact> implements ContactD
     @Override
     protected List<Contact> parseResultSet(ResultSet rs) throws DataBaseException {
         List<Contact> result = new ArrayList<>();
+        GenericDao subjectDao = getDaoFromCurrentFactory(Subject.class);
+        GenericDao phoneTypeDao = getDaoFromCurrentFactory(PhoneType.class);
+        GenericDao companyDao = getDaoFromCurrentFactory(Company.class);
+        SubjectTagDAOImpl subjectTagDAOImpl = (SubjectTagDAOImpl) getDaoFromCurrentFactory(SubjectTag.class);
         try {
             while (rs.next()) {
                 Contact contact = new Contact();
                 int id = rs.getInt("id");
                 // Считываем данные из таблицы subject
-                GenericDao subjectDao = getDaoFromCurrentFactory(Subject.class);
                 Subject subject = (Subject) subjectDao.read(id);
                 contact.setId(id);
                 contact.setName(subject.getName());
                 contact.setPost(rs.getString("post"));
                 // Считываем данные из таблицы phone_type
-                GenericDao phoneTypeDao = getDaoFromCurrentFactory(PhoneType.class);
                 PhoneType phoneType = (PhoneType) phoneTypeDao.read(rs.getInt("phone_type_id"));
                 contact.setPhoneType(phoneType);
                 contact.setPhone(rs.getString("phone"));
                 contact.setEmail(rs.getString("email"));
                 contact.setSkype(rs.getString("skype"));
                 // Считываем данные из таблицы company
-                GenericDao companyDao = getDaoFromCurrentFactory(Company.class);
                 Company company = (Company) companyDao.read(rs.getInt("company_id"));
                 contact.setCompany(company);
                 // Считываем тэги
-                SubjectTagDAOImpl subjectTagDAOImpl = (SubjectTagDAOImpl) getDaoFromCurrentFactory(SubjectTag.class);
                 contact.setTags(subjectTagDAOImpl.getAllTagsBySubjectId(id));
-
                 result.add(contact);
             }
         } catch (SQLException e) {
