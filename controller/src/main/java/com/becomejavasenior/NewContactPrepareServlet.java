@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.util.List;
 
-@WebServlet(name="newcontact", urlPatterns = "/new_contact")
+@WebServlet(name="new_contact_prepare", urlPatterns = "/new_contact_prepare")
 public class NewContactPrepareServlet extends HttpServlet {
     private DaoFactory dao;
     private Connection connection;
@@ -34,7 +34,7 @@ public class NewContactPrepareServlet extends HttpServlet {
             GenericDao userDao = dao.getDao(connection,User.class);
             List<User> usersList = userDao.readAll();
             request.setAttribute("userslist", usersList);
-            getServletContext().getRequestDispatcher("/newcontact.jsp").forward(request,response);
+            getServletContext().getRequestDispatcher("/jsp/newcontact.jsp").forward(request,response);
         } catch (DataBaseException e) {
             e.printStackTrace();
         } catch (ServletException e) {

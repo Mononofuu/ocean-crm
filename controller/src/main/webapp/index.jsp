@@ -8,7 +8,7 @@
 <body>
 CRM System
 <br>
-<a href="/new_contact">New Contact</a><br>
+<a href="/new_contact_prepare">New Contact</a><br>
 <a href="dashboard.jsp">Dashboard</a>
 </body>
 </html>

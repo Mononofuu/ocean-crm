@@ -14,7 +14,7 @@ import java.util.*;
 /**
  * @author Anton Sakhno <sakhno83@gmail.com>
  */
-@WebServlet("/")
+@WebServlet("/new_contact_add")
 public class NewContactServlet extends HttpServlet {
     private DaoFactory dao;
     private Connection connection;

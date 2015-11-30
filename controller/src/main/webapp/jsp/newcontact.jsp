@@ -3,7 +3,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page isELIgnored="false" %>
 <style>
-    <%@include file='newcontact.css' %>
+    <%@include file='../resources/css/newcontact.css' %>
 </style>
 <html>
 <head>
@@ -16,7 +16,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.8.7/jquery.timepicker.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.8.7/jquery.timepicker.css"/>
 
-    <link href="newcontact.css" rel="stylesheet" type="text/css"/>
+    <link href="../resources/css/newcontact.css" rel="stylesheet" type="text/css"/>
     <script type="text/javascript">
         $(function () {
             $("#datepicker").datepicker();
@@ -25,7 +25,7 @@
     </script>
 </head>
 <body>
-<form action="newContactServlet" method="get" enctype="multipart/form-data">
+<form action="new_contact_add" method="get" enctype="multipart/form-data">
     <div class="row">
     <div class="tablename">Создание контакта</div>
     <div class="frame">
@@ -52,7 +52,7 @@
         <textarea class="field bigtext" name="notes" placeholder="Примечание к контакту" rows="4"></textarea>
         <input class="field bigtext" type="file" min="1" max="10" name="file[]" multiple="true">
         <input class="button" type="submit" value="Добавить">
-        <a class="button cancel" href="index.jsp">Отмена</a>
+        <a class="button cancel" href="../index.jsp">Отмена</a>
     </div>
     </div>
 
