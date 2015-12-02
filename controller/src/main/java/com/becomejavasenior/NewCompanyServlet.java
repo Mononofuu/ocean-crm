@@ -32,8 +32,9 @@ public class NewCompanyServlet extends HttpServlet{
         try {
             dao = new PostgreSqlDaoFactory();
             connection = dao.getConnection();
+            req.setCharacterEncoding("UTF-8");
             createCompanyFromRequest(req);
-            getServletContext().getRequestDispatcher("/new_contact").forward(req,resp);
+            getServletContext().getRequestDispatcher("/new_contact_prepare").forward(req,resp);
 
         } catch (DataBaseException e) {
             e.printStackTrace();
