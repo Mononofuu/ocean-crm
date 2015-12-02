@@ -12,6 +12,7 @@
         <RollingFile name="fileWriter"
                      fileName="${LOG_DIR}/crm-ocean.log"
                      filePattern="${ARCHIVE}/crm-ocean.log.%i">
+            <PatternLayout pattern="${PATTERN}"/>
             <Policies>
                 <SizeBasedTriggeringPolicy size="10MB"/>
             </Policies>
