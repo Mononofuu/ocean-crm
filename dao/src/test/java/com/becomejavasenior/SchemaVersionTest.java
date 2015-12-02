@@ -21,10 +21,8 @@ public class SchemaVersionTest {
         String query = "SELECT version FROM db_version";
         PreparedStatement statement = connection.prepareStatement(query);
         ResultSet rs = statement.executeQuery();
-        String version=null;
-        while (rs.next()){
-            version = rs.getString("version");
-        }
+        rs.next();
+        String version=rs.getString("version");
         assertEquals(SchemaVersion.getDbVersion(),version);
     }
 }
