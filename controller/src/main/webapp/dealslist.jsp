@@ -16,6 +16,21 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title></title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.17/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.17/themes/smoothness/jquery-ui.css"/>
+    <%--<link href="newcontact.css" rel="stylesheet" type="text/css"/>--%>
+    <script type="text/javascript">
+        $(function () {
+            $("#datepicker").datepicker({
+                inline: true,
+                language: 'ru',
+                changeYear: true,
+                changeMonth: true
+            });
+        });
+    </script>
+
 </head>
 <body>
 
@@ -23,14 +38,14 @@
     <table>
         <tr>
             <td><input class="button" type="submit" value="Воронка"></td>
-            <td><input class="button" type="submit" value="Список"></td>
+            <td><input class="button list" type="submit" value="Список"></td>
         </tr>
     </table>
 </divbutton>
 
 <div class="row">
-    <div class="tablename"><b>Отображение сделок</b></div>
-    <div class="tablename">Список</div>
+    <div class="tablename"><b><h2>Отображение сделок</h2></b></div>
+    <div class="tablename center"><b><h1>Список</h1></b></div>
     <div class="row2">
         <table class="table">
             <thead>
@@ -60,7 +75,8 @@
         </table>
     </div>
     <div class="row3">
-        <div class="tablename">Фильтры</div>
+        <div class="tablename companyadd center"><b><h2>Фильтры</h2></b></div>
+        <div class="frame rightframe">
         <select class="field" name="deal_status_" size="7">
             <option value="deal_open=">Открытые сделки</option>
             <option value="deal_my">Только мои сделки</option>
@@ -72,7 +88,8 @@
         </select>
 
 
-        <select class="field period" name="period">
+         <a><select class="field" name="period">
+            <option value="">Когда</option>
             <option value="today">Сегодня</option>
             <option value="allday">Весь день</option>
             <option value="tomorow">Завтра</option>
@@ -81,8 +98,8 @@
             <option value="nextyear">Следующий год</option>
         </select>
 
-        <div class="period smaltext">или выбрать</div>
-        <input class="period date" type="text" id="datepicker" name="date">
+        <input class="period" type="text" id="datepicker" name="date"></a>
+
         <select class="field" name="stages">
             <option value="">Этапы</option>
             <option value="value1">Этап1</option>
@@ -101,8 +118,9 @@
 
 
         <input class="field tags" type="text" name="tags" placeholder="Теги">
-        <td><input class="button" type="submit" value="Сохранить"></td>
+        <td><input class="field button" type="submit" value="Сохранить"></td>
 
+        </div>
     </div>
 
 

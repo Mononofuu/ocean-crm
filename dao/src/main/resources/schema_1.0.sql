@@ -1,4 +1,4 @@
----drop schema public cascade;
+﻿---drop schema public cascade;
 ---create schema public;
 
 CREATE  TABLE users(
@@ -133,3 +133,11 @@ CREATE  TABLE subject_tag(
   subject_id integer REFERENCES subject(id) ON DELETE CASCADE,
   tag_id integer REFERENCES tag(id),
   PRIMARY KEY(subject_id, tag_id));
+
+INSERT INTO phone_type (name) VALUES
+('WORK_PHONE_NUMBER'),
+('WORK_DIRECT_PHONE_NUMBER'),
+('MOBILE_PHONE_NUMBER'),
+('FAX_NUMBER'),
+('HOME_PHONE_NUMBER'),
+('OTHER_PHONE_NUMBER');

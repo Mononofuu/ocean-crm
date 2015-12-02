@@ -3,7 +3,7 @@ package com.becomejavasenior;
 import java.util.List;
 import java.util.Set;
 
-public class Contact extends Subject implements Tagable{
+public class Contact extends Subject {
 
     private static final long serialVersionUID = -5553010181244222836L;
 

@@ -7,17 +7,18 @@
     <display-name>CRM Web Application</display-name>
 
     <servlet>
-        <servlet-name>dealServlet</servlet-name>
-        <servlet-class>com.becomejavasenior.NewDealServlet</servlet-class>
+        <servlet-name>dashboardServlet</servlet-name>
+        <servlet-class>com.becomejavasenior.dashboard.DashboardServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>dealServlet</servlet-name>
-        <url-pattern>/newdeal</url-pattern>
+        <servlet-name>dashboardServlet</servlet-name>
+        <url-pattern>/dashboard</url-pattern>
     </servlet-mapping>
 
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
+
 
 </web-app>

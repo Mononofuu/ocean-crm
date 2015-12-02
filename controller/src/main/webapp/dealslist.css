@@ -1,6 +1,6 @@
 .button {
     display: block;
-    margin-top: 0px;
+    margin-top: 10px;
     width: 150px;
     background-color: forestgreen;
     font-size: 16px;
@@ -10,7 +10,12 @@
     color: black;
     text-align: center;
     border: 2px solid black;
+    border-radius: 10px;
 
+}
+
+.list {
+    background-color: darksalmon;
 }
 
 .frame {
@@ -26,13 +31,12 @@
 }
 
 .rightframe {
-    width: 250px;
+    width: 350px;
 }
 
 .tablename {
     display: block;
-    margin: 10px 0 0 0px;
-    width: 100%
+    margin: 20px 0 0 20px;
 }
 
 table {
@@ -53,7 +57,7 @@ td {
 }
 
 tr:nth-child(2n) {
-    background: #e8edff;
+    background-color: antiquewhite;
 }
 
 caption {
@@ -83,11 +87,31 @@ caption {
     float: left;
     width: 1000px;
     height: 600px;
-    overflow: scroll;
+    overflow-y: scroll;
 }
 
 .row3 {
     float: left;
     width: 300px;
+}
 
+.companyadd {
+    margin-top: 25px;
+}
+
+.field {
+    display: block;
+    margin: 0px 15px 10px 15px;
+    width: 180px;
+    padding: 5px;
+    display: inline-block;
+}
+
+.period {
+    width: 80px;
+    display: inline-block;
+}
+
+.center {
+    text-align: center;
 }
