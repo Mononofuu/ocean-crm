@@ -18,11 +18,13 @@ public class SchemaVersionTest {
 
     @Test
     public void schemaVersionTest() throws SQLException{
-        String query = "SELECT version FROM db_version WHERE id = 1";
+        String query = "SELECT version FROM db_version";
         PreparedStatement statement = connection.prepareStatement(query);
         ResultSet rs = statement.executeQuery();
-        rs.next();
-        String version = rs.getString("version");
+        String version=null;
+        while (rs.next()){
+            version = rs.getString("version");
+        }
         assertEquals(SchemaVersion.getDbVersion(),version);
     }
 }

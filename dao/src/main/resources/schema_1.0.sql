@@ -143,8 +143,7 @@ INSERT INTO phone_type (name) VALUES
 ('OTHER_PHONE_NUMBER');
 
 CREATE TABLE db_version(
-  id INTEGER PRIMARY KEY,
-  version VARCHAR(45)
+  version VARCHAR(45) PRIMARY KEY
 );
 
-INSERT INTO db_version (id, version) VALUES (1, '1.0');
+INSERT INTO db_version (version) VALUES ('1.0');
