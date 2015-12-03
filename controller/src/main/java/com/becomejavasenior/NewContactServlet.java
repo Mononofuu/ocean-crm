@@ -1,5 +1,8 @@
 package com.becomejavasenior;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,6 +19,7 @@ import java.util.*;
  */
 @WebServlet("/new_contact_add")
 public class NewContactServlet extends HttpServlet {
+    private Logger logger = LogManager.getLogger(NewContactServlet.class);
     private DaoFactory dao;
     private Connection connection;
 
@@ -51,8 +55,9 @@ public class NewContactServlet extends HttpServlet {
             newContact.setCompany(getCompanyFromRequest(request.getParameter("companyid")));
             GenericDao<Contact>  contactDao = dao.getDao(Contact.class);
             Contact returnedContact = contactDao.create(newContact);
+            throw new DataBaseException();
         } catch (DataBaseException e) {
-            e.printStackTrace();
+            logger.error("Error while adding new contact", e);
         }
 
 

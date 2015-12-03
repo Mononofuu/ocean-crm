@@ -1,5 +1,8 @@
 package com.becomejavasenior;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -11,6 +14,7 @@ import java.util.List;
 
 @WebServlet(name="new_contact_prepare", urlPatterns = "/new_contact_prepare")
 public class NewContactPrepareServlet extends HttpServlet {
+    private Logger logger = LogManager.getLogger(NewContactPrepareServlet.class);
     private DaoFactory dao;
     private Connection connection;
 
@@ -36,9 +40,9 @@ public class NewContactPrepareServlet extends HttpServlet {
             request.setAttribute("userslist", usersList);
             getServletContext().getRequestDispatcher("/jsp/newcontact.jsp").forward(request,response);
         } catch (DataBaseException e) {
-            e.printStackTrace();
+            logger.error("Error when prepearing data for newcontact.jsp",e);
         } catch (ServletException e) {
-            e.printStackTrace();
+            logger.error("Error when prepearing data for newcontact.jsp",e);
         }
     }
 }

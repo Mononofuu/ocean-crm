@@ -10,11 +10,15 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Connection;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * @author Anton Sakhno <sakhno83@gmail.com>
  */
 @WebServlet(name="newcompany", urlPatterns = "/new_company")
 public class NewCompanyServlet extends HttpServlet{
+    private Logger logger = LogManager.getLogger(NewCompanyServlet.class);
     private DaoFactory dao;
     private Connection connection;
 
@@ -37,11 +41,11 @@ public class NewCompanyServlet extends HttpServlet{
             getServletContext().getRequestDispatcher("/new_contact_prepare").forward(req,resp);
 
         } catch (DataBaseException e) {
-            e.printStackTrace();
+            logger.error("Error while quick adding new company", e);
         } catch (ServletException e) {
-            e.printStackTrace();
+            logger.error("Error while quick adding new company", e);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error while quick adding new company", e);
         }
     }
 
@@ -57,12 +61,13 @@ public class NewCompanyServlet extends HttpServlet{
                 result.setWeb(new URL(url));
             } catch (MalformedURLException e) {
                 result.setWeb(null);
+                logger.warn("Incorrect URL", e);
             }
             result.setAdress(request.getParameter("newcompanyaddress"));
             companyDao.create(result);
 
         } catch (DataBaseException e) {
-            e.printStackTrace();
+            logger.error("Error while quick adding new company", e);
         }
     }
 
