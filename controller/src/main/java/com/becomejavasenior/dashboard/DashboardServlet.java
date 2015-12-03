@@ -92,7 +92,7 @@ public class DashboardServlet extends HttpServlet {
         int unsuccessClosedDeals = 0;
         for (Object deal : deals) {
             if (deal instanceof Deal) {
-                if (((Deal) deal).getStatus().getName().equals("Р—Р°РєСЂС‹С‚Рѕ Рё РЅРµСЂРµР°Р»РёР·РѕРІР°РЅРѕ")) {
+                if (((Deal) deal).getStatus().getName().equals("Закрыто и нереализовано")) {
                     unsuccessClosedDeals++;
                 }
             }
@@ -105,7 +105,7 @@ public class DashboardServlet extends HttpServlet {
         int successDeals = 0;
         for (Object deal : deals) {
             if (deal instanceof Deal) {
-                if (((Deal) deal).getStatus().getName().equals("РЈСЃРїРµС€РЅРѕ СЂРµР°Р»РёР·РѕРІР°РЅРѕ")) {
+                if (((Deal) deal).getStatus().getName().equals("Успешно реализовано")) {
                     successDeals++;
                 }
             }
