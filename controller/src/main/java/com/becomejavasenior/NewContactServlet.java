@@ -54,7 +54,7 @@ public class NewContactServlet extends HttpServlet {
 
 
         try {
-            GenericDao<Contact>  contactDao = dao.getDao(connection,Contact.class);
+            GenericDao<Contact>  contactDao = dao.getDao(Contact.class);
             Contact returnedContact = contactDao.create(newContact);
             System.out.println("id - "+returnedContact.getId());
             System.out.println(returnedContact.getName());
@@ -111,7 +111,7 @@ public class NewContactServlet extends HttpServlet {
         result.setAdress(request.getParameter("newcompanyaddress"));
         GenericDao<Company>  companyDao = null;
         try {
-            companyDao = dao.getDao(connection,Company.class);
+            companyDao = dao.getDao(Company.class);
             result = companyDao.create(result);
         } catch (DataBaseException e) {
             e.printStackTrace();

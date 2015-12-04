@@ -13,16 +13,14 @@ import java.util.Properties;
 public abstract class AbstractJDBCDaoFactory implements DaoFactory {
     private String url;
     private Properties prop = new Properties();
-    private Map<Class, GenericDao> daoclasses = new HashMap<>();
+    private Map<Class, GenericDao> daoClasses = new HashMap<>();
 
     public AbstractJDBCDaoFactory() throws DataBaseException {
         try {
             prop.load(getClass().getClassLoader().getResourceAsStream(getPropertyFileName()));
             Class.forName(prop.getProperty("driver"));
             url = prop.getProperty("url");
-        } catch (ClassNotFoundException e) {
-            throw new DataBaseException(e);
-        } catch (IOException e) {
+        } catch (ClassNotFoundException | IOException e) {
             throw new DataBaseException(e);
         }
     }
@@ -39,13 +37,13 @@ public abstract class AbstractJDBCDaoFactory implements DaoFactory {
     }
 
     @Override
-    public GenericDao getDao(Connection connection, Class clazz) throws DataBaseException {
+    public GenericDao getDao(Class clazz) throws DataBaseException {
         GenericDao result;
-        if (daoclasses.size() > 0) {
-            result = daoclasses.get(clazz);
+        if (daoClasses.size() > 0) {
+            result = daoClasses.get(clazz);
         } else {
-            initializeDaoClasses(connection);
-            result = daoclasses.get(clazz);
+            initializeDaoClasses(getConnection());
+            result = daoClasses.get(clazz);
         }
         if (result == null) {
             throw new DataBaseException("Соответствующий класс не найден");
@@ -59,13 +57,20 @@ public abstract class AbstractJDBCDaoFactory implements DaoFactory {
     protected abstract String getPropertyFileName();
 
     private void initializeDaoClasses(Connection connection) throws DataBaseException {
-        daoclasses.put(Contact.class, new ContactDAOImpl(this, connection));
-        daoclasses.put(Subject.class, new SubjectDAOImpl(this, connection));
-        daoclasses.put(Company.class, new CompanyDAOImpl(this, connection));
-        daoclasses.put(PhoneType.class, new PhoneTypeDAOImpl(this, connection));
-        daoclasses.put(SubjectTag.class, new SubjectTagDAOImpl(this, connection));
-        daoclasses.put(Tag.class, new TagDAOImpl(this, connection));
-        daoclasses.put(User.class, new UserDAOImpl(this, connection));
-        daoclasses.put(Comment.class, new CommentDAOImpl(this, connection));
+        daoClasses.put(Contact.class, new ContactDAOImpl(connection));
+        daoClasses.put(Subject.class, new SubjectDAOImpl(connection));
+        daoClasses.put(Company.class, new CompanyDAOImpl(connection));
+        daoClasses.put(PhoneType.class, new PhoneTypeDAOImpl(connection));
+        daoClasses.put(SubjectTag.class, new SubjectTagDAOImpl(connection));
+        daoClasses.put(Tag.class, new TagDAOImpl(connection));
+        daoClasses.put(User.class, new UserDAOImpl(connection));
+        daoClasses.put(Comment.class, new CommentDAOImpl(connection));
+        daoClasses.put(Currency.class, new CurrencyDAOImpl(connection));
+        daoClasses.put(DealContact.class, new DealContactDAOImpl(connection));
+        daoClasses.put(Deal.class, new DealDAOImpl(connection));
+        daoClasses.put(DealStatus.class, new DealStatusDAOImpl(connection));
+        daoClasses.put(Task.class, new TaskDAOImpl(connection));
+        daoClasses.put(File.class, new FileDAOImpl(connection));
+
     }
 }

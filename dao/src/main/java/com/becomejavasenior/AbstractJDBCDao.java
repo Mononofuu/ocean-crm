@@ -5,12 +5,15 @@ import java.util.List;
 import java.util.Set;
 
 public abstract class AbstractJDBCDao<T> implements GenericDao<T> {
+    private static DaoFactory daoFactory;
     private Connection connection;
-    private DaoFactory daoFactory;
 
-    public AbstractJDBCDao(DaoFactory daoFactory, Connection connection) throws DataBaseException {
+    public AbstractJDBCDao(Connection connection) throws DataBaseException {
         this.connection = connection;
-        this.daoFactory = daoFactory;
+    }
+
+    public static void setDaoFactory(DaoFactory daoFactory) {
+        AbstractJDBCDao.daoFactory = daoFactory;
     }
 
     protected Connection getConnection() {
@@ -146,7 +149,7 @@ public abstract class AbstractJDBCDao<T> implements GenericDao<T> {
      * Возвращает dao для переданного класса с текущим connection и daoFactory
      */
     protected GenericDao getDaoFromCurrentFactory(Class clazz) throws DataBaseException {
-        return daoFactory.getDao(connection, clazz);
+        return daoFactory.getDao(clazz);
     }
 
     /**

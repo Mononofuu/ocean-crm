@@ -37,4 +37,23 @@ public class Currency implements Serializable {
     public void setCode(String code) {
         this.code = code;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Currency currency = (Currency) o;
+
+        if (!name.equals(currency.name)) return false;
+        return code.equals(currency.code);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = 31 * result + code.hashCode();
+        return result;
+    }
 }

@@ -13,8 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserDAOImpl extends AbstractJDBCDao<User> implements UserDAO {
-    public UserDAOImpl(DaoFactory daoFactory, Connection connection) throws DataBaseException {
-        super(daoFactory, connection);
+    public UserDAOImpl(  Connection connection) throws DataBaseException {
+        super(connection);
     }
 
     @Override
@@ -53,7 +53,7 @@ public class UserDAOImpl extends AbstractJDBCDao<User> implements UserDAO {
 
     @Override
     public String getReadAllQuery() {
-        return null;
+        return "SELECT * FROM users";
     }
 
     @Override

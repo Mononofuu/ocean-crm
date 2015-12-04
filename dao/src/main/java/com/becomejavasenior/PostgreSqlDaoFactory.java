@@ -3,6 +3,7 @@ package com.becomejavasenior;
 public class PostgreSqlDaoFactory extends AbstractJDBCDaoFactory {
 
     public PostgreSqlDaoFactory() throws DataBaseException {
+        AbstractJDBCDao.setDaoFactory(this);
     }
 
     @Override

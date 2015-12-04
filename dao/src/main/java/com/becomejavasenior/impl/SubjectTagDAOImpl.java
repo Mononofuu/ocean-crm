@@ -11,8 +11,8 @@ import java.util.Set;
 
 public class SubjectTagDAOImpl extends AbstractJDBCDao<SubjectTag> implements SubjectTagDAO {
 
-    public SubjectTagDAOImpl(DaoFactory daoFactory, Connection connection) throws DataBaseException {
-        super(daoFactory, connection);
+    public SubjectTagDAOImpl( Connection connection) throws DataBaseException {
+        super(connection);
     }
 
     @Override
