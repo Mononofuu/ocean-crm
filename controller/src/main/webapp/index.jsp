@@ -8,6 +8,8 @@
 <body>
 CRM System
 <br>
+
+<p><a href="deal">New Deal</a></p>
 <a href="newcontact.jsp">New Contact</a>
 <a href="dashboard.jsp">Dashboard</a>
 </body>

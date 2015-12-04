@@ -8,6 +8,14 @@
          version="3.0">
     <display-name>CRM Web Application</display-name>
 
+    <servlet>
+        <servlet-name>deal</servlet-name>
+        <servlet-class>com.becomejavasenior.DealController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>deal</servlet-name>
+        <url-pattern>/deal</url-pattern>
+    </servlet-mapping>
 
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>

@@ -1,0 +1,70 @@
+body {
+    background-color: #696969;
+}
+
+fieldset {
+    background-color: #dddddd;
+    float: left;
+    border: 2px solid;
+    border-radius: 5px;
+    width: auto;
+    padding: 10px;
+    margin: 10px;
+}
+
+#contacttype {
+    width: 90px;
+}
+
+#contactnumber {
+    width: 145px;
+}
+
+.input {
+    width: 240px;
+    height: 30px;
+    margin: 2px auto;
+}
+
+.textarea {
+    height: 70px;
+    max-height: 300px;
+    margin: 2px auto;
+}
+
+.center {
+    text-align: center;
+}
+
+#contactscroller {
+    overflow: auto;
+    width: 230px;
+    height: auto;
+    max-height: 160px;
+    margin: 10px;
+}
+
+#submit {
+    clear: left;
+    float: right;
+}
+
+#contactitem {
+    border-radius: 10px;
+    border: medium solid black;
+    width: 180px;
+    height: 40px;
+    padding-left: 10px;
+}
+
+.button {
+    width: 225px;
+    border: solid black;
+    border-radius: 5px;
+    font-size: 16px;
+    padding: 10px;
+    cursor: pointer;
+    color: white;
+    background-color: #286090;
+}
+
