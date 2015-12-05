@@ -18,11 +18,9 @@ import java.util.List;
 public class DashboardServlet extends HttpServlet {
 
     private static DaoFactory myDaoFactory;
-    private static Connection myConnection;
 
     public DashboardServlet() throws DataBaseException {
         myDaoFactory = new PostgreSqlDaoFactory();
-        myConnection = myDaoFactory.getConnection();
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -152,7 +150,7 @@ public class DashboardServlet extends HttpServlet {
     private GenericDao getGenericDao(Class daoClass) {
         GenericDao dealGenericDao = null;
         try {
-            dealGenericDao = myDaoFactory.getDao(myConnection, daoClass);
+            dealGenericDao = myDaoFactory.getDao(daoClass);
         } catch (DataBaseException e) {
             e.printStackTrace();
         }

@@ -11,6 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CommentDAOImpl extends AbstractJDBCDao<Comment> implements CommentDAO {
+    public CommentDAOImpl(Connection connection) throws DataBaseException {
+        super(connection);
+    }
+
     @Override
     public String getReadAllQuery() {
         return "SELECT * FROM comment";
@@ -46,7 +50,7 @@ public class CommentDAOImpl extends AbstractJDBCDao<Comment> implements CommentD
 
     @Override
     public String getCreateQuery() {
-        return "INSERT INTO comment (subject_id, comment, create_date, user_id) VALUES (?, ?, ?, ?);";
+        return "INSERT INTO comment (subject_id, comment, created_date, user_id) VALUES (?, ?, ?, ?);";
     }
 
     @Override
@@ -89,9 +93,5 @@ public class CommentDAOImpl extends AbstractJDBCDao<Comment> implements CommentD
             throw new DataBaseException(e);
         }
         return result;
-    }
-
-    public CommentDAOImpl(DaoFactory daoFactory, Connection connection) throws DataBaseException {
-        super(daoFactory, connection);
     }
 }

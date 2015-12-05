@@ -13,8 +13,8 @@ import java.util.List;
 
 public class ContactDAOImpl extends AbstractJDBCDao<Contact> implements ContactDAO {
 
-    public ContactDAOImpl(DaoFactory daoFactory, Connection connection) throws DataBaseException {
-        super(daoFactory, connection);
+    public ContactDAOImpl( Connection connection) throws DataBaseException {
+        super(connection);
     }
 
     @Override

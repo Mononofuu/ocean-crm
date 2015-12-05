@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserDAOImpl extends AbstractJDBCDao<User> implements UserDAO {
-    public UserDAOImpl(DaoFactory daoFactory, Connection connection) throws DataBaseException {
-        super(daoFactory, connection);
+    public UserDAOImpl(  Connection connection) throws DataBaseException {
+        super(connection);
     }
 
     @Override

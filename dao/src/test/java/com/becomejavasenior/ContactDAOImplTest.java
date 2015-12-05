@@ -21,8 +21,8 @@ public class ContactDAOImplTest {
     @Before
     public void SetUp() throws DataBaseException {
         daoFactory = new PostgreSqlDaoFactory();
-        connection = daoFactory.getConnection();
-        contactDao = daoFactory.getDao(connection, Contact.class);
+//        connection = daoFactory.getConnection();
+        contactDao = daoFactory.getDao(Contact.class);
         contact = new Contact();
         contact.setName("testname");
         contact.setPost("testpost");
@@ -54,7 +54,7 @@ public class ContactDAOImplTest {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-        GenericDao<Company> companyDao = daoFactory.getDao(connection, Company.class);
+        GenericDao<Company> companyDao = daoFactory.getDao(Company.class);
         company = companyDao.create(company);
         contact.setCompany(company);
         //List<Comment> comments = new ArrayList<>();
@@ -75,7 +75,7 @@ public class ContactDAOImplTest {
         contactDao.delete(contactFromDB.getId());
         List listAfter = contactDao.readAll();
         assertEquals(listBefore.size(), listAfter.size() + 1);
-        GenericDao<Company> companyDao = daoFactory.getDao(connection, Company.class);
+        GenericDao<Company> companyDao = daoFactory.getDao(Company.class);
         companyDao.delete(contactFromDB.getCompany().getId());
     }
 

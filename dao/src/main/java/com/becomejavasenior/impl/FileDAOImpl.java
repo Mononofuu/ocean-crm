@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileDAOImpl extends AbstractJDBCDao<File> implements FileDAO {
-    public FileDAOImpl(DaoFactory daoFactory, Connection connection) throws DataBaseException {
-        super(daoFactory, connection);
+    public FileDAOImpl(Connection connection) throws DataBaseException {
+        super(connection);
     }
 
     @Override
@@ -49,9 +49,7 @@ public class FileDAOImpl extends AbstractJDBCDao<File> implements FileDAO {
                 file.setSize(rs.getInt("size"));
                 result.add(file);
             }
-        } catch (SQLException e) {
-            throw new DataBaseException(e);
-        } catch (MalformedURLException e) {
+        } catch (SQLException | MalformedURLException e) {
             throw new DataBaseException(e);
         }
         return result;

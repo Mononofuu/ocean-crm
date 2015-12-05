@@ -15,8 +15,8 @@ import java.util.List;
 
 public class SubjectDAOImpl extends AbstractJDBCDao<Subject> implements SubjectDAO {
 
-    public SubjectDAOImpl(DaoFactory daoFactory, Connection connection) throws DataBaseException {
-        super(daoFactory, connection);
+    public SubjectDAOImpl(Connection connection) throws DataBaseException {
+        super(connection);
     }
 
     @Override

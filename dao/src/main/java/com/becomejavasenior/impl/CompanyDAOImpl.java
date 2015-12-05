@@ -13,8 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CompanyDAOImpl extends AbstractJDBCDao<Company> implements CompanyDAO {
-    public CompanyDAOImpl(DaoFactory daoFactory, Connection connection) throws DataBaseException {
-        super(daoFactory, connection);
+    public CompanyDAOImpl(Connection connection) throws DataBaseException {
+        super(connection);
     }
 
     @Override

@@ -1,7 +1,6 @@
 package com.becomejavasenior.impl;
 
 import com.becomejavasenior.AbstractJDBCDao;
-import com.becomejavasenior.DaoFactory;
 import com.becomejavasenior.DataBaseException;
 import com.becomejavasenior.Tag;
 import com.becomejavasenior.interfacedao.TagDAO;
@@ -14,8 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TagDAOImpl extends AbstractJDBCDao<Tag> implements TagDAO {
-    public TagDAOImpl(DaoFactory daoFactory, Connection connection) throws DataBaseException {
-        super(daoFactory, connection);
+    public TagDAOImpl(Connection connection) throws DataBaseException {
+        super(connection);
     }
 
     @Override
