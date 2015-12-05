@@ -21,7 +21,7 @@
 .frame {
     display: inline-block;
     background-color: antiquewhite;
-    width: 200px;
+    width: 180px;
     padding-top: 15px;
     padding-bottom: 10px;
     padding-right: 10px;
@@ -85,7 +85,7 @@ caption {
 }
 .row2 {
     float: left;
-    width: 1000px;
+    width: 950px;
     height: 600px;
     overflow-y: scroll;
 }

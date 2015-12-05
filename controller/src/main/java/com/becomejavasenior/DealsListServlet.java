@@ -29,8 +29,11 @@ public class DealsListServlet extends HttpServlet{
             Connection connection = daoFactory.getConnection();
             GenericDao<Deal> dealDao = daoFactory.getDao(connection, Deal.class);
             List<Deal> dealsList = dealDao.readAll();
+            GenericDao<DealStatus> dealStatusDao = daoFactory.getDao(connection, DealStatus.class);
+            List<DealStatus> dealStatusList = dealStatusDao.readAll();
 
             req.setAttribute("deals", dealsList);
+            req.setAttribute("deals_statuses", dealStatusList);
 
             req.getRequestDispatcher("dealslist.jsp").forward(req, resp);
         }catch (DataBaseException e){
@@ -38,6 +41,36 @@ public class DealsListServlet extends HttpServlet{
             logger.error(e.toString());
         }
 
+
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        try{
+            DaoFactory daoFactory = null;
+            daoFactory = new PostgreSqlDaoFactory();
+            Connection connection = daoFactory.getConnection();
+            GenericDao<DealStatus> dealStatusDao = daoFactory.getDao(connection, DealStatus.class);
+            List<DealStatus> dealStatusList = dealStatusDao.readAll();
+            List<Deal> dealsList;
+
+            GenericDao<Deal> dealDao = daoFactory.getDao(connection, Deal.class);
+
+            String dealStatusId = req.getParameter("dealstatus");
+            if(dealStatusId == null){
+                dealsList = dealDao.readAll();
+            }else {
+                dealsList = dealDao.readAll();
+            }
+
+            req.setAttribute("deals", dealsList);
+            req.setAttribute("deals_statuses", dealStatusList);
+
+            req.getRequestDispatcher("dealslist.jsp").forward(req, resp);
+        }catch (DataBaseException e){
+            logger.error("List of deals open error");
+            logger.error(e.toString());
+        }
 
     }
 }

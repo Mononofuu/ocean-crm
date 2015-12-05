@@ -75,18 +75,16 @@
         </table>
     </div>
     <div class="row3">
+
+        <form method="POST" action='dealslist' name="frmDealsListFilter">
+
         <div class="tablename companyadd center"><b><h2>Фильтры</h2></b></div>
         <div class="frame rightframe">
-        <select class="field" name="deal_status_" size="7">
-            <option value="deal_open=">Открытые сделки</option>
-            <option value="deal_my">Только мои сделки</option>
-            <option value="deal_finished=">Успешно завершенные</option>
-            <option value="deal_failed=">Нереализованные сделки</option>
-            <option value="deal_without_task">Сделки без задач</option>
-            <option value="deal_time_passed">Сделки с просроченными задачами</option>
-            <option value="deal_deleted">Удаленные</option>
+        <select class="field" name="dealstatus" size="7">
+            <c:forEach items="${deals_statuses}" var="status">
+                <option value=${status.id}>${status.name}</option>
+            </c:forEach>
         </select>
-
 
          <a><select class="field" name="period">
             <option value="">Когда</option>
@@ -121,6 +119,7 @@
         <td><input class="field button" type="submit" value="Сохранить"></td>
 
         </div>
+        </form>
     </div>
 
 
