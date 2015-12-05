@@ -9,6 +9,8 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Создание контакта</title>
+    <jsp:include page="../jsp/menu.jsp" />
+    <link rel="import" href="../jsp/menu.jsp" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.17/jquery-ui.min.js"></script>
     <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.17/themes/smoothness/jquery-ui.css"/>
@@ -25,7 +27,8 @@
     </script>
 </head>
 <body>
-<form action="new_contact_add" method="get" enctype="multipart/form-data">
+<div>
+    <form action="new_contact_add" method="get" enctype="multipart/form-data">
     <div class="row">
     <div class="tablename">Создание контакта</div>
     <div class="frame">
@@ -113,10 +116,7 @@
         </select>
 
         <div class="tablename companyadd">Добавить компанию</div>
-
-    </div>
-</form>
-<form action="/new_company" method="post">
+        <form action="/new_company" method="post">
     <div class="row frame rightframe">
         <input class="field" type="text" name="newcompanyname" placeholder="Название компании">
         <input class="field" type="text" name="newcompanyphone" placeholder="Телефон">
@@ -126,6 +126,10 @@
         <input class="button addbutton" type="submit" value="Добавить Компанию">
     </div>
 </form>
+    </div>
+</form>
+</div>
+
 </body>
 
 

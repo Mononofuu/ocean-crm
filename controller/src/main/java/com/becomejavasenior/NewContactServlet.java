@@ -55,7 +55,6 @@ public class NewContactServlet extends HttpServlet {
             newContact.setCompany(getCompanyFromRequest(request.getParameter("companyid")));
             GenericDao<Contact>  contactDao = dao.getDao(Contact.class);
             Contact returnedContact = contactDao.create(newContact);
-            throw new DataBaseException();
         } catch (DataBaseException e) {
             logger.error("Error while adding new contact", e);
         }

@@ -1,21 +1,20 @@
 body {
-    background-color: #696969;
+    background-color: aliceblue;
 }
 
 .tablename {
     display: block;
-    margin: 20px 0 0 20px;
-    color: aliceblue;
+    margin: 0 0 0 20px;
+    font: bold;
 }
-
 .frame {
-/*    display: inline-block;*/
-    background-color: antiquewhite;
-    width: 380px;
+    background-color:gainsboro;
+    width: 350px;
     padding-top: 15px;
     padding-bottom: 10px;
     padding-right: 10px;
     margin-left: 20px;
+    margin-bottom: 20px;
     border: 2px solid black;
     border-radius: 10px;
 }
@@ -36,7 +35,7 @@ body {
 }
 
 .phonetype, .period {
-    width: 100px;
+    width: 85px;
     display: inline;
     margin-right: 0px;
 }
@@ -46,7 +45,7 @@ body {
 }
 
 .tags, .bigtext {
-    width: 350px;
+    width: 320px;
     display: inline-block;
 }
 
@@ -70,7 +69,7 @@ body {
 .button {
     display: inline-block;
     width: 150px;
-    background-color: forestgreen;
+    background-color: darkseagreen;
     font-size: 16px;
     cursor: pointer;
     text-decoration: none;
@@ -85,15 +84,16 @@ body {
 
 .cancel {
     width: 130px;
-    background-color: darksalmon;
-    padding: 5px 10px;
+    background-color: lavenderblush;
+    padding: 4px 10px;
 }
 
 .addbutton{
     display: block;
+    width: 180px;
 }
 .companyselect{
-    margin: 40px 0 0 20px;
+    margin: 20px 0 0 20px;
     width: 220px;
     
 }
