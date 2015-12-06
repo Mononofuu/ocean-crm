@@ -1,8 +1,5 @@
 package com.becomejavasenior.interfacedao;
 
-<<<<<<< HEAD
-public interface DealStatusDAO {
-=======
 import com.becomejavasenior.DataBaseException;
 import com.becomejavasenior.DealStatus;
 
@@ -11,5 +8,4 @@ import com.becomejavasenior.DealStatus;
  */
 public interface DealStatusDAO {
     int checkIfExists(DealStatus status) throws DataBaseException;
->>>>>>> master
 }

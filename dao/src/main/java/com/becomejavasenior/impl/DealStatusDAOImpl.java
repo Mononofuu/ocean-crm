@@ -1,7 +1,5 @@
 package com.becomejavasenior.impl;
 
-import com.becomejavasenior.*;
-import com.becomejavasenior.interfacedao.CurrencyDAO;
 import com.becomejavasenior.AbstractJDBCDao;
 import com.becomejavasenior.DataBaseException;
 import com.becomejavasenior.DealStatus;
@@ -14,11 +12,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-<<<<<<< HEAD
-public class DealStatusDAOImpl extends AbstractJDBCDao<DealStatus> implements DealStatusDAO {
-    public DealStatusDAOImpl(DaoFactory daoFactory, Connection connection) throws DataBaseException {
-        super(daoFactory, connection);
-=======
 /**
  * created by Alekseichenko Sergey <mononofuu@gmail.com>
  */
@@ -34,10 +27,6 @@ public class DealStatusDAOImpl extends AbstractJDBCDao<DealStatus> implements De
 
     @Override
     public String getCreateQuery() {
-<<<<<<< HEAD
-        return "INSERT INTO status_type (name) " +
-                "VALUES (?);";
-=======
         return "INSERT INTO status_type (name) VALUES (?)";
     }
 
@@ -48,24 +37,12 @@ public class DealStatusDAOImpl extends AbstractJDBCDao<DealStatus> implements De
 
     @Override
     public String getDeleteQuery() {
-<<<<<<< HEAD
-        return "DELETE FROM status_type WHERE id= ?;";
-=======
         return "DELETE FROM status_type WHERE id= ?";
->>>>>>> master
     }
 
     @Override
     protected List<DealStatus> parseResultSet(ResultSet rs) throws DataBaseException {
         List<DealStatus> result = new ArrayList<>();
-<<<<<<< HEAD
-        try{
-            while (rs.next()){
-                DealStatus dealStatus= new DealStatus();
-                dealStatus.setId(rs.getInt("id"));
-                dealStatus.setName(rs.getString("name"));
-                result.add(dealStatus);
-=======
         try {
             while (rs.next()) {
                 DealStatus status = new DealStatus();
@@ -73,7 +50,6 @@ public class DealStatusDAOImpl extends AbstractJDBCDao<DealStatus> implements De
                 status.setName(rs.getString("name"));
 
                 result.add(status);
->>>>>>> master
             }
         } catch (SQLException e) {
             throw new DataBaseException(e);
@@ -82,15 +58,6 @@ public class DealStatusDAOImpl extends AbstractJDBCDao<DealStatus> implements De
     }
 
     @Override
-    public String getReadAllQuery() {
-        return "SELECT * FROM status_type";
-    }
-
-    @Override
-    protected void prepareStatementForInsert(PreparedStatement statement, DealStatus object) throws DataBaseException {
-        try {
-            statement.setString(1, object.getName());
-=======
     protected void prepareStatementForInsert(PreparedStatement statement, DealStatus object) throws DataBaseException {
         try {
             statement.setString(1, object.getName());
@@ -133,11 +100,5 @@ public class DealStatusDAOImpl extends AbstractJDBCDao<DealStatus> implements De
         } else {
             return read(checkedId);
         }
-    public String getUpdateQuery() {
-        return null;
-    }
-
-    @Override
-    protected void prepareStatementForUpdate(PreparedStatement statement, DealStatus object) throws DataBaseException {
     }
 }

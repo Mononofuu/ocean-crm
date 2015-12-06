@@ -27,9 +27,9 @@ public class DealsListServlet extends HttpServlet{
             DaoFactory daoFactory = null;
             daoFactory = new PostgreSqlDaoFactory();
             Connection connection = daoFactory.getConnection();
-            GenericDao<Deal> dealDao = daoFactory.getDao(connection, Deal.class);
+            GenericDao<Deal> dealDao = daoFactory.getDao(Deal.class);
             List<Deal> dealsList = dealDao.readAll();
-            GenericDao<DealStatus> dealStatusDao = daoFactory.getDao(connection, DealStatus.class);
+            GenericDao<DealStatus> dealStatusDao = daoFactory.getDao(DealStatus.class);
             List<DealStatus> dealStatusList = dealStatusDao.readAll();
 
             req.setAttribute("deals", dealsList);
@@ -50,11 +50,11 @@ public class DealsListServlet extends HttpServlet{
             DaoFactory daoFactory = null;
             daoFactory = new PostgreSqlDaoFactory();
             Connection connection = daoFactory.getConnection();
-            GenericDao<DealStatus> dealStatusDao = daoFactory.getDao(connection, DealStatus.class);
+            GenericDao<DealStatus> dealStatusDao = daoFactory.getDao(DealStatus.class);
             List<DealStatus> dealStatusList = dealStatusDao.readAll();
             List<Deal> dealsList;
 
-            GenericDao<Deal> dealDao = daoFactory.getDao(connection, Deal.class);
+            GenericDao<Deal> dealDao = daoFactory.getDao(Deal.class);
 
             String dealStatusId = req.getParameter("dealstatus");
             if(dealStatusId == null){
