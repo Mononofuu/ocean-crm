@@ -1,0 +1,30 @@
+.menu {
+    float: left;
+    width: 180px;
+    margin: 0;
+    padding: 0;
+}
+.menu li{
+    list-style: none;
+    border-bottom: 2px solid black;
+
+}   
+.menu li a{
+    display: block;
+    text-decoration: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font: 16pt bold;
+    color: black;
+}
+
+.menu li .logo{
+    padding: 20px;
+}
+
+body{
+    background-color: aliceblue;
+}
+.sub-menu{
+    display: none;
+}

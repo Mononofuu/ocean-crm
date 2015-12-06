@@ -1,6 +1,5 @@
 package com.becomejavasenior.impl;
 
-import com.becomejavasenior.*;
 import com.becomejavasenior.AbstractJDBCDao;
 import com.becomejavasenior.DaoFactory;
 import com.becomejavasenior.DataBaseException;
@@ -19,13 +18,6 @@ public class UserDAOImpl extends AbstractJDBCDao<User> implements UserDAO {
         super(connection);
     }
 
-    @Override
-    public String getCreateQuery() {
-        return "INSERT INTO users (name, login, password, email, phone_mob, phone_work, language, comment) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
-//        return "INSERT INTO users (name, login, password, email, phone_mob, phone_work, language, comment, photo) " +
-//                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
-    }
 
     @Override
     public String getDeleteQuery() {
@@ -44,17 +36,9 @@ public class UserDAOImpl extends AbstractJDBCDao<User> implements UserDAO {
                 user.setPassword(rs.getString("password"));
                 user.setPhoto(rs.getBytes("photo"));
                 user.setEmail(rs.getString("email"));
-                user.setPhoneHome(rs.getString("phone_mob"));
-                user.setPhoneWork(rs.getString("phone_work"));
-                switch (rs.getString("language")){
-                    case "EN":
-                        user.setLanguage(Language.EN);
-                        break;
-                    case "RU":
-                        user.setLanguage(Language.RU);
-                        break;
-                }
-//                user.setComments(rs.getString("comment"));
+                user.setPhoneWork(rs.getString("phone_mob"));
+                user.setPhoneHome(rs.getString("phone_work"));
+
                 result.add(user);
             }
         } catch (SQLException e) {
@@ -69,18 +53,14 @@ public class UserDAOImpl extends AbstractJDBCDao<User> implements UserDAO {
     }
 
     @Override
-    protected void prepareStatementForInsert(PreparedStatement statement, User object) throws DataBaseException {
+    public String getCreateQuery() {
+        return "INSERT INTO users (name) VALUES (?);";
+    }
 
+    @Override
+    protected void prepareStatementForInsert(PreparedStatement statement, User object) throws DataBaseException {
         try {
             statement.setString(1, object.getName());
-            statement.setString(2, object.getLogin());
-            statement.setString(3, object.getPassword());
-            statement.setString(4, object.getEmail());
-            statement.setString(5, object.getPhoneHome());
-            statement.setString(6, object.getPhoneWork());
-            statement.setString(7, object.getLanguage().toString());
-            statement.setString(8, "simply comment");
-//            statement.setString(8, object.get"simply comment");
         } catch (SQLException e) {
             throw new DataBaseException(e);
         }
@@ -93,5 +73,6 @@ public class UserDAOImpl extends AbstractJDBCDao<User> implements UserDAO {
 
     @Override
     protected void prepareStatementForUpdate(PreparedStatement statement, User object) throws DataBaseException {
+
     }
 }
