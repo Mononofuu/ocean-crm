@@ -90,7 +90,8 @@ public class TaskDAOImpl extends AbstractJDBCDao<Task> implements TaskDAO {
     @Override
     public List<Task> getAllTasksBySubjectId(int id) throws DataBaseException {
         List<Task> result;
-        try (PreparedStatement statement = getConnection().prepareStatement(getReadAllQuery() + " WHERE subject_id = ?")) {
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(getReadAllQuery() + " WHERE subject_id = ?")) {
             statement.setInt(1, id);
             ResultSet rs = statement.executeQuery();
             result = parseResultSet(rs);

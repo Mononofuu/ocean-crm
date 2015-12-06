@@ -83,7 +83,8 @@ public class TagDAOImpl extends AbstractJDBCDao<Tag> implements TagDAO {
     //Поверяет есть ли такой тэг в базе. Если есть, возвращает его id, если нет то возвращает -1.
     public int checkIfExists(Tag tag) throws DataBaseException {
         String query = "SELECT * FROM tag WHERE name = ?";
-        try (PreparedStatement statement = getConnection().prepareStatement(query)) {
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, tag.getName());
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {

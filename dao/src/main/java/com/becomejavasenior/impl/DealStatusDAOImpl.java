@@ -76,7 +76,8 @@ public class DealStatusDAOImpl extends AbstractJDBCDao<DealStatus> implements De
     @Override
     public int checkIfExists(DealStatus status) throws DataBaseException {
         String query = "SELECT * FROM status_type WHERE name = ?";
-        try (PreparedStatement statement = getConnection().prepareStatement(query)) {
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, status.getName());
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {

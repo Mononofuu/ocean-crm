@@ -19,7 +19,8 @@ public class SubjectTagDAOImpl extends AbstractJDBCDao<SubjectTag> implements Su
     //Переопределяем метод чтобы возвращал null и не ломал метод read().
     @Override
     public SubjectTag create(SubjectTag object) throws DataBaseException {
-        try (PreparedStatement statement = getConnection().prepareStatement(getCreateQuery(), Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(getCreateQuery(), Statement.RETURN_GENERATED_KEYS)) {
             prepareStatementForInsert(statement, object); // помещаем в запрос параметры object
             statement.executeUpdate();
             // получаем обратно новую запись через возвращенный id записи

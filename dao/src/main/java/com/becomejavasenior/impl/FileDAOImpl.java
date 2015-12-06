@@ -97,7 +97,8 @@ public class FileDAOImpl extends AbstractJDBCDao<File> implements FileDAO {
 
     public List<File> getAllFilesBySubjectId(int id) throws DataBaseException {
         List<File> result;
-        try (PreparedStatement statement = getConnection().prepareStatement(getReadAllQuery() + " WHERE subject_id = ?")) {
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(getReadAllQuery() + " WHERE subject_id = ?")) {
             statement.setInt(1, id);
             ResultSet rs = statement.executeQuery();
             result = parseResultSet(rs);
