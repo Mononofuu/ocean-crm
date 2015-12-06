@@ -12,7 +12,7 @@
 <title>Добавить сделку</title>
 </head>
 <body>
-<form action="/deal" method="post">
+<form action="/deal?action=newdeal" method="post">
     <fieldset>
         <legend>Добавить сделку</legend>
         <input class="input" type="text" name="dealname" placeholder="Название сделки"/>
@@ -43,7 +43,10 @@
         <br/>
         <input class="input" type="file" name="dealfiles" id="files" multiple><br/>
     </fieldset>
+</form>
 
+
+<form action="/deal?action=newcontact" method="post">
     <fieldset>
         <legend>Добавить контакт</legend>
         <div id="contactscroller">
@@ -72,14 +75,19 @@
         <h5 class="center">или добавить новый</h5>
         <input class="input" type="text" name="contactname" placeholder="Имя Фамилия"/>
         <br/>
-        <input class="input" type="text" name="contactcompany" placeholder="Компания (Название компании)"/>
+        <select class="input" name="contactcompany">
+            <option value="" disabled selected>Выбрать компанию</option>
+            <c:forEach items="${companies}" var="item">
+                <option value="${item.id}">${item.name}</option>
+            </c:forEach>
+        </select>
         <br/>
         <input class="input" type="text" name="contactposition" placeholder="Должность (Название должности)"/>
         <br/>
         <select class="input" name="contactphonetype" id="contacttype">
             <option value="" disabled selected>Тип</option>
-            <c:forEach items="${contacts}" var="item">
-                <option value="${item.id}">${item.name}</option>
+            <c:forEach items="${phoneTypes}" var="item">
+                <option value="${item}">${item}</option>
             </c:forEach>
         </select>
         <input class="input" type="text" id="contactnumber" name="contactphonenumber" placeholder="Номер телефона"/>
@@ -90,7 +98,9 @@
         <br/>
         <button type="submit">Создать контакт</button>
     </fieldset>
+</form>
 
+<form action="/deal?action=newcompany" method="post">
     <fieldset>
         <legend>Добавить компанию</legend>
         <select class="input" name="dealcompany">
@@ -101,30 +111,32 @@
         </select>
         <br/>
         <h5 class="center">или добавить новую</h5>
-        <input class="input" type="text" placeholder="Название компании"/>
+        <input class="input" type="text" name="companyname" placeholder="Название компании"/>
         <br/>
-        <input class="input" type="tel" name="tel" placeholder="Телефон">
+        <input class="input" type="tel" name="companyphone" placeholder="Телефон">
         <br/>
-        <input class="input" type="email" name="email" placeholder="Email">
+        <input class="input" type="email" name="companyemail" placeholder="Email">
         <br/>
-        <input class="input" type="url" name="website" placeholder="Web-адрес">
+        <input class="input" type="url" name="companysite" placeholder="Web-адрес">
         <br/>
-        <textarea class="input textarea" placeholder="Адрес"></textarea>
+        <textarea class="input textarea" name="companyaddress" placeholder="Адрес"></textarea>
         <br/>
         <button type="submit">Создать компанию</button>
     </fieldset>
+</form>
 
+<form action="/deal?action=newtask" method="post">
     <fieldset>
-        <legend>Запланировать действие</legend>
-        <select class="input">
+        <legend>Запланировать задачу</legend>
+        <select class="input" name="taskperiod">
             <option value="" disabled selected>Период</option>
             <c:forEach items="${list.resp}" var="item">
                 <option><c:out value="${item}"/></option>
             </c:forEach>
         </select>
-        <br/>
+    <br/>
         <h5 class="center">или выбрать</h5>
-        <input class="input" type="datetime-local" name="datetime">
+        <input class="input" type="datetime-local" name="taskduetime">
         <br/>
         <select class="input">
             <option value="" disabled selected>Ответственный</option>
@@ -151,6 +163,5 @@
         <button class="button" type="button">Отмена</button>
     </div>
 
-</form>
 </body>
 </html>
