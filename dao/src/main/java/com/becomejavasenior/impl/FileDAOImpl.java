@@ -15,9 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileDAOImpl extends AbstractJDBCDao<File> implements FileDAO {
-    public FileDAOImpl(Connection connection) throws DataBaseException {
-        super(connection);
-    }
 
     @Override
     public String getReadAllQuery() {
@@ -33,17 +30,17 @@ public class FileDAOImpl extends AbstractJDBCDao<File> implements FileDAO {
     protected List<File> parseResultSet(ResultSet rs) throws DataBaseException {
         List<File> result = new ArrayList<>();
         try {
+            GenericDao subjectDao = getDaoFromCurrentFactory(Subject.class);
+            GenericDao userDao = getDaoFromCurrentFactory(User.class);
             while (rs.next()) {
                 File file = new File();
                 file.setId(rs.getInt("id"));
-                GenericDao subjectDao = getDaoFromCurrentFactory(Subject.class);
                 Subject subject = (Subject) subjectDao.read(rs.getInt("subject_id"));
                 file.setSubject(subject);
                 file.setName(rs.getString("name"));
                 file.setFileLink(new URL(rs.getString("link")));
                 file.setFileFromDB(rs.getBytes("content"));
                 file.setDateCreated(rs.getDate("created_date"));
-                GenericDao userDao = getDaoFromCurrentFactory(User.class);
                 User user = (User) userDao.read(rs.getInt("user_id"));
                 file.setUser(user);
                 file.setSize(rs.getInt("size"));

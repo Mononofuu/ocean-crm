@@ -9,14 +9,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.Connection;
 import java.util.List;
 
 @WebServlet(name="new_contact_prepare", urlPatterns = "/new_contact_prepare")
 public class NewContactPrepareServlet extends HttpServlet {
     private Logger logger = LogManager.getLogger(NewContactPrepareServlet.class);
     private DaoFactory dao;
-    private Connection connection;
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -31,7 +29,6 @@ public class NewContactPrepareServlet extends HttpServlet {
     private void process(HttpServletRequest request, HttpServletResponse response) throws IOException{
         try {
             dao = new PostgreSqlDaoFactory();
-            connection = dao.getConnection();
             GenericDao companyDao = dao.getDao(Company.class);
             List<Company> companyList = companyDao.readAll();
             request.setAttribute("companylist", companyList);

@@ -74,4 +74,31 @@ public class Task implements Serializable {
     public void setComment(String comment) {
         this.comment = comment;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Task task = (Task) o;
+
+        if (subject != null ? !subject.equals(task.subject) : task.subject != null) return false;
+        if (user != null ? !user.equals(task.user) : task.user != null) return false;
+        if (dateCreated != null ? !dateCreated.equals(task.dateCreated) : task.dateCreated != null) return false;
+        if (dueTime != null ? !dueTime.equals(task.dueTime) : task.dueTime != null) return false;
+        if (type != task.type) return false;
+        return !(comment != null ? !comment.equals(task.comment) : task.comment != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = subject != null ? subject.hashCode() : 0;
+        result = 31 * result + (user != null ? user.hashCode() : 0);
+        result = 31 * result + (dateCreated != null ? dateCreated.hashCode() : 0);
+        result = 31 * result + (dueTime != null ? dueTime.hashCode() : 0);
+        result = 31 * result + (type != null ? type.hashCode() : 0);
+        result = 31 * result + (comment != null ? comment.hashCode() : 0);
+        return result;
+    }
 }

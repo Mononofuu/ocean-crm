@@ -8,8 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.sql.Connection;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -20,7 +18,6 @@ import org.apache.logging.log4j.Logger;
 public class NewCompanyServlet extends HttpServlet{
     private Logger logger = LogManager.getLogger(NewCompanyServlet.class);
     private DaoFactory dao;
-    private Connection connection;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -35,7 +32,6 @@ public class NewCompanyServlet extends HttpServlet{
     private void process(HttpServletRequest req, HttpServletResponse resp) {
         try {
             dao = new PostgreSqlDaoFactory();
-            connection = dao.getConnection();
             req.setCharacterEncoding("UTF-8");
             createCompanyFromRequest(req);
             getServletContext().getRequestDispatcher("/new_contact_prepare").forward(req,resp);

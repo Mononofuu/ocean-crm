@@ -13,9 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TagDAOImpl extends AbstractJDBCDao<Tag> implements TagDAO {
-    public TagDAOImpl(Connection connection) throws DataBaseException {
-        super(connection);
-    }
 
     @Override
     public String getReadAllQuery() {

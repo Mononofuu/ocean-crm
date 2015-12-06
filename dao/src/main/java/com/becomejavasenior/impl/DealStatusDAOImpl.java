@@ -16,9 +16,6 @@ import java.util.List;
  * created by Alekseichenko Sergey <mononofuu@gmail.com>
  */
 public class DealStatusDAOImpl extends AbstractJDBCDao<DealStatus> implements DealStatusDAO {
-    public DealStatusDAOImpl(Connection connection) throws DataBaseException {
-        super(connection);
-    }
 
     @Override
     public String getReadAllQuery() {

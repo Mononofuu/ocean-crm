@@ -14,9 +14,6 @@ import java.util.List;
  * created by Alekseichenko Sergey <mononofuu@gmail.com>
  */
 public class DealContactDAOImpl extends AbstractJDBCDao<DealContact> implements DealContactDAO {
-    public DealContactDAOImpl(Connection connection) throws DataBaseException {
-        super(connection);
-    }
 
     @Override
     public List<Contact> getAllContactsBySubjectId(int id) throws DataBaseException {
@@ -57,18 +54,15 @@ public class DealContactDAOImpl extends AbstractJDBCDao<DealContact> implements 
     @Override
     protected List<DealContact> parseResultSet(ResultSet rs) throws DataBaseException {
         List<DealContact> result = new ArrayList<>();
-        try {
+        try{
+            GenericDao subjectDao = getDaoFromCurrentFactory(Subject.class);
+            GenericDao contactDao = getDaoFromCurrentFactory(Contact.class);
             while (rs.next()) {
                 DealContact dealContact = new DealContact();
-
-                GenericDao subjectDao = getDaoFromCurrentFactory(Subject.class);
                 Subject subject = (Subject) subjectDao.read(rs.getInt("deal_id"));
                 dealContact.setSubject(subject);
-
-                GenericDao contactDao = getDaoFromCurrentFactory(Contact.class);
                 Contact contact = (Contact) contactDao.read(rs.getInt("contact_id"));
                 dealContact.setContact(contact);
-
                 result.add(dealContact);
             }
         } catch (SQLException e) {
