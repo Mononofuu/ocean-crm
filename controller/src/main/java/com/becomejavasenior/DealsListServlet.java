@@ -20,59 +20,43 @@ import org.apache.logging.log4j.Logger;
 @WebServlet("/dealslist")
 public class DealsListServlet extends HttpServlet{
     static final Logger logger = LogManager.getRootLogger();
+    private DaoFactory dao;
+    private Connection connection;
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-        try{
-            DaoFactory daoFactory = null;
-            daoFactory = new PostgreSqlDaoFactory();
-            Connection connection = daoFactory.getConnection();
-            GenericDao<Deal> dealDao = daoFactory.getDao(Deal.class);
-            List<Deal> dealsList = dealDao.readAll();
-            GenericDao<DealStatus> dealStatusDao = daoFactory.getDao(DealStatus.class);
-            List<DealStatus> dealStatusList = dealStatusDao.readAll();
-
-            req.setAttribute("deals", dealsList);
-            req.setAttribute("deals_statuses", dealStatusList);
-
-            req.getRequestDispatcher("dealslist.jsp").forward(req, resp);
-        }catch (DataBaseException e){
-            logger.error("List of deals open error");
-            logger.error(e.toString());
-        }
-
-
+        this.process(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        try{
-            DaoFactory daoFactory = null;
-            daoFactory = new PostgreSqlDaoFactory();
-            Connection connection = daoFactory.getConnection();
-            GenericDao<DealStatus> dealStatusDao = daoFactory.getDao(DealStatus.class);
+        this.process(req, resp);
+    }
+
+    private void process(HttpServletRequest request, HttpServletResponse response) throws IOException{
+        try {
+            dao = new PostgreSqlDaoFactory();
+            connection = dao.getConnection();
+            GenericDao dealStatusDao = dao.getDao(DealStatus.class);
+            GenericDao dealDao = dao.getDao(Deal.class);
             List<DealStatus> dealStatusList = dealStatusDao.readAll();
             List<Deal> dealsList;
-
-            GenericDao<Deal> dealDao = daoFactory.getDao(Deal.class);
-
-            String dealStatusId = req.getParameter("dealstatus");
-            if(dealStatusId == null){
+            String dealStatusId = request.getParameter("dealstatus");
+//            if(dealStatusId == null){
                 dealsList = dealDao.readAll();
-            }else {
-                dealsList = dealDao.readAll();
-            }
-
-            req.setAttribute("deals", dealsList);
-            req.setAttribute("deals_statuses", dealStatusList);
-
-            req.getRequestDispatcher("dealslist.jsp").forward(req, resp);
-        }catch (DataBaseException e){
-            logger.error("List of deals open error");
-            logger.error(e.toString());
+//            }else {
+//                dealsList = dealDao.readAll();
+//            }
+            request.setAttribute("deals", dealsList);
+            request.setAttribute("deals_statuses", dealStatusList);
+            request.getRequestDispatcher("jsp/dealslist.jsp").forward(request, response);
+        } catch (DataBaseException e) {
+            logger.error("Error when prepearing data for dealslist.jsp",e);
+        } catch (ServletException e) {
+            logger.error("Error when prepearing data for dealslist.jsp",e);
         }
-
     }
+
 }
 
 

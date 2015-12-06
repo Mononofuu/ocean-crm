@@ -1,29 +1,27 @@
 body {
-    background-color: #696969;
+    background-color: aliceblue;
 }
 
 .tablename {
     display: block;
-    margin: 20px 0 0 20px;
-    color: aliceblue;
+    margin: 0 0 0 20px;
+    font: bold;
 }
-
 .frame {
-    display: inline-block;
-    background-color: antiquewhite;
-    width: 380px;
+    background-color:gainsboro;
+    width: 350px;
     padding-top: 15px;
     padding-bottom: 10px;
     padding-right: 10px;
     margin-left: 20px;
+    margin-bottom: 20px;
     border: 2px solid black;
     border-radius: 10px;
 }
 
-.rightframe {
+.rightframe{
     width: 210px;
 }
-
 .field {
     display: block;
     margin: 0px 15px 10px 15px;
@@ -37,7 +35,7 @@ body {
 }
 
 .phonetype, .period {
-    width: 100px;
+    width: 85px;
     display: inline;
     margin-right: 0px;
 }
@@ -47,17 +45,16 @@ body {
 }
 
 .tags, .bigtext {
-    width: 350px;
+    width: 320px;
+    display: inline-block;
 }
 
 .smaltext {
     font-size: 12px;
 }
 
-.right {
-    position: absolute;
-    left: 430px;
-    top: 40px;
+.row {
+    float: left;
 }
 
 .budget {
@@ -70,19 +67,33 @@ body {
 }
 
 .button {
-    display: block;
-    margin-top: 50px;
-    width: 225px;
-    background-color: forestgreen;
+    display: inline-block;
+    width: 150px;
+    background-color: darkseagreen;
     font-size: 16px;
-    padding: 10px;
     cursor: pointer;
     text-decoration: none;
     color: black;
     text-align: center;
+    border: 2px solid black;
+    border-radius: 5px;
+    margin-left: 15px;
+    margin-bottom: 5px;
+    padding: 4px;
 }
 
 .cancel {
-    width: 200px;
-    background-color: darksalmon;
+    width: 130px;
+    background-color: lavenderblush;
+    padding: 4px 10px;
+}
+
+.addbutton{
+    display: block;
+    width: 180px;
+}
+.companyselect{
+    margin: 20px 0 0 20px;
+    width: 220px;
+    
 }

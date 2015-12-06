@@ -141,3 +141,9 @@ INSERT INTO phone_type (name) VALUES
 ('FAX_NUMBER'),
 ('HOME_PHONE_NUMBER'),
 ('OTHER_PHONE_NUMBER');
+
+CREATE TABLE db_version(
+  version VARCHAR(45) PRIMARY KEY
+);
+
+INSERT INTO db_version (version) VALUES ('1.0');
