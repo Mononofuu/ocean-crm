@@ -2,7 +2,6 @@ package com.becomejavasenior.impl;
 
 import com.becomejavasenior.*;
 import com.becomejavasenior.interfacedao.DealDAO;
-import com.becomejavasenior.interfacedao.UserDAO;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -41,36 +40,31 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO {
     @Override
     protected List<Deal> parseResultSet(ResultSet rs) throws DataBaseException {
         List<Deal> result = new ArrayList<>();
-        GenericDao subjectDao = getDaoFromCurrentFactory(Subject.class);
-        GenericDao dealStatusDao = getDaoFromCurrentFactory(DealStatus.class);
-        GenericDao currencyDao = getDaoFromCurrentFactory(Currency.class);
-        GenericDao contactDao = getDaoFromCurrentFactory(Contact.class);
-        GenericDao companyDao = getDaoFromCurrentFactory(Company.class);
         try {
             while (rs.next()) {
                 Deal deal = new Deal();
                 int id = rs.getInt("id");
 
-                subjectDao = getDaoFromCurrentFactory(Subject.class);
+                GenericDao subjectDao = getDaoFromCurrentFactory(Subject.class);
                 Subject subject = (Subject) subjectDao.read(id);
                 deal.setId(id);
                 deal.setName(subject.getName());
                 deal.setBudget(rs.getInt("budget"));
                 deal.setDateWhenDealClose(rs.getTimestamp("data_close"));
 
-                companyDao = getDaoFromCurrentFactory(Company.class);
+                GenericDao companyDao = getDaoFromCurrentFactory(Company.class);
                 Company company = (Company) companyDao.read(rs.getInt("company_id"));
                 deal.setDealCompany(company);
 
-                contactDao = getDaoFromCurrentFactory(Contact.class);
+                GenericDao contactDao = getDaoFromCurrentFactory(Contact.class);
                 Contact contact = (Contact) contactDao.read(rs.getInt("contact_main_id"));
                 deal.setMainContact(contact);
 
-                dealStatusDao = getDaoFromCurrentFactory(DealStatus.class);
+                GenericDao dealStatusDao = getDaoFromCurrentFactory(DealStatus.class);
                 DealStatus dealStatus = (DealStatus) dealStatusDao.read(rs.getInt("status_id"));
                 deal.setStatus(dealStatus);
 
-                currencyDao = getDaoFromCurrentFactory(Currency.class);
+                GenericDao currencyDao = getDaoFromCurrentFactory(Currency.class);
                 Currency currency = (Currency) currencyDao.read(rs.getInt("currency_id"));
                 deal.setCurrency(currency);
 
@@ -97,6 +91,7 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO {
         return result;
     }
 
+    @Override
     protected void prepareStatementForInsert(PreparedStatement statement, Deal object) throws DataBaseException {
         try {
             statement.setInt(1, createSubject(object));
@@ -105,7 +100,12 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO {
             statement.setInt(4, object.getBudget());
             statement.setInt(5, object.getMainContact().getId());
             statement.setInt(6, object.getDealCompany().getId());
-            statement.setDate(7, new Date(object.getDateWhenDealClose().getTime()));
+            if (object.getDateWhenDealClose() == null) {
+                statement.setNull(7, Types.TIMESTAMP);
+
+            } else {
+                statement.setTimestamp(7, new Timestamp(object.getDateWhenDealClose().getTime()));
+            }
         } catch (SQLException e) {
             throw new DataBaseException(e);
         }

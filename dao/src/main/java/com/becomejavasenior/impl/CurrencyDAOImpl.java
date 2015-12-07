@@ -1,11 +1,9 @@
 package com.becomejavasenior.impl;
 
-import com.becomejavasenior.*;
-import com.becomejavasenior.interfacedao.CurrencyDAO;
-import com.becomejavasenior.interfacedao.UserDAO;
 import com.becomejavasenior.AbstractJDBCDao;
 import com.becomejavasenior.Currency;
 import com.becomejavasenior.DataBaseException;
+import com.becomejavasenior.interfacedao.CurrencyDAO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
