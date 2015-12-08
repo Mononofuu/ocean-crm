@@ -13,7 +13,8 @@
 	crossorigin="anonymous">
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<script src="js/viewallcontacts.js" type="text/javascript"></script>
+	<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+	<script src="js/viewallcontacts.js" type="text/javascript"></script>
 <style>
     <%@include file='css/viewallcontacts.css' %>
 </style>
@@ -42,8 +43,8 @@
 		<br>
 		<br>
 
-		<p>Когда</p>
-		<select name="periodfilter">
+		<p class="left">Когда</p>
+		<select name="periodfilter" id="periodfilter">
 			<option value="alltime">За все время</option>
 			<option value="fortoday">За сегодня</option>
 			<option value="forthreedays">За 3 дня</option>
@@ -51,12 +52,16 @@
 			<option value="forquarter">За квартал</option>
 			<option value="setperiod">Период</option>
 		</select>
+		<p>
+			<label for="from">c:</label> <input type="text" id="from" name="from" />
+			<label for="to">до:</label> <input type="text" id="to" name="to" />
+		</p>
 		<div id="radio">
 			<input type="radio" name="one" value="created"> созданы <input
 				type="radio" name="one" value="changed"> изменены
 		</div>
-		<p>Этапы</p>
-		<a href="javascript://">Выбрать этапы</a>
+		<p class="left">Этапы</p>
+		<a class="checkboxappear" href="javascript://">Выбрать этапы</a>
 		<div id="multiSelect">
 			<span> <input type="checkbox" value="nodeals" /> Без сделок
 			</span> <span> <input type="checkbox" value="noopendeals" /> Без
@@ -76,12 +81,12 @@
 				реализовано
 			</span>
 		</div>
-		<p>Менеджеры</p>
-		<select name="managers">
+		<p class="left">Менеджеры</p>
+		<select name="managers" id="managers">
 			<option>Some manager</option>
 		</select>
-		<p>Задачи</p>
-		<select name="tasksfilter">
+		<p class="left">Задачи</p>
+		<select name="tasksfilter" id="tasksfilter">
 			<option value="ignore">не учитывать</option>
 			<option value="fortoday">на сегодня</option>
 			<option value="fortommorow">на завтра</option>
@@ -91,7 +96,7 @@
 			<option value="notasks">нет задач</option>
 			<option value="expired">просрочены</option>
 		</select>
-		<p>Теги</p>
+		<p class="left">Теги</p>
 		<select>
 			<option>Some tag1</option>
 			<option>Some tag2</option>
@@ -111,31 +116,31 @@
 			</thead>
 			<tbody>
 				<tr>
-					<td>Абрамов Абрам</td>
+					<td><a href="#">Абрамов Абрам</a></td>
 					<td>Дотнет</td>
 					<td>+380444578954</td>
 					<td>abrabr@dotnet.ua</td>
 				</tr>
 				<tr>
-					<td>Иванов Иван</td>
+					<td><a href="#">Иванов Иван</a></td>
 					<td>Джава</td>
 					<td>+380507894561</td>
 					<td>ivoivo@javacom.ua</td>
 				</tr>
 				<tr>
-					<td>Петров Петр</td>
+					<td><a href="#">Петров Петр</a></td>
 					<td>Руби</td>
 					<td>+380934567894</td>
 					<td>pitpit@rubycom.ua</td>
 				</tr>
 				<tr>
-					<td>Сидоров Сергей</td>
+					<td><a href="#">Сидоров Сергей</a></td>
 					<td>Питон</td>
 					<td>+380787885689</td>
 					<td>sidrs@pythoncom.ua</td>
 				</tr>
 				<tr>
-					<td>Томсон Том</td>
+					<td><a href="#">Томсон Том</a></td>
 					<td>Тим</td>
 					<td>+445068454521</td>
 					<td>tt@teamcom.com</td>

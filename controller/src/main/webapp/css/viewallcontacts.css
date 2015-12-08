@@ -21,9 +21,9 @@ h4 {
 }
 #viewallcontacts {
     position: relative;
-    margin-right: 1%; 
+    margin-right: 3px;
     margin-top: 1%;
-    width: 72%;
+    width: 54%;
     float: right;
     border: 2px groove darkgray;
     border-radius: 6px; 
@@ -33,13 +33,13 @@ h4 {
     width: 24%;
     float: left;
     display:inline-block;
-    margin-left: 2%;
+    margin-left: 21%;
     margin-top: 1%;
-    height: 70%;
-    border: 2px groove darkgray;
-    border-radius: 6px; 
+    height: 80%;
+    //border: 2px groove darkgray;
+    //border-radius: 6px;
 }
-p {
+.left {
     position:relative;
     margin-left: 3%; 
     margin-top: 5%;
@@ -74,7 +74,7 @@ select {
     position: relative;
     margin-left: 40%;
     margin-bottom: -4%;
-    margin-top: -2%;
+    margin-top: 5%;
 }
 
 #multiSelect span {
@@ -82,7 +82,7 @@ select {
     margin-left: 40%;
     font-size: 12px;
 }
-a {
+.checkboxappear {
     display:inline-block; 
     margin-left: 39%;
     font-size: 13px;
@@ -92,6 +92,20 @@ a {
     padding: 1% 3px 1% 3px; 
     border-radius: 4px;
 }
+label, #from, #to {
+    position: relative;
+    float:left;
+    margin-left: 10px;
+    margin-top: -3%;
+}
+#from, #to  {
+    width: 80px;
+    position: relative;
+    float:left;
+}
 
+#ui-datepicker-div {
+    font: 75% "Trebuchet MS", sans-serif;
+}
 
 
