@@ -9,18 +9,11 @@ import com.becomejavasenior.interfacedao.UserDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class UserDAOImpl extends AbstractJDBCDao<User> implements UserDAO {
-    public UserDAOImpl(  Connection connection) throws DataBaseException {
-        super(connection);
-    }
-
-    @Override
-    public String getCreateQuery() {
-        return "SELECT * FROM users";
-    }
 
     @Override
     public String getDeleteQuery() {
@@ -30,24 +23,23 @@ public class UserDAOImpl extends AbstractJDBCDao<User> implements UserDAO {
     @Override
     protected List<User> parseResultSet(ResultSet rs) throws DataBaseException {
         List<User> result = new ArrayList<>();
-//        try{
-//            while (rs.next()){
-//                User user = new User();
-//                user.setId(rs.getInt("id"));
-//                user.setName(rs.getString("name"));
-//                user.setLogin(rs.getString("login"));
-//                user.setPassword(rs.getString("password"));
-//                user.setPhoto(rs.getBytes("photo"));
-//                user.setEmail(rs.getString("email"));
-//                user.setPhoneWork(rs.getString("phone_work"));
-//                user.setPhoneHome(rs.getString("phone_home"));
-//
-//
-//                result.add(user);
-//            }
-//        } catch (SQLException e) {
-//            throw new DataBaseException(e);
-//        }
+        try{
+            while (rs.next()){
+                User user = new User();
+                user.setId(rs.getInt("id"));
+                user.setName(rs.getString("name"));
+                user.setLogin(rs.getString("login"));
+                user.setPassword(rs.getString("password"));
+                user.setPhoto(rs.getBytes("photo"));
+                user.setEmail(rs.getString("email"));
+                user.setPhoneWork(rs.getString("phone_mob"));
+                user.setPhoneHome(rs.getString("phone_work"));
+
+                result.add(user);
+            }
+        } catch (SQLException e) {
+            throw new DataBaseException(e);
+        }
         return result;
     }
 
@@ -57,8 +49,17 @@ public class UserDAOImpl extends AbstractJDBCDao<User> implements UserDAO {
     }
 
     @Override
-    protected void prepareStatementForInsert(PreparedStatement statement, User object) throws DataBaseException {
+    public String getCreateQuery() {
+        return "INSERT INTO users (name) VALUES (?);";
+    }
 
+    @Override
+    protected void prepareStatementForInsert(PreparedStatement statement, User object) throws DataBaseException {
+        try {
+            statement.setString(1, object.getName());
+        } catch (SQLException e) {
+            throw new DataBaseException(e);
+        }
     }
 
     @Override

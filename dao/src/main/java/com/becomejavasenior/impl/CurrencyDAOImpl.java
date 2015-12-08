@@ -16,9 +16,6 @@ import java.util.List;
  * created by Alekseichenko Sergey <mononofuu@gmail.com>
  */
 public class CurrencyDAOImpl extends AbstractJDBCDao<Currency> implements CurrencyDAO {
-    public CurrencyDAOImpl(Connection connection) throws DataBaseException {
-        super(connection);
-    }
 
     @Override
     public String getReadAllQuery() {
@@ -27,7 +24,8 @@ public class CurrencyDAOImpl extends AbstractJDBCDao<Currency> implements Curren
 
     @Override
     public String getCreateQuery() {
-        return "INSERT INTO currency (code, name) VALUES (?, ?)";
+        return "INSERT INTO currency (code, name) " +
+                "VALUES (?, ?);";
     }
 
     @Override
@@ -45,12 +43,11 @@ public class CurrencyDAOImpl extends AbstractJDBCDao<Currency> implements Curren
         List<Currency> result = new ArrayList<>();
         try {
             while (rs.next()) {
-                Currency currency = new Currency();
-                currency.setId(rs.getInt("id"));
-                currency.setCode(rs.getString("code"));
-                currency.setName(rs.getString("name"));
-
-                result.add(currency);
+            Currency currency = new Currency();
+            currency.setId(rs.getInt("id"));
+            currency.setCode(rs.getString("code"));
+            currency.setName(rs.getString("name"));
+            result.add(currency);
             }
         } catch (SQLException e) {
             throw new DataBaseException(e);

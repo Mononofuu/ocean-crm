@@ -1,23 +1,15 @@
 package com.becomejavasenior.impl;
 
-import com.becomejavasenior.AbstractJDBCDao;
-import com.becomejavasenior.DaoFactory;
-import com.becomejavasenior.DataBaseException;
-import com.becomejavasenior.Subject;
+import com.becomejavasenior.*;
 import com.becomejavasenior.interfacedao.SubjectDAO;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SubjectDAOImpl extends AbstractJDBCDao<Subject> implements SubjectDAO {
-
-    public SubjectDAOImpl(Connection connection) throws DataBaseException {
-        super(connection);
-    }
 
     @Override
     public String getDeleteQuery() {
@@ -33,12 +25,11 @@ public class SubjectDAOImpl extends AbstractJDBCDao<Subject> implements SubjectD
     protected List<Subject> parseResultSet(ResultSet rs) throws DataBaseException {
         List<Subject> result = new ArrayList<>();
         try {
+            GenericDao userDao =  getDaoFromCurrentFactory(User.class);
             while (rs.next()) {
-                Subject subject = new Subject() {
-                };
-//                GenericDao userDao =  getDaoFromCurrentFactory(User.class);
-//                User user = (User)userDao.read(rs.getInt("content_owner_id"));
-//                subject.setUser(user);
+                Subject subject = new Subject() {};
+                User user = (User)userDao.read(rs.getInt("content_owner_id"));
+                subject.setUser(user);
                 subject.setId(rs.getInt("id"));
                 subject.setName(rs.getString("name"));
                 result.add(subject);
@@ -51,14 +42,18 @@ public class SubjectDAOImpl extends AbstractJDBCDao<Subject> implements SubjectD
 
     @Override
     public String getCreateQuery() {
-        return "INSERT INTO subject (name) VALUES (?);"; //content_owner_id пока убран
+        return "INSERT INTO subject (content_owner_id, name) VALUES (?, ?);";
     }
 
     @Override
     protected void prepareStatementForInsert(PreparedStatement statement, Subject object) throws DataBaseException {
         try {
-            //statement.setInt(1,object.getUser().getId());
-            statement.setString(1, object.getName());
+            if(object.getUser()!=null){
+                statement.setInt(1,object.getUser().getId());
+            }else {
+                statement.setNull(1, Types.INTEGER);
+            }
+            statement.setString(2, object.getName());
         } catch (SQLException e) {
             throw new DataBaseException(e);
         }
@@ -66,17 +61,21 @@ public class SubjectDAOImpl extends AbstractJDBCDao<Subject> implements SubjectD
 
     @Override
     public String getUpdateQuery() {
-        return "UPDATE subject SET name = ? WHERE id = ?;"; //, content_owner_id  = ?
+        return "UPDATE subject SET name = ?, content_owner_id = ? WHERE id = ?;";
     }
 
     @Override
     protected void prepareStatementForUpdate(PreparedStatement statement, Subject object) throws DataBaseException {
         try {
             statement.setString(1, object.getName());
-            //statement.setInt(2, object.getUser().getId());
-            statement.setInt(2, object.getId());
+            if(object.getUser()!=null){
+                statement.setInt(2, object.getUser().getId());
+            }else {
+                statement.setNull(2, Types.INTEGER);
+            }
+            statement.setInt(3, object.getId());
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DataBaseException();
         }
 
     }

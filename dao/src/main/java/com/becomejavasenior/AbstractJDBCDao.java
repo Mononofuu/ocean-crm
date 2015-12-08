@@ -4,20 +4,15 @@ import java.sql.*;
 import java.util.List;
 import java.util.Set;
 
-public abstract class AbstractJDBCDao<T> implements GenericDao<T> {
+public abstract class AbstractJDBCDao<T> implements GenericDao<T>{
     private static DaoFactory daoFactory;
-    private Connection connection;
-
-    public AbstractJDBCDao(Connection connection) throws DataBaseException {
-        this.connection = connection;
-    }
 
     public static void setDaoFactory(DaoFactory daoFactory) {
         AbstractJDBCDao.daoFactory = daoFactory;
     }
 
-    protected Connection getConnection() {
-        return connection;
+    protected Connection getConnection()throws DataBaseException{
+        return daoFactory.getConnection();
     }
 
     /**
@@ -73,7 +68,8 @@ public abstract class AbstractJDBCDao<T> implements GenericDao<T> {
     @Override
     public T read(int key) throws DataBaseException {
         T result;
-        try (PreparedStatement statement = connection.prepareStatement(getReadQuery())) {
+        try (Connection connection = daoFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(getReadQuery())) {
             statement.setInt(1, key);
             ResultSet rs = statement.executeQuery();
             List<T> allObjects = parseResultSet(rs);
@@ -90,7 +86,8 @@ public abstract class AbstractJDBCDao<T> implements GenericDao<T> {
     @Override
     public T create(T object) throws DataBaseException {
         T result;
-        try (PreparedStatement statement = connection.prepareStatement(getCreateQuery(), Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection connection = daoFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(getCreateQuery(), Statement.RETURN_GENERATED_KEYS)) {
             prepareStatementForInsert(statement, object); // помещаем в запрос параметры object
             statement.executeUpdate();
             // получаем обратно новую запись через возвращенный id записи
@@ -109,7 +106,8 @@ public abstract class AbstractJDBCDao<T> implements GenericDao<T> {
 
     @Override
     public void update(T object) throws DataBaseException {
-        try (PreparedStatement statement = connection.prepareStatement(getUpdateQuery())) {
+        try (Connection connection = daoFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(getUpdateQuery())) {
             prepareStatementForUpdate(statement, object);
             int state = statement.executeUpdate();
             if (state != 1) {
@@ -122,7 +120,8 @@ public abstract class AbstractJDBCDao<T> implements GenericDao<T> {
 
     @Override
     public void delete(int id) throws DataBaseException {
-        try (PreparedStatement statement = connection.prepareStatement(getDeleteQuery())) {
+        try (Connection connection = daoFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(getDeleteQuery())) {
             statement.setInt(1, id);
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -133,7 +132,8 @@ public abstract class AbstractJDBCDao<T> implements GenericDao<T> {
     @Override
     public List<T> readAll() throws DataBaseException {
         List<T> result;
-        try (PreparedStatement statement = connection.prepareStatement(getReadAllQuery())) {
+        try (Connection connection = daoFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(getReadAllQuery())) {
             ResultSet rs = statement.executeQuery();
             result = parseResultSet(rs);
         } catch (SQLException e) {

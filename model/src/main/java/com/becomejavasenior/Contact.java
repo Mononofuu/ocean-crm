@@ -119,6 +119,7 @@ public class Contact extends Subject {
         if (comments != null ? !comments.equals(contact.comments) : contact.comments != null) return false;
         if (files != null ? !files.equals(contact.files) : contact.files != null) return false;
         if (tasks != null ? !tasks.equals(contact.tasks) : contact.tasks != null) return false;
+        if (getName() != null ? !getName().equals(contact.getName()) : contact.getName() != null) return false;
         return !(deals != null ? !deals.equals(contact.deals) : contact.deals != null);
 
     }
@@ -137,4 +138,6 @@ public class Contact extends Subject {
         result = 31 * result + (deals != null ? deals.hashCode() : 0);
         return result;
     }
+
+
 }

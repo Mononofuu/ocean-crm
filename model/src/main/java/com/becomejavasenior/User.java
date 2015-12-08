@@ -1,6 +1,7 @@
 package com.becomejavasenior;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -138,5 +139,46 @@ public class User implements Serializable {
 
     public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        User user = (User) o;
+
+        if (name != null ? !name.equals(user.name) : user.name != null) return false;
+        if (login != null ? !login.equals(user.login) : user.login != null) return false;
+        if (password != null ? !password.equals(user.password) : user.password != null) return false;
+        if (!Arrays.equals(photo, user.photo)) return false;
+        if (email != null ? !email.equals(user.email) : user.email != null) return false;
+        if (phoneWork != null ? !phoneWork.equals(user.phoneWork) : user.phoneWork != null) return false;
+        if (phoneHome != null ? !phoneHome.equals(user.phoneHome) : user.phoneHome != null) return false;
+        if (grantsSet != null ? !grantsSet.equals(user.grantsSet) : user.grantsSet != null) return false;
+        if (language != user.language) return false;
+        if (events != null ? !events.equals(user.events) : user.events != null) return false;
+        if (comments != null ? !comments.equals(user.comments) : user.comments != null) return false;
+        if (files != null ? !files.equals(user.files) : user.files != null) return false;
+        return !(tasks != null ? !tasks.equals(user.tasks) : user.tasks != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (login != null ? login.hashCode() : 0);
+        result = 31 * result + (password != null ? password.hashCode() : 0);
+        result = 31 * result + (photo != null ? Arrays.hashCode(photo) : 0);
+        result = 31 * result + (email != null ? email.hashCode() : 0);
+        result = 31 * result + (phoneWork != null ? phoneWork.hashCode() : 0);
+        result = 31 * result + (phoneHome != null ? phoneHome.hashCode() : 0);
+        result = 31 * result + (grantsSet != null ? grantsSet.hashCode() : 0);
+        result = 31 * result + (language != null ? language.hashCode() : 0);
+        result = 31 * result + (events != null ? events.hashCode() : 0);
+        result = 31 * result + (comments != null ? comments.hashCode() : 0);
+        result = 31 * result + (files != null ? files.hashCode() : 0);
+        result = 31 * result + (tasks != null ? tasks.hashCode() : 0);
+        return result;
     }
 }

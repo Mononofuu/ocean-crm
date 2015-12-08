@@ -42,7 +42,7 @@ public abstract class AbstractJDBCDaoFactory implements DaoFactory {
         if (daoClasses.size() > 0) {
             result = daoClasses.get(clazz);
         } else {
-            initializeDaoClasses(getConnection());
+            initializeDaoClasses();
             result = daoClasses.get(clazz);
         }
         if (result == null) {
@@ -56,21 +56,21 @@ public abstract class AbstractJDBCDaoFactory implements DaoFactory {
      */
     protected abstract String getPropertyFileName();
 
-    private void initializeDaoClasses(Connection connection) throws DataBaseException {
-        daoClasses.put(Contact.class, new ContactDAOImpl(connection));
-        daoClasses.put(Subject.class, new SubjectDAOImpl(connection));
-        daoClasses.put(Company.class, new CompanyDAOImpl(connection));
-        daoClasses.put(PhoneType.class, new PhoneTypeDAOImpl(connection));
-        daoClasses.put(SubjectTag.class, new SubjectTagDAOImpl(connection));
-        daoClasses.put(Tag.class, new TagDAOImpl(connection));
-        daoClasses.put(User.class, new UserDAOImpl(connection));
-        daoClasses.put(Comment.class, new CommentDAOImpl(connection));
-        daoClasses.put(Currency.class, new CurrencyDAOImpl(connection));
-        daoClasses.put(DealContact.class, new DealContactDAOImpl(connection));
-        daoClasses.put(Deal.class, new DealDAOImpl(connection));
-        daoClasses.put(DealStatus.class, new DealStatusDAOImpl(connection));
-        daoClasses.put(Task.class, new TaskDAOImpl(connection));
-        daoClasses.put(File.class, new FileDAOImpl(connection));
+    private void initializeDaoClasses() throws DataBaseException {
+        daoClasses.put(Contact.class, new ContactDAOImpl());
+        daoClasses.put(Subject.class, new SubjectDAOImpl());
+        daoClasses.put(Company.class, new CompanyDAOImpl());
+        daoClasses.put(PhoneType.class, new PhoneTypeDAOImpl());
+        daoClasses.put(SubjectTag.class, new SubjectTagDAOImpl());
+        daoClasses.put(Tag.class, new TagDAOImpl());
+        daoClasses.put(User.class, new UserDAOImpl());
+        daoClasses.put(Comment.class, new CommentDAOImpl());
+        daoClasses.put(Currency.class, new CurrencyDAOImpl());
+        daoClasses.put(DealContact.class, new DealContactDAOImpl());
+        daoClasses.put(Deal.class, new DealDAOImpl());
+        daoClasses.put(DealStatus.class, new DealStatusDAOImpl());
+        daoClasses.put(Task.class, new TaskDAOImpl());
+        daoClasses.put(File.class, new FileDAOImpl());
 
     }
 }

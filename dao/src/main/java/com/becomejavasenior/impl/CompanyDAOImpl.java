@@ -5,17 +5,11 @@ import com.becomejavasenior.interfacedao.CompanyDAO;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CompanyDAOImpl extends AbstractJDBCDao<Company> implements CompanyDAO {
-    public CompanyDAOImpl(Connection connection) throws DataBaseException {
-        super(connection);
-    }
 
     @Override
     public String getReadAllQuery() {
@@ -31,22 +25,24 @@ public class CompanyDAOImpl extends AbstractJDBCDao<Company> implements CompanyD
     protected List<Company> parseResultSet(ResultSet rs) throws DataBaseException {
         List<Company> result = new ArrayList<>();
         try {
+            GenericDao subjectDao = getDaoFromCurrentFactory(Subject.class);
             while (rs.next()) {
                 Company company = new Company();
-                GenericDao subjectDao = getDaoFromCurrentFactory(Subject.class);
                 Subject subject = (Subject) subjectDao.read(rs.getInt("id"));
                 company.setId(subject.getId());
                 company.setUser(subject.getUser());
                 company.setName(subject.getName());
                 company.setPhoneNumber(rs.getString("phone_number"));
                 company.setEmail(rs.getString("email"));
-                company.setWeb(new URL(rs.getString("web")));
+                try {
+                    company.setWeb(new URL(rs.getString("web")));
+                } catch (MalformedURLException e) {
+                    /*NOP*/
+                }
                 company.setAdress(rs.getString("address"));
                 result.add(company);
             }
         } catch (SQLException e) {
-            throw new DataBaseException(e);
-        } catch (MalformedURLException e) {
             throw new DataBaseException(e);
         }
         return result;
@@ -63,7 +59,11 @@ public class CompanyDAOImpl extends AbstractJDBCDao<Company> implements CompanyD
             statement.setInt(1, createSubject(object));
             statement.setString(2, object.getPhoneNumber());
             statement.setString(3, object.getEmail());
-            statement.setString(4, object.getWeb().toString());
+            if(object.getWeb()!=null){
+                statement.setString(4, object.getWeb().toString());
+            }else{
+                statement.setNull(4, Types.CHAR);
+            }
             statement.setString(5, object.getAdress());
         } catch (SQLException e) {
             throw new DataBaseException(e);

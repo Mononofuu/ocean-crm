@@ -1,4 +1,4 @@
 package com.becomejavasenior.interfacedao;
 
-public interface PhoneTypeDAO {
+public interface PhoneTypeDAO{
 }
