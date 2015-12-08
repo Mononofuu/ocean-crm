@@ -1,3 +1,7 @@
+*{
+    margin: 0;
+    padding: 0;
+}
 .menu {
     float: left;
     width: 180px;
@@ -7,19 +11,20 @@
 .menu li{
     list-style: none;
     border-bottom: 2px solid black;
+    position: relative;
 
 }   
-.menu li a{
+.menu a{
     display: block;
     text-decoration: none;
     padding: 10px 20px;
     cursor: pointer;
-    font: 16pt bold;
+    font: 14pt bold;
     color: black;
 }
-
 .menu li .logo{
     padding: 20px;
+    background-color:cadetblue;
 }
 
 body{
@@ -27,4 +32,34 @@ body{
 }
 .sub-menu{
     display: none;
+    position:absolute;
+    left: 160px;
+    top: -2px;
+    width: 220px;
+    background-color:aliceblue;
+    border-radius: 0 10px 10px 10px;
+    border: 2px solid black;
 }
+.sub-menu li:last-child{
+    border-bottom: 0px;
+}
+
+.menu a:hover{
+    color:snow;
+    background-color:cadetblue;
+
+}
+.menu .header:hover{
+    color:black;
+}
+.header{
+    background-color:cadetblue;
+}
+.sub-menu li:last-child a{
+    border-radius: 0 0 10px 10px;
+}
+.sub-menu li:first-child a{
+    border-radius: 0 8px 0 0;
+}
+
+

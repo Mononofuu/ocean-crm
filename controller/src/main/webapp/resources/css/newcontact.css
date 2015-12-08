@@ -4,8 +4,8 @@ body {
 
 .tablename {
     display: block;
-    margin: 0 0 0 20px;
-    font: bold;
+    margin: 10px 0 0 20px;
+    font-weight: bold;
 }
 .frame {
     background-color:gainsboro;
