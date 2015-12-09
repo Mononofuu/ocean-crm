@@ -44,11 +44,19 @@ public class DealsPyramidServlet extends HttpServlet {
             List<Deal> conversationDeals = deals.stream().filter(deal -> deal.getStatus().getName().equals("CONVERSATION")).collect(Collectors.toList());
             List<Deal> decisionDeals = deals.stream().filter(deal -> deal.getStatus().getName().equals("MAKE THE DECISION")).collect(Collectors.toList());
             List<Deal> approvalDeals = deals.stream().filter(deal -> deal.getStatus().getName().equals("APPROVAL OF THE CONTRACT")).collect(Collectors.toList());
+            int primaryDealsBudget = primaryDeals.stream().mapToInt(i -> i.getBudget()).sum();
+            int conversationDealsBudget = conversationDeals.stream().mapToInt(i -> i.getBudget()).sum();
+            int decisionDealsBudget = decisionDeals.stream().mapToInt(i -> i.getBudget()).sum();
+            int approvalDealsBudget = approvalDeals.stream().mapToInt(i -> i.getBudget()).sum();
 
             req.setAttribute("primaryDeals", primaryDeals);
             req.setAttribute("conversationDeals", conversationDeals);
             req.setAttribute("decisionDeals", decisionDeals);
             req.setAttribute("approvalDeals", approvalDeals);
+            req.setAttribute("primaryDealsBudget", primaryDealsBudget);
+            req.setAttribute("conversationDealsBudget", conversationDealsBudget);
+            req.setAttribute("decisionDealsBudget", decisionDealsBudget);
+            req.setAttribute("approvalDealsBudget", approvalDealsBudget);
 
         } catch (DataBaseException e) {
             logger.error("Error while getting DAO");
