@@ -12,7 +12,7 @@
 <title>Добавить сделку</title>
 </head>
 <body>
-<form action="/deal?action=newdeal" method="post">
+<form action="/deal" method="post">
     <fieldset>
         <legend>Добавить сделку</legend>
         <input class="input" type="text" name="dealname" placeholder="Название сделки"/>
@@ -43,10 +43,8 @@
         <br/>
         <input class="input" type="file" name="dealfiles" id="files" multiple><br/>
     </fieldset>
-</form>
 
 
-<form action="/deal?action=newcontact" method="post">
     <fieldset>
         <legend>Добавить контакт</legend>
         <div id="contactscroller">
@@ -96,11 +94,9 @@
         <br/>
         <input class="input" type="text" name="contactskype" placeholder="Skype"/>
         <br/>
-        <button type="submit">Создать контакт</button>
+        <button type="submit" name="action" value="newcontact">Создать контакт</button>
     </fieldset>
-</form>
 
-<form action="/deal?action=newcompany" method="post">
     <fieldset>
         <legend>Добавить компанию</legend>
         <select class="input" name="dealcompany">
@@ -121,11 +117,9 @@
         <br/>
         <textarea class="input textarea" name="companyaddress" placeholder="Адрес"></textarea>
         <br/>
-        <button type="submit">Создать компанию</button>
+        <button type="submit" name="action" value="newcompany">Создать компанию</button>
     </fieldset>
-</form>
 
-<form action="/deal?action=newtask" method="post">
     <fieldset>
         <legend>Запланировать задачу</legend>
         <select class="input" name="taskperiod">
@@ -159,9 +153,9 @@
     <br/>
 
     <div id="submit">
-        <button class="button" type="submit">Добавить</button>
-        <button class="button" type="button">Отмена</button>
+        <button class="button" type="submit" name="action" value="newdeal">Добавить</button>
+        <button class="button" type="button" onclick="location.href = '../index.jsp'">Отмена</button>
     </div>
-
+</form>
 </body>
 </html>
