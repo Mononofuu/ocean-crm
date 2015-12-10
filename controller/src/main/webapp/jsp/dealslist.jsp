@@ -13,6 +13,7 @@
 </style>
 
 <html>
+<link href="../css/dealslist.css" rel="stylesheet" type="text/css">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title></title>
@@ -22,6 +23,14 @@
     <script type="text/javascript">
         $(function () {
             $("#datepicker").datepicker({
+                inline: true,
+                language: 'ru',
+                changeYear: true,
+                changeMonth: true
+            });
+        });
+        $(function () {
+            $("#datepicker2").datepicker({
                 inline: true,
                 language: 'ru',
                 changeYear: true,
@@ -80,32 +89,36 @@
         <div class="tablename companyadd center"><b><h2>Фильтры</h2></b></div>
         <div class="frame rightframe">
         <select class="field" name="dealstatus" size="7">
+            <option selected value=""><b>Все статусы</b></option>
             <c:forEach items="${deals_statuses}" var="status">
                 <option value=${status.id}>${status.name}</option>
             </c:forEach>
         </select>
 
-         <a><select class="field" name="period">
+         <select class="field" name="period">
             <option value="">Когда</option>
             <option value="today">Сегодня</option>
-            <option value="allday">Весь день</option>
-            <option value="tomorow">Завтра</option>
+            <option value="tomorrow">Завтра</option>
             <option value="nextweek">Следующая неделя</option>
             <option value="nextmonth">Следующий месяц</option>
             <option value="nextyear">Следующий год</option>
         </select>
-
-        <input class="period" type="text" id="datepicker" name="date"></a>
-
+			
+             <div class="interval">	
+             <input class="period" type="text" id="datepicker" name="datebegin">
+             <input class="period" type="text" id="datepicker2" name="dateend">
+			 </div>
+            	
         <select class="field" name="stages">
             <option value="">Этапы</option>
             <option value="value1">Этап1</option>
             <option value="value2">Этап2</option>
         </select>
-        <select class="field" name="responsible">
-            <option value="">Менеджеры</option>
-            <option value="value1">Пользователь1</option>
-            <option value="value2">Пользователь2</option>
+        <select class="field" name="user">
+            <option selected value=""><b>Все менеджеры</b></option>
+            <c:forEach items="${users}" var="user">
+                <option value=${user.id}>${user.name}</option>
+            </c:forEach>
         </select>
         <select class="field" name="tasks">
             <option value="">Задачи</option>
@@ -115,7 +128,7 @@
 
 
         <input class="field tags" type="text" name="tags" placeholder="Теги">
-        <td><input class="field button" type="submit" value="Сохранить"></td>
+        <input class="field button" type="submit" value="Сохранить">
 
         </div>
         </form>

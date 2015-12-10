@@ -1,7 +1,7 @@
 package com.becomejavasenior;
 
+import com.becomejavasenior.impl.CommentDAOImpl;
 import com.becomejavasenior.impl.DealDAOImpl;
-import com.becomejavasenior.DataBaseException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -35,20 +35,65 @@ public class DealsListServlet extends HttpServlet{
 
     private void process(HttpServletRequest request, HttpServletResponse response) throws IOException{
         try {
+
+            List<Deal> dealsList;
+            List<Deal> dealsListStatus;
+            List<Deal> dealsListUser;
+            List<Deal> dealsListTag;
+
             dao = new PostgreSqlDaoFactory();
             connection = dao.getConnection();
+
             GenericDao dealStatusDao = dao.getDao(DealStatus.class);
-            GenericDao dealDao = dao.getDao(Deal.class);
             List<DealStatus> dealStatusList = dealStatusDao.readAll();
-            List<Deal> dealsList;
+
+            GenericDao userDao = dao.getDao(User.class);
+            List<User> userList = userDao.readAll();
+
+
+//            GenericDao dealDao = dao.getDao(Deal.class);
+            DealDAOImpl dealDao = new DealDAOImpl(connection);
+            dealsList = dealDao.readAll();
+
             String dealStatusId = request.getParameter("dealstatus");
-//            if(dealStatusId == null){
-                dealsList = dealDao.readAll();
-//            }else {
-//                dealsList = dealDao.readAll();
-//            }
+            String dealUserId = request.getParameter("user");
+
+
+            if(dealStatusId == null || dealStatusId.equals("")){
+                dealsListStatus = dealDao.readAll();
+            }else {
+                dealsListStatus = dealDao.readStatusFilter(Integer.valueOf(dealStatusId));
+            }
+
+
+
+            if(dealUserId == null || dealUserId.equals("")){
+                dealsListUser = dealDao.readAll();
+            }else {
+                dealsListUser = dealDao.readUserFilter(Integer.valueOf(dealUserId));
+            }
+
+
+            String tags = request.getParameter("tags");
+            if(tags == null){
+                dealsListTag = dealDao.readAll();
+            }else{
+                String tag = tags.trim().replaceAll("\\s+","','");
+//                String[] tag = tags.trim().split(" ");
+//                if(tag.length == 0 ) {
+                if(tag.equals("")) {
+                    dealsListTag = dealDao.readAll();
+                }else{
+                    dealsListTag = dealDao.readTagFilter("'" + tag + "')))");
+//                    dealsList = dealDao.readTagFilter(tag);
+                }
+            }
+
+//            dealsList = dealsListStatus.and(dealsListTag);
+
             request.setAttribute("deals", dealsList);
             request.setAttribute("deals_statuses", dealStatusList);
+            request.setAttribute("users", userList);
             request.getRequestDispatcher("jsp/dealslist.jsp").forward(request, response);
         } catch (DataBaseException e) {
             logger.error("Error when prepearing data for dealslist.jsp",e);
@@ -58,6 +103,3 @@ public class DealsListServlet extends HttpServlet{
     }
 
 }
-
-
-

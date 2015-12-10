@@ -11,6 +11,15 @@ import java.util.List;
  * created by Alekseichenko Sergey <mononofuu@gmail.com>
  */
 public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO {
+
+    public static final String DEAL_SELECT_STATUS_ID = " where status_id=?";
+    public static final String DEAL_SELECT_USER_ID = " where id in(select subject.id from subject " +
+            "where subject.content_owner_id = ?)";
+
+    public static final String DEAL_SELECT_TAG = " where deal.id in(select subject_id from subject_tag " +
+            "where subject_tag.tag_id in (select id from tag where name in (";
+
+
     public DealDAOImpl(Connection connection) throws DataBaseException {
         super(connection);
     }
@@ -18,6 +27,16 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO {
     @Override
     public String getReadAllQuery() {
         return "SELECT * FROM deal";
+    }
+
+    @Override
+    public String getReadQuery() {
+        return getReadAllQuery() + getConditionStatment();
+    }
+
+    @Override
+    protected String getConditionStatment() {
+        return "where status_id = 40";
     }
 
     @Override
@@ -127,6 +146,52 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO {
             throw new DataBaseException(e);
         }
         }
+
+    public List<Deal> readStatusFilter(int statusId) throws DataBaseException {
+        List<Deal> result;
+        try (PreparedStatement statement = getConnection().prepareStatement(getReadAllQuery() + DEAL_SELECT_STATUS_ID)) {
+            statement.setInt(1, statusId);
+            ResultSet rs = statement.executeQuery();
+            result = parseResultSet(rs);
+        } catch (SQLException e) {
+            throw new DataBaseException(e);
+        }
+        if (result == null) {
+            throw new DataBaseException();
+        }
+        return result;
+    }
+
+    public List<Deal> readUserFilter(int userId) throws DataBaseException {
+        List<Deal> result;
+        try (PreparedStatement statement = getConnection().prepareStatement(getReadAllQuery() + DEAL_SELECT_USER_ID)) {
+            statement.setInt(1, userId);
+            ResultSet rs = statement.executeQuery();
+            result = parseResultSet(rs);
+        } catch (SQLException e) {
+            throw new DataBaseException(e);
+        }
+        if (result == null) {
+            throw new DataBaseException();
+        }
+        return result;
+    }
+
+    public List<Deal> readTagFilter(String tag) throws DataBaseException {
+        List<Deal> result;
+        try (PreparedStatement statement = getConnection().prepareStatement(getReadAllQuery() + DEAL_SELECT_TAG + tag)){
+//            statement.setString(1, tag);
+//            statement.setObject(1, tag);
+            ResultSet rs = statement.executeQuery();
+            result = parseResultSet(rs);
+        } catch (SQLException e) {
+            throw new DataBaseException(e);
+        }
+        if (result == null) {
+            throw new DataBaseException();
+        }
+        return result;
+    }
 
 
 }

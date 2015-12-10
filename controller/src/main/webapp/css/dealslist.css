@@ -21,7 +21,7 @@
 .frame {
     display: inline-block;
     background-color: antiquewhite;
-    width: 180px;
+    width: 150px;
     padding-top: 15px;
     padding-bottom: 10px;
     padding-right: 10px;
@@ -31,7 +31,7 @@
 }
 
 .rightframe {
-    width: 350px;
+    width: 210px;
 }
 
 .tablename {
@@ -92,7 +92,7 @@ caption {
 
 .row3 {
     float: left;
-    width: 300px;
+    width: 240px;
 }
 
 .companyadd {
@@ -110,7 +110,13 @@ caption {
 .period {
     width: 80px;
     display: inline-block;
+    margin: 0px 0px 10px 15px;
 }
+
+.interval {
+    width: 210px;
+}
+
 
 .center {
     text-align: center;
