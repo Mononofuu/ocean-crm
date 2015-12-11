@@ -1,4 +1,4 @@
-package com.becomejavasenior.user.services;
+package com.becomejavasenior.exception;
 
 public class IncorrectDataException extends Exception{
     public IncorrectDataException(String message) {

@@ -71,22 +71,11 @@
     </filter-mapping>
     <filter-mapping>
         <filter-name>AuthorizedFilter</filter-name>
-        <servlet-name>user</servlet-name>
+        <servlet-name>dealServlet</servlet-name>
     </filter-mapping>
     <filter-mapping>
         <filter-name>AuthorizedFilter</filter-name>
-        <servlet-name>admin</servlet-name>
+        <servlet-name>dashboardServlet</servlet-name>
     </filter-mapping>
-
-    <filter-mapping>
-        <filter-name>UserFilter</filter-name>
-        <servlet-name>user</servlet-name>
-    </filter-mapping>
-
-    <filter-mapping>
-        <filter-name>AdminFilter</filter-name>
-        <servlet-name>admin</servlet-name>
-    </filter-mapping>
-
 
 </web-app>
