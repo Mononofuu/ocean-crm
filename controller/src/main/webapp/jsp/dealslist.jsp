@@ -55,6 +55,7 @@
     <div class="tablename"><b><h2>Отображение сделок</h2></b></div>
     <div class="tablename center"><b><h1>Список</h1></b></div>
     <div class="row2">
+        <form method="POST" action='dealedit' name="frmDealEdit">
         <table class="table">
             <thead>
             <tr>
@@ -67,76 +68,83 @@
             </thead>
             <tbody>
 
-
             <c:forEach items="${deals}" var="deal">
                 <tr>
-                    <td>${deal.name}</td>
-                    <td>${deal.mainContact.name}</td>
-                    <td>${deal.mainContact.company.name}</td>
-                    <td>${deal.status.name}</td>
-                    <td>${deal.budget} ${deal.currency.name}</td>
-                </tr>
-            </c:forEach>
+<%--
+                                    <td><input type="submit" name="frmDealEdit" value=${deal.id}>${deal.name}</td>
+--%>
+                                    <td>${deal.name}</td>
+                                    <td>${deal.mainContact.name}</td>
+                                    <td>${deal.mainContact.company.name}</td>
+                                    <td>${deal.status.name}</td>
+                                    <td>${deal.budget} ${deal.currency.name}</td>
+                                </tr>
+                            </c:forEach>
 
-            </tbody>
+                            </tbody>
 
-        </table>
-    </div>
-    <div class="row3">
+                        </table>
+                        </form>
+                    </div>
+                    <div class="row3">
 
-        <form method="POST" action='dealslist' name="frmDealsListFilter">
+                        <form method="POST" action='dealslist' name="frmDealsListFilter">
 
-        <div class="tablename companyadd center"><b><h2>Фильтры</h2></b></div>
-        <div class="frame rightframe">
-        <select class="field" name="dealstatus" size="7">
-            <option selected value=""><b>Все статусы</b></option>
-            <c:forEach items="${deals_statuses}" var="status">
-                <option value=${status.id}>${status.name}</option>
-            </c:forEach>
-        </select>
+                        <div class="tablename companyadd center"><b><h2>Фильтры</h2></b></div>
+                        <div class="frame rightframe">
 
-         <select class="field" name="period">
-            <option value="">Когда</option>
-            <option value="today">Сегодня</option>
-            <option value="tomorrow">Завтра</option>
-            <option value="nextweek">Следующая неделя</option>
-            <option value="nextmonth">Следующий месяц</option>
-            <option value="nextyear">Следующий год</option>
-        </select>
-			
-             <div class="interval">	
-             <input class="period" type="text" id="datepicker" name="datebegin">
-             <input class="period" type="text" id="datepicker2" name="dateend">
-			 </div>
-            	
-        <select class="field" name="stages">
-            <option value="">Этапы</option>
-            <option value="value1">Этап1</option>
-            <option value="value2">Этап2</option>
-        </select>
-        <select class="field" name="user">
-            <option selected value=""><b>Все менеджеры</b></option>
-            <c:forEach items="${users}" var="user">
-                <option value=${user.id}>${user.name}</option>
-            </c:forEach>
-        </select>
-        <select class="field" name="tasks">
-            <option value="">Задачи</option>
-            <option value="value1">Задача1</option>
-            <option value="value2">Задача2</option>
-        </select>
+                       <select class="field" name="selectedfilter" title="Стандартные фильтры" size="7">
+                            <option value="" disabled selected>Выберите фильтр</option>
+                            <option value="open">Открытые сделки</option>
+                            <option value="my">Только мои сделки</option>
+                            <option value="success">Успешно завершенные</option>
+                            <option value="fail">Нереализованные сделки</option>
+                            <option value="notask">Сделки без задач</option>
+                            <option value="expired">Сделки c просроченными задачами</option>
+                            <option value="deleted">Удаленные</option>
+                        </select>
 
+                        <div class="interval">
+                             <input class="period" type="text" id="datepicker" name="datebegin">
+                             <input class="period" type="text" id="datepicker2" name="dateend">
+                        </div>
 
-        <input class="field tags" type="text" name="tags" placeholder="Теги">
-        <input class="field button" type="submit" value="Сохранить">
+                        <select class="field" name="dealstatus">
+                            <option value="" disabled selected>Все этапы</option>
+                            <c:forEach items="${deals_statuses}" var="status">
+                                <option value=${status.id}>${status.name}</option>
+                            </c:forEach>
+                        </select>
 
-        </div>
-        </form>
-    </div>
-
-
-</div>
+                        <select class="field" name="user">
+                            <option value="" disabled selected><b>Все менеджеры</b></option>
+                            <c:forEach items="${users}" var="user">
+                                <option value=${user.id}>${user.name}</option>
+                            </c:forEach>
+                        </select>
+                        <select class="field" name="tasks">
+                            <option value="" disabled selected>Задачи</option>
+                            <option value="">Не учитывать</option>
+                            <option value="">На сегодня</option>
+                            <option value="">На завтра</option>
+                            <option value="">На этой неделе</option>
+                            <option value="">В этом месяце</option>
+                            <option value="">В этом квартале</option>
+                            <option value="">Нет задач</option>
+                            <option value="">Просрочены</option>
+                        </select>
 
 
-</body>
-</html>
+                        <input class="field tags" type="text" name="tags" placeholder="Теги">
+                        <input class="field button" type="submit" value="Сохранить">
+
+                        </div>
+                        </form>
+                    </div>
+
+
+                </div>
+
+
+                </body>
+                </html>

@@ -10,7 +10,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -36,10 +40,13 @@ public class DealsListServlet extends HttpServlet{
     private void process(HttpServletRequest request, HttpServletResponse response) throws IOException{
         try {
 
-            List<Deal> dealsList;
+            List<Deal> dealsList = new ArrayList<Deal>();
             List<Deal> dealsListStatus;
             List<Deal> dealsListUser;
             List<Deal> dealsListTag;
+            boolean filters = false;
+            boolean firstFilter = true;
+            boolean emptyFilter = false;
 
             dao = new PostgreSqlDaoFactory();
             connection = dao.getConnection();
@@ -51,50 +58,75 @@ public class DealsListServlet extends HttpServlet{
             List<User> userList = userDao.readAll();
 
 
-//            GenericDao dealDao = dao.getDao(Deal.class);
             DealDAOImpl dealDao = new DealDAOImpl(connection);
-            dealsList = dealDao.readAll();
 
             String dealStatusId = request.getParameter("dealstatus");
             String dealUserId = request.getParameter("user");
-
-
-            if(dealStatusId == null || dealStatusId.equals("")){
-                dealsListStatus = dealDao.readAll();
-            }else {
-                dealsListStatus = dealDao.readStatusFilter(Integer.valueOf(dealStatusId));
-            }
-
-
-
-            if(dealUserId == null || dealUserId.equals("")){
-                dealsListUser = dealDao.readAll();
-            }else {
-                dealsListUser = dealDao.readUserFilter(Integer.valueOf(dealUserId));
-            }
-
-
             String tags = request.getParameter("tags");
-            if(tags == null){
-                dealsListTag = dealDao.readAll();
-            }else{
+
+            if(dealStatusId != null && dealStatusId.equals("") == false){
+                dealsListStatus = dealDao.readStatusFilter(Integer.valueOf(dealStatusId));
+                dealsList = dealsListStatus;
+                filters = true;
+                firstFilter = false;
+                if(dealsList.size() == 0){
+                    emptyFilter = true;
+                }
+                logger.info("DealsListServlet. Used filter dealStatusId " + dealStatusId);
+            }
+
+            if(emptyFilter == false && dealUserId != null && dealUserId.equals("") ==false){
+                dealsListUser = dealDao.readUserFilter(Integer.valueOf(dealUserId));
+                filters = true;
+                if(firstFilter == true){
+                    dealsList = dealsListUser;
+                    firstFilter = false;
+                }else{
+                    dealsList = dealsList.stream()
+                            .filter(deal ->
+                                    (dealsListUser.stream().map(Deal::getId).collect(Collectors.toList())).contains(deal.getId()))
+                            .collect(Collectors.toList());
+                    if(dealsList.size() == 0){
+                        emptyFilter = true;
+                    }
+                    logger.info("DealsListServlet. Used filter dealUserId " + dealUserId);
+                }
+            }
+
+            if(emptyFilter == false && tags != null){
                 String tag = tags.trim().replaceAll("\\s+","','");
-//                String[] tag = tags.trim().split(" ");
-//                if(tag.length == 0 ) {
                 if(tag.equals("")) {
                     dealsListTag = dealDao.readAll();
                 }else{
                     dealsListTag = dealDao.readTagFilter("'" + tag + "')))");
-//                    dealsList = dealDao.readTagFilter(tag);
+                    filters = true;
+                    if(firstFilter == true){
+                        dealsList = dealsListTag;
+                        firstFilter = false;
+                    }else{
+                        dealsList = dealsList.stream()
+                                .filter(deal ->
+                                        (dealsListTag.stream().map(Deal::getId).collect(Collectors.toList())).contains(deal.getId()))
+                                .collect(Collectors.toList());
+                        if(dealsList.size() == 0){
+                            emptyFilter = true;
+                        }
+                        logger.info("DealsListServlet. Used filter dealTag " + tag);
+                    }
                 }
             }
 
-//            dealsList = dealsListStatus.and(dealsListTag);
+            if(filters == false){
+                dealsList = dealDao.readAll();
+            }
 
             request.setAttribute("deals", dealsList);
             request.setAttribute("deals_statuses", dealStatusList);
             request.setAttribute("users", userList);
             request.getRequestDispatcher("jsp/dealslist.jsp").forward(request, response);
+            connection.close();
+        } catch (SQLException e) {
+            logger.error("Error when prepearing data for dealslist.jsp",e);
         } catch (DataBaseException e) {
             logger.error("Error when prepearing data for dealslist.jsp",e);
         } catch (ServletException e) {
