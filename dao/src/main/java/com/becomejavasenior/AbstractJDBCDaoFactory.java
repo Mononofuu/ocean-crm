@@ -3,6 +3,8 @@ package com.becomejavasenior;
 import com.becomejavasenior.impl.*;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -22,6 +24,17 @@ public abstract class AbstractJDBCDaoFactory implements DaoFactory {
             url = prop.getProperty("url");
         } catch (ClassNotFoundException | IOException e) {
             throw new DataBaseException(e);
+        } catch (NullPointerException e){
+            URI dbUri = null;
+            try {
+                dbUri = new URI(System.getenv("DATABASE_URL"));
+            } catch (URISyntaxException e1) {
+                throw new DataBaseException(e);
+            }
+            url = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath();
+            prop.put("user", dbUri.getUserInfo().split(":")[0]);
+            prop.put("password", dbUri.getUserInfo().split(":")[1]);
+            prop.put("driver", "org.postgresql.Driver");
         }
     }
 
