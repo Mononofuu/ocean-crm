@@ -29,7 +29,7 @@
 <body>
 <div>
     <form action="new_contact_add" method="get" enctype="multipart/form-data">
-    <div class="row">
+    <div class="floatleft">
     <div class="tablename">Создание контакта</div>
     <div class="frame">
         <input class="field" type="text" name="name" placeholder="Имя Фамилия">
@@ -59,7 +59,7 @@
     </div>
     </div>
 
-    <div class="row">
+    <div class="floatleft">
         <div class="tablename">Быстрое добавление сделки</div>
         <div class="frame">
             <input class="field bigtext" type="text" name="newdealname" placeholder="Название сделки">
@@ -107,7 +107,7 @@
     </div>
     </div>
     
-    <div class="row">
+    <div class="floatleft">
         <select class="companyselect" name="companyid">
             <option value="" disabled selected>Выбор Компании</option>
             <c:forEach var="company" items="${companylist}">
@@ -117,7 +117,7 @@
 
         <div class="tablename companyadd">Добавить компанию</div>
         <form action="/new_company" method="post">
-    <div class="row frame rightframe">
+    <div class="floatleft frame rightframe">
         <input class="field" type="text" name="newcompanyname" placeholder="Название компании">
         <input class="field" type="text" name="newcompanyphone" placeholder="Телефон">
         <input class="field" type="text" name="newcompanyemail" placeholder="Email">

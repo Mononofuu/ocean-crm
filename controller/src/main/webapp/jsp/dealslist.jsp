@@ -42,7 +42,7 @@
     </table>
 </divbutton>
 
-<div class="row">
+<div class="floatleft">
     <div class="tablename"><b><h2>Отображение сделок</h2></b></div>
     <div class="tablename center"><b><h1>Список</h1></b></div>
     <div class="row2">

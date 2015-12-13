@@ -47,7 +47,7 @@ body{
 .menu a:hover{
     color:snow;
     background-color:cadetblue;
-
+    text-decoration: none;
 }
 .menu .header:hover{
     color:black;

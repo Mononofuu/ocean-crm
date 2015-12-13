@@ -1,14 +1,16 @@
 /**
  * Created by antonsakhno on 10.12.15.
  */
+
 $(document).ready(function(){
     var buttoncolor = 'cadetblue';
     var $activebutton = $('.todo');
     var $activeview = $('.todotasks');
-    
+
     $activeview.show();
     $activebutton.css('background-color', buttoncolor);
-    
+
+
     $('.view').hover(
         function(){
             if($activebutton.get(0)!=$(this).get(0)){
@@ -22,14 +24,14 @@ $(document).ready(function(){
                 $(this).css('background-color', buttoncolor);
             };
     });
-        
+
     var buttonclick = function(){
         $('.tasks').hide();
         $activeview.show();
         $('.view').css('background-color', 'gainsboro');
         $activebutton.css('background-color', buttoncolor);
     };
-    
+
     $('.todo').click(function(){
         $activebutton=$(this);
         $activeview=$('.todotasks')
