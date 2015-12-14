@@ -84,6 +84,7 @@ public abstract class AbstractJDBCDaoFactory implements DaoFactory {
         daoClasses.put(DealStatus.class, new DealStatusDAOImpl());
         daoClasses.put(Task.class, new TaskDAOImpl());
         daoClasses.put(File.class, new FileDAOImpl());
+        daoClasses.put(TaskType.class, new TaskTypeDAOImpl());
 
     }
 }

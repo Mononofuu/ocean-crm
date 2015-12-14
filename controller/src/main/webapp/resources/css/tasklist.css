@@ -1,8 +1,12 @@
 .window, .tab-pane{
-    background-color:gainsboro;
     border: 2px solid black;
     border-radius: 10px;
     margin: 10px 0 0 20px;
+    height:550px;
+    overflow: auto;
+}
+.window{
+    height: 600px;
 }
 
 .addtask{
@@ -13,107 +17,55 @@
 }
 
 .element{
-    border: 2px solid #560000;
+    border: 1px solid black;
     border-radius: 5px;
     padding: 5px;
+    background-color: #88cbcd;
+    margin-bottom: 3px;
+    font-size: 0.7em;
+    overflow: hidden;
+    padding: 2px;
 }
-.overdue .element{
-background-color: rgba(255, 146, 56, 0.47);
-}
-.todotoday .element{
-background-color: cadetblue;
+
+.overdue .element, .missed{
+    background-color: rgba(255, 146, 56, 0.47);
 }
 .todotomorow .element{
-background-color: darkseagreen;
+    background-color: darkseagreen;
+    color: black;
 }
 .rowname{
     text-align: center;
 }
 .no-gutter > [class*='col-'] {
-    padding-right:0;
+    padding-right:3px;
     padding-left:0;
 }
 
-/*старый  css*/
-/*.selectview{*/
-    /*margin: 0 0 0 20px; */
-/*}*/
+.date, .contactdeal{
+    width:150px;
+}
+.time{
+    width: 110px;
+}
+.tab-content .tab-pane{
+    padding: 3px;
+}
+.monthtable, .align-table{
+    table-layout: fixed;
+    width:100%;
+}
+.monthtable td{
+    height: 80px;
+}
+.smalltext{
+    font-size: 0.6em;
+    padding: 1px;
+}
 
-/*.floatleft {*/
-    /*float:left;*/
-    /*margin-top: 20px;*/
-/*}*/
-/*.tasks{*/
-    /*display:none;*/
-    /*margin-top: 40px;*/
-    /*height: 485px;*/
-    /*border: 2px solid black;*/
-    /*border-radius: 10px;*/
-    /*background-color:gainsboro;*/
-/*}*/
-/*.addcontact{*/
-    /*display: block;*/
-    /*width: 120px;*/
-    /*text-decoration: none;*/
-    /*color: black;*/
-    /*background-color: darkseagreen;*/
-    /*margin: 0px 3px 0 30px;*/
-    /*text-align: center;*/
-    /*padding: 5px 5px;*/
-    /*border: 1px solid black;*/
-    /*border-radius: 5px;*/
-    /*cursor: pointer;*/
-/*}*/
-
-/*.overdue, .todotoday, .todotomorow{*/
-    /*float: left;*/
-    /*/!*height: 100%;*!/*/
-    /*/!*width: 33%;*!/*/
-    /*overflow: auto;*/
-/*}*/
-/*.todotomorow{*/
-    /*/!*width: 33.7%;*!/*/
-/*}*/
-
-/*.overdue, .todotoday{*/
-    /*border-right: 1px solid black;*/
-
-/*}*/
-/*.rowname{*/
-    /*background-color: darkgrey;*/
-    /*text-align: center;*/
-/*}*/
-/*.leftrow{*/
-    /*border-radius: 9px 0 0 0;*/
-
-/*}*/
-/*.rightrow{*/
-    /*border-radius: 0 9px 0 0;*/
-/*}*/
-
-/*.element{*/
-    /*overflow: auto;*/
-    /*padding: 0;*/
-/*}*/
-/*.overdue .element{*/
-    /*background-color: rgba(255, 146, 56, 0.47);*/
-    /*border: 2px solid #560000;*/
-    /*border-radius: 5px;*/
-/*}*/
-/*.todotoday .element{*/
-    /*background-color: cadetblue;*/
-    /*border: 2px solid #001856;*/
-    /*border-radius: 5px;*/
-/*}*/
-/*.todotomorow .element{*/
-    /*background-color: darkseagreen;*/
-    /*border: 2px solid #001856;*/
-    /*border-radius: 5px;*/
-/*}*/
-/*.comment{*/
-    /*overflow-x: hidden;*/
-    /*width: 220px;*/
-    /*margin: 0;*/
-/*}*/
-
-
+.formlable{
+    padding: 0 0 3px 15px;
+}
+.resetbutton{
+    margin-left:30px;
+}

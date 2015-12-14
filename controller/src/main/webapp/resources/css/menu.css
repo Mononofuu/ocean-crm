@@ -33,6 +33,7 @@ body{
 .sub-menu{
     display: none;
     position:absolute;
+    z-index: 10;
     left: 160px;
     top: -2px;
     width: 220px;

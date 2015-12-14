@@ -149,25 +149,31 @@ public class NewContactServlet extends HttpServlet {
             switch (period){
                 case "today":
                     c.add(Calendar.DAY_OF_MONTH, 1);
+                    c.add(Calendar.MINUTE, -1);
                     break;
                 case "allday":
                     c.add(Calendar.DAY_OF_MONTH, 1);
+                    c.add(Calendar.MINUTE, -1);
                     break;
                 case "tomorow":
                     c.add(Calendar.DAY_OF_MONTH, 2);
+                    c.add(Calendar.MINUTE, -1);
                     break;
                 case "nextweek":
                     c.set(Calendar.DAY_OF_WEEK, 0);
                     c.add(Calendar.DAY_OF_MONTH,14);
+                    c.add(Calendar.MINUTE, -1);
                     break;
                 case "nextmonth":
                     c.set(Calendar.DAY_OF_MONTH,0);
                     c.add(Calendar.MONTH, 2);
+                    c.add(Calendar.MINUTE, -1);
                     break;
                 case "nextyear":
                     c.set(Calendar.DAY_OF_MONTH,0);
                     c.set(Calendar.MONTH,0);
                     c.add(Calendar.YEAR, 2);
+                    c.add(Calendar.MINUTE, -1);
                     break;
             }
             task.setDueTime(c.getTime());
