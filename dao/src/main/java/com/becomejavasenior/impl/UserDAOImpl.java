@@ -14,10 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserDAOImpl extends AbstractJDBCDao<User> implements UserDAO {
-    public UserDAOImpl(  Connection connection) throws DataBaseException {
-        super(connection);
-    }
-
 
     @Override
     public String getDeleteQuery() {

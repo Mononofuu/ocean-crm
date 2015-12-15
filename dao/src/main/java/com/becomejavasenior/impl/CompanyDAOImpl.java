@@ -10,9 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CompanyDAOImpl extends AbstractJDBCDao<Company> implements CompanyDAO {
-    public CompanyDAOImpl(Connection connection) throws DataBaseException {
-        super(connection);
-    }
 
     @Override
     public String getReadAllQuery() {
@@ -28,9 +25,9 @@ public class CompanyDAOImpl extends AbstractJDBCDao<Company> implements CompanyD
     protected List<Company> parseResultSet(ResultSet rs) throws DataBaseException {
         List<Company> result = new ArrayList<>();
         try {
+            GenericDao subjectDao = getDaoFromCurrentFactory(Subject.class);
             while (rs.next()) {
                 Company company = new Company();
-                GenericDao subjectDao = getDaoFromCurrentFactory(Subject.class);
                 Subject subject = (Subject) subjectDao.read(rs.getInt("id"));
                 company.setId(subject.getId());
                 company.setUser(subject.getUser());

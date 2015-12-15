@@ -142,6 +142,11 @@ INSERT INTO phone_type (name) VALUES
 ('HOME_PHONE_NUMBER'),
 ('OTHER_PHONE_NUMBER');
 
+INSERT INTO task_type (name) VALUES
+  ('FOLLOW_UP'),
+  ('MEETING'),
+  ('OTHER');
+
 CREATE TABLE db_version(
   version VARCHAR(45) PRIMARY KEY
 );

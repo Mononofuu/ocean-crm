@@ -11,10 +11,6 @@ import java.util.Set;
 
 public class SubjectTagDAOImpl extends AbstractJDBCDao<SubjectTag> implements SubjectTagDAO {
 
-    public SubjectTagDAOImpl( Connection connection) throws DataBaseException {
-        super(connection);
-    }
-
     @Override
     protected String getConditionStatment() {
         return " WHERE subject_id = ?";
@@ -23,7 +19,8 @@ public class SubjectTagDAOImpl extends AbstractJDBCDao<SubjectTag> implements Su
     //Переопределяем метод чтобы возвращал null и не ломал метод read().
     @Override
     public SubjectTag create(SubjectTag object) throws DataBaseException {
-        try (PreparedStatement statement = getConnection().prepareStatement(getCreateQuery(), Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(getCreateQuery(), Statement.RETURN_GENERATED_KEYS)) {
             prepareStatementForInsert(statement, object); // помещаем в запрос параметры object
             statement.executeUpdate();
             // получаем обратно новую запись через возвращенный id записи
@@ -50,17 +47,14 @@ public class SubjectTagDAOImpl extends AbstractJDBCDao<SubjectTag> implements Su
     protected List<SubjectTag> parseResultSet(ResultSet rs) throws DataBaseException {
         List<SubjectTag> result = new ArrayList<>();
         try {
+            GenericDao subjectDao = getDaoFromCurrentFactory(Subject.class);
+            GenericDao tagDao = getDaoFromCurrentFactory(Tag.class);
             while (rs.next()) {
                 SubjectTag subjectTag = new SubjectTag();
-
-                GenericDao subjectDao = getDaoFromCurrentFactory(Subject.class);
                 Subject subject = (Subject) subjectDao.read(rs.getInt("subject_id"));
                 subjectTag.setSubject(subject);
-
-                GenericDao tagDao = getDaoFromCurrentFactory(Tag.class);
                 Tag tag = (Tag) tagDao.read(rs.getInt("tag_id"));
                 subjectTag.setTag(tag);
-
                 result.add(subjectTag);
             }
         } catch (SQLException e) {
@@ -108,7 +102,8 @@ public class SubjectTagDAOImpl extends AbstractJDBCDao<SubjectTag> implements Su
      */
     public Set<Tag> getAllTagsBySubjectId(int id) throws DataBaseException {
         Set<Tag> result = new HashSet<>();
-        try (PreparedStatement statement = getConnection().prepareStatement(getReadAllQuery() + getConditionStatment())) {
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(getReadAllQuery() + getConditionStatment())) {
             statement.setInt(1, id);
             ResultSet rs = statement.executeQuery();
             List<SubjectTag> list = parseResultSet(rs);

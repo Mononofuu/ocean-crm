@@ -16,9 +16,6 @@ import java.util.List;
  * created by Alekseichenko Sergey <mononofuu@gmail.com>
  */
 public class CurrencyDAOImpl extends AbstractJDBCDao<Currency> implements CurrencyDAO {
-    public CurrencyDAOImpl(Connection connection) throws DataBaseException {
-        super(connection);
-    }
 
     @Override
     public String getReadAllQuery() {

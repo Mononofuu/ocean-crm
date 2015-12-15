@@ -21,8 +21,6 @@ import java.util.*;
 public class NewContactServlet extends HttpServlet {
     private Logger logger = LogManager.getLogger(NewContactServlet.class);
     private DaoFactory dao;
-    private Connection connection;
-
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         this.process(request, response);
@@ -35,7 +33,6 @@ public class NewContactServlet extends HttpServlet {
     private void process(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             dao = new PostgreSqlDaoFactory();
-            connection = dao.getConnection();
             Contact newContact = new Contact();
             newContact.setName(request.getParameter("name"));
             newContact.setTags(getTagsFromRequest(request.getParameter("tags")));

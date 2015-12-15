@@ -35,11 +35,6 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO {
     }
 
     @Override
-    protected String getConditionStatment() {
-        return "where status_id = 40";
-    }
-
-    @Override
     public String getCreateQuery() {
         return "INSERT INTO deal(id, status_id, currency_id, budget, contact_main_id, company_id, data_close) " +
                 "VALUES(?,?,?,?,?,?,?)";
@@ -60,48 +55,37 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO {
     protected List<Deal> parseResultSet(ResultSet rs) throws DataBaseException {
         List<Deal> result = new ArrayList<>();
         try {
+            GenericDao subjectDao = getDaoFromCurrentFactory(Subject.class);
+            GenericDao companyDao = getDaoFromCurrentFactory(Company.class);
+            GenericDao contactDao = getDaoFromCurrentFactory(Contact.class);
+            GenericDao dealStatusDao = getDaoFromCurrentFactory(DealStatus.class);
+            GenericDao currencyDao = getDaoFromCurrentFactory(Currency.class);
+            SubjectTagDAOImpl subjectTagDAOImpl = (SubjectTagDAOImpl) getDaoFromCurrentFactory(SubjectTag.class);
+            DealContactDAOImpl dealContactDAOImpl = (DealContactDAOImpl) getDaoFromCurrentFactory(DealContact.class);
+            FileDAOImpl fileDao = (FileDAOImpl) getDaoFromCurrentFactory(File.class);
+            CommentDAOImpl commentDAO = (CommentDAOImpl) getDaoFromCurrentFactory(Comment.class);
+            TaskDAOImpl taskDAO = (TaskDAOImpl) getDaoFromCurrentFactory(Task.class);
             while (rs.next()) {
                 Deal deal = new Deal();
                 int id = rs.getInt("id");
-
-                GenericDao subjectDao = getDaoFromCurrentFactory(Subject.class);
                 Subject subject = (Subject) subjectDao.read(id);
                 deal.setId(id);
                 deal.setName(subject.getName());
                 deal.setBudget(rs.getInt("budget"));
                 deal.setDateWhenDealClose(rs.getTimestamp("data_close"));
-
-                GenericDao companyDao = getDaoFromCurrentFactory(Company.class);
                 Company company = (Company) companyDao.read(rs.getInt("company_id"));
                 deal.setDealCompany(company);
-
-                GenericDao contactDao = getDaoFromCurrentFactory(Contact.class);
                 Contact contact = (Contact) contactDao.read(rs.getInt("contact_main_id"));
                 deal.setMainContact(contact);
-
-                GenericDao dealStatusDao = getDaoFromCurrentFactory(DealStatus.class);
                 DealStatus dealStatus = (DealStatus) dealStatusDao.read(rs.getInt("status_id"));
                 deal.setStatus(dealStatus);
-
-                GenericDao currencyDao = getDaoFromCurrentFactory(Currency.class);
                 Currency currency = (Currency) currencyDao.read(rs.getInt("currency_id"));
                 deal.setCurrency(currency);
-
-                SubjectTagDAOImpl subjectTagDAOImpl = (SubjectTagDAOImpl) getDaoFromCurrentFactory(SubjectTag.class);
                 deal.setTags(subjectTagDAOImpl.getAllTagsBySubjectId(id));
-
-                DealContactDAOImpl dealContactDAOImpl = (DealContactDAOImpl) getDaoFromCurrentFactory(DealContact.class);
                 deal.setContacts(dealContactDAOImpl.getAllContactsBySubjectId(id));
-
-                FileDAOImpl fileDao = (FileDAOImpl) getDaoFromCurrentFactory(File.class);
                 deal.setFiles(fileDao.getAllFilesBySubjectId(id));
-
-                CommentDAOImpl commentDAO = (CommentDAOImpl) getDaoFromCurrentFactory(Comment.class);
                 deal.setComments(commentDAO.getAllCommentsBySubjectId(id));
-
-                TaskDAOImpl taskDAO = (TaskDAOImpl) getDaoFromCurrentFactory(Task.class);
                 deal.setTasks(taskDAO.getAllTasksBySubjectId(id));
-
                 result.add(deal);
             }
         } catch (SQLException e) {
@@ -132,7 +116,7 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO {
 
     @Override
     protected void prepareStatementForUpdate(PreparedStatement statement, Deal object) throws DataBaseException {
-        try {
+        try{
             GenericDao subjectDao = getDaoFromCurrentFactory(Subject.class);
             subjectDao.update(object);
             statement.setInt(1, object.getStatus().getId());

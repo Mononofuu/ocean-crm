@@ -13,9 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PhoneTypeDAOImpl extends AbstractJDBCDao<PhoneType> implements PhoneTypeDAO {
-    public PhoneTypeDAOImpl(Connection connection) throws DataBaseException {
-        super(connection);
-    }
 
     @Override
     public String getReadAllQuery() {

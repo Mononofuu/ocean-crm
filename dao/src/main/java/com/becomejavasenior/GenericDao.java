@@ -2,7 +2,7 @@ package com.becomejavasenior;
 
 import java.util.List;
 
-public interface GenericDao<T> {
+public interface GenericDao<T>{
     T create(T object) throws DataBaseException;
 
     T read(int key) throws DataBaseException;

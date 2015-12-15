@@ -1,9 +1,7 @@
 <!DOCTYPE html>
-<!--
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page isELIgnored="false" %>
--->
 <style>
     <%@include file='../resources/css/menu.css' %>
 </style>
@@ -39,7 +37,7 @@
             <li>
                 <a href="#7">Настройки</a>
                 <ul class="sub-menu">
-                    <li>Настройки</li>
+                    <li><a class="header" href="#">Настройки</a></li>
                     <li><a href="#">Общие настройки</a></li>
                     <li><a href="#">Этапы продаж</a></li>
                     <li><a href="#">Пользователи и права</a></li>
