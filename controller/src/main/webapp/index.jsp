@@ -8,11 +8,11 @@
 <body>
 CRM System
 <br>
+<a href="jsp/menu.jsp">Main menu</a><br/>
 <a href="deal">New Deal</a><br/>
 <a href="dealspyramid">Voronka</a><br/>
 <a href="/new_contact_prepare">New Contact</a><br/>
 <a href="dashboard.jsp">Dashboard</a><br/>
-<a href="dealslist?action=add">View list of deals</a>
 
 </body>
 </html>
