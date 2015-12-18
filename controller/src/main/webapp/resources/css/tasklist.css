@@ -1,0 +1,71 @@
+.window, .tab-pane{
+    border: 2px solid black;
+    border-radius: 10px;
+    margin: 10px 0 0 20px;
+    height:550px;
+    overflow: auto;
+}
+.window{
+    height: 600px;
+}
+
+.addtask{
+    margin: 5px 0 0 80px;
+}
+.nav{
+    margin-top: 10px;
+}
+
+.element{
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 5px;
+    background-color: #88cbcd;
+    margin-bottom: 3px;
+    font-size: 0.7em;
+    overflow: hidden;
+    padding: 2px;
+}
+
+.overdue .element, .missed{
+    background-color: rgba(255, 146, 56, 0.47);
+}
+.todotomorow .element{
+    background-color: darkseagreen;
+    color: black;
+}
+.rowname{
+    text-align: center;
+}
+.no-gutter > [class*='col-'] {
+    padding-right:3px;
+    padding-left:0;
+}
+
+.date, .contactdeal{
+    width:150px;
+}
+.time{
+    width: 110px;
+}
+.tab-content .tab-pane{
+    padding: 3px;
+}
+.monthtable, .align-table{
+    table-layout: fixed;
+    width:100%;
+}
+.monthtable td{
+    height: 80px;
+}
+.smalltext{
+    font-size: 0.6em;
+    padding: 1px;
+}
+
+.formlable{
+    padding: 0 0 3px 15px;
+}
+.resetbutton{
+    margin-left:30px;
+}

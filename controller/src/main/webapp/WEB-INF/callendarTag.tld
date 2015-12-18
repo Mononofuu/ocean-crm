@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<taglib xmlns="http://java.sun.com/xml/ns/javaee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd"
+        version="2.1">
+
+    <tlib-version>1.0</tlib-version>
+    <short-name>cal</short-name>
+    <uri>/WEB-INF/callendarTag</uri>
+    <tag>
+        <name>month</name>
+        <tag-class>com.becomejavasenior.jstl.MonthCalendar</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>tasks</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+    <tag>
+        <name>week</name>
+        <tag-class>com.becomejavasenior.jstl.WeekCalendar</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>tasks</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+    <tag>
+        <name>day</name>
+        <tag-class>com.becomejavasenior.jstl.DayCalendar</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>tasks</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+</taglib>

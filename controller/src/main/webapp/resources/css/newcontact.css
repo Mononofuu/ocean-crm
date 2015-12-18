@@ -53,7 +53,7 @@ body {
     font-size: 12px;
 }
 
-.row {
+.floatleft {
     float: left;
 }
 
@@ -81,11 +81,19 @@ body {
     margin-bottom: 5px;
     padding: 4px;
 }
+.button:hover{
+    background-color: seagreen;
+    color: snow;
+}
 
 .cancel {
     width: 130px;
     background-color: lavenderblush;
     padding: 4px 10px;
+}
+.cancel:hover{
+    background-color: #8b211e;
+    color: snow;
 }
 
 .addbutton{
@@ -97,3 +105,4 @@ body {
     width: 220px;
     
 }
+
