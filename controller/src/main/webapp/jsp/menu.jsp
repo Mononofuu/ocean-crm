@@ -23,7 +23,7 @@
                 <a href="#2">Рабочий стол</a>
             </li>
             <li>
-                <a href="#3">Сделки</a>
+                <a href="/dealspyramid">Сделки</a>
             </li>
             <li>
                 <a href="#4">Контакты</a>

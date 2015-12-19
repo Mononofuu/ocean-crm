@@ -10,8 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -43,25 +42,19 @@ public class DealsPyramidServlet extends HttpServlet {
 
         try {
             GenericDao<Deal> dealDao = dao.getDao(Deal.class);
+            GenericDao<DealStatus> statusDao = dao.getDao(DealStatus.class);
+            List<DealStatus> statuses = statusDao.readAll();
+            Collections.sort(statuses);
+
             List<Deal> deals = applyFilter(dealDao.readAll(), filter);
 
-            List<Deal> primaryDeals = deals.stream().filter(deal -> deal.getStatus().getName().equals("PRIMARY CONTACT")).collect(Collectors.toList());
-            List<Deal> conversationDeals = deals.stream().filter(deal -> deal.getStatus().getName().equals("CONVERSATION")).collect(Collectors.toList());
-            List<Deal> decisionDeals = deals.stream().filter(deal -> deal.getStatus().getName().equals("MAKE THE DECISION")).collect(Collectors.toList());
-            List<Deal> approvalDeals = deals.stream().filter(deal -> deal.getStatus().getName().equals("APPROVAL OF THE CONTRACT")).collect(Collectors.toList());
-            int primaryDealsBudget = primaryDeals.stream().mapToInt(Deal::getBudget).sum();
-            int conversationDealsBudget = conversationDeals.stream().mapToInt(Deal::getBudget).sum();
-            int decisionDealsBudget = decisionDeals.stream().mapToInt(Deal::getBudget).sum();
-            int approvalDealsBudget = approvalDeals.stream().mapToInt(Deal::getBudget).sum();
+            SortedMap<DealStatus, List<Deal>> dealsToStatus = new TreeMap<>();
+            for (DealStatus status : statuses) {
+                dealsToStatus.put(status, new ArrayList<>());
+                deals.stream().filter(deal -> deal.getStatus().equals(status)).forEach(deal1 -> dealsToStatus.get(status).add(deal1));
+            }
 
-            req.setAttribute("primaryDeals", primaryDeals);
-            req.setAttribute("conversationDeals", conversationDeals);
-            req.setAttribute("decisionDeals", decisionDeals);
-            req.setAttribute("approvalDeals", approvalDeals);
-            req.setAttribute("primaryDealsBudget", primaryDealsBudget);
-            req.setAttribute("conversationDealsBudget", conversationDealsBudget);
-            req.setAttribute("decisionDealsBudget", decisionDealsBudget);
-            req.setAttribute("approvalDealsBudget", approvalDealsBudget);
+            req.setAttribute("deals_map", dealsToStatus);
 
         } catch (DataBaseException e) {
             logger.error("Error while getting DAO");
