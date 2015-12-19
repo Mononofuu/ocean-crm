@@ -14,6 +14,7 @@
 </style>
 
 <html>
+<!--<link href="../css/dealslist.css" rel="stylesheet" type="text/css">-->
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Список сделок</title>
@@ -38,32 +39,18 @@
     </script>
 
 </head>
+
 <body>
 
 
-<div class="row">
-    <div class="tablename"><b><h2>Отображение сделок</h2></b></div>
-    <div class="tablename center"><b><h1>Список</h1></b></div>
-    <div class="row2">
-        <table class="table">
-            <thead>
-            <tr>
-                <th width="150">Название сделки</th>
-                <th width="150">Основной контакт</th>
-                <th width="150">Компания контакта</th>
-                <th width="150">Этап сделки</th>
-                <th width="150">Бюджет</th>
-            </tr>
-            </thead>
-            <tbody>
 
-<div class="container -fluid">
+<div class="left-container">
 
 
-    <form class="form-inline col-xs-10">
+    <form action="dealspyramid" class="form-inline col-xs-10">
         <div class="form-group">
-            <input href="../dealspyramid?action=add" class="btn btn-default navbar-btn" type="submit" value="Воронка">
-            <input class="btn btn-default navbar-btn" type="submit" value="Список">
+            <input class="btn btn-default navbar-btn" type="submit" value="Воронка">
+            <!--<input class="btn btn-default navbar-btn" type="submit" value="Список">-->
         </div>
     </form>
 
@@ -95,7 +82,7 @@
         </table>
     </div>
 
-    <form  class="well col-xs-4">
+    <form  class="well col-xs-3">
         <h3>Фильтры</h3>
         <div class="form-group">
             <select class="form-control" name="selectedfilter" title="Стандартные фильтры" size="8">
@@ -157,7 +144,7 @@
 
 
         <div class="form-group">
-            <input type="text" class="form-control" id="inputEmail" placeholder="Теги">
+            <input type="text" class="form-control" name="tags" placeholder="Теги">
         </div>
         <div class="form-group">
             <input class="btn btn-default navbar-btn" type="submit" value="Сохранить">
@@ -168,6 +155,5 @@
 
 </div>
 
-
-                </body>
-                </html>
+</body>
+</html>

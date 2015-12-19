@@ -1,7 +1,7 @@
 package com.becomejavasenior;
 
-import com.becomejavasenior.impl.CommentDAOImpl;
 import com.becomejavasenior.impl.DealDAOImpl;
+import com.becomejavasenior.impl.DealServiceImpl;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.becomejavasenior.interfaceservice.DealService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -26,7 +27,7 @@ import org.apache.logging.log4j.Logger;
 public class DealsListServlet extends HttpServlet{
     static final Logger logger = LogManager.getRootLogger();
     private DaoFactory dao;
-    private Connection connection;
+//    private Connection connection;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -52,9 +53,7 @@ public class DealsListServlet extends HttpServlet{
             GenericDao userDao = dao.getDao(User.class);
             List<User> userList = userDao.readAll();
 
-
-//            GenericDao dealDao = dao.getDao(Deal.class);
-            DealDAOImpl dealDao = new DealDAOImpl();
+            DealServiceImpl dealService = new DealServiceImpl();
 
             String dealStatusId = request.getParameter("dealstatus");
             String dealUserId = request.getParameter("user");
@@ -63,13 +62,13 @@ public class DealsListServlet extends HttpServlet{
             List<List<Deal>> list = new ArrayList<>();
 
             if(dealStatusId != null && dealStatusId.equals("") == false){
-                dealsList = dealDao.readStatusFilter(Integer.valueOf(dealStatusId));
+                dealsList = dealService.findDealsByStatus(Integer.valueOf(dealStatusId));
                 list.add(dealsList);
                 logger.info("DealsListServlet. Used filter dealStatusId " + dealStatusId);
             }
 
             if(dealUserId != null && dealUserId.equals("") ==false){
-                dealsList = dealDao.readUserFilter(Integer.valueOf(dealUserId));
+                dealsList = dealService.findDealsByUser(Integer.valueOf(dealUserId));
                 list.add(dealsList);
                 logger.info("DealsListServlet. Used filter dealUserId " + dealUserId);
             }
@@ -77,35 +76,22 @@ public class DealsListServlet extends HttpServlet{
             if(tags != null){
                 String tag = tags.trim().replaceAll("\\s+","','");
                 if(!tag.equals("")) {
-                    dealsList = dealDao.readTagFilter("'" + tag + "')))");
+                    dealsList = dealService.findDealsByTags(tag);
                     list.add(dealsList);
                     logger.info("DealsListServlet. Used filter dealTag " + tag);
                 }
             }
 
             if(list.size() == 0){
-                dealsList = dealDao.readAll();
+                dealsList = dealService.findDeals();
             }else{
-                List<Deal> dealsListTemp;
-                Iterator<List<Deal>> listIterator = list.iterator();
-                dealsList = listIterator.next();
-                while (dealsList.size() != 0 && listIterator.hasNext()) {
-                    //                   dealsListTemp = listIterator.next();
-                    dealsList = dealsList.stream()
-                            .filter(deal ->
-//                                (dealsListTemp.stream().map(Deal::getId).collect(Collectors.toList())).contains(deal.getId()))
-                                    (listIterator.next().stream().map(Deal::getId).collect(Collectors.toList())).contains(deal.getId()))
-                            .collect(Collectors.toList());
-                }
+                dealsList = dealService.findDealsByFilters(list);
             }
 
             request.setAttribute("deals", dealsList);
             request.setAttribute("deals_statuses", dealStatusList);
             request.setAttribute("users", userList);
             request.getRequestDispatcher("jsp/dealslist.jsp").forward(request, response);
-//            connection.close();
-//        } catch (SQLException e) {
-//            logger.error("Error when prepearing data for dealslist.jsp",e);
         } catch (DataBaseException e) {
             logger.error("Error when prepearing data for dealslist.jsp",e);
         } catch (ServletException e) {
