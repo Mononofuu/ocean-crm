@@ -152,3 +152,15 @@ CREATE TABLE db_version(
 );
 
 INSERT INTO db_version (version) VALUES ('1.0');
+
+CREATE TABLE filter (
+  id         SERIAL PRIMARY KEY,
+  user_id    INTEGER REFERENCES users (id) NOT NULL,
+  type       VARCHAR(45),
+  date_from  TIMESTAMP,
+  date_to    TIMESTAMP,
+  status_id  INTEGER REFERENCES status_type (id),
+  manager_id INTEGER REFERENCES contact (id),
+  tasks      VARCHAR(45),
+  tags       VARCHAR(45)
+);
