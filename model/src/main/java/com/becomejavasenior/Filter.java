@@ -9,6 +9,7 @@ import java.sql.Timestamp;
 public class Filter implements Serializable {
     private static final long serialVersionUID = -5045712962652077587L;
     private int id;
+    private String name;
     private User user;
     private FilterPeriod type;
     private Timestamp date_from;
@@ -97,6 +98,13 @@ public class Filter implements Serializable {
         this.user = user;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     @Override
     public boolean equals(Object o) {

@@ -25,6 +25,8 @@ public class FilterDAOTest {
         filterDao = factory.getDao(Filter.class);
         filter = new Filter();
 
+        filter.setName("Test filter");
+
         filter.setUser((User) factory.getDao(User.class).read(1));
 
         filter.setType(FilterPeriod.PERIOD);
@@ -46,6 +48,7 @@ public class FilterDAOTest {
         returned = filterDao.create(filter);
         assertEquals(filter, returned);
 
+        System.out.println(returned.getName());
         System.out.println(returned.getId());
         System.out.println(returned.getUser().getName());
         System.out.println(returned.getType().name());

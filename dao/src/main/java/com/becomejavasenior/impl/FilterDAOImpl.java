@@ -18,12 +18,13 @@ public class FilterDAOImpl extends AbstractJDBCDao<Filter> implements FilterDAO 
 
     @Override
     public String getCreateQuery() {
-        return "INSERT INTO filter (user_id, type, date_from, date_to, status_id, manager_id, tasks, tags) VALUES (?,?,?,?,?,?,?,?)";
+        return "INSERT INTO filter (name, user_id, type, date_from, date_to, status_id, manager_id, tasks, tags) " +
+                "VALUES (?,?,?,?,?,?,?,?,?)";
     }
 
     @Override
     public String getUpdateQuery() {
-        return "UPDATE filter SET user_id = ?, type = ?, date_from = ?, date_to = ?, status_id = ?, manager_id = ?, tasks = ?, tags = ? WHERE id = ?";
+        return "UPDATE filter SET name = ?, user_id = ?, type = ?, date_from = ?, date_to = ?, status_id = ?, manager_id = ?, tasks = ?, tags = ? WHERE id = ?";
     }
 
     @Override
@@ -42,6 +43,8 @@ public class FilterDAOImpl extends AbstractJDBCDao<Filter> implements FilterDAO 
             while (rs.next()) {
                 Filter filter = new Filter();
                 filter.setId(rs.getInt("id"));
+
+                filter.setName(rs.getString("name"));
 
                 User user = (User) userDao.read(rs.getInt("user_id"));
                 filter.setUser(user);
@@ -78,18 +81,19 @@ public class FilterDAOImpl extends AbstractJDBCDao<Filter> implements FilterDAO 
     @Override
     protected void prepareStatementForInsert(PreparedStatement statement, Filter object) throws DataBaseException {
         try {
-            statement.setInt(1, object.getUser().getId());
-            statement.setString(2, object.getType().name());
-            statement.setTimestamp(3, object.getDate_from());
-            statement.setTimestamp(4, object.getDate_to());
-            statement.setInt(5, object.getStatus().getId());
+            statement.setString(1, object.getName());
+            statement.setInt(2, object.getUser().getId());
+            statement.setString(3, object.getType().name());
+            statement.setTimestamp(4, object.getDate_from());
+            statement.setTimestamp(5, object.getDate_to());
+            statement.setInt(6, object.getStatus().getId());
             if (object.getManager() == null) {
-                statement.setNull(6, Types.INTEGER);
+                statement.setNull(7, Types.INTEGER);
             } else {
-                statement.setInt(6, object.getManager().getId());
+                statement.setInt(7, object.getManager().getId());
             }
-            statement.setString(7, object.getTaskType().name());
-            statement.setString(8, object.getTags());
+            statement.setString(8, object.getTaskType().name());
+            statement.setString(9, object.getTags());
 
         } catch (SQLException e) {
             throw new DataBaseException();
@@ -99,15 +103,16 @@ public class FilterDAOImpl extends AbstractJDBCDao<Filter> implements FilterDAO 
     @Override
     protected void prepareStatementForUpdate(PreparedStatement statement, Filter object) throws DataBaseException {
         try {
-            statement.setInt(1, object.getUser().getId());
-            statement.setString(2, object.getType().name());
-            statement.setTimestamp(3, object.getDate_from());
-            statement.setTimestamp(4, object.getDate_to());
-            statement.setInt(5, object.getStatus().getId());
-            statement.setInt(6, object.getManager().getId());
-            statement.setString(7, object.getTaskType().name());
-            statement.setString(8, object.getTags());
-            statement.setInt(9, object.getId());
+            statement.setString(1, object.getName());
+            statement.setInt(2, object.getUser().getId());
+            statement.setString(3, object.getType().name());
+            statement.setTimestamp(4, object.getDate_from());
+            statement.setTimestamp(5, object.getDate_to());
+            statement.setInt(6, object.getStatus().getId());
+            statement.setInt(7, object.getManager().getId());
+            statement.setString(8, object.getTaskType().name());
+            statement.setString(9, object.getTags());
+            statement.setInt(10, object.getId());
         } catch (SQLException e) {
             throw new DataBaseException();
         }
