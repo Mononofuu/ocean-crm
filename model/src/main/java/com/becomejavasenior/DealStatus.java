@@ -9,8 +9,26 @@ public class DealStatus implements Serializable {
 
     private int id;
     private String name;
+    private String color;
+    private boolean systemDefault;
 
     public DealStatus() {
+    }
+
+    public boolean isSystemDefault() {
+        return systemDefault;
+    }
+
+    public void setSystemDefault(boolean systemDefault) {
+        this.systemDefault = systemDefault;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 
     public int getId() {
