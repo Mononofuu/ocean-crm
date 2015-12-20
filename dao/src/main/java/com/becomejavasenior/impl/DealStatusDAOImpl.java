@@ -24,12 +24,12 @@ public class DealStatusDAOImpl extends AbstractJDBCDao<DealStatus> implements De
 
     @Override
     public String getCreateQuery() {
-        return "INSERT INTO status_type (name) VALUES (?)";
+        return "INSERT INTO status_type (name, color, systemDefault) VALUES (?, ?, ?)";
     }
 
     @Override
     public String getUpdateQuery() {
-        return "UPDATE status_type SET name = ? WHERE id = ?";
+        return "UPDATE status_type SET name = ?, color = ?, systemDefault = ? WHERE id = ?";
     }
 
     @Override
@@ -45,6 +45,8 @@ public class DealStatusDAOImpl extends AbstractJDBCDao<DealStatus> implements De
                 DealStatus status = new DealStatus();
                 status.setId(rs.getInt("id"));
                 status.setName(rs.getString("name"));
+                status.setColor(rs.getString("color"));
+                status.setSystemDefault(rs.getBoolean("systemDefault"));
 
                 result.add(status);
             }
@@ -58,6 +60,8 @@ public class DealStatusDAOImpl extends AbstractJDBCDao<DealStatus> implements De
     protected void prepareStatementForInsert(PreparedStatement statement, DealStatus object) throws DataBaseException {
         try {
             statement.setString(1, object.getName());
+            statement.setString(2, object.getColor());
+            statement.setBoolean(3, object.isSystemDefault());
         } catch (SQLException e) {
             throw new DataBaseException(e);
         }
@@ -67,7 +71,9 @@ public class DealStatusDAOImpl extends AbstractJDBCDao<DealStatus> implements De
     protected void prepareStatementForUpdate(PreparedStatement statement, DealStatus object) throws DataBaseException {
         try {
             statement.setString(1, object.getName());
-            statement.setInt(2, object.getId());
+            statement.setString(2, object.getColor());
+            statement.setBoolean(3, object.isSystemDefault());
+            statement.setInt(4, object.getId());
         } catch (SQLException e) {
             throw new DataBaseException(e);
         }
