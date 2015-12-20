@@ -23,7 +23,7 @@
     <div class="row">
         <div class="col-md-3 border ">
             <p style="text-align: center">Фильтры</p>
-            <form action="/dealspyramid" method="get">
+            <form action="/dealspyramid" method="post">
                 <select class="form-control" name="selectedfilter" title="Стандартные фильтры">
                     <option value="" disabled selected>Выберите фильтр</option>
                     <option value="open">Открытые сделки</option>
@@ -33,23 +33,28 @@
                     <option value="notask">Сделки без задач</option>
                     <option value="expired">Сделки c просроченными задачами</option>
                     <option value="deleted">Удаленные</option>
-                </select>
-                <button class="btn btn-primary" type="submit">Применить фильтр</button>
-                <br><br>
+                    <c:forEach items="${filters}" var="item">
+                        <option value="${item.id}">${item.name}</option>
+                    </c:forEach>
+                </select><br/>
+                <button class="btn btn-primary" type="submit" name="action" value="applyfilter">Применить фильтр
+                </button>
+                <br/><br/>
+                <input class="form-control" type="text" name="name" placeholder="Название фильтра"/>
                 <select class="form-control" id="when" name="when" title="Когда">
                     <option value="" disabled selected>Когда</option>
-                    <option value="alltime">За все время</option>
-                    <option value="today">За сегодня</option>
-                    <option value="3days">За 3 дня</option>
-                    <option value="week">За неделю</option>
-                    <option value="month">За месяц</option>
-                    <option value="quarter">За квартал</option>
+                    <c:forEach items="${filterperiod}" var="item">
+                        <option value="${item}">${item.toString()}</option>
+                    </c:forEach>
                 </select><br>
-                <input id="calend" class="form-control" type="datetime-local" name="period"><br>
+                <p>Дата с</p>
+                <input type="date" class="form-control" name="date_from" min="2015-12-01"><br/>
+                <p>Дата до</p>
+                <input type="date" class="form-control" name="date_to" max="2020-01-01"><br>
                 <select class="form-control" name="phase">
                     <option value="" disabled selected>Этапы</option>
-                    <c:forEach items="${phases}" var="item">
-                        <option value="${item.id}">${item.name}</option>
+                    <c:forEach items="${deals_map}" var="item">
+                        <option value="${item.key.id}">${item.key.name}</option>
                     </c:forEach>
                 </select><br>
                 <select class="form-control" name="managers">
@@ -60,17 +65,12 @@
                 </select><br>
                 <select class="form-control" name="tasks" title="Задачи">
                     <option value="" disabled selected>Задачи</option>
-                    <option value="">Не учитывать</option>
-                    <option value="">На сегодня</option>
-                    <option value="">На завтра</option>
-                    <option value="">На этой неделе</option>
-                    <option value="">В этом месяце</option>
-                    <option value="">В этом квартале</option>
-                    <option value="">Нет задач</option>
-                    <option value="">Просрочены</option>
+                    <c:forEach items="${filtertask}" var="item">
+                        <option value="${item}">${item.toString()}</option>
+                    </c:forEach>
                 </select><br>
                 <input class="form-control" type="text" name="tags" placeholder="Теги"/><br>
-                <button class="btn btn-default" type="submit">Сохранить фильтр</button>
+                <button class="btn btn-default" type="submit" name="action" value="savefilter">Сохранить фильтр</button>
             </form>
 
         </div>
@@ -79,7 +79,7 @@
 
             <c:forEach items="${deals_map}" var="entry">
                 <c:set var="total" value="${0}"/>
-                <fieldset class="col-xs-2 border" id="${entry.key.name}">
+                <fieldset class="col-xs-2 border" id="${entry.key.name}" style="background-color: ${entry.key.color}">
                     <legend class="h6 text-uppercase">${entry.key.name}</legend>
                     <c:forEach items="${entry.value}" var="deal">
                         <c:set var="total" value="${total + deal.budget}"/>
@@ -98,66 +98,6 @@
                 </fieldset>
             </c:forEach>
 
-
-            <%--<fieldset id="primary_contact">--%>
-            <%--<legend>Первичный контакт</legend>--%>
-            <%--<a>${fn:length(primaryDeals)} сделок: ${primaryDealsBudget}USD</a>--%>
-            <%--<c:forEach items="${primaryDeals}" var="deal">--%>
-            <%--<div class="rectangle">--%>
-            <%--<p><a href="http://www.w3schools.com/html/">${deal.name}</a></p>--%>
-            <%--<a>${deal.budget}$</a></br>--%>
-            <%--<a>${deal.dealCompany.name}</a>--%>
-            <%--<c:forEach items="${deal.contacts}" var="contact">--%>
-            <%--<a>${contact}</a>--%>
-            <%--</c:forEach>--%>
-            <%--</div>--%>
-            <%--</c:forEach>--%>
-            <%--</fieldset>--%>
-
-            <%--<fieldset id="conversation">--%>
-            <%--<legend>Переговоры</legend>--%>
-            <%--<a>${fn:length(conversationDeals)} сделок: ${conversationDealsBudget}USD</a>--%>
-            <%--<c:forEach items="${conversationDeals}" var="deal">--%>
-            <%--<div class="rectangle">--%>
-            <%--<p><a href="http://www.w3schools.com/html/">${deal.name}</a></p>--%>
-            <%--<a>${deal.budget}$</a></br>--%>
-            <%--<a>${deal.dealCompany.name}</a>--%>
-            <%--<c:forEach items="${deal.contacts}" var="contact">--%>
-            <%--<a>${contact}</a>--%>
-            <%--</c:forEach>--%>
-            <%--</div>--%>
-            <%--</c:forEach>--%>
-            <%--</fieldset>--%>
-
-            <%--<fieldset id="decision">--%>
-            <%--<legend>Принимают решение</legend>--%>
-            <%--<a>${fn:length(decisionDeals)} сделок: ${decisionDealsBudget}USD</a>--%>
-            <%--<c:forEach items="${decisionDeals}" var="deal">--%>
-            <%--<div class="rectangle">--%>
-            <%--<p><a href="http://www.w3schools.com/html/">${deal.name}</a></p>--%>
-            <%--<a>${deal.budget}$</a></br>--%>
-            <%--<a>${deal.dealCompany.name}</a>--%>
-            <%--<c:forEach items="${deal.contacts}" var="contact">--%>
-            <%--<a>${contact}</a>--%>
-            <%--</c:forEach>--%>
-            <%--</div>--%>
-            <%--</c:forEach>--%>
-            <%--</fieldset>--%>
-
-            <%--<fieldset id="approval">--%>
-            <%--<legend>Согласование договора</legend>--%>
-            <%--<a>${fn:length(approvalDeals)} сделок: ${approvalDealsBudget}USD</a>--%>
-            <%--<c:forEach items="${approvalDeals}" var="deal">--%>
-            <%--<div class="rectangle">--%>
-            <%--<p><a href="http://www.w3schools.com/html/">${deal.name}</a></p>--%>
-            <%--<a>${deal.budget}$</a></br>--%>
-            <%--<a>${deal.dealCompany.name}</a>--%>
-            <%--<c:forEach items="${deal.contacts}" var="contact">--%>
-            <%--<a>${contact}</a>--%>
-            <%--</c:forEach>--%>
-            <%--</div>--%>
-            <%--</c:forEach>--%>
-            <%--</fieldset>--%>
         </div>
 
     </div>

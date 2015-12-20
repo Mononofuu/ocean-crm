@@ -82,7 +82,8 @@ public class FilterDAOImpl extends AbstractJDBCDao<Filter> implements FilterDAO 
     protected void prepareStatementForInsert(PreparedStatement statement, Filter object) throws DataBaseException {
         try {
             statement.setString(1, object.getName());
-            statement.setInt(2, object.getUser().getId());
+//            statement.setInt(2, object.getUser().getId());
+            statement.setInt(2, 1);//TODO
             statement.setString(3, object.getType().name());
             statement.setTimestamp(4, object.getDate_from());
             statement.setTimestamp(5, object.getDate_to());

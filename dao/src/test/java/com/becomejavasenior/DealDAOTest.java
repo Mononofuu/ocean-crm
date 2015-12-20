@@ -20,7 +20,6 @@ public class DealDAOTest {
     private final static String DEAL_NAME = "Test Deal";
     private final static String COMPANY_NAME = "Test Company";
     private final static String TAG = "testdealtag";
-    private final static String DEAL_STATUS = "In progress";
     private final static String CURRENCY_NAME = "Dollar";
     private final static String CURRENCY_CODE = "USD";
     private final static String COMPANY_PHONE = "0442222222";
@@ -47,10 +46,9 @@ public class DealDAOTest {
         }
         deal.setTags(tags);
 
-        DealStatus status = new DealStatus();
-        status.setName(DEAL_STATUS);
+        DealStatus status;
         GenericDao<DealStatus> statusDao = daoFactory.getDao(DealStatus.class);
-        status = statusDao.create(status);
+        status = statusDao.read(1);
         deal.setStatus(status);
 
         Currency currency = new Currency();
