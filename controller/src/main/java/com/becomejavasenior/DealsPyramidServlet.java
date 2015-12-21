@@ -35,6 +35,7 @@ public class DealsPyramidServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
         try {
             dao = new PostgreSqlDaoFactory();
         } catch (DataBaseException e) {
