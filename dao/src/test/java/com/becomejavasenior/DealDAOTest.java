@@ -59,7 +59,8 @@ public class DealDAOTest {
         deal.setCurrency(currency);
 
 
-        deal.setDateWhenDealClose(new Timestamp(new Date().getTime()));
+        deal.setDateWhenDealClose(null);
+        deal.setDateCreated(new Timestamp(new Date().getTime()));
 
         Company company = new Company();
         company.setName(COMPANY_NAME);

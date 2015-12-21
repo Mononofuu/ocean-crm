@@ -182,3 +182,6 @@ INSERT INTO currency (code, name) VALUES ('USD', 'Dollar');
 
 INSERT INTO users (name, login, password) VALUES
   ('user', 'user', 'user01');
+
+ALTER TABLE deal
+ADD created_date TIMESTAMP WITHOUT TIME ZONE;
