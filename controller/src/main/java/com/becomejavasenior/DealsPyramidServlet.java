@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -25,6 +27,11 @@ public class DealsPyramidServlet extends HttpServlet {
     private final static String nextJSP = "/jsp/dealspyramid.jsp";
     private DaoFactory dao;
 
+    public static boolean isBetween(LocalDate created, LocalDate startTime, LocalDate endTime) {
+        logger.info("Compare dates");
+        logger.info(startTime + " --- " + created + " --- " + endTime);
+        return created.compareTo(startTime) > 0 && created.compareTo(endTime) <= 0;
+    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -131,7 +138,7 @@ public class DealsPyramidServlet extends HttpServlet {
     }
 
     private List<Deal> applyFilter(List<Deal> deals, String filterName) {
-        if (filterName.equals("null")) {
+        if (filterName == null || filterName.equals("null")) {
             return deals;
         }
         logger.info("Applying filter: " + filterName);
@@ -169,7 +176,116 @@ public class DealsPyramidServlet extends HttpServlet {
             GenericDao<Filter> filterDao = dao.getDao(Filter.class);
             Filter filter = filterDao.read(Integer.parseInt(filterName));
 
-            //TODO
+            deals = deals.stream().filter(deal -> deal.getStatus().equals(filter.getStatus()))
+                    .collect(Collectors.toList());
+
+            switch (filter.getType()) {
+                case TODAY:
+                    logger.info("TODAY");
+                    deals = deals.stream()
+                            .filter(deal -> deal.getDateCreated().compareTo(new Date()) == 0)
+                            .collect(Collectors.toList());
+                    break;
+                case FOR_THREE_DAYS:
+                    logger.info("FOR_THREE_DAYS");
+                    deals = deals.stream()
+                            .filter(deal -> isBetween(deal.getDateCreated().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), LocalDate.now().minusDays(3), LocalDate.now()))
+                            .collect(Collectors.toList());
+                    break;
+                case WEEK:
+                    logger.info("WEEK");
+                    deals = deals.stream()
+                            .filter(deal -> isBetween(deal.getDateCreated().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), LocalDate.now().minusDays(7), LocalDate.now()))
+                            .collect(Collectors.toList());
+                    break;
+                case MONTH:
+                    logger.info("MONTH");
+                    deals = deals.stream()
+                            .filter(deal -> isBetween(deal.getDateCreated().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), LocalDate.now().minusMonths(1), LocalDate.now()))
+                            .collect(Collectors.toList());
+                    break;
+                case QUARTER:
+                    logger.info("QUARTER");
+                    deals = deals.stream()
+                            .filter(deal -> isBetween(deal.getDateCreated().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), LocalDate.now().minusMonths(3), LocalDate.now()))
+                            .collect(Collectors.toList());
+                    break;
+                case PERIOD:
+                    logger.info("PERIOD");
+                    deals = deals.stream()
+                            .filter(deal -> isBetween(deal.getDateCreated().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), filter.getDate_from().toLocalDateTime().toLocalDate(), filter.getDate_to().toLocalDateTime().toLocalDate()))
+                            .collect(Collectors.toList());
+                    break;
+                case ALL_TIME:
+                    break;
+            }
+
+            if (filter.getManager() != null) {
+                logger.info("MANAGER");
+                deals = deals.stream()
+                        .filter(deal -> deal.getMainContact().equals(filter.getManager()))
+                        .collect(Collectors.toList());
+            }
+
+            switch (filter.getTaskType()) {
+                case WO_TASKS:
+                    logger.info("WO TASKS");
+                    deals = deals.stream()
+                            .filter(deal -> deal.getTasks() == null)
+                            .collect(Collectors.toList());
+                    break;
+                case EXPIRED:
+                    logger.info("EXPIRED TASKS");
+                    deals = deals.stream()
+                            .filter(deal -> deal.getTasks()
+                                    .stream().anyMatch(task -> task.getDueTime().compareTo(new Date()) < 0))
+                            .collect(Collectors.toList());
+                    break;
+                case TODAY:
+                    logger.info("TODAY TASKS");
+                    deals = deals.stream()
+                            .filter(deal -> deal.getTasks()
+                                    .stream().anyMatch(task -> task.getDueTime().compareTo(new Date()) == 0))
+                            .collect(Collectors.toList());
+                    break;
+                case TOMORROW:
+                    logger.info("TOMORROW TASKS");
+                    deals = deals.stream()
+                            .filter(deal -> deal.getTasks()
+                                    .stream().anyMatch(task -> isBetween(task.getDueTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), LocalDate.now(), LocalDate.now().plusDays(1))))
+                            .collect(Collectors.toList());
+                    break;
+                case THIS_WEEK:
+                    logger.info("THIS WEEK TASKS");
+                    deals = deals.stream()
+                            .filter(deal -> deal.getTasks()
+                                    .stream().anyMatch(task -> isBetween(task.getDueTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), LocalDate.now(), LocalDate.now().plusDays(7))))
+                            .collect(Collectors.toList());
+                    break;
+                case THIS_MONTHS:
+                    logger.info("THIS MONTH TASKS");
+                    deals = deals.stream()
+                            .filter(deal -> deal.getTasks()
+                                    .stream().anyMatch(task -> isBetween(task.getDueTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), LocalDate.now(), LocalDate.now().plusMonths(1))))
+                            .collect(Collectors.toList());
+                    break;
+                case THIS_QUARTER:
+                    logger.info("THIS QUARTER TASKS");
+                    deals = deals.stream()
+                            .filter(deal -> deal.getTasks()
+                                    .stream().anyMatch(task -> isBetween(task.getDueTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), LocalDate.now(), LocalDate.now().plusMonths(3))))
+                            .collect(Collectors.toList());
+                    break;
+                case IGNORE:
+                    logger.info("IGNORE TASKS");
+
+                    break;
+            }
+
+            if (filter.getTags() != null && !filter.getTags().isEmpty()) {
+                logger.info("TAGS: " + filter.getTags().length());
+                deals = deals.stream().filter(deal -> deal.getTags().stream().anyMatch(tag -> filter.getTags().contains(tag.getName()))).collect(Collectors.toList());
+            }
 
         } catch (DataBaseException e) {
             logger.error("Error while getting DAO");
