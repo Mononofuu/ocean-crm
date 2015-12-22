@@ -30,7 +30,7 @@
 body{
     background-color: aliceblue;
 }
-.sub-menu{
+.sub-menu, .profile{
     display: none;
     position:absolute;
     z-index: 10;
@@ -40,6 +40,9 @@ body{
     background-color:aliceblue;
     border-radius: 0 10px 10px 10px;
     border: 2px solid black;
+}
+.profile{
+    text-align: center;
 }
 .sub-menu li:last-child{
     border-bottom: 0px;

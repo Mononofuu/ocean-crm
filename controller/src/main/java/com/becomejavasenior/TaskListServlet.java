@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -44,6 +45,10 @@ public class TaskListServlet extends HttpServlet{
                     else return 0;
                 }
             });
+            Enumeration<String> enumer = request.getParameterNames();
+            if(enumer.hasMoreElements()){
+                filterTasks(request, allTasks);
+            }
             request.setAttribute("tasklist", allTasks);
             Calendar tomorowDate = GregorianCalendar.getInstance();
             tomorowDate.set(Calendar.HOUR_OF_DAY, 0);
@@ -84,4 +89,34 @@ public class TaskListServlet extends HttpServlet{
         return result;
     }
 
+    private void filterTasks(HttpServletRequest req, List<Task> tasks){
+        String filtername = req.getParameter("filtername");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+        Date dueDate = null;
+        try {
+            String date = req.getParameter("duedate");
+            String time = req.getParameter("duetime");
+            if("".equals(time)){
+                time = "23:59";
+            }
+            dueDate = dateFormat.parse(date+" "+time);
+        } catch (ParseException e) {
+            /*NOP*/
+        }
+
+        String taskType = req.getParameter("tasktype");
+        logger.info(taskType);
+        Iterator<Task> taskIterator = tasks.iterator();
+        while (taskIterator.hasNext()){
+            Task task = taskIterator.next();
+            if(dueDate!=null&&task.getDueTime().getTime()>dueDate.getTime()){
+                taskIterator.remove();
+                continue;
+            }
+            if(taskType!=null&&!"".equals(taskType)&&TaskType.valueOf(taskType)!=task.getType()){
+                taskIterator.remove();
+                continue;
+            }
+        }
+    }
 }
