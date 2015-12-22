@@ -1,6 +1,5 @@
 package com.becomejavasenior;
 
-import com.becomejavasenior.impl.DealDAOImpl;
 import com.becomejavasenior.impl.DealServiceImpl;
 
 import javax.servlet.ServletException;
@@ -9,14 +8,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import com.becomejavasenior.interfaceservice.DealService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -27,7 +21,6 @@ import org.apache.logging.log4j.Logger;
 public class DealsListServlet extends HttpServlet{
     static final Logger logger = LogManager.getRootLogger();
     private DaoFactory dao;
-//    private Connection connection;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

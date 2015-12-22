@@ -1,11 +1,11 @@
 package com.becomejavasenior.impl;
 
 import com.becomejavasenior.*;
+import com.becomejavasenior.interfacedao.DealDAO;
 import com.becomejavasenior.interfaceservice.DealService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,7 +16,8 @@ import java.util.stream.Collectors;
 public class DealServiceImpl implements DealService{
 
     static final Logger logger = LogManager.getRootLogger();
-    DealDAOImpl dealDao = new DealDAOImpl();
+    DealDAO dealDao = new DealDAOImpl();
+
 
     @Override
     public void saveDeal(Deal deal) throws DataBaseException {
@@ -34,7 +35,7 @@ public class DealServiceImpl implements DealService{
 
     @Override
     public Deal findDealById(int id) throws DataBaseException {
-        Deal deal = dealDao.read(id);
+        Deal deal = (Deal) dealDao.read(id);
         return deal;
     }
 
@@ -67,10 +68,8 @@ public class DealServiceImpl implements DealService{
         Iterator<List<Deal>> listIterator = list.iterator();
         List<Deal> dealsList = listIterator.next();
         while (dealsList.size() != 0 && listIterator.hasNext()) {
-            //                   dealsListTemp = listIterator.next();
             dealsList = dealsList.stream()
                     .filter(deal ->
-//                                (dealsListTemp.stream().map(Deal::getId).collect(Collectors.toList())).contains(deal.getId()))
                             (listIterator.next().stream().map(Deal::getId).collect(Collectors.toList())).contains(deal.getId()))
                     .collect(Collectors.toList());
         }

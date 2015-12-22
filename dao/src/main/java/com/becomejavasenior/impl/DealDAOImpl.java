@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * created by Alekseichenko Sergey <mononofuu@gmail.com>
  */
-public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO {
+public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
 
     public static final String DEAL_SELECT_STATUS_ID = " where status_id=?";
     public static final String DEAL_SELECT_USER_ID = " where id in(select subject.id from subject " +
