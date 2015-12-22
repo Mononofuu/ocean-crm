@@ -1,0 +1,1 @@
+INSERT INTO currency (code, name) VALUES ('USD', 'Dollar');

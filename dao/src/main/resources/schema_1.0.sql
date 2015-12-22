@@ -152,36 +152,3 @@ CREATE TABLE db_version(
 );
 
 INSERT INTO db_version (version) VALUES ('1.0');
-
-CREATE TABLE filter (
-  id         SERIAL PRIMARY KEY,
-  name       VARCHAR(45) NOT NULL ,
-  user_id    INTEGER REFERENCES users (id) NOT NULL,
-  type       VARCHAR(45) NOT NULL ,
-  date_from  TIMESTAMP,
-  date_to    TIMESTAMP,
-  status_id  INTEGER REFERENCES status_type (id) NOT NULL ,
-  manager_id INTEGER REFERENCES contact (id),
-  tasks      VARCHAR(45),
-  tags       VARCHAR(45)
-);
-
-ALTER TABLE status_type
-ADD color VARCHAR(7) NOT NULL DEFAULT '#E0E0E0',
-ADD systemDefault BOOLEAN DEFAULT FALSE;
-
-INSERT INTO status_type (name, color, systemDefault) VALUES
-  ('PRIMARY CONTACT', '#0040ff', FALSE),
-  ('CONVERSATION', '#7f00ff', FALSE),
-  ('MAKE THE DECISION', '#ffff00', FALSE),
-  ('APPROVAL OF THE CONTRACT', '#80ff00', FALSE),
-  ('SUCCESS', '#00ff00', TRUE),
-  ('CLOSED AND NOT IMPLEMENTED', '#ff0000', TRUE);
-
-INSERT INTO currency (code, name) VALUES ('USD', 'Dollar');
-
-INSERT INTO users (name, login, password) VALUES
-  ('user', 'user', 'user01');
-
-ALTER TABLE deal
-ADD created_date TIMESTAMP WITHOUT TIME ZONE;
