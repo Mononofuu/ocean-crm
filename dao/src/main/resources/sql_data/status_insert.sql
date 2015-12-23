@@ -1,7 +1,3 @@
-ALTER TABLE status_type
-ADD color VARCHAR(7) NOT NULL DEFAULT '#E0E0E0',
-ADD systemDefault BOOLEAN DEFAULT FALSE;
-
 INSERT INTO status_type (name, color, systemDefault) VALUES
   ('PRIMARY CONTACT', '#0040ff', FALSE),
   ('CONVERSATION', '#7f00ff', FALSE),
