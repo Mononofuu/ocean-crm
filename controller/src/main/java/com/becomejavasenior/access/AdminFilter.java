@@ -1,6 +1,7 @@
 package com.becomejavasenior.access;
 
-import com.becomejavasenior.UserWithRole;
+import com.becomejavasenior.Grants;
+import com.becomejavasenior.User;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -22,11 +23,13 @@ public class AdminFilter implements Filter{
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
-        if (((UserWithRole)request.getSession().getAttribute("user")).getRole().equals(allowableRole)){
-            filterChain.doFilter(request, servletResponse);
-        } else {
-            ((HttpServletResponse)servletResponse).sendRedirect("/");
+        User user = (User)request.getSession().getAttribute("user");
+        for(Grants userGrant : user.getGrantsSet()) {
+            if (allowableRole.equals(userGrant.getRole().getName())) {
+                filterChain.doFilter(request, servletResponse);
+            }
         }
+        ((HttpServletResponse)servletResponse).sendRedirect("/");
     }
 
     @Override

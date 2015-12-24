@@ -3,9 +3,12 @@ package com.becomejavasenior;
 
 import com.becomejavasenior.exception.IncorrectDataException;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+
 public interface UserService {
 
-    User login(String login, String pass) throws IncorrectDataException;
+    User authenticate(String attemptedPassword, String login) throws IncorrectDataException, NoSuchAlgorithmException, InvalidKeySpecException;
 
-    void registration (String login, String name);
+    void registration (User user) throws DataBaseException;
 }
