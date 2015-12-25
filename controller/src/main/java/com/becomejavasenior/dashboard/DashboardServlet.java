@@ -46,7 +46,7 @@ public class DashboardServlet extends HttpServlet {
         getServletContext().getRequestDispatcher("/dashboard.jsp").forward(request, response);
     }
 
-    private int getEvents() {
+    private List<Event> getEvents() {
         GenericDao eventsDao = getGenericDao(Event.class);
         List events = null;
         try {
@@ -54,7 +54,7 @@ public class DashboardServlet extends HttpServlet {
         } catch (DataBaseException e) {
             e.printStackTrace();
         }
-        return events != null ? events.size() : 0;
+        return events;
     }
 
     private int getCompanies() {
