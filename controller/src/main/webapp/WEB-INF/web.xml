@@ -6,11 +6,6 @@
 
     <display-name>CRM Web Application</display-name>
 
-    <welcome-file-list>
-        <!--<welcome-file>index.jsp</welcome-file>-->
-        <welcome-file>jsp/menu.jsp</welcome-file>
-    </welcome-file-list>
-
     <servlet>
         <servlet-name>dealServlet</servlet-name>
         <servlet-class>com.becomejavasenior.DealController</servlet-class>
@@ -19,7 +14,6 @@
         <servlet-name>dealServlet</servlet-name>
         <url-pattern>/deal</url-pattern>
     </servlet-mapping>
-
 
     <servlet>
         <servlet-name>dashboardServlet</servlet-name>
@@ -30,5 +24,9 @@
         <servlet-name>dashboardServlet</servlet-name>
         <url-pattern>/dashboard</url-pattern>
     </servlet-mapping>
+
+    <welcome-file-list>
+        <welcome-file>dashboard</welcome-file>
+    </welcome-file-list>
 
 </web-app>
