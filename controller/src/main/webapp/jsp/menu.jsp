@@ -20,7 +20,7 @@
         <a class="logo" href="#1">CRM-OCEAN</a>
     </li>
     <li>
-        <a href="#2">Рабочий стол</a>
+        <a href="/dashboard">Рабочий стол</a>
     </li>
     <li>
         <a href="/dealslist">Сделки</a>

@@ -10,11 +10,13 @@
     <title>CRM_OCEAN - Dashboard</title>
     <link href="css/bootstrap.css" rel="stylesheet">
     <link href="css/crm-ocean.css" rel="stylesheet">
+    <jsp:include page="/jsp/menu.jsp" />
+    <link rel="import" href="jsp/menu.jsp" />
 
 </head>
 <body>
 <div class="row-fluid">
-    <div style="float:left;width:80%;height: 100%;">
+    <div style="float:left;width: 72%;height: 100%;">
         <fieldset class="scheduler-border">
             <legend class="scheduler-border">Виджеты</legend>
             <div class="row-fluid">
@@ -107,7 +109,7 @@
             </div>
         </fieldset>
     </div>
-    <div style="float:left;width:20%;height: 100%;">
+    <div style="float:right;height: 100%;">
         <fieldset class="scheduler-border" style="height: auto;">
             <legend class="scheduler-border">Последние события</legend>
             <c:forEach var="event" items="${events}">

@@ -1,11 +1,15 @@
 package com.becomejavasenior;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.sql.*;
 import java.util.List;
 import java.util.Set;
 
 public abstract class AbstractJDBCDao<T> implements GenericDao<T>{
     private static DaoFactory daoFactory;
+    private final static Logger LOGGER = LogManager.getLogger(AbstractJDBCDao.class);
 
     public static void setDaoFactory(DaoFactory daoFactory) {
         AbstractJDBCDao.daoFactory = daoFactory;
@@ -78,6 +82,7 @@ public abstract class AbstractJDBCDao<T> implements GenericDao<T>{
             }
             result = allObjects.get(0);
         } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
             throw new DataBaseException(e);
         }
         return result;
@@ -111,9 +116,11 @@ public abstract class AbstractJDBCDao<T> implements GenericDao<T>{
             prepareStatementForUpdate(statement, object);
             int state = statement.executeUpdate();
             if (state != 1) {
+                LOGGER.error("State more then one");
                 throw new DataBaseException();
             }
         } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
             throw new DataBaseException(e);
         }
     }
@@ -125,6 +132,7 @@ public abstract class AbstractJDBCDao<T> implements GenericDao<T>{
             statement.setInt(1, id);
             statement.executeUpdate();
         } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
             throw new DataBaseException(e);
         }
     }
@@ -137,6 +145,7 @@ public abstract class AbstractJDBCDao<T> implements GenericDao<T>{
             ResultSet rs = statement.executeQuery();
             result = parseResultSet(rs);
         } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
             throw new DataBaseException(e);
         }
         if (result == null) {
