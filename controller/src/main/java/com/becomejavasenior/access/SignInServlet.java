@@ -56,7 +56,7 @@ public class SignInServlet extends HttpServlet {
             resp.sendRedirect("/dashboard");
         } catch (IncorrectDataException ex) {
             req.setAttribute("errors", Arrays.asList(ex.getMessage()));
-            req.getRequestDispatcher("/signin").forward(req, resp);
+            req.getRequestDispatcher("WEB-INF/auth/sign_in.jsp").forward(req, resp);
         } catch (InvalidKeySpecException e) {
             LOGGER.error(e.getMessage());
         } catch (NoSuchAlgorithmException e) {
