@@ -10,6 +10,7 @@
     <module>dao</module>
     <module>model</module>
     <module>service</module>
+    <module>jdbc-template</module>
   </modules>
 
   <name>CRM Maven Webapp</name>
