@@ -18,29 +18,33 @@ import java.util.Map;
 public class UserFilter implements Filter {
 
     private final static Logger LOGGER = LogManager.getLogger(UserFilter.class);
-    private final static Map<String, List<String>> URL2ROLES;
+    private final static Map<String, List<Role>> URL2ROLES;
 
     static {
         URL2ROLES = new HashMap<>();
-        List<String> dealslistUsers = new ArrayList<>();
-        dealslistUsers.add("admin");
-        dealslistUsers.add("user");
-        List<String> dashboardUsers = new ArrayList<>();
-        dashboardUsers.add("admin");
-        dashboardUsers.add("user");
-        List<String> contactsUsers = new ArrayList<>();
-        contactsUsers.add("admin");
-        contactsUsers.add("user");
-        List<String> tasklistUsers = new ArrayList<>();
-        tasklistUsers.add("admin");
-        tasklistUsers.add("user");
-        List<String> settingsUsers = new ArrayList<>();
-        settingsUsers.add("admin");
-        URL2ROLES.put("/dealslist", dealslistUsers);
-        URL2ROLES.put("/dashboard", dashboardUsers);
-        URL2ROLES.put("/contacts", contactsUsers);
-        URL2ROLES.put("/tasklist", tasklistUsers);
-        URL2ROLES.put("/settings", settingsUsers);
+        Role admin = new Role();
+        admin.setName("admin");
+        Role user = new Role();
+        user.setName("user");
+        List<Role> dealslistRoles = new ArrayList<>();
+        dealslistRoles.add(admin);
+        dealslistRoles.add(user);
+        List<Role> dashboardRoles = new ArrayList<>();
+        dashboardRoles.add(admin);
+        dashboardRoles.add(user);
+        List<Role> contactsRoles = new ArrayList<>();
+        contactsRoles.add(admin);
+        contactsRoles.add(user);
+        List<Role> tasklistRoles = new ArrayList<>();
+        tasklistRoles.add(admin);
+        tasklistRoles.add(user);
+        List<Role> settingsRoles = new ArrayList<>();
+        settingsRoles.add(admin);
+        URL2ROLES.put("/dealslist", dealslistRoles);
+        URL2ROLES.put("/dashboard", dashboardRoles);
+        URL2ROLES.put("/contacts", contactsRoles);
+        URL2ROLES.put("/tasklist", tasklistRoles);
+        URL2ROLES.put("/settings", settingsRoles);
 
     }
 
@@ -73,12 +77,12 @@ public class UserFilter implements Filter {
             if (grant.getUser().getId() != loggedUserName.getId()) {
                 continue;
             }
-            for (Map.Entry<String, List<String>> url2role : URL2ROLES.entrySet()) {
+            for (Map.Entry<String, List<Role>> url2role : URL2ROLES.entrySet()) {
                 if (!path.contains(url2role.getKey())) {
                     continue;
                 }
-                for (String role : url2role.getValue()) {
-                    if (role.equals(grant.getRole().getName())) {
+                for (Role role : url2role.getValue()) {
+                    if (role.equals(grant.getRole())) {
                         return true;
                     }
                 }

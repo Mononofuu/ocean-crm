@@ -41,7 +41,7 @@ public class SignInServlet extends HttpServlet {
         }
         if (errors.size() != 0) {
             req.setAttribute("errors", errors);
-            req.getRequestDispatcher("WEB-INF/auth/sign_in.jsp").forward(req, resp);
+            req.getRequestDispatcher("/signin").forward(req, resp);
             return;
         }
         try {
@@ -49,14 +49,14 @@ public class SignInServlet extends HttpServlet {
             if (user == null) {
                 errors.add("Invalid user name or password.");
                 req.setAttribute("errors", errors);
-                req.getRequestDispatcher("WEB-INF/auth/sign_in.jsp").forward(req, resp);
+                req.getRequestDispatcher("/signin").forward(req, resp);
                 return;
             }
             req.getSession().setAttribute("user", user);
-            resp.sendRedirect("/");
+            resp.sendRedirect("/dashboard");
         } catch (IncorrectDataException ex) {
             req.setAttribute("errors", Arrays.asList(ex.getMessage()));
-            req.getRequestDispatcher("WEB-INF/auth/sign_in.jsp").forward(req, resp);
+            req.getRequestDispatcher("/signin").forward(req, resp);
         } catch (InvalidKeySpecException e) {
             LOGGER.error(e.getMessage());
         } catch (NoSuchAlgorithmException e) {
