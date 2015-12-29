@@ -1,90 +1,16 @@
-body {
-    background-color: #696969;
-}
-
-fieldset {
-    background-color: #989898;
-    float: left;
-    border: 2px solid;
-    border-radius: 5px;
-    width: 175px;
-    height: auto;
-    padding: 10px;
-    margin: 0;
-    text-align: center;
-}
-
-form {
-    width: 280px;
-    height: auto;
-    margin-left: auto;
-    margin-right: auto;
-    display: block;
-}
-
-select, input {
-    width: 280px;
-    height: 30px;
-    border-radius: 2px;
-    border: solid #989898 1px;
-    margin: 5px;
-}
-
-.filter {
-    width: 300px;
-    height: auto;
-    overflow: hidden;
-    border: 2px solid;
+.border {
+    border: 2px solid dimgrey;
     border-radius: 5px;
     background-color: #ededed;
-    padding: 10px;
-    float: left;
-    margin-right: 10px;
-}
-
-.visual {
-    width: 810px;
-    height: auto;
-    overflow: hidden;
-    border: 2px solid;
-    border-radius: 5px;
-    background-color: #ededed;
-    padding: 10px;
-    margin-left: 10px;
 }
 
 .rectangle {
-    width: 175px;
-    height: 100px;
     background: white;
     border: solid 2px;
     border-radius: 25px;
     text-align: center;
 }
 
-#primary_contact {
-    background-color: #e99898;
-}
-
-#conversation {
-    background-color: #fde498;
-}
-
-#decision {
-    background-color: #b5d6a7;
-}
-
-#approval {
-    background-color: #9ec4f7;
-}
-
-#when {
-    width: 70px;
-    margin-right: 5px;
-}
-
-#calend {
-    width: 190px;
-    margin-left: 5px;
-    margin-right: 0;
+.fieldset-color {
+    background: white;
 }

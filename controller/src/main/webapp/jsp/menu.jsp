@@ -39,7 +39,7 @@
         <ul class="sub-menu">
             <li><a class="header" href="#">Настройки</a></li>
             <li><a href="#">Общие настройки</a></li>
-            <li><a href="#">Этапы продаж</a></li>
+            <li><a href="/deal_status">Этапы продаж</a></li>
             <li><a href="#">Пользователи и права</a></li>
             <li><a href="#">Редакторы полей</a></li>
             <li><a href="#">Бизнес процессы</a></li>

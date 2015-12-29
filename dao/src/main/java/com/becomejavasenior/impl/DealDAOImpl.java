@@ -31,14 +31,14 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
 
     @Override
     public String getCreateQuery() {
-        return "INSERT INTO deal(id, status_id, currency_id, budget, contact_main_id, company_id, data_close) " +
-                "VALUES(?,?,?,?,?,?,?)";
+        return "INSERT INTO deal(id, status_id, currency_id, budget, contact_main_id, company_id, data_close, created_date) " +
+                "VALUES(?,?,?,?,?,?,?,?)";
     }
 
     @Override
     public String getUpdateQuery() {
         return "UPDATE deal SET status_id = ?, currency_id = ?, budget = ?, contact_main_id = ?," +
-                "company_id = ?, data_close = ? WHERE id = ?";
+                "company_id = ?, data_close = ?, created_date = ? WHERE id = ?";
     }
 
     @Override
@@ -68,6 +68,7 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
                 deal.setName(subject.getName());
                 deal.setBudget(rs.getInt("budget"));
                 deal.setDateWhenDealClose(rs.getTimestamp("data_close"));
+                deal.setDateCreated(rs.getTimestamp("created_date"));
                 Company company = (Company) companyDao.read(rs.getInt("company_id"));
                 deal.setDealCompany(company);
                 Contact contact = (Contact) contactDao.read(rs.getInt("contact_main_id"));
@@ -104,6 +105,8 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
             } else {
                 statement.setTimestamp(7, new Timestamp(object.getDateWhenDealClose().getTime()));
             }
+            statement.setTimestamp(8, new Timestamp(object.getDateCreated().getTime()));
+
         } catch (SQLException e) {
             throw new DataBaseException(e);
         }
@@ -120,7 +123,8 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
             statement.setInt(4, object.getMainContact().getId());
             statement.setInt(5, object.getDealCompany().getId());
             statement.setTimestamp(6, new Timestamp(object.getDateWhenDealClose().getTime()));
-            statement.setInt(7, object.getId());
+            statement.setTimestamp(7, new Timestamp(object.getDateCreated().getTime()));
+            statement.setInt(8, object.getId());
         } catch (SQLException e) {
             throw new DataBaseException(e);
         }
