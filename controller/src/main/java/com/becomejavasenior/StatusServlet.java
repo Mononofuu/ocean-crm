@@ -21,32 +21,41 @@ public class StatusServlet extends HttpServlet {
     private final static Logger logger = LogManager.getLogger(DealsPyramidServlet.class);
     private final static String nextJSP = "/jsp/dealsstatus.jsp";
     private final static String editStatusJSP = "/jsp/statusedit.jsp";
-    private DaoFactory dao;
+    private GenericDao<DealStatus> statusDao;
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public void init() throws ServletException {
+        try {
+            DaoFactory dao = new PostgreSqlDaoFactory();
+            statusDao = dao.getDao(DealStatus.class);
+
+        } catch (DataBaseException e) {
+            logger.error("Error while creating DaoFactory");
+            logger.catching(e);
+        }
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        try {
+            int id = getId(req);
+            statusDao.delete(id);
+            logger.info("Delete status {}", id);
+        } catch (DataBaseException e) {
+            logger.error("Error while deleting status");
+            logger.catching(e);
+        }
+        resp.sendRedirect("deal_status");
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
-        String action = req.getParameter("action");
         DealStatus status = new DealStatus();
         status.setName(req.getParameter("name"));
         status.setColor(req.getParameter("color"));
-
         try {
-            dao = new PostgreSqlDaoFactory();
-            GenericDao<DealStatus> statusDao = dao.getDao(DealStatus.class);
-            if (action.equals("create")) {
-                statusDao.create(status);
-                logger.info("NEW STATUS CREATED:");
-            } else if (action.equals("edit")) {
-                status.setId(getId(req));
-                statusDao.update(status);
-                logger.info("STATUS UPDATED:");
-            }
             statusDao.create(status);
-            logger.info("NEW STATUS CREATED:");
-            logger.info(status.getId());
-            logger.info(status.getName());
-
         } catch (DataBaseException e) {
             logger.error("Error while creating new status");
             logger.catching(e);
@@ -55,34 +64,40 @@ public class StatusServlet extends HttpServlet {
     }
 
     @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+        String action = req.getParameter("action");
+        try {
+            if (action.equals("create")) {
+                doPut(req, resp);
+            } else if (action.equals("edit")) {
+                DealStatus status = new DealStatus();
+                status.setName(req.getParameter("name"));
+                status.setColor(req.getParameter("color"));
+                status.setId(getId(req));
+                statusDao.update(status);
+                logger.info("STATUS UPDATED:");
+                resp.sendRedirect("/deal_status");
+            }
+        } catch (DataBaseException e) {
+            logger.error("Error while updating status");
+            logger.catching(e);
+        }
+    }
+
+    @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("action");
 
         try {
-            dao = new PostgreSqlDaoFactory();
-        } catch (DataBaseException e) {
-            logger.error("Error while getting DAO Factory");
-            logger.catching(e);
-        }
-
-        try {
-            GenericDao<DealStatus> statusDao = dao.getDao(DealStatus.class);
-
             if (action == null) {
-
                 List<DealStatus> statusList = statusDao.readAll();
-
                 req.setAttribute("statusList", statusList);
-
                 RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextJSP);
                 dispatcher.forward(req, resp);
                 logger.info(String.format("REDIRECTING TO %s", nextJSP));
-
             } else if (action.equals("delete")) {
-                int id = getId(req);
-                statusDao.delete(id);
-                logger.info("Delete status {}", id);
-                resp.sendRedirect("deal_status");
+                doDelete(req, resp);
             } else if (action.equals("edit")) {
                 int id = getId(req);
                 DealStatus editStatus = statusDao.read(id);
