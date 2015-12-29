@@ -25,7 +25,10 @@ import java.util.stream.Collectors;
 public class DealsPyramidServlet extends HttpServlet {
     private final static Logger logger = LogManager.getLogger(DealsPyramidServlet.class);
     private final static String nextJSP = "/jsp/dealspyramid.jsp";
-    private DaoFactory dao;
+    private GenericDao<Deal> dealDao;
+    private GenericDao<DealStatus> statusDao;
+    private GenericDao<Filter> filterDao;
+    private GenericDao<Contact> contactDao;
 
     public static boolean isBetween(LocalDate created, LocalDate startTime, LocalDate endTime) {
         logger.info("Compare dates");
@@ -34,20 +37,23 @@ public class DealsPyramidServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setCharacterEncoding("UTF-8");
+    public void init() throws ServletException {
         try {
-            dao = new PostgreSqlDaoFactory();
+            DaoFactory dao = new PostgreSqlDaoFactory();
+            dealDao = dao.getDao(Deal.class);
+            statusDao = dao.getDao(DealStatus.class);
+            filterDao = dao.getDao(Filter.class);
+            contactDao = dao.getDao(Contact.class);
         } catch (DataBaseException e) {
             logger.error("Error while getting DAO Factory");
             logger.catching(e);
         }
+    }
 
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
         try {
-            GenericDao<DealStatus> statusDao = dao.getDao(DealStatus.class);
-            GenericDao<Filter> filterDao = dao.getDao(Filter.class);
-            GenericDao<Contact> contactDao = dao.getDao(Contact.class);
-
             String action = req.getParameter("action");
             if (action.equals("savefilter")) {
                 Filter filter = new Filter();
@@ -94,17 +100,7 @@ public class DealsPyramidServlet extends HttpServlet {
         logger.info(String.format("Selected filter: %s", filter));
 
         try {
-            dao = new PostgreSqlDaoFactory();
-        } catch (DataBaseException e) {
-            logger.error("Error while getting DAO Factory");
-            logger.catching(e);
-        }
 
-        try {
-            GenericDao<Deal> dealDao = dao.getDao(Deal.class);
-            GenericDao<DealStatus> statusDao = dao.getDao(DealStatus.class);
-            GenericDao<Filter> filterDao = dao.getDao(Filter.class);
-            GenericDao<Contact> contactDao = dao.getDao(Contact.class);
 
             List<FilterPeriod> filterPeriods = new ArrayList<>(Arrays.asList(FilterPeriod.values()));
             List<FilterTaskType> filterTaskTypes = new ArrayList<>(Arrays.asList(FilterTaskType.values()));
@@ -121,7 +117,6 @@ public class DealsPyramidServlet extends HttpServlet {
                 dealsToStatus.put(status, new ArrayList<>());
                 deals.stream().filter(deal -> deal.getStatus().equals(status)).forEach(deal1 -> dealsToStatus.get(status).add(deal1));
             }
-
 
             req.setAttribute("filterperiod", filterPeriods);
             req.setAttribute("filtertask", filterTaskTypes);
@@ -174,7 +169,6 @@ public class DealsPyramidServlet extends HttpServlet {
         }
 
         try {
-            GenericDao<Filter> filterDao = dao.getDao(Filter.class);
             Filter filter = filterDao.read(Integer.parseInt(filterName));
 
             deals = deals.stream().filter(deal -> deal.getStatus().equals(filter.getStatus()))
