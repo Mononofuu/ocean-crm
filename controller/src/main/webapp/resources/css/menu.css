@@ -43,7 +43,24 @@ body{
 }
 .profile{
     text-align: center;
+    width: 300px;
+    top:0;
+    left:180px;
+    border-radius: 0 10px 10px 0;
 }
+
+.profile>div>a{
+    display: inline-block;
+    width: 49.3%;
+    padding: 5px 0;
+    margin: 0;
+}
+.username{
+    padding: 5px 0;
+    font: bold italic 100% serif;
+    width: auto;
+}
+
 .sub-menu li:last-child{
     border-bottom: 0px;
 }

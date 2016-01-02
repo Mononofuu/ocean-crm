@@ -101,7 +101,7 @@ public class TaskListServlet extends HttpServlet{
             }
             dueDate = dateFormat.parse(date+" "+time);
         } catch (ParseException e) {
-            /*NOP*/
+            logger.error("Неверный формат даты", e);
         }
 
         String taskType = req.getParameter("tasktype");

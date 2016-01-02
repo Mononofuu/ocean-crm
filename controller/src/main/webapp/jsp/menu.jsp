@@ -18,6 +18,21 @@
 <ul class="menu">
     <li>
         <a class="logo" href="#1">CRM-OCEAN</a>
+        <div class="profile">
+            <c:choose>
+                <c:when test="${not empty user}">
+                    <div class="username">${user.name}</div>
+                    <div>
+                        <a href="#">Профиль</a>
+                        <a href="/logout">Выход</a>
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <div class="username">Вход не выполнен</div>
+                    <a href="/signin">Залогиниться</a>
+                </c:otherwise>
+            </c:choose>
+        </div>
     </li>
     <li>
         <a href="/dashboard">Рабочий стол</a>
