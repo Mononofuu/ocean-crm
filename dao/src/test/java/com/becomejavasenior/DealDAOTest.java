@@ -9,6 +9,7 @@ import java.net.URL;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
@@ -89,8 +90,18 @@ public class DealDAOTest {
 
     @Test
     public void CreateUpdateDeleteTest() throws DataBaseException {
-        Deal dbDeal = dealDao.create(deal);
+        Deal dbDeal = null;
+        for (int i = 0; i < 10; i++) {
+            dbDeal = dealDao.create(deal);
+        }
         assertEquals(deal, dbDeal);
     }
+
+    @Test
+    public void readAllTest() throws DataBaseException {
+        List<Deal> deals = dealDao.readAll();
+        System.out.println(deals.size());
+    }
+
 
 }
