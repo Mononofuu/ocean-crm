@@ -59,7 +59,7 @@
                 </select><br>
                 <select class="form-control" name="managers">
                     <option value="" disabled selected>Менеджеры</option>
-                    <c:forEach items="${contacts}" var="item">
+                    <c:forEach items="${managers}" var="item">
                         <option value="${item.id}">${item.name}</option>
                     </c:forEach>
                 </select><br>

@@ -1,6 +1,7 @@
 package com.becomejavasenior;
 
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -9,7 +10,6 @@ import java.net.URL;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
@@ -30,11 +30,16 @@ public class DealDAOTest {
     private final static String CONTACT_PHONE = "0999999999";
     private GenericDao<Deal> dealDao;
     private Deal deal;
+    private PostgreSqlDaoFactory daoFactory;
 
     @Before
     public void SetUp() throws DataBaseException {
-        DaoFactory daoFactory = new PostgreSqlDaoFactory();
+        daoFactory = new PostgreSqlDaoFactory();
         dealDao = daoFactory.getDao(Deal.class);
+    }
+
+    @Test
+    public void CreateUpdateDeleteTest() throws DataBaseException {
         deal = new Deal();
         deal.setName(DEAL_NAME);
         deal.setBudget(5000);
@@ -85,22 +90,17 @@ public class DealDAOTest {
         GenericDao<Contact> contactDao = daoFactory.getDao(Contact.class);
         contact = contactDao.create(contact);
         deal.setMainContact(contact);
-
-    }
-
-    @Test
-    public void CreateUpdateDeleteTest() throws DataBaseException {
-        Deal dbDeal = null;
-        for (int i = 0; i < 10; i++) {
-            dbDeal = dealDao.create(deal);
-        }
+        Deal dbDeal = dealDao.create(deal);
         assertEquals(deal, dbDeal);
     }
 
     @Test
     public void readAllTest() throws DataBaseException {
-        List<Deal> deals = dealDao.readAll();
-        System.out.println(deals.size());
+        long start = System.nanoTime();
+        dealDao.readAllLite();
+        long time = (System.nanoTime() - start) / 1_000_000;
+        System.out.println(time + " ms");
+        Assert.assertTrue(time < 10_000);
     }
 
 
