@@ -24,7 +24,9 @@ public abstract class AbstractJDBCDaoFactory implements DaoFactory {
                 dataSource.setUrl(prop.getProperty("url"));
                 dataSource.setUsername(prop.getProperty("user"));
                 dataSource.setPassword(prop.getProperty("password"));
-                dataSource.setMinIdle(10);
+                dataSource.setInitialSize(10);
+                dataSource.setMaxTotal(100);
+                dataSource.setMaxIdle(30);
             }
         } catch (IOException e) {
             throw new DataBaseException(e);
