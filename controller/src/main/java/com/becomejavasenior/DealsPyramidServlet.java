@@ -29,6 +29,7 @@ public class DealsPyramidServlet extends HttpServlet {
     private GenericDao<DealStatus> statusDao;
     private GenericDao<Filter> filterDao;
     private GenericDao<Contact> contactDao;
+    private User user;
 
     public static boolean isBetween(LocalDate created, LocalDate startTime, LocalDate endTime) {
         logger.info("Compare dates");
@@ -60,6 +61,8 @@ public class DealsPyramidServlet extends HttpServlet {
                 filter.setName(req.getParameter("name"));
                 String periodName = req.getParameter("when");
                 filter.setType(FilterPeriod.valueOf(periodName));
+                User user = (User) req.getSession().getAttribute("user");
+                filter.setUser(user);
                 if (periodName.equals("PERIOD")) {
                     SimpleDateFormat format = new SimpleDateFormat("yyy-mm-dd");
                     filter.setDate_from(new Timestamp(format.parse((req.getParameter("date_from"))).getTime()));
@@ -97,7 +100,8 @@ public class DealsPyramidServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String filter = req.getParameter("selectedfilter");
-        logger.info(String.format("Selected filter: %s", filter));
+        user = (User) req.getSession().getAttribute("user");
+        logger.info(String.format("Selected filter: %s, for user: %s", filter, user.getLogin()));
 
         try {
 
@@ -143,7 +147,7 @@ public class DealsPyramidServlet extends HttpServlet {
                 return deals.stream().filter(deal -> deal.getDateWhenDealClose() == null)
                         .collect(Collectors.toList());
             case "my":
-                return deals; //TODO
+                return deals.stream().filter(deal -> deal.getUser().getId() == user.getId()).collect(Collectors.toList());
             case "success":
                 return deals.stream()
                         .filter(deal -> (deal.getDateWhenDealClose() != null) & deal.getStatus().getName().equals("SUCCESS"))
