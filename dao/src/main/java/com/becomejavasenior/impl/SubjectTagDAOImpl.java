@@ -35,7 +35,7 @@ public class SubjectTagDAOImpl extends AbstractJDBCDao<SubjectTag> implements Su
 
     @Override
     public String getReadAllQuery() {
-        return "SELECT * FROM subject_tag";
+        return "SELECT subject_id, tag_id, tag.name FROM subject_tag JOIN subject ON subject_tag.subject_id = subject.id JOIN tag ON subject_tag.tag_id = tag.id ";
     }
 
     @Override
@@ -54,6 +54,22 @@ public class SubjectTagDAOImpl extends AbstractJDBCDao<SubjectTag> implements Su
                 Subject subject = (Subject) subjectDao.read(rs.getInt("subject_id"));
                 subjectTag.setSubject(subject);
                 Tag tag = (Tag) tagDao.read(rs.getInt("tag_id"));
+                subjectTag.setTag(tag);
+                result.add(subjectTag);
+            }
+        } catch (SQLException e) {
+            throw new DataBaseException(e);
+        }
+        return result;
+    }
+
+    @Override
+    protected List<SubjectTag> parseResultSetLite(ResultSet rs) throws DataBaseException {
+        List<SubjectTag> result = new ArrayList<>();
+        try {
+            while (rs.next()) {
+                SubjectTag subjectTag = new SubjectTag();
+                Tag tag = new Tag(rs.getString("name"));
                 subjectTag.setTag(tag);
                 result.add(subjectTag);
             }
@@ -106,7 +122,7 @@ public class SubjectTagDAOImpl extends AbstractJDBCDao<SubjectTag> implements Su
              PreparedStatement statement = connection.prepareStatement(getReadAllQuery() + getConditionStatment())) {
             statement.setInt(1, id);
             ResultSet rs = statement.executeQuery();
-            List<SubjectTag> list = parseResultSet(rs);
+            List<SubjectTag> list = parseResultSetLite(rs);
             for (SubjectTag subjectTag : list) {
                 result.add(subjectTag.getTag());
             }

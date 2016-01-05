@@ -104,12 +104,12 @@ public class DealsPyramidServlet extends HttpServlet {
 
             List<FilterPeriod> filterPeriods = new ArrayList<>(Arrays.asList(FilterPeriod.values()));
             List<FilterTaskType> filterTaskTypes = new ArrayList<>(Arrays.asList(FilterTaskType.values()));
-            List<Contact> contacts = contactDao.readAll();
+            List<Contact> contacts = contactDao.readAllLite();
             List<Filter> filters = filterDao.readAll();
             List<DealStatus> statuses = statusDao.readAll();
             Collections.sort(statuses);
 
-            List<Deal> deals = dealDao.readAll();
+            List<Deal> deals = dealDao.readAllLite();
             deals = applyFilter(deals, filter);
 
             SortedMap<DealStatus, List<Deal>> dealsToStatus = new TreeMap<>();

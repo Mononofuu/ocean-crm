@@ -2,10 +2,11 @@ package com.becomejavasenior.impl;
 
 import com.becomejavasenior.*;
 import com.becomejavasenior.interfacedao.SubjectDAO;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +31,23 @@ public class SubjectDAOImpl extends AbstractJDBCDao<Subject> implements SubjectD
                 Subject subject = new Subject() {};
                 User user = (User)userDao.read(rs.getInt("content_owner_id"));
                 subject.setUser(user);
+                subject.setId(rs.getInt("id"));
+                subject.setName(rs.getString("name"));
+                result.add(subject);
+            }
+        } catch (SQLException e) {
+            throw new DataBaseException(e);
+        }
+        return result;
+    }
+
+    @Override
+    protected List<Subject> parseResultSetLite(ResultSet rs) throws DataBaseException {
+        List<Subject> result = new ArrayList<>();
+        try {
+            while (rs.next()) {
+                Subject subject = new Subject() {
+                };
                 subject.setId(rs.getInt("id"));
                 subject.setName(rs.getString("name"));
                 result.add(subject);

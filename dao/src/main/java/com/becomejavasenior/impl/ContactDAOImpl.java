@@ -4,15 +4,23 @@ package com.becomejavasenior.impl;
 import com.becomejavasenior.*;
 import com.becomejavasenior.interfacedao.ContactDAO;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ContactDAOImpl extends AbstractJDBCDao<Contact> implements ContactDAO {
 
     @Override
+    protected String getConditionStatment() {
+        return "WHERE contact.id = ?";
+    }
+
+    @Override
     public String getReadAllQuery() {
-        return "SELECT * FROM contact";
+        return "SELECT contact.id, post, phone_type_id, phone, email, skype, company_id, name  FROM contact JOIN subject ON subject.id=contact.id ";
     }
 
     @Override
@@ -47,6 +55,27 @@ public class ContactDAOImpl extends AbstractJDBCDao<Contact> implements ContactD
                 contact.setCompany(company);
                 // Считываем тэги
                 contact.setTags(subjectTagDAOImpl.getAllTagsBySubjectId(id));
+                result.add(contact);
+            }
+        } catch (SQLException e) {
+            throw new DataBaseException(e);
+        }
+        return result;
+    }
+
+    @Override
+    protected List<Contact> parseResultSetLite(ResultSet rs) throws DataBaseException {
+        List<Contact> result = new ArrayList<>();
+        try {
+            while (rs.next()) {
+                Contact contact = new Contact();
+                int id = rs.getInt("id");
+                contact.setId(id);
+                contact.setName(rs.getString("name"));
+                contact.setPost(rs.getString("post"));
+                contact.setPhone(rs.getString("phone"));
+                contact.setEmail(rs.getString("email"));
+                contact.setSkype(rs.getString("skype"));
                 result.add(contact);
             }
         } catch (SQLException e) {

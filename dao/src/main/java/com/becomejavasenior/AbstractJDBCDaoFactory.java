@@ -1,40 +1,35 @@
 package com.becomejavasenior;
 
 import com.becomejavasenior.impl.*;
+import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
 public abstract class AbstractJDBCDaoFactory implements DaoFactory {
-    private String url;
-    private Properties prop = new Properties();
+    private static BasicDataSource dataSource;
     private Map<Class, GenericDao> daoClasses = new HashMap<>();
 
     public AbstractJDBCDaoFactory() throws DataBaseException {
         try {
-            prop.load(getClass().getClassLoader().getResourceAsStream(getPropertyFileName()));
-            Class.forName(prop.getProperty("driver"));
-            url = prop.getProperty("url");
-        } catch (ClassNotFoundException | IOException e) {
-            throw new DataBaseException(e);
-        } catch (NullPointerException e){
-            URI dbUri = null;
-            try {
-                dbUri = new URI(System.getenv("DATABASE_URL"));
-            } catch (URISyntaxException e1) {
-                throw new DataBaseException(e);
+            if (dataSource == null) {
+                dataSource = new BasicDataSource();
+                Properties prop = new Properties();
+                prop.load(getClass().getClassLoader().getResourceAsStream(getPropertyFileName()));
+                dataSource.setDriverClassName(prop.getProperty("driver"));
+                dataSource.setUrl(prop.getProperty("url"));
+                dataSource.setUsername(prop.getProperty("user"));
+                dataSource.setPassword(prop.getProperty("password"));
+                dataSource.setInitialSize(10);
+                dataSource.setMaxTotal(100);
+                dataSource.setMaxIdle(30);
             }
-            url = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath();
-            prop.put("user", dbUri.getUserInfo().split(":")[0]);
-            prop.put("password", dbUri.getUserInfo().split(":")[1]);
-            prop.put("driver", "org.postgresql.Driver");
+        } catch (IOException e) {
+            throw new DataBaseException(e);
         }
     }
 
@@ -42,7 +37,7 @@ public abstract class AbstractJDBCDaoFactory implements DaoFactory {
     public Connection getConnection() throws DataBaseException {
         Connection connection;
         try {
-            connection = DriverManager.getConnection(url, prop);
+            connection = dataSource.getConnection();
         } catch (SQLException e) {
             throw new DataBaseException(e);
         }
