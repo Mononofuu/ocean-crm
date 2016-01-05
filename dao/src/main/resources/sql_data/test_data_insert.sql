@@ -38,3 +38,4 @@ INSERT INTO tag (name) VALUES
   ('тэг5'),
   ('тэг6'),
   ('тэг7');
+
