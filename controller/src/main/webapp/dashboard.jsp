@@ -1,4 +1,6 @@
-<%--
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page import="java.util.List" %>
+<%@ page import="com.becomejavasenior.Event" %><%--
   Author: Vladislav Lybachevskiy
 --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
@@ -10,11 +12,13 @@
     <title>CRM_OCEAN - Dashboard</title>
     <link href="css/bootstrap.css" rel="stylesheet">
     <link href="css/crm-ocean.css" rel="stylesheet">
+    <jsp:include page="/jsp/menu.jsp" />
+    <link rel="import" href="jsp/menu.jsp" />
 
 </head>
 <body>
 <div class="row-fluid">
-    <div style="float:left;width:80%;height: 100%;">
+    <div style="float:left;width: 72%;height: 100%;">
         <fieldset class="scheduler-border">
             <legend class="scheduler-border">Виджеты</legend>
             <div class="row-fluid">
@@ -107,15 +111,15 @@
             </div>
         </fieldset>
     </div>
-    <div style="float:left;width:20%;height: 100%;">
+    <div style="float:right;height: 100%;">
         <fieldset class="scheduler-border" style="height: auto;">
             <legend class="scheduler-border">Последние события</legend>
             <c:forEach var="event" items="${events}">
                 <fieldset class="scheduler-border">
-                    <small><a href="">${event.getEventDate()}</a><br>
-                        <a href="">${event.getUser().getName()}</a><br>
-                            ${event.getOperationType()}<br>
-                        <a href="">${event.getEventContent()}</a><br></small>
+                    <a href="">${event.getEventDate()}</a><br>
+                        <a href="">${event.getUser().getLogin()}</a><br>
+                        ${event.getOperationType()}<br>
+                        <a href="">${event.getEventContent()}</a>
                 </fieldset>
             </c:forEach>
         </fieldset>

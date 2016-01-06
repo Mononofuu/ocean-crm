@@ -46,4 +46,12 @@ public class Role implements Serializable {
     public void setGrantsSet(Set<Grants> grantsSet) {
         this.grantsSet = grantsSet;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Role) {
+            return this.getName().equals(((Role) obj).getName());
+        }
+        return false;
+    }
 }

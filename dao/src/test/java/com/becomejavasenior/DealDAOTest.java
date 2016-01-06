@@ -1,6 +1,7 @@
 package com.becomejavasenior;
 
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,7 +21,6 @@ public class DealDAOTest {
     private final static String DEAL_NAME = "Test Deal";
     private final static String COMPANY_NAME = "Test Company";
     private final static String TAG = "testdealtag";
-    private final static String DEAL_STATUS = "In progress";
     private final static String CURRENCY_NAME = "Dollar";
     private final static String CURRENCY_CODE = "USD";
     private final static String COMPANY_PHONE = "0442222222";
@@ -30,11 +30,16 @@ public class DealDAOTest {
     private final static String CONTACT_PHONE = "0999999999";
     private GenericDao<Deal> dealDao;
     private Deal deal;
+    private PostgreSqlDaoFactory daoFactory;
 
     @Before
     public void SetUp() throws DataBaseException {
-        DaoFactory daoFactory = new PostgreSqlDaoFactory();
+        daoFactory = new PostgreSqlDaoFactory();
         dealDao = daoFactory.getDao(Deal.class);
+    }
+
+    @Test
+    public void CreateUpdateDeleteTest() throws DataBaseException {
         deal = new Deal();
         deal.setName(DEAL_NAME);
         deal.setBudget(5000);
@@ -47,10 +52,9 @@ public class DealDAOTest {
         }
         deal.setTags(tags);
 
-        DealStatus status = new DealStatus();
-        status.setName(DEAL_STATUS);
+        DealStatus status;
         GenericDao<DealStatus> statusDao = daoFactory.getDao(DealStatus.class);
-        status = statusDao.create(status);
+        status = statusDao.read(1);
         deal.setStatus(status);
 
         Currency currency = new Currency();
@@ -61,7 +65,8 @@ public class DealDAOTest {
         deal.setCurrency(currency);
 
 
-        deal.setDateWhenDealClose(new Timestamp(new Date().getTime()));
+        deal.setDateWhenDealClose(null);
+        deal.setDateCreated(new Timestamp(new Date().getTime()));
 
         Company company = new Company();
         company.setName(COMPANY_NAME);
@@ -85,13 +90,18 @@ public class DealDAOTest {
         GenericDao<Contact> contactDao = daoFactory.getDao(Contact.class);
         contact = contactDao.create(contact);
         deal.setMainContact(contact);
-
-    }
-
-    @Test
-    public void CreateUpdateDeleteTest() throws DataBaseException {
         Deal dbDeal = dealDao.create(deal);
         assertEquals(deal, dbDeal);
     }
+
+    @Test
+    public void readAllTest() throws DataBaseException {
+        long start = System.nanoTime();
+        dealDao.readAllLite();
+        long time = (System.nanoTime() - start) / 1_000_000;
+        System.out.println(time + " ms");
+        Assert.assertTrue(time < 10_000);
+    }
+
 
 }

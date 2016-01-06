@@ -62,8 +62,9 @@
                     <div class="form-group col-sm-10">
                         <label for="tasktype">Типы</label>
                         <select class="form-control" name="tasktype" id="tasktype">
+                            <option value="">Все типы</option>
                              <c:forEach var="tasktype" items="${tasktypes}">
-                                <option value="tasktype">${tasktype.toString()}</option>
+                                <option value="${tasktype}">${tasktype.toString()}</option>
                              </c:forEach>
                          </select>
                     </div>

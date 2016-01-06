@@ -15,6 +15,7 @@ public interface DealService{
         void saveDeal(Deal deal) throws DataBaseException;
         void deleteDeal(int id) throws DataBaseException;
         List<Deal> findDeals() throws DataBaseException;
+        List<Deal> findDealsLite() throws DataBaseException;
         List<Deal> findDealsByStatus(int statusId) throws DataBaseException;
         List<Deal> findDealsByUser(int statusId) throws DataBaseException;
         List<Deal> findDealsByTags(String tag) throws DataBaseException;

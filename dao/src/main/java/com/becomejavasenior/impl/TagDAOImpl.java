@@ -14,6 +14,8 @@ import java.util.List;
 
 public class TagDAOImpl extends AbstractJDBCDao<Tag> implements TagDAO {
 
+    public static final String SELECT_ALL_SUBJECT_TAGS = " WHERE id IN(SELECT tag_id FROM subject_tag WHERE subject_id = ?)";
+
     @Override
     public String getReadAllQuery() {
         return "SELECT * FROM tag";
@@ -95,5 +97,21 @@ public class TagDAOImpl extends AbstractJDBCDao<Tag> implements TagDAO {
         } catch (SQLException e) {
             throw new DataBaseException(e);
         }
+    }
+
+    @Override
+    public List<Tag> readAllSubjectTags(int subjectId) throws DataBaseException {
+        List<Tag> result;
+        try (PreparedStatement statement = getConnection().prepareStatement(getReadAllQuery() + SELECT_ALL_SUBJECT_TAGS)){
+            statement.setInt(1, subjectId);
+            ResultSet rs = statement.executeQuery();
+            result = parseResultSet(rs);
+        } catch (SQLException e) {
+            throw new DataBaseException(e);
+        }
+        if (result == null) {
+            throw new DataBaseException();
+        }
+        return result;
     }
 }

@@ -1,10 +1,14 @@
 package com.becomejavasenior;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.sql.*;
 import java.util.List;
 import java.util.Set;
 
 public abstract class AbstractJDBCDao<T> implements GenericDao<T>{
+    private final static Logger LOGGER = LogManager.getLogger(AbstractJDBCDao.class);
     private static DaoFactory daoFactory;
 
     public static void setDaoFactory(DaoFactory daoFactory) {
@@ -20,6 +24,7 @@ public abstract class AbstractJDBCDao<T> implements GenericDao<T>{
      * SELECT * FROM [Table]
      */
     public abstract String getReadAllQuery();
+
 
     public String getReadQuery() {
         return getReadAllQuery() + getConditionStatment();
@@ -49,6 +54,13 @@ public abstract class AbstractJDBCDao<T> implements GenericDao<T>{
     protected abstract List<T> parseResultSet(ResultSet rs) throws DataBaseException;
 
     /**
+     * Разбирает ResultSet и возвращает список объектов соответствующих содержимому ResultSet не заполняя их другими сущностями.
+     */
+    protected List<T> parseResultSetLite(ResultSet rs) throws DataBaseException {
+        return parseResultSet(rs);
+    }
+
+    /**
      * Устанавливает аргументы insert запроса в соответствии со значением полей объекта object.
      */
     protected abstract void prepareStatementForInsert(PreparedStatement statement, T object) throws DataBaseException;
@@ -68,6 +80,7 @@ public abstract class AbstractJDBCDao<T> implements GenericDao<T>{
     @Override
     public T read(int key) throws DataBaseException {
         T result;
+        long startTime = System.nanoTime();
         try (Connection connection = daoFactory.getConnection();
              PreparedStatement statement = connection.prepareStatement(getReadQuery())) {
             statement.setInt(1, key);
@@ -78,8 +91,33 @@ public abstract class AbstractJDBCDao<T> implements GenericDao<T>{
             }
             result = allObjects.get(0);
         } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
             throw new DataBaseException(e);
         }
+        long time = (System.nanoTime() - startTime) / 1000000;
+        LOGGER.debug(this.getClass().getSimpleName() + " ==> Dao READ method execution time(ms): " + time);
+        return result;
+    }
+
+    @Override
+    public T readLite(int key) throws DataBaseException {
+        T result;
+        long startTime = System.nanoTime();
+        try (Connection connection = daoFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(getReadQuery())) {
+            statement.setInt(1, key);
+            ResultSet rs = statement.executeQuery();
+            List<T> allObjects = parseResultSetLite(rs);
+            if (allObjects.size() == 0) {
+                return null;
+            }
+            result = allObjects.get(0);
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+            throw new DataBaseException(e);
+        }
+        long time = (System.nanoTime() - startTime) / 1000000;
+        LOGGER.debug(this.getClass().getSimpleName() + " ==> Dao READ LITE method execution time(ms): " + time);
         return result;
     }
 
@@ -111,9 +149,11 @@ public abstract class AbstractJDBCDao<T> implements GenericDao<T>{
             prepareStatementForUpdate(statement, object);
             int state = statement.executeUpdate();
             if (state != 1) {
+                LOGGER.error("State more then one");
                 throw new DataBaseException();
             }
         } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
             throw new DataBaseException(e);
         }
     }
@@ -125,6 +165,7 @@ public abstract class AbstractJDBCDao<T> implements GenericDao<T>{
             statement.setInt(1, id);
             statement.executeUpdate();
         } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
             throw new DataBaseException(e);
         }
     }
@@ -137,6 +178,24 @@ public abstract class AbstractJDBCDao<T> implements GenericDao<T>{
             ResultSet rs = statement.executeQuery();
             result = parseResultSet(rs);
         } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+            throw new DataBaseException(e);
+        }
+        if (result == null) {
+            throw new DataBaseException();
+        }
+        return result;
+    }
+
+    @Override
+    public List<T> readAllLite() throws DataBaseException {
+        List<T> result;
+        try (Connection connection = daoFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(getReadAllQuery())) {
+            ResultSet rs = statement.executeQuery();
+            result = parseResultSetLite(rs);
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
             throw new DataBaseException(e);
         }
         if (result == null) {

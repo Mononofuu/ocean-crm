@@ -2,27 +2,41 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Login</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CRM_OCEAN - Login page</title>
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/crm-ocean.css" rel="stylesheet">
+    <link href="css/signin.css" rel="stylesheet">
+
 </head>
-    <body>
-        login page
-        <form method="post">
-            Name: <input type="text" name="login"/>
-            Password: <input type="password" name="password"/>
-            <input type="submit"/>
-        </form>
+<body>
+<div class="container">
+
+    <form class="form-signin" method="post">
+        <h2 class="form-signin-heading">Please sign in</h2>
+        <label for="inputEmail" class="sr-only">Email address</label>
+        <input name="login" type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input name="password" type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button><button class="btn btn-lg btn-primary btn-block" onclick="location.href='/registration'" type="button">Registration</button>
+
         <%
-            List<String> errors  = (List<String>)request.getAttribute("errors");
-            if (errors != null && errors.size() > 0){ %>
-        <ul>
+        List<String> errors  = (List<String>)request.getAttribute("errors");
+        if (errors != null && errors.size() > 0){ %>
+
             <%
                 for (String error: errors) {
-             %>
-                 <li><%=error%></li>
+            %>
+            <div class="alert alert-warning"><%=error%></div>
             <%
                 }
             %>
-        </ul>
-           <% }%>
-    </body>
+            <% }%>
+
+    </form>
+
+</div>
+</body>
 </html>

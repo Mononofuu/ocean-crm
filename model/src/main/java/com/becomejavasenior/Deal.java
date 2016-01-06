@@ -19,8 +19,17 @@ public class Deal extends Subject {
     private List<Comment> comments;
     private List<File> files;
     private List<Task> tasks;
+    private Date dateCreated;
 
     public Deal() {
+    }
+
+    public Date getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
     }
 
     public Contact getMainContact() {

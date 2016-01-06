@@ -18,9 +18,24 @@
 <ul class="menu">
     <li>
         <a class="logo" href="#1">CRM-OCEAN</a>
+        <div class="profile">
+            <c:choose>
+                <c:when test="${not empty user}">
+                    <div class="username">${user.name}</div>
+                    <div>
+                        <a href="#">Профиль</a>
+                        <a href="/logout">Выход</a>
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <div class="username">Вход не выполнен</div>
+                    <a href="/signin">Залогиниться</a>
+                </c:otherwise>
+            </c:choose>
+        </div>
     </li>
     <li>
-        <a href="#2">Рабочий стол</a>
+        <a href="/dashboard">Рабочий стол</a>
     </li>
     <li>
         <a href="/dealslist">Сделки</a>
@@ -39,7 +54,7 @@
         <ul class="sub-menu">
             <li><a class="header" href="#">Настройки</a></li>
             <li><a href="#">Общие настройки</a></li>
-            <li><a href="#">Этапы продаж</a></li>
+            <li><a href="/deal_status">Этапы продаж</a></li>
             <li><a href="#">Пользователи и права</a></li>
             <li><a href="#">Редакторы полей</a></li>
             <li><a href="#">Бизнес процессы</a></li>

@@ -42,10 +42,10 @@ public class DealsListServlet extends HttpServlet{
             dao = new PostgreSqlDaoFactory();
 
             GenericDao dealStatusDao = dao.getDao(DealStatus.class);
-            List<DealStatus> dealStatusList = dealStatusDao.readAll();
+            List<DealStatus> dealStatusList = dealStatusDao.readAllLite();
 
             GenericDao userDao = dao.getDao(User.class);
-            List<User> userList = userDao.readAll();
+            List<User> userList = userDao.readAllLite();
 
             DealService dealService = new DealServiceImpl();
 

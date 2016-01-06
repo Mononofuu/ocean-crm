@@ -45,6 +45,12 @@ public class DealServiceImpl implements DealService{
     }
 
     @Override
+    public List<Deal> findDealsLite() throws DataBaseException{
+        List<Deal> dealList = dealDao.readAllLite();
+        return dealList;
+    }
+
+    @Override
     public List<Deal> findDealsByStatus(int statusId) throws DataBaseException {
         List<Deal> dealList = dealDao.readStatusFilter(Integer.valueOf(statusId));
         return dealList;

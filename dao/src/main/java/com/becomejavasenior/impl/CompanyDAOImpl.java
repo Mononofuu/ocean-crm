@@ -5,15 +5,23 @@ import com.becomejavasenior.interfacedao.CompanyDAO;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CompanyDAOImpl extends AbstractJDBCDao<Company> implements CompanyDAO {
 
     @Override
+    protected String getConditionStatment() {
+        return "WHERE company.id = ?";
+    }
+
+    @Override
     public String getReadAllQuery() {
-        return "SELECT * FROM company";
+        return "SELECT company.id, phone_number, email, web, address, name  FROM company JOIN subject ON subject.id=company.id ";
     }
 
     @Override
@@ -32,6 +40,30 @@ public class CompanyDAOImpl extends AbstractJDBCDao<Company> implements CompanyD
                 company.setId(subject.getId());
                 company.setUser(subject.getUser());
                 company.setName(subject.getName());
+                company.setPhoneNumber(rs.getString("phone_number"));
+                company.setEmail(rs.getString("email"));
+                try {
+                    company.setWeb(new URL(rs.getString("web")));
+                } catch (MalformedURLException e) {
+                    /*NOP*/
+                }
+                company.setAdress(rs.getString("address"));
+                result.add(company);
+            }
+        } catch (SQLException e) {
+            throw new DataBaseException(e);
+        }
+        return result;
+    }
+
+    @Override
+    protected List<Company> parseResultSetLite(ResultSet rs) throws DataBaseException {
+        List<Company> result = new ArrayList<>();
+        try {
+            while (rs.next()) {
+                Company company = new Company();
+                company.setId(rs.getInt("id"));
+                company.setName(rs.getString("name"));
                 company.setPhoneNumber(rs.getString("phone_number"));
                 company.setEmail(rs.getString("email"));
                 try {
