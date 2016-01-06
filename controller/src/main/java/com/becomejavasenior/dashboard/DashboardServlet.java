@@ -1,6 +1,7 @@
 package com.becomejavasenior.dashboard;
 
 import com.becomejavasenior.*;
+import com.becomejavasenior.impl.TaskServiceImpl;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -190,10 +191,9 @@ public class DashboardServlet extends HttpServlet {
     }
 
     private List getAllTasks() {
-        GenericDao tasksDao = getGenericDao(Task.class);
         List tasks = null;
         try {
-            tasks = tasksDao.readAll();
+            tasks = new TaskServiceImpl().getAllTask();
         } catch (DataBaseException e) {
             e.printStackTrace();
         }
