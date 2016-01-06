@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.becomejavasenior.interfaceservice.DealService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -46,7 +47,7 @@ public class DealsListServlet extends HttpServlet{
             GenericDao userDao = dao.getDao(User.class);
             List<User> userList = userDao.readAll();
 
-            DealServiceImpl dealService = new DealServiceImpl();
+            DealService dealService = new DealServiceImpl();
 
             String dealStatusId = request.getParameter("dealstatus");
             String dealUserId = request.getParameter("user");

@@ -18,7 +18,6 @@ public class DealServiceImpl implements DealService{
     static final Logger logger = LogManager.getRootLogger();
     DealDAO dealDao = new DealDAOImpl();
 
-
     @Override
     public void saveDeal(Deal deal) throws DataBaseException {
         if(deal.getId() == 0){

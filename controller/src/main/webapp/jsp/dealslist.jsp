@@ -71,7 +71,7 @@
             <tbody>
             <c:forEach items="${deals}" var="deal">
                 <tr>
-                    <td>${deal.name}</td>
+                    <td><a href="/dealedit?action=edit&id=${deal.id}">${deal.name}</a></td>
                     <td>${deal.mainContact.name}</td>
                     <td>${deal.mainContact.company.name}</td>
                     <td>${deal.status.name}</td>
