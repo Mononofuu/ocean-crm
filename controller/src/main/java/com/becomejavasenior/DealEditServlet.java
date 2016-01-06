@@ -73,16 +73,16 @@ public class DealEditServlet extends HttpServlet {
                 }
                 request.getRequestDispatcher("/dealedit?action=edit&id="+request.getParameter("dealid")).forward(request, response);
                 break;
-            case "edit":
+            case "update":
                 String submitname = request.getParameter("submit");
                 if(submitname != null){
                     String requestString = "";
                     switch (submitname){
                         case "company":
-                            requestString = "/companyedit?action=edit&id="+request.getParameter("companyid");
+                            requestString = "/companyedit?action=edit&id="+request.getParameter("company");
                             break;
                         case "contactmain":
-                            requestString = "/contactedit?action=edit&id="+request.getParameter("maincontactid");
+                            requestString = "/contactedit?action=edit&id="+request.getParameter("maincontact");
                             break;
                         case "deal":
                             try {
@@ -140,7 +140,9 @@ public class DealEditServlet extends HttpServlet {
                         request.setAttribute("backurl", "/dealedit?action=edit&id="+request.getParameter("id"));
                         request.getRequestDispatcher(requestString).forward(request, response);
                     }
-                }else{
+                }
+                break;
+            case "edit":
                     try {
                         dao = new PostgreSqlDaoFactory();
 
@@ -184,7 +186,7 @@ public class DealEditServlet extends HttpServlet {
                         e.printStackTrace();
                     }
                     request.getRequestDispatcher("jsp/dealedit.jsp").forward(request, response);
-                }
+            break;
         }
     }
 

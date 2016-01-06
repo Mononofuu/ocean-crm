@@ -36,7 +36,7 @@
         <div class="tab-content">
 
             <div class="tab-pane container-fluid active" id="common">
-                <form  class="form-horizontal" method="post" action="dealedit?action=edit">
+                <form  class="form-horizontal" method="post" action="dealedit?action=update">
                     <fieldset>
                         <input type="hidden" name="id" value="${deal.id}">
 
@@ -162,7 +162,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-md-2 control-label" for="btnsave"></label>
+                            <label class="col-md-2 control-label" for="btndealsave"></label>
                             <div class="col-md-4">
                                 <button type="submit" class="btn btn-default navbar-btn" value="deal" name="submit" id="btndealsave">Записать</button>
                             </div>
