@@ -18,12 +18,13 @@ public class TaskDAOImpl extends AbstractJDBCDao<Task> implements TaskDAO {
     private Logger logger = LogManager.getLogger(TaskDAOImpl.class);
 
     @Override
-    public List<Task> getAllTasksByParameters(Map<String, String[]> parameters) throws DataBaseException{
+    public List<Task> getAllTasksByParameters(String userId, Date date, String taskTypeId) throws DataBaseException {
         List<Task> result;
         try (Connection connection = getConnection();
              Statement statement = connection.createStatement()
         ){
-            ResultSet rs = statement.executeQuery(getParametrisedReadQuery(parameters));
+            logger.info(getParametrisedReadQuery(userId, date, taskTypeId));
+            ResultSet rs = statement.executeQuery(getParametrisedReadQuery(userId, date, taskTypeId));
             result = parseResultSet(rs);
         } catch (SQLException e) {
             logger.error(e.getMessage());
@@ -35,45 +36,16 @@ public class TaskDAOImpl extends AbstractJDBCDao<Task> implements TaskDAO {
         return result;
     }
 
-    private String getParametrisedReadQuery(Map<String, String[]> parameters){
-        String result = "SELECT * FROM task";
-        // фильтрация по предуставновленным фильтрам
-        String filter = parameters.get("filtername")[0];
-        switch (filter){
-            case "mytasks":
-                result += " WHERE user_id = " + parameters.get("currentuser")[0];
-                break;
-            case "overduetasks":
-                result += " WHERE due_date < NOW() AND user_id = " + parameters.get("currentuser")[0];
-                break;
-            default:
-                result += " WHERE 1=1";
-                break;
+    private String getParametrisedReadQuery(String userId, Date date, String taskTypeId){
+        String result = getReadAllQuery()+" WHERE 1=1";
+        if(userId!=null){
+            result+=" AND user_id = "+userId;
         }
-        // добавление фильтра по дате
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
-        try {
-            String date = parameters.get("duedate")[0];
-            if(!"".equals(date)){
-                String time = parameters.get("duetime")[0];
-                if("".equals(time)){
-                    time = "23:59";
-                }
-                Date dueDate = dateFormat.parse(date+" "+time);
-                result += " AND due_date <= '"+new SimpleDateFormat("yyyy-MM-dd HH:mm:00").format(dueDate)+"'";
-            }
-        } catch (ParseException e) {
-            logger.error("Неверный формат даты", e);
+        if(date!=null){
+            result+=" AND due_date <= '"+new SimpleDateFormat("yyyy-MM-dd HH:mm:00").format(date)+"'";
         }
-        // добавление фильтра по типу задачи
-        String taskType = parameters.get("tasktype")[0];
-        if(!"".equals(taskType)){
-            result += " AND task_type_id = "+taskType;
-        }
-        // добавление филтра по пользователю
-        String userId = parameters.get("user")[0];
-        if (!"".equals(userId)){
-            result += " AND user_id = "+userId;
+        if(taskTypeId!=null){
+            result+=" AND task_type_id = "+taskTypeId;
         }
         return result;
     }

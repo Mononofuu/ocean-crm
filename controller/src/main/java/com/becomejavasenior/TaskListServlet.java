@@ -1,7 +1,8 @@
 package com.becomejavasenior;
 
-import com.becomejavasenior.impl.TaskDAOImpl;
-import com.becomejavasenior.interfacedao.TaskDAO;
+import com.becomejavasenior.impl.*;
+import com.becomejavasenior.impl.UserServiceImpl;
+import com.becomejavasenior.interfaceservice.TaskService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -11,7 +12,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -21,7 +21,6 @@ import java.util.*;
 @WebServlet(name="tasklist", urlPatterns = "/tasklist")
 public class TaskListServlet extends HttpServlet{
     private Logger logger = LogManager.getLogger(TaskListServlet.class);
-    private DaoFactory dao;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -35,13 +34,12 @@ public class TaskListServlet extends HttpServlet{
 
     private void process(HttpServletRequest request, HttpServletResponse response) throws IOException{
         try {
-            dao = new PostgreSqlDaoFactory();
-            TaskDAOImpl taskDao = (TaskDAOImpl) dao.getDao(Task.class);
+            TaskService taskService = new TaskServiceImpl();
             List<Task> allTasks;
             if(request.getParameterMap().size()>0){
-                allTasks = taskDao.getAllTasksByParameters(request.getParameterMap());
+                allTasks = taskService.getTasksByParameters(request.getParameterMap());
             }else {
-                allTasks = taskDao.readAll();
+                allTasks = taskService.getAllTask();
             }
             Collections.sort(allTasks, (o1, o2) -> {
                 long result = o1.getDueTime().getTime()-o2.getDueTime().getTime();
@@ -62,10 +60,8 @@ public class TaskListServlet extends HttpServlet{
             endOfDay.add(Calendar.MINUTE, -1);
             request.setAttribute("endofday", endOfDay);
             request.setAttribute("timelist", getTimeList());
-            GenericDao<TaskType> taskTypesDao = dao.getDao(TaskType.class);
-            request.setAttribute("tasktypes", taskTypesDao.readAll());
-            GenericDao<TaskType> usersDao = dao.getDao(User.class);
-            request.setAttribute("users", usersDao.readAll());
+            request.setAttribute("tasktypes", new TaskTypeServiceImpl().getAllTaskTypes());
+            request.setAttribute("users", new UserServiceImpl().getAllUsers());
             getServletContext().getRequestDispatcher("/jsp/tasklist.jsp").forward(request,response);
         } catch (DataBaseException e) {
             logger.error("Error when prepearing data for tasklist.jsp",e);
