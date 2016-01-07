@@ -4,6 +4,8 @@ import com.becomejavasenior.impl.*;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -30,6 +32,20 @@ public abstract class AbstractJDBCDaoFactory implements DaoFactory {
             }
         } catch (IOException e) {
             throw new DataBaseException(e);
+        } catch (NullPointerException e){
+            URI dbUri = null;
+            try {
+                dbUri = new URI(System.getenv("DATABASE_URL"));
+            } catch (URISyntaxException e1) {
+                throw new DataBaseException(e);
+            }
+            dataSource.setDriverClassName("org.postgresql.Driver");
+            dataSource.setUrl("jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath());
+            dataSource.setUsername(dbUri.getUserInfo().split(":")[0]);
+            dataSource.setPassword(dbUri.getUserInfo().split(":")[1]);
+            dataSource.setInitialSize(10);
+            dataSource.setMaxTotal(100);
+            dataSource.setMaxIdle(30);
         }
     }
 
