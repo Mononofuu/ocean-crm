@@ -173,26 +173,16 @@
             </div>
 
             <div class="tab-pane container-fluid" id="contacts">
-            <div class="tabbable tabs-left">
-                <ul class="nav nav-tabs" for="dealstatus">
-                    <c:forEach items="${dealcontacts}" var="contact" varStatus="status">
-                        <li><a href="#contact${contact.id}" data-toggle="tab">${contact.name}</a></li>
-                    </c:forEach>
-                </ul>
+                <div class="tabbable tabs-left">
+                    <ul class="nav nav-tabs" for="dealstatus">
+                        <c:forEach items="${dealcontacts}" var="contact" varStatus="status">
+                            <li><a href="#contact${contact.id}" data-toggle="tab">${contact.name}</a></li>
+                        </c:forEach>
+                        <li><a href="#contactnew" data-toggle="tab">Новый ...</a></li>
+                    </ul>
 
-                <div class="tab-content col-xs-3">
-                    <div class="form-group">
-                        <div class="form-group">
-                            <button id="button_addcontact" name="button_addcontact" class="btn btn-default navbar-btn">Добавить контакт</button>
-                        </div>
-                    </div>
-                    <div class="checkbox">
-                        <label><input type="checkbox" id="contact_all_fields"> Вывести все поля</label>
-                    </div>
-                </div>
-
-                <div class="tab-content col-xs-9">
-                    <c:forEach items="${dealcontacts}" var="contact" varStatus="status">
+                   <div class="tab-content col-xs-9">
+                        <c:forEach items="${dealcontacts}" var="contact" varStatus="status">
 
                         <c:choose>
                             <c:when test="${status.getIndex() == 0}">
@@ -209,7 +199,7 @@
                                 <fieldset>
 
                                     <div class="form-group">
-                                        <label class="col-xs-4 control-label" for="contactname${contact.id}">Имя</label>
+                                        <label class="col-xs-2 control-label" for="contactname${contact.id}">Имя</label>
                                         <div class="col-xs-8">
                                             <input id="contactname${contact.id}" name="contactname${contact.id}" type="text" placeholder="" class="form-control input-md" value="${contact.name}">
 
@@ -217,7 +207,7 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label class="col-xs-4 control-label" for="contactcompany${contact.id}">Компания</label>
+                                        <label class="col-xs-2 control-label" for="contactcompany${contact.id}">Компания</label>
                                         <div class="col-xs-8">
                                             <select id="contactcompany${contact.id}" name="contactcompany${contact.id}" class="form-control">
                                                 <c:forEach items="${companies}" var="company">
@@ -235,7 +225,7 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label class="col-xs-4 control-label" for="contactpost${contact.id}">Должность</label>
+                                        <label class="col-xs-2 control-label" for="contactpost${contact.id}">Должность</label>
                                         <div class="col-xs-8">
                                             <input id="contactpost${contact.id}" name="contactpost${contact.id}" type="text" placeholder="" class="form-control input-md" value="${contact.post}">
 
@@ -243,7 +233,7 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label class="col-xs-4 control-label" for="contactphone${contact.id}">Номер телефона</label>
+                                        <label class="col-xs-2 control-label" for="contactphone${contact.id}">Номер телефона</label>
                                         <div class="col-xs-8">
                                             <input id="contactphone${contact.id}" name="contactphone${contact.id}" type="text" placeholder="" class="form-control input-md" required="" value="${contact.phone}">
 
@@ -251,7 +241,7 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label class="col-xs-4 control-label" for="contactphonetype${contact.id}"></label>
+                                        <label class="col-xs-2 control-label" for="contactphonetype${contact.id}"></label>
                                         <div class="col-xs-8">
                                             <select id="contactphonetype${contact.id}" name="contactphonetype${contact.id}" class="form-control">
                                                 <c:forEach items="${phonetypes}" var="phonetype">
@@ -269,7 +259,7 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label class="col-xs-4 control-label" for="contactuser${contact.id}">Ответственный</label>
+                                        <label class="col-xs-2 control-label" for="contactuser${contact.id}">Ответственный</label>
                                         <div class="col-xs-8">
                                             <select id="contactuser${contact.id}" name="contactuser${contact.id}" class="form-control">
                                                 <c:forEach items="${users}" var="user">
@@ -287,14 +277,14 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label class="col-xs-4 control-label" for="contactemail${contact.id}">E-mail</label>
+                                        <label class="col-xs-2 control-label" for="contactemail${contact.id}">E-mail</label>
                                         <div class="col-xs-8">
                                             <input id="contactemail${contact.id}" name="contactemail${contact.id}" type="text" placeholder="" class="form-control input-md" value="${contact.email}"}>
                                         </div>
                                     </div>
 
                                     <div class="form-group">
-                                        <label class="col-xs-4 control-label" for="contactskype${contact.id}">Skype</label>
+                                        <label class="col-xs-2 control-label" for="contactskype${contact.id}">Skype</label>
                                         <div class="col-xs-8">
                                             <input id="contactskype${contact.id}" name="contactskype${contact.id}" type="text" placeholder="" class="form-control input-md" required="" value="${contact.skype}">
                                         </div>
@@ -310,10 +300,38 @@
                             </form>
                         </div>
                     </c:forEach>
+                       <div class="tab-pane container-fluid" id="contactnew">
+                           <form  class="form-horizontal" method="post" action="dealedit?action=update">
+                               <input type="hidden" name="id" value="${deal.id}">
+                               <fieldset>
+
+                        <div class="tab-content col-xs-8">
+
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label" for="newcontact">Имя</label>
+                            <div class="col-xs-8">
+                                <select id="newcontact" name="newcontact" class="form-control">
+                                    <c:forEach items="${contacts}" var="contact">
+                                        <option value=${contact.id}>${contact.name}</option>
+                                    </c:forEach>
+                                </select>
+                            </div>
+                        </div>
+
+                            <label class="col-md-2 control-label" for="button_addcontact"></label>
+                            <div class="col-md-2">
+                                <button type="submit" id="button_addcontact" value="dealcontactadd" name="submit" class="btn btn-default navbar-btn">Добавить контакт</button>
+                            </div>
+
+                        </div>
+                        </fieldset>
+                        </form>
+                        </div>
+
                 </div>
 
-            </div>
-            </div>
+                   </div>
+                </div>
 
             <div class="tab-pane container-fluid" id="tasks">
 

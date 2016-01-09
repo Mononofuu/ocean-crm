@@ -139,6 +139,31 @@ public class DealEditServlet extends HttpServlet {
                             }
                             request.getRequestDispatcher("/dealedit?action=edit&id="+request.getParameter("id")).forward(request, response);
                             break;
+                        case "dealcontactadd":
+                            try {
+                                dao = new PostgreSqlDaoFactory();
+                                int id = Integer.parseInt(request.getParameter("id"));
+                                GenericDao<Contact> contactDao = dao.getDao(Contact.class);
+                                Contact contact = contactDao.read(Integer.parseInt(request.getParameter("newcontact")));
+                                GenericDao<Subject> subjectDao = dao.getDao(Subject.class);
+                                Subject subject = subjectDao.read(id);
+                                DealContact dealContact = new DealContact();
+                                dealContact.setSubject(subject);
+                                dealContact.setContact(contact);
+                                GenericDao<DealContact> dealContactDAO = dao.getDao(DealContact.class);
+                                dealContactDAO.create(dealContact);
+                                logger.info("deal updated:");
+                                logger.info(subject.getId());
+                                logger.info(subject.getName());
+                                logger.info("add contact:");
+                                logger.info(contact.getId());
+                                logger.info(contact.getName());
+                            } catch (DataBaseException e) {
+                                logger.error("Error while updating deal");
+                                logger.catching(e);
+                            }
+                            request.getRequestDispatcher("/dealedit?action=edit&id="+request.getParameter("id")).forward(request, response);
+                            break;
                     }
                     if(!requestString.equals("")){
                         request.setAttribute("backurl", "/dealedit?action=edit&id="+request.getParameter("id"));

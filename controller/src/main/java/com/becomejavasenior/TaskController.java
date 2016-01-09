@@ -55,7 +55,7 @@ public class TaskController extends HttpServlet{
                         task.setUser((User) request.getSession().getAttribute("user"));
                         task.setComment(request.getParameter("taskcomment"));
                         task.setType(TaskType.valueOf(request.getParameter("tasktype")));
-                        taskDao.create(task);
+//                        taskDao.create(task);
                         logger.info("task created:");
                         logger.info(task.getId());
                         logger.info(task.getSubject());
@@ -68,7 +68,7 @@ public class TaskController extends HttpServlet{
                         task = (Task) taskDao.read(getId(request));
                         task.setComment(request.getParameter("taskcomment"));
                         task.setType(TaskType.valueOf(request.getParameter("tasktype")));
-                        taskDao.update(task);
+//                        taskDao.update(task);
                         logger.info("task updated:");
                         logger.info(task.getId());
                         logger.info(task.getComment());
