@@ -2,15 +2,53 @@ package com.becomejavasenior.impl;
 
 import com.becomejavasenior.*;
 import com.becomejavasenior.interfacedao.TaskDAO;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.Date;
 
 /**
  * created by Alekseichenko Sergey <mononofuu@gmail.com>
  */
 public class TaskDAOImpl extends AbstractJDBCDao<Task> implements TaskDAO {
+    private Logger logger = LogManager.getLogger(TaskDAOImpl.class);
+
+    @Override
+    public List<Task> getAllTasksByParameters(String userId, Date date, String taskTypeId) throws DataBaseException {
+        List<Task> result;
+        try (Connection connection = getConnection();
+             Statement statement = connection.createStatement()
+        ){
+            logger.info(getParametrisedReadQuery(userId, date, taskTypeId));
+            ResultSet rs = statement.executeQuery(getParametrisedReadQuery(userId, date, taskTypeId));
+            result = parseResultSet(rs);
+        } catch (SQLException e) {
+            logger.error(e.getMessage());
+            throw new DataBaseException(e);
+        }
+        if (result == null) {
+            throw new DataBaseException();
+        }
+        return result;
+    }
+
+    private String getParametrisedReadQuery(String userId, Date date, String taskTypeId){
+        String result = getReadAllQuery()+" WHERE 1=1";
+        if(userId!=null){
+            result+=" AND user_id = "+userId;
+        }
+        if(date!=null){
+            result+=" AND due_date <= '"+new SimpleDateFormat("yyyy-MM-dd HH:mm:00").format(date)+"'";
+        }
+        if(taskTypeId!=null){
+            result+=" AND task_type_id = "+taskTypeId;
+        }
+        return result;
+    }
 
     @Override
     public String getReadAllQuery() {

@@ -4,4 +4,5 @@
 $(document).ready(function(){
     $("#datepicker").datepicker();
     $("#timepicker").timepicker({ 'timeFormat': 'H:i' });
+    $(".multipleselect").select2();
 });

@@ -34,6 +34,7 @@
             <div class="col-md-3 window">
                 <h4>Фильтры</h4>
                 <form class="form-horizontal" action="tasklist" method="post">
+                    <input type="hidden" name="currentuser" value="${user.id}">
                     <div class="form-group">
                         <div class="col-sm-10">
                             <select class="form-control" size="5" name="filtername" id="filtername">
@@ -64,7 +65,7 @@
                         <select class="form-control" name="tasktype" id="tasktype">
                             <option value="">Все типы</option>
                              <c:forEach var="tasktype" items="${tasktypes}">
-                                <option value="${tasktype}">${tasktype.toString()}</option>
+                                <option value="${tasktype.ordinal()+1}">${tasktype.toString()}</option>
                              </c:forEach>
                          </select>
                     </div>
@@ -81,8 +82,9 @@
                         <div class="col-sm-10">
                             <label for="users">Менеджеры</label>
                             <select class="form-control" name="user" id="users">
+                                <option value="">Любой менеджер</option>
                                 <c:forEach var="user" items="${users}">
-                                    <option value="user.id">${user.name}</option>
+                                    <option value="${user.id}">${user.name}</option>
                                 </c:forEach>
                             </select>
                         </div>

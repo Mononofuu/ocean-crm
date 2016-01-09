@@ -41,7 +41,7 @@
         <a href="/dealslist">Сделки</a>
     </li>
     <li>
-        <a href="#4">Контакты</a>
+        <a href="/contactlist">Контакты</a>
     </li>
     <li>
         <a href="/tasklist">Задачи</a>
