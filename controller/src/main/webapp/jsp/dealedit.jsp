@@ -26,7 +26,7 @@
 </div>
 <div class="col-xs-10">
     <h3>Редактирование сделки</h3>
-    <div class="tabbable tabs-below col-md-7">
+    <div class="tabbable tabs-below col-md-10">
         <ul class="nav nav-tabs">
             <li class="active"><a href="#common" data-toggle="tab">Общая информация</a></li>
             <li><a href="#contacts" data-toggle="tab">Контакты</a></li>
@@ -175,7 +175,7 @@
             <div class="tab-pane container-fluid" id="contacts">
             <div class="tabbable tabs-left">
                 <ul class="nav nav-tabs" for="dealstatus">
-                    <c:forEach items="${contacts}" var="contact" varStatus="status">
+                    <c:forEach items="${dealcontacts}" var="contact" varStatus="status">
                         <li><a href="#contact${contact.id}" data-toggle="tab">${contact.name}</a></li>
                     </c:forEach>
                 </ul>
@@ -192,7 +192,7 @@
                 </div>
 
                 <div class="tab-content col-xs-9">
-                    <c:forEach items="${contacts}" var="contact" varStatus="status">
+                    <c:forEach items="${dealcontacts}" var="contact" varStatus="status">
 
                         <c:choose>
                             <c:when test="${status.getIndex() == 0}">
@@ -316,7 +316,65 @@
             </div>
 
             <div class="tab-pane container-fluid" id="tasks">
-                Задачи
+
+                <div class="table-responsive col-xs-12">
+                    <h3>Примечания</h3>
+                    <table class="table table-striped table-bordered table-hover table-condensed">
+                        <thead>
+                        <tr>
+                            <th>Дата и время создания</th>
+                            <th>Имя пользователя</th>
+                            <th>Комментарий</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <c:forEach items="${comments}" var="comment">
+                            <tr>
+                                <td>${comment.dateCreated}</td>
+                                <td>${comment.user.name}</td>
+                                <td>${comment.text}</td>
+                                <td>
+                                    <a href="/commentedit?action=edit&id=${comment.id}&backurl=/dealedit?action=edit&subjectid=${deal.id}">Изменить</a></td>
+                                </td>
+                                <td>
+                                    <a href="/commentedit?action=delete&id=${comment.id}&backurl=/dealedit?action=edit&subjectid=${deal.id}">Удалить</a></td>
+                            </tr>
+                        </c:forEach>
+                        </tbody>
+                    </table>
+                    <a href="/commentedit?action=edit&id=0&backurl=/dealedit?action=edit&subjectid=${deal.id}">Добавить примечание</a></td>
+
+                    <h3>Задачи</h3>
+                    <table class="table table-striped table-bordered table-hover table-condensed">
+                        <thead>
+                        <tr>
+                            <th>Дата и время создания</th>
+                            <th>Имя пользователя</th>
+                            <th>Комментарий</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <c:forEach items="${tasks}" var="task">
+                            <tr>
+                                <td>${task.dateCreated}</td>
+                                <td>${task.user.name}</td>
+                                <td>${task.text}</td>
+                                <td>
+                                    <a href="/taskedit?action=edit&id=${task.id}&backurl=/dealedit?action=edit&subjectid=${deal.id}">Изменить</a></td>
+                                </td>
+                                <td>
+                                    <a href="/taskedit?action=delete&id=${task.id}&backurl=/dealedit?action=edit&subjectid=${deal.id}">Удалить</a></td>
+                            </tr>
+                        </c:forEach>
+                        </tbody>
+                    </table>
+                    <a href="/taskedit?action=edit&id=0&backurl=/dealedit?action=edit&subjectid=${deal.id}">Добавить задачу</a></td>
+                </div>
+
             </div>
 
         </div>

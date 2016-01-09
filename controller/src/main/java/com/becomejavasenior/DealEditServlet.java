@@ -1,10 +1,10 @@
 package com.becomejavasenior;
 
-import com.becomejavasenior.impl.DealContactDAOImpl;
-import com.becomejavasenior.impl.DealServiceImpl;
-import com.becomejavasenior.impl.TagDAOImpl;
+import com.becomejavasenior.impl.*;
+import com.becomejavasenior.interfacedao.CommentDAO;
 import com.becomejavasenior.interfacedao.DealContactDAO;
 import com.becomejavasenior.interfacedao.TagDAO;
+import com.becomejavasenior.interfacedao.TaskDAO;
 import com.becomejavasenior.interfaceservice.DealService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -84,6 +84,12 @@ public class DealEditServlet extends HttpServlet {
                         case "contactmain":
                             requestString = "/contactedit?action=edit&id="+request.getParameter("maincontact");
                             break;
+//                        case "comment":
+//                            requestString = "/contactedit?action=edit&id="+request.getParameter("maincontact");
+//                            break;
+//                        case "task":
+//                            requestString = "/taskedit?action=edit&id="+request.getParameter("maincontact");
+//                            break;
                         case "deal":
                             try {
                                 dao = new PostgreSqlDaoFactory();
@@ -97,7 +103,6 @@ public class DealEditServlet extends HttpServlet {
                                 GenericDao<Contact> contactDao = dao.getDao(Contact.class);
                                 Contact contact = contactDao.read(Integer.parseInt(request.getParameter("maincontact")));
                                 deal.setMainContact(contact);
-
                                 Tag tag;
                                 Set<Tag> set = new HashSet<Tag>();
                                 String tags = request.getParameter("tags").trim().replaceAll("\\s+","','");
@@ -108,7 +113,6 @@ public class DealEditServlet extends HttpServlet {
                                     set.add(tag);
                                 }
                                 deal.setTags(set);
-
                                 GenericDao<User> userDao = dao.getDao(User.class);
                                 User user = userDao.read(Integer.parseInt(request.getParameter("user")));
                                 deal.setUser(user);
@@ -162,14 +166,17 @@ public class DealEditServlet extends HttpServlet {
                         List<Company> companyList = companyDao.readAll();
                         request.setAttribute("companies", companyList);
 
+                        GenericDao contactDao = dao.getDao(Contact.class);
+                        List<Contact> contactList = contactDao.readAll();
+                        request.setAttribute("contacts", contactList);
+
                         GenericDao phoneTypeDao = dao.getDao(PhoneType.class);
                         List<PhoneType> phoneTypeList = phoneTypeDao.readAll();
                         request.setAttribute("phonetypes", phoneTypeList);
 
-
                         DealContactDAO dealContactService = new DealContactDAOImpl();
-                        List<Contact> contactList = dealContactService.getAllContactsBySubjectId(deal.getId());
-                        request.setAttribute("contacts", contactList);
+                        List<Contact> dealContactList = dealContactService.getAllContactsBySubjectId(deal.getId());
+                        request.setAttribute("dealcontacts", dealContactList);
 
                         TagDAO tagDAO = new TagDAOImpl();
                         List<Tag> tagList = tagDAO.readAllSubjectTags(deal.getId());
@@ -182,6 +189,15 @@ public class DealEditServlet extends HttpServlet {
                         GenericDao currencyDao = dao.getDao(Currency.class);
                         List<Currency> currencyList = currencyDao.readAll();
                         request.setAttribute("currencies", currencyList);
+
+                        CommentDAO commentDao = new CommentDAOImpl();
+                        List<Comment> commentList = commentDao.getAllCommentsBySubjectId(deal.getId());
+                        request.setAttribute("comments", commentList);
+
+                        TaskDAO taskDao = new TaskDAOImpl();
+                        List<Task> taskList = taskDao.getAllTasksBySubjectId(deal.getId());
+                        request.setAttribute("comments", commentList);
+
                     } catch (DataBaseException e) {
                         e.printStackTrace();
                     }

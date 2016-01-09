@@ -63,7 +63,7 @@
         <tr>
             <th>Название сделки</th>
             <th>Основной контакт</th>
-            <th>Компания контакта</th>
+            <th>Компания</th>
             <th>Этап сделки</th>
             <th>Бюджет</th>
         </tr>
@@ -73,7 +73,7 @@
                 <tr>
                     <td><a href="/dealedit?action=edit&id=${deal.id}">${deal.name}</a></td>
                     <td>${deal.mainContact.name}</td>
-                    <td>${deal.mainContact.company.name}</td>
+                    <td>${deal.dealCompany.name}</td>
                     <td>${deal.status.name}</td>
                     <td>${deal.budget} ${deal.currency.name}</td>
                 </tr>

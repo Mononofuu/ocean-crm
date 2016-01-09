@@ -82,7 +82,7 @@ public class CommentDAOImpl extends AbstractJDBCDao<Comment> implements CommentD
     public List<Comment> getAllCommentsBySubjectId(int id) throws DataBaseException {
         List<Comment> result;
         try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(getReadAllQuery() + " WHERE subject_id = ?")) {
+             PreparedStatement statement = connection.prepareStatement(getReadAllQuery() + " WHERE subject_id = ? ORDER BY created_date")) {
             statement.setInt(1, id);
             ResultSet rs = statement.executeQuery();
             result = parseResultSet(rs);

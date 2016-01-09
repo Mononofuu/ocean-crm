@@ -45,12 +45,17 @@ public class UserFilter implements Filter {
         List<Role> tasklistRoles = new ArrayList<>();
         tasklistRoles.add(admin);
         tasklistRoles.add(user);
+        List<Role> commentRoles = new ArrayList<>();
+        commentRoles.add(admin);
+        commentRoles.add(user);
         List<Role> settingsRoles = new ArrayList<>();
         settingsRoles.add(admin);
         URL2ROLES.put("/dealslist", dealslistRoles);
         URL2ROLES.put("/dealedit", dealeditRoles);
         URL2ROLES.put("/companyedit", companyRoles);
         URL2ROLES.put("/contactedit", contactsRoles);
+        URL2ROLES.put("/commentedit", commentRoles);
+        URL2ROLES.put("/taskedit", tasklistRoles);
         URL2ROLES.put("/dashboard", dashboardRoles);
         URL2ROLES.put("/contacts", contactsRoles);
         URL2ROLES.put("/tasklist", tasklistRoles);
