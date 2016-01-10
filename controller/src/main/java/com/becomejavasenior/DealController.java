@@ -22,37 +22,25 @@ public class DealController extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
-        String name = request.getParameter("companyname");
-        String phone = request.getParameter("companyphone");
-        String email = request.getParameter("companyemail");
-        String site = request.getParameter("companysite");
-        String address = request.getParameter("companyaddress");
+        String action = request.getParameter("action");
+        logger.debug(action);
+        switch (action) {
+            case "newdeal":
+                newDeal(request, response);
+                response.sendRedirect("/index.jsp");
+                break;
+            case "newcontact":
+                newContact(request, response);
+                break;
+            case "newcompany":
+                newCompany(request, response);
+                break;
+            case "newtask":
+                newTask(request, response);
+                break;
+            default:
+        }
 
-        logger.debug(name);
-        logger.debug(phone);
-        logger.debug(email);
-        logger.debug(site);
-        logger.debug(address);
-        newCompany(request, response);
-//        String action = request.getParameter("action");
-//
-//        switch (action) {
-//            case "newdeal":
-//                newDeal(request, response);
-//                response.sendRedirect("/index.jsp");
-//                break;
-//            case "newcontact":
-//                newContact(request, response);
-//                break;
-//            case "newcompany":
-//                newCompany(request, response);
-//                break;
-//            case "newtask":
-//                newTask(request, response);
-//                break;
-//            default:
-//        }
-//
 //        response.sendRedirect("/deal");
 
 
@@ -65,12 +53,19 @@ public class DealController extends HttpServlet {
     private void newContact(HttpServletRequest request, HttpServletResponse response) {
         try {
             Contact contact = new Contact();
+            logger.debug(request.getParameter("contactname"));
+            logger.debug(request.getParameter("contactcompany"));
+            logger.debug(request.getParameter("contactposition"));
+            logger.debug(request.getParameter("contactphonetype"));
+            logger.debug(request.getParameter("contactphonenumber"));
+            logger.debug(request.getParameter("contactemail"));
+            logger.debug(request.getParameter("contactskype"));
+
             contact.setName(request.getParameter("contactname"));
 
             GenericDao<Company> companyDao = dao.getDao(Company.class);
             Company company = companyDao.read(Integer.parseInt(request.getParameter("contactcompany")));
             contact.setCompany(company);
-
             contact.setPost(request.getParameter("contactposition"));
             contact.setPhoneType(PhoneType.valueOf(request.getParameter("contactphonetype")));
             contact.setPhone(request.getParameter("contactphonenumber"));
@@ -205,7 +200,7 @@ public class DealController extends HttpServlet {
             logger.catching(e);
         }
 
-        logger.info("Collecting contacts, phases and companies data");
+//        logger.info("Collecting contacts, phases and companies data");
 
         String action = request.getParameter("action");
         logger.info("GET action = " + action);
@@ -221,6 +216,7 @@ public class DealController extends HttpServlet {
                 case "getContacts":
                     GenericDao<Contact> contactDao = dao.getDao(Contact.class);
                     List<Contact> contactList = contactDao.readAll();
+                    logger.debug(contactList.size());
                     json = new Gson().toJson(contactList);
                     break;
                 case "getDealStatuses":

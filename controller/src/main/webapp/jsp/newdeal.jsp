@@ -22,33 +22,35 @@
 
 
 </head>
-<body ng-controller="formController" onload="getCompanies(); getPhoneTypes()">
+<body>
 <div class="col-lg-2">
     <jsp:include page="menu.jsp"/>
 </div>
-<div class="col-lg-10">
+<div ng-controller="DealController" class="col-lg-10">
 
-    <form  class="col-md-3" name="dynamicForm" ng-submit="processForm()">
+    <form class="col-md-3" name="dynamicForm" ng-submit="processForm('newcontact')">
         <fieldset>
             <legend>Добавить контакт</legend>
-            <div ng-controller="ContactsController">
                     <a ng-click="removeContact(sc.id)" class="btn-info btn btn-block" ng-repeat="sc in selectedContacts">{{sc.name}}</a><br/>
                 <label>Выберите контакт</label>
                 <select class="form-control" ng-model="selected" ng-change="selectContact(selected)">
                     <option ng-repeat="contact in contacts" value="{{contact.id +','+ contact.name}}">{{contact.name}}</option>
                 </select>
-            </div>
             <br/>
-            <h5 class="center">или создать новый</h5>
+            <label>или создайте новый</label>
             <input class="form-control" type="text" name="contactname" placeholder="Имя Фамилия"
                    ng-model="formData.contactname" required/>
             <br/>
-            <select class="companies form-control" name="contactcompany"></select>
+            <select class="form-control" name="contactcompany" ng-model="formData.contactcompany">
+                <option ng-repeat="company in companies" value="{{company.id}}">{{company.name}}</option>
+            </select>
             <br/>
             <input class="form-control" type="text" name="contactposition" placeholder="Должность (Название должности)"
                    ng-model="formData.contactposition"/>
             <br/>
-            <select class="phonetype form-control" name="contactphonetype"></select>
+            <select class="form-control" name="contactphonetype" ng-model="formData.contactphonetype">
+                <option ng-repeat="phoneType in phoneTypes" value="{{phoneType}}">{{phoneType}}</option>
+            </select>
             <input class="form-control" type="text" name="contactphonenumber" placeholder="Номер телефона"
                    ng-model="formData.contactphonenumber"/>
             <br/>
@@ -64,11 +66,15 @@
         </fieldset>
     </form>
 
-    <form class="col-md-3" name="dynamicForm" ng-submit="processForm()">
+    <form  class="col-md-3" name="dynamicForm" ng-submit="processForm('newcompany')">
         <fieldset>
             <legend>Прикрепить компанию</legend>
-            <select class="companies form-control" name="dealcompany"></select>
-            <h5 class="center">или добавить новую</h5>
+            <label>Выберите компанию</label>
+            <select class="form-control" name="dealcompany">
+                <option ng-repeat="company in companies" value="{{company.id}}">{{company.name}}</option>
+
+            </select>
+            <label >или добавить новую</label>
             <div>
                 <input class="form-control" type="text" name="companyname" placeholder="Название компании"
                        ng-model="formData.companyname" required/>
