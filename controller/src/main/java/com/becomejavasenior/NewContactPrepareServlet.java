@@ -1,5 +1,7 @@
 package com.becomejavasenior;
 
+import com.becomejavasenior.impl.DealServiceImpl;
+import com.becomejavasenior.impl.TaskServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -35,7 +37,14 @@ public class NewContactPrepareServlet extends HttpServlet {
             GenericDao userDao = dao.getDao(User.class);
             List<User> usersList = userDao.readAll();
             request.setAttribute("userslist", usersList);
-            getServletContext().getRequestDispatcher("/jsp/newcontact.jsp").forward(request,response);
+            GenericDao phoneTypeDao = dao.getDao(PhoneType.class);
+            List<PhoneType> phoneTypes = phoneTypeDao.readAll();
+            request.setAttribute("phonetypelist", phoneTypes);
+            List<TaskType> taskTypes = new TaskServiceImpl().getAllTaskTypes();
+            request.setAttribute("tasktypes", taskTypes);
+            List<DealStatus> dealStatuses = new DealServiceImpl().getAllDealStatuses();
+            request.setAttribute("dealstatuses", dealStatuses);
+            getServletContext().getRequestDispatcher("/jsp/newcontact_bootstrap.jsp").forward(request,response);
         } catch (DataBaseException e) {
             logger.error("Error when prepearing data for newcontact.jsp",e);
         } catch (ServletException e) {

@@ -75,7 +75,6 @@
         <filter-name>UserFilter</filter-name>
         <url-pattern>/contactlist</url-pattern>
     </filter-mapping>
-
     <filter-mapping>
         <filter-name>AuthorizedFilter</filter-name>
         <servlet-name>SignOut</servlet-name>

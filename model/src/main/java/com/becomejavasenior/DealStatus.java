@@ -105,4 +105,24 @@ public class DealStatus implements Serializable, Comparable {
     public int compareTo(Object o) {
         return Integer.compare(this.getId(), ((DealStatus) o).getId());
     }
+
+    @Override
+    public String toString() {
+        switch (name){
+            case "PRIMARY CONTACT":
+                return "Первичный контакт";
+            case "CONVERSATION":
+                return "Обсуждение";
+            case "MAKE THE DECISION":
+                return "Принимают решение";
+            case "APPROVAL OF THE CONTRACT":
+                return "Согласование договора";
+            case "SUCCESS":
+                return "Успешно реализованно";
+            case "CLOSED AND NOT IMPLEMENTED":
+                return "Закрыто и нереализованно";
+            default:
+                return name;
+        }
+    }
 }

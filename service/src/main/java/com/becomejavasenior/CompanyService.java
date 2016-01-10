@@ -16,4 +16,5 @@ public interface CompanyService {
         void deleteCompany(int id) throws DataBaseException;
         List<Company> findCompanies() throws DataBaseException;
         List<Company> findCompaniesLite() throws DataBaseException;
+        Company findCompanyByName(String name) throws DataBaseException;
 }

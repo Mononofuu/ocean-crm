@@ -59,7 +59,7 @@ public class TaskListServlet extends HttpServlet{
             endOfDay.add(Calendar.MINUTE, -1);
             request.setAttribute("endofday", endOfDay);
             request.setAttribute("timelist", getTimeList());
-            request.setAttribute("tasktypes", new TaskTypeServiceImpl().getAllTaskTypes());
+            request.setAttribute("tasktypes", taskService.getAllTaskTypes());
             request.setAttribute("users", new UserServiceImpl().getAllUsers());
             getServletContext().getRequestDispatcher("/jsp/tasklist.jsp").forward(request,response);
         } catch (DataBaseException e) {

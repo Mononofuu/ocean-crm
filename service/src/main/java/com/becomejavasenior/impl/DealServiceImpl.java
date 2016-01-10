@@ -2,10 +2,9 @@ package com.becomejavasenior.impl;
 
 import com.becomejavasenior.*;
 import com.becomejavasenior.interfacedao.DealDAO;
-import com.becomejavasenior.DealService;
+import com.becomejavasenior.interfacedao.DealStatusDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import java.sql.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -14,15 +13,17 @@ import java.util.stream.Collectors;
 /**
  * Created by Peter on 18.12.2015.
  */
-public class DealServiceImpl implements DealService{
+public class DealServiceImpl implements com.becomejavasenior.DealService {
 
     static final Logger logger = LogManager.getRootLogger();
     DaoFactory daoFactory;
     DealDAO dealDao;
+    DealStatusDAO dealStatusDao;
 
     public DealServiceImpl() throws DataBaseException{
         daoFactory = new PostgreSqlDaoFactory();
         dealDao = (DealDAO)daoFactory.getDao(Deal.class);
+        dealStatusDao = (DealStatusDAO) daoFactory.getDao(DealStatus.class);
     }
 
     @Override
@@ -110,4 +111,13 @@ public class DealServiceImpl implements DealService{
         return dealList;
     }
 
+    @Override
+    public List<DealStatus> getAllDealStatuses() throws DataBaseException {
+        return dealStatusDao.readAll();
+    }
+
+    @Override
+    public DealStatus findDealStatus(int id) throws DataBaseException {
+        return dealStatusDao.read(id);
+    }
 }

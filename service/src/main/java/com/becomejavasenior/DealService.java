@@ -31,5 +31,6 @@ public interface DealService{
         List<Deal> findDealsByConditions(int condition) throws DataBaseException;
         List<Deal> findDealsByCreatedDateInterval(Date dateBegin, Date dateEnd) throws DataBaseException;
         List<Deal> findDealsByTasksDueDateInterval(Date dateBegin, Date dateEnd) throws DataBaseException;
-
+        List<DealStatus> getAllDealStatuses() throws DataBaseException;
+        DealStatus findDealStatus(int id) throws DataBaseException;
 }

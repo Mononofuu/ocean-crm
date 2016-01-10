@@ -49,3 +49,9 @@ INSERT INTO tag (name) VALUES
   ('тэг6'),
   ('тэг7');
 
+INSERT INTO deal (id, status_id, currency_id, budget, contact_main_id, company_id, data_close, created_date) VALUES
+  (2, 1, 1, 1000, 5, 2, '2016-02-06 22:00:00', NOW()),
+  (3, 1, 1, 1000, 5, 2, '2016-02-06 22:00:00', NOW()),
+  (4, 1, 1, 1000, 5, 2, '2016-02-06 22:00:00', NOW()),
+  (5, 1, 1, 1000, 5, 2, '2016-02-06 22:00:00', NOW());
+

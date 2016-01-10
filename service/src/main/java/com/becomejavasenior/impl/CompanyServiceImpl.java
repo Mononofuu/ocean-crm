@@ -10,47 +10,57 @@ import java.util.List;
 /**
  * Created by Peter on 18.12.2015.
  */
-public class CompanyServiceImpl implements CompanyService{
 
-    static final Logger logger = LogManager.getRootLogger();
+public class CompanyServiceImpl implements CompanyService {
+
+    private static Logger logger = LogManager.getLogger(CompanyServiceImpl.class);
     private DaoFactory dao;
-    private CompanyDAOImpl companyDao;
+    private CompanyDAOImpl companyDAO;
 
-    public CompanyServiceImpl() throws DataBaseException {
-        dao = new PostgreSqlDaoFactory();
-        companyDao = (CompanyDAOImpl)dao.getDao(Company.class);
+    public CompanyServiceImpl(){
+        try {
+            dao = new PostgreSqlDaoFactory();
+            companyDAO = (CompanyDAOImpl)dao.getDao(Company.class);
+        } catch (DataBaseException e) {
+            logger.error(e);
+        }
     }
 
     @Override
     public void saveCompany(Company company) throws DataBaseException {
-        if(company.getId() == 0){
-            companyDao.create(company);
-        }else{
-            companyDao.update(company);
+
+        if (company.getId() == 0) {
+            companyDAO.create(company);
+        } else {
+            companyDAO.update(company);
         }
     }
 
     @Override
     public void deleteCompany(int id) throws DataBaseException {
-        companyDao.delete(id);
+        companyDAO.delete(id);
     }
 
     @Override
     public Company findCompanyById(int id) throws DataBaseException {
-        Company company = companyDao.read(id);
+        Company company = companyDAO.read(id);
         return company;
     }
 
     @Override
     public List<Company> findCompanies() throws DataBaseException{
-        List<Company> companyList = companyDao.readAll();
+        List<Company> companyList = companyDAO.readAll();
         return companyList;
     }
 
     @Override
     public List<Company> findCompaniesLite() throws DataBaseException{
-        List<Company> companyList = companyDao.readAllLite();
+        List<Company> companyList = companyDAO.readAllLite();
         return companyList;
     }
 
+    @Override
+    public Company findCompanyByName(String name) throws DataBaseException {
+        return companyDAO.readCompanyByName(name);
+    }
 }

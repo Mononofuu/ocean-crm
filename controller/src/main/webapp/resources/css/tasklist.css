@@ -1,4 +1,4 @@
-.window, .tab-pane{
+.window, .tab-pane, .autowindow{
     border: 2px solid black;
     border-radius: 10px;
     margin: 10px 0 0 20px;
@@ -7,6 +7,11 @@
 }
 .window{
     height: 650px;
+}
+.autowindow{
+    padding-top: 10px;
+    height: auto;
+    padding-bottom: 10px;
 }
 
 .addtask{
@@ -43,6 +48,13 @@
     padding-right:3px;
     padding-left:0;
 }
+.small-gutter > [class*='col-'] {
+    padding-right: 0;
+    padding-left: 5px;
+}
+.small-gutter > [class*='col-']:first-child{
+    padding-left:15px;
+}
 
 .date, .contactdeal{
     width:150px;
@@ -71,7 +83,6 @@
 .resetbutton{
     margin-left:30px;
 }
-
 .paging-nav {
     text-align: center;
     padding-top: 2px;
@@ -134,3 +145,6 @@
     background-color: #f9f9f9
 }
 
+body{
+    background-color: aliceblue;
+}
