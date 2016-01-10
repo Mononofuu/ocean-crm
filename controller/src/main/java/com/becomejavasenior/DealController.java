@@ -1,9 +1,9 @@
 package com.becomejavasenior;
 
+import com.google.gson.Gson;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -22,26 +22,39 @@ public class DealController extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
-        String action = request.getParameter("action");
+        String name = request.getParameter("companyname");
+        String phone = request.getParameter("companyphone");
+        String email = request.getParameter("companyemail");
+        String site = request.getParameter("companysite");
+        String address = request.getParameter("companyaddress");
 
-        switch (action) {
-            case "newdeal":
-                newDeal(request, response);
-                response.sendRedirect("/index.jsp");
-                break;
-            case "newcontact":
-                newContact(request, response);
-                break;
-            case "newcompany":
-                newCompany(request, response);
-                break;
-            case "newtask":
-                newTask(request, response);
-                break;
-            default:
-        }
+        logger.debug(name);
+        logger.debug(phone);
+        logger.debug(email);
+        logger.debug(site);
+        logger.debug(address);
+        newCompany(request, response);
+//        String action = request.getParameter("action");
+//
+//        switch (action) {
+//            case "newdeal":
+//                newDeal(request, response);
+//                response.sendRedirect("/index.jsp");
+//                break;
+//            case "newcontact":
+//                newContact(request, response);
+//                break;
+//            case "newcompany":
+//                newCompany(request, response);
+//                break;
+//            case "newtask":
+//                newTask(request, response);
+//                break;
+//            default:
+//        }
+//
+//        response.sendRedirect("/deal");
 
-        response.sendRedirect("/deal");
 
     }
 
@@ -194,25 +207,44 @@ public class DealController extends HttpServlet {
 
         logger.info("Collecting contacts, phases and companies data");
 
-        try {
-            GenericDao<Contact> contactDao = dao.getDao(Contact.class);
-            List<Contact> contactList = contactDao.readAll();
-            GenericDao<DealStatus> dealStatusDao = dao.getDao(DealStatus.class);
-            List<DealStatus> dealStatusList = dealStatusDao.readAll();
-            GenericDao<Company> companyDao = dao.getDao(Company.class);
-            List<Company> companyList = companyDao.readAll();
-            request.setAttribute("contacts", contactList);
-            request.setAttribute("phases", dealStatusList);
-            request.setAttribute("companies", companyList);
-            request.setAttribute("phoneTypes", PhoneType.values());
+        String action = request.getParameter("action");
+        logger.info("GET action = " + action);
 
+        String json = null;
+        try {
+            switch (action) {
+                case "getCompanies":
+                    GenericDao<Company> companyDao = dao.getDao(Company.class);
+                    List<Company> companyList = companyDao.readAll();
+                    json = new Gson().toJson(companyList);
+                    break;
+                case "getContacts":
+                    GenericDao<Contact> contactDao = dao.getDao(Contact.class);
+                    List<Contact> contactList = contactDao.readAll();
+                    json = new Gson().toJson(contactList);
+                    break;
+                case "getDealStatuses":
+                    GenericDao<DealStatus> dealStatusDao = dao.getDao(DealStatus.class);
+                    List<DealStatus> dealStatusList = dealStatusDao.readAll();
+                    json = new Gson().toJson(dealStatusList);
+                    break;
+                case "getPhoneTypes":
+                    json = new Gson().toJson(PhoneType.values());
+                    break;
+                default:
+            }
         } catch (DataBaseException e) {
             logger.error("Error while getting DAO");
             logger.catching(e);
         }
-        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextJSP);
-        dispatcher.forward(request, response);
-        logger.info(String.format("REDIRECTING TO %s", nextJSP));
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(json);
+
+
+//        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextJSP);
+//        dispatcher.forward(request, response);
+//        logger.info(String.format("REDIRECTING TO %s", nextJSP));
 
     }
 }
