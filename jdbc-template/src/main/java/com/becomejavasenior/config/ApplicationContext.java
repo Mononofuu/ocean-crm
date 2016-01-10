@@ -1,48 +1,36 @@
 package com.becomejavasenior.config;
 
+import com.becomejavasenior.Grants;
+import com.becomejavasenior.Role;
+import com.becomejavasenior.User;
 import com.becomejavasenior.impl.GrantsTemplateDAOImpl;
 import com.becomejavasenior.impl.RoleTemplateDAOImpl;
 import com.becomejavasenior.impl.UserTemplateDAOImpl;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.becomejavasenior.interfaceDAO.GenericTemplateDAO;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.context.annotation.ImportResource;
 
 /**
  * @author Lybachevskiy.Vladislav
  */
 @Configuration
-@PropertySource("classpath:postgresql_config.properties")
+@ImportResource("classpath:spring-datasource.xml")
 public class ApplicationContext {
 
-    @Autowired
-    Environment myEnvironment;
-
     @Bean
-    public DriverManagerDataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(myEnvironment.getRequiredProperty("driver"));
-        dataSource.setUsername(myEnvironment.getRequiredProperty("user"));
-        dataSource.setUrl(myEnvironment.getRequiredProperty("url"));
-        dataSource.setPassword(myEnvironment.getRequiredProperty("password"));
-        return dataSource;
+    public GenericTemplateDAO<User> userDao() {
+        return new UserTemplateDAOImpl();
     }
 
     @Bean
-    public UserTemplateDAOImpl userDAO() {
-        return new UserTemplateDAOImpl(dataSource());
+    public GenericTemplateDAO<Role> roleDao() {
+        return new RoleTemplateDAOImpl();
     }
 
     @Bean
-    public RoleTemplateDAOImpl roleDAOImpl() {
-        return new RoleTemplateDAOImpl(dataSource());
-    }
-
-    @Bean
-    public GrantsTemplateDAOImpl grantsDAOImpl(){
-        return new GrantsTemplateDAOImpl(dataSource());
+    public GenericTemplateDAO<Grants> grantsDao() {
+        return new GrantsTemplateDAOImpl();
     }
 
 }

@@ -2,13 +2,15 @@ package com.becomejavasenior.impl;
 
 import com.becomejavasenior.Role;
 import com.becomejavasenior.interfaceDAO.GenericTemplateDAO;
+import com.becomejavasenior.mapper.RoleRowMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.PreparedStatementSetter;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 
+import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,8 +22,13 @@ import java.util.Map;
 
 public class RoleTemplateDAOImpl extends JdbcDaoSupport implements GenericTemplateDAO<Role> {
 
-    public RoleTemplateDAOImpl(DataSource dataSource) {
-        setDataSource(dataSource);
+    @Autowired
+    @Qualifier("dataSource")
+    private DataSource myDataSource;
+
+    @PostConstruct
+    private void initialize() {
+        setDataSource(myDataSource);
     }
 
     public void create(Role role) {
@@ -34,15 +41,7 @@ public class RoleTemplateDAOImpl extends JdbcDaoSupport implements GenericTempla
         String sql = "SELECT * FROM role WHERE id = ?";
         return getJdbcTemplate().queryForObject(
                 sql, new Object[]{id},
-                new RowMapper<Role>() {
-                    public Role mapRow(ResultSet resultSet, int i) throws SQLException {
-                        Role role = new Role();
-                        role.setId(resultSet.getInt("id"));
-                        role.setName(resultSet.getString("name"));
-                        role.setDescription(resultSet.getString("description"));
-                        return role;
-                    }
-                });
+                new RoleRowMapper());
     }
 
     public List<Role> readAll() {

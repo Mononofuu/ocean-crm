@@ -4,13 +4,15 @@ import com.becomejavasenior.Comment;
 import com.becomejavasenior.Language;
 import com.becomejavasenior.User;
 import com.becomejavasenior.interfaceDAO.GenericTemplateDAO;
+import com.becomejavasenior.mapper.UserRowMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.PreparedStatementSetter;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 
+import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,8 +24,13 @@ import java.util.Map;
 
 public class UserTemplateDAOImpl extends JdbcDaoSupport implements GenericTemplateDAO<User> {
 
-    public UserTemplateDAOImpl(DataSource dataSource) {
-        setDataSource(dataSource);
+    @Autowired
+    @Qualifier("dataSource")
+    private DataSource myDataSource;
+
+    @PostConstruct
+    private void initialize() {
+        setDataSource(myDataSource);
     }
 
     public void create(User user) {
@@ -35,26 +42,7 @@ public class UserTemplateDAOImpl extends JdbcDaoSupport implements GenericTempla
         String sql = "SELECT * FROM users WHERE id = ?";
         return getJdbcTemplate().queryForObject(
                 sql, new Object[]{id},
-                new RowMapper<User>() {
-                    public User mapRow(ResultSet resultSet, int i) throws SQLException {
-                        User user = new User();
-                        user.setName(resultSet.getString("name"));
-                        user.setLogin(resultSet.getString("login"));
-                        user.setPassword(resultSet.getString("password"));
-                        user.setPhoto(resultSet.getBytes("photo"));
-                        user.setEmail(resultSet.getString("email"));
-                        user.setPhoneHome(resultSet.getString("phone_mob"));
-                        user.setPhoneWork(resultSet.getString("phone_work"));
-                        String language = resultSet.getString("language");
-                        user.setLanguage(language != null ? Language.valueOf(language) : null);
-                        Comment comment = new Comment();
-                        comment.setText(resultSet.getString("comment"));
-                        List<Comment> comments = new ArrayList<Comment>();
-                        comments.add(comment);
-                        user.setComments(comments);
-                        return user;
-                    }
-                });
+                new UserRowMapper());
     }
 
     public List<User> readAll() {
