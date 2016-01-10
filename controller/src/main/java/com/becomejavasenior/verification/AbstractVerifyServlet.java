@@ -31,7 +31,7 @@ public abstract class AbstractVerifyServlet extends HttpServlet{
         process(req, resp);
     }
 
-    private void process(HttpServletRequest req, HttpServletResponse resp) throws IOException{
+    public void process(HttpServletRequest req, HttpServletResponse resp) throws IOException{
         StringWriter writer = new StringWriter();
         req.setCharacterEncoding("UTF-8");
         resp.setContentType("application/json");

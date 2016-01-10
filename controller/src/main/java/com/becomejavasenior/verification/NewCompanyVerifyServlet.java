@@ -33,7 +33,6 @@ public class NewCompanyVerifyServlet extends AbstractVerifyServlet {
         }
         String phoneNumber = req.getParameter("newcompanyphone");
         if(!checkString(phoneNumber, PHONE_PATTERN)){
-            logger.info(phoneNumber);
             result.put("newcompanyphone", "Некоректный номер");
         }
         String email = req.getParameter("newcompanyemail");
