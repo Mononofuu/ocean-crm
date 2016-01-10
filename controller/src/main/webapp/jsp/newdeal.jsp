@@ -2,7 +2,7 @@
 <%@ page isELIgnored="false" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <style>
-    <%@include file='../css/newdeal.css' %>
+    <%--<%@include file='../css/newdeal.css' %>--%>
     <%@include file='../css/bootstrap.css' %>
 </style>
 <!DOCTYPE html>
@@ -22,30 +22,24 @@
 
 
 </head>
-<body ng-controller="formController" onload="getCompanies();getContacts(); getPhoneTypes()">
+<body ng-controller="formController" onload="getCompanies(); getPhoneTypes()">
 <div class="col-lg-2">
     <jsp:include page="menu.jsp"/>
 </div>
 <div class="col-lg-10">
 
-    <form name="dynamicForm" ng-submit="processForm()">
-        <fieldset ng-controller="ContactController as contactList">
+    <form  class="col-md-3" name="dynamicForm" ng-submit="processForm()">
+        <fieldset>
             <legend>Добавить контакт</legend>
-            <div id="contactscroller">
-                <ul class="unstyled">
-                    <li class="test" ng-repeat="todo in contactList.todos">
-                        <span>{{todo.id}}</span>
-                        <span>{{todo.name}}</span>
-                    </li>
-                </ul>
+            <div ng-controller="ContactsController">
+                    <a ng-click="removeContact(sc.id)" class="btn-info btn btn-block" ng-repeat="sc in selectedContacts">{{sc.name}}</a><br/>
+                <label>Выберите контакт</label>
+                <select class="form-control" ng-model="selected" ng-change="selectContact(selected)">
+                    <option ng-repeat="contact in contacts" value="{{contact.id +','+ contact.name}}">{{contact.name}}</option>
+                </select>
             </div>
-
-            {{selection}}
-            {{contacts}}
             <br/>
-            <select class="contacts form-control" ng-repeat="todo in contactList.todos" name="dealcontact" ng-model="selection"
-                    ng-change="contactList.addTodo(selection)"></select>
-            <h5 class="center">или добавить новый</h5>
+            <h5 class="center">или создать новый</h5>
             <input class="form-control" type="text" name="contactname" placeholder="Имя Фамилия"
                    ng-model="formData.contactname" required/>
             <br/>
@@ -70,7 +64,7 @@
         </fieldset>
     </form>
 
-    <form name="dynamicForm" ng-submit="processForm()">
+    <form class="col-md-3" name="dynamicForm" ng-submit="processForm()">
         <fieldset>
             <legend>Прикрепить компанию</legend>
             <select class="companies form-control" name="dealcompany"></select>
