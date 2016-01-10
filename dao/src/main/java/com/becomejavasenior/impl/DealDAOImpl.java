@@ -2,6 +2,8 @@ package com.becomejavasenior.impl;
 
 import com.becomejavasenior.*;
 import com.becomejavasenior.interfacedao.DealDAO;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -12,11 +14,12 @@ import java.sql.Date;
  * created by Alekseichenko Sergey <mononofuu@gmail.com>
  */
 public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
-
-    public static final String DEAL_SELECT_STATUS_ID = " WHERE status_id=?";
     public static final String DEAL_SELECT_TAG = " WHERE deal.id IN(SELECT subject_id FROM subject_tag " +
             "WHERE subject_tag.tag_id IN (SELECT id FROM tag WHERE name IN (";
-
+    private final static Logger LOGGER = LogManager.getLogger(DealDAOImpl.class);
+    public static final String DEAL_SELECT_STATUS_ID = " where status_id=?";
+    public static final String DEAL_SELECT_USER_ID = " where id in(select subject.id from subject " +
+            "where subject.content_owner_id = ?)";
     public static final String DEAL_SELECT_OPENED = " WHERE deal.data_close IS null";
     public static final String DEAL_SELECT_BY_USER = " WHERE subject.content_owner_id=?";
     public static final String DEAL_SELECT_WITHOUT_TASKS = " WHERE NOT deal.id IN (SELECT subject_id FROM task GROUP BY subject_id)";
@@ -98,9 +101,7 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
                 deal.setContacts(dealContactDAOImpl.getAllContactsBySubjectId(id));
                 deal.setFiles(fileDao.getAllFilesBySubjectId(id));
                 deal.setComments(commentDAO.getAllCommentsBySubjectId(id));
-                //Здесь глючит при наличии тасков. Получается бесконечный цикл
-//                deal.setTasks(taskDAO.getAllTasksBySubjectId(id));
-                deal.setTasks(new ArrayList<Task>());
+                deal.setTasks(taskDAO.getAllTasksBySubject(deal));
                 result.add(deal);
             }
         } catch (SQLException e) {
@@ -137,7 +138,7 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
                 Currency currency = (Currency) currencyDao.read(rs.getInt("currency_id"));
                 deal.setCurrency(currency);
                 deal.setTags(subjectTagDAOImpl.getAllTagsBySubjectId(id));
-                deal.setTasks(taskDAO.getAllTasksBySubjectId(id));
+                deal.setTasks(taskDAO.getAllTasksBySubject(deal));
                 result.add(deal);
             }
         } catch (SQLException e) {
