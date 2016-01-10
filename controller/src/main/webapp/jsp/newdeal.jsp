@@ -31,11 +31,12 @@
     <form class="col-md-3" name="dynamicForm" ng-submit="processForm('newcontact')">
         <fieldset>
             <legend>Добавить контакт</legend>
-                    <a ng-click="removeContact(sc.id)" class="btn-info btn btn-block" ng-repeat="sc in selectedContacts">{{sc.name}}</a><br/>
-                <label>Выберите контакт</label>
-                <select class="form-control" ng-model="selected" ng-change="selectContact(selected)">
-                    <option ng-repeat="contact in contacts" value="{{contact.id +','+ contact.name}}">{{contact.name}}</option>
-                </select>
+            <a ng-click="removeContact(sc.id)" class="btn-info btn btn-block" ng-repeat="sc in selectedContacts">{{sc.name}}</a>
+            <label>Выберите контакт</label>
+            <select class="form-control" ng-model="selected" ng-change="selectContact(selected)">
+                <option ng-repeat="contact in contacts" value="{{contact.id +','+ contact.name}}">{{contact.name}}
+                </option>
+            </select>
             <br/>
             <label>или создайте новый</label>
             <input class="form-control" type="text" name="contactname" placeholder="Имя Фамилия"
@@ -66,7 +67,7 @@
         </fieldset>
     </form>
 
-    <form  class="col-md-3" name="dynamicForm" ng-submit="processForm('newcompany')">
+    <form class="col-md-3" name="dynamicForm" ng-submit="processForm('newcompany')">
         <fieldset>
             <legend>Прикрепить компанию</legend>
             <label>Выберите компанию</label>
@@ -74,26 +75,52 @@
                 <option ng-repeat="company in companies" value="{{company.id}}">{{company.name}}</option>
 
             </select>
-            <label >или добавить новую</label>
-            <div>
-                <input class="form-control" type="text" name="companyname" placeholder="Название компании"
-                       ng-model="formData.companyname" required/>
-                <br/>
-                <input class="form-control" type="tel" name="companyphone" placeholder="Телефон"
-                       ng-model="formData.companyphone" required>
-                <br/>
-                <input class="form-control" type="email" name="companyemail" placeholder="Email"
-                       ng-model="formData.companyemail" required>
-                <br/>
-                <input class="form-control" type="url" name="companysite" placeholder="Web-адрес"
-                       ng-model="formData.companysite" required>
-                <br/>
+            <label>или добавить новую</label>
+            <input class="form-control" type="text" name="companyname" placeholder="Название компании"
+                   ng-model="formData.companyname" required/>
+            <br/>
+            <input class="form-control" type="tel" name="companyphone" placeholder="Телефон"
+                   ng-model="formData.companyphone" required>
+            <br/>
+            <input class="form-control" type="email" name="companyemail" placeholder="Email"
+                   ng-model="formData.companyemail" required>
+            <br/>
+            <input class="form-control" type="url" name="companysite" placeholder="Web-адрес"
+                   ng-model="formData.companysite" required>
+            <br/>
                 <textarea class="form-control textarea" name="companyaddress" placeholder="Адрес"
                           ng-model="formData.companyaddress" required></textarea>
+            <br/>
+            <button type="submit" class="btn btn-success btn-block">
+                <span class="glyphicon"></span> Создать команию
+            </button>
+        </fieldset>
+    </form>
+
+    <form class="col-md-3" name="dynamicForm" ng-submit="processForm('newtask')" ng-init="addTask=false">
+        <fieldset>
+            <legend>Запланировать задачу</legend>
+            <input type="checkbox" ng-model="addTask">Добавить задачу к новой сделке
+            <div ng-show="addTask">
+                <select class="form-control" name="taskperiod" ng-model="formData.taskperiod">
+                    <option>Сегодня</option>
+                    <option>Завтра</option>
+                    <option>Послезавтра</option>
+                </select>
+                <label>или</label>
+                <input class="form-control" type="datetime-local" name="taskduedate"
+                       ng-model="formData.taskduedate" required>
                 <br/>
-                <button type="submit" class="btn btn-success btn-block">
-                    <span class="glyphicon"></span> Создать команию
-                </button>
+                <select class="form-control" name="taskuser" ng-model="formData.taskuser">
+                    <option ng-repeat="user in users" value="{{user.id}}">{{user.name}}</option>
+                </select>
+                <br/>
+                <select class="form-control" name="tasktype" ng-model="formData.tasktype">
+                    <option ng-repeat="taskType in taskTypes" value="{{taskType}}">{{taskType}}</option>
+                </select>
+                <br/>
+                <textarea class="form-control textarea" name="taskcomment" placeholder="Текст задачи"
+                          ng-model="formData.taskcomment"></textarea>
             </div>
         </fieldset>
     </form>

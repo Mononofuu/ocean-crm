@@ -16,7 +16,6 @@ import java.util.List;
 
 public class DealController extends HttpServlet {
     private final static Logger logger = LogManager.getLogger(DealController.class);
-    private final static String nextJSP = "/jsp/newdeal.jsp";
     private DaoFactory dao;
     private Deal createdDeal;
 
@@ -41,28 +40,23 @@ public class DealController extends HttpServlet {
             default:
         }
 
-//        response.sendRedirect("/deal");
-
-
     }
 
     private void newTask(HttpServletRequest request, HttpServletResponse response) {
-        //TODO Add task implementation
+        try {
+            Task task = new Task();
+            GenericDao<Task> taskDao = dao.getDao(Task.class);
+
+        } catch (DataBaseException e) {
+            logger.error("Error while creating new contact");
+            logger.catching(e);
+        }
     }
 
     private void newContact(HttpServletRequest request, HttpServletResponse response) {
         try {
             Contact contact = new Contact();
-            logger.debug(request.getParameter("contactname"));
-            logger.debug(request.getParameter("contactcompany"));
-            logger.debug(request.getParameter("contactposition"));
-            logger.debug(request.getParameter("contactphonetype"));
-            logger.debug(request.getParameter("contactphonenumber"));
-            logger.debug(request.getParameter("contactemail"));
-            logger.debug(request.getParameter("contactskype"));
-
             contact.setName(request.getParameter("contactname"));
-
             GenericDao<Company> companyDao = dao.getDao(Company.class);
             Company company = companyDao.read(Integer.parseInt(request.getParameter("contactcompany")));
             contact.setCompany(company);
@@ -200,8 +194,6 @@ public class DealController extends HttpServlet {
             logger.catching(e);
         }
 
-//        logger.info("Collecting contacts, phases and companies data");
-
         String action = request.getParameter("action");
         logger.info("GET action = " + action);
 
@@ -216,7 +208,6 @@ public class DealController extends HttpServlet {
                 case "getContacts":
                     GenericDao<Contact> contactDao = dao.getDao(Contact.class);
                     List<Contact> contactList = contactDao.readAll();
-                    logger.debug(contactList.size());
                     json = new Gson().toJson(contactList);
                     break;
                 case "getDealStatuses":
@@ -227,6 +218,14 @@ public class DealController extends HttpServlet {
                 case "getPhoneTypes":
                     json = new Gson().toJson(PhoneType.values());
                     break;
+                case "getTaskTypes":
+                    json = new Gson().toJson(TaskType.values());
+                    break;
+                case "getUsers":
+                    GenericDao<User> userDao = dao.getDao(User.class);
+                    List<User> users = userDao.readAll();
+                    json = new Gson().toJson(users);
+                    break;
                 default:
             }
         } catch (DataBaseException e) {
@@ -236,11 +235,5 @@ public class DealController extends HttpServlet {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(json);
-
-
-//        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextJSP);
-//        dispatcher.forward(request, response);
-//        logger.info(String.format("REDIRECTING TO %s", nextJSP));
-
     }
 }

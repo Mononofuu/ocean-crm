@@ -8,6 +8,8 @@ newDeal.controller('DealController', function ($scope, $http) {
         getCompanies($http, $scope);
         getContacts($http, $scope);
         getPhoneTypes($http, $scope);
+        getTaskTypes($http, $scope);
+        getUsers($http, $scope);
     });
     $scope.selectedContacts = [];
     $scope.formData = {};
@@ -83,3 +85,22 @@ function getPhoneTypes($http, $scope) {
         $scope.phoneTypes = response.data;
     });
 }
+
+function getTaskTypes($http, $scope) {
+    $http({
+        method: 'GET',
+        url: '../deal?action=getTaskTypes'
+    }).then(function successCallback(response) {
+        $scope.taskTypes = response.data;
+    });
+}
+
+function getUsers($http, $scope) {
+    $http({
+        method: 'GET',
+        url: '../deal?action=getUsers'
+    }).then(function successCallback(response) {
+        $scope.users = response.data;
+    });
+}
+
