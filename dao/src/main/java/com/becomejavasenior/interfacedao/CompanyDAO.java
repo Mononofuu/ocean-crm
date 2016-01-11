@@ -1,4 +1,7 @@
 package com.becomejavasenior.interfacedao;
 
-public interface CompanyDAO {
+import com.becomejavasenior.Company;
+import com.becomejavasenior.GenericDao;
+
+public interface CompanyDAO  extends GenericDao<Company> {
 }

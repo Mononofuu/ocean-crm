@@ -33,6 +33,18 @@ public class DealContactDAOImpl extends AbstractJDBCDao<DealContact> implements 
     }
 
     @Override
+    public void deleteDealContact(int dealId, int contactId) throws DataBaseException{
+        try (Connection connection = getConnection();
+            PreparedStatement statement = connection.prepareStatement("DELETE FROM deal_contact WHERE deal_id = ? AND contact_id=?")) {
+            statement.setInt(1, dealId);
+            statement.setInt(2, contactId);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DataBaseException(e);
+        }
+    }
+
+    @Override
     public String getReadAllQuery() {
         return "SELECT * FROM deal_contact";
     }

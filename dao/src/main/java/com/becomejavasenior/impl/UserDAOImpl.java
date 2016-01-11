@@ -75,7 +75,8 @@ public class UserDAOImpl extends AbstractJDBCDao<User> implements UserDAO {
             statement.setString(6, object.getPhoneHome());
             statement.setString(7, object.getPhoneWork());
             statement.setString(8, object.getLanguage() != null ? object.getLanguage().toString() : null);
-            statement.setString(9, object.getComments().toString());
+//            statement.setString(9, object.getComments().toString());
+            statement.setString(9, "");
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
             throw new DataBaseException(e);

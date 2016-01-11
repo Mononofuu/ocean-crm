@@ -87,7 +87,9 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
                 deal.setContacts(dealContactDAOImpl.getAllContactsBySubjectId(id));
                 deal.setFiles(fileDao.getAllFilesBySubjectId(id));
                 deal.setComments(commentDAO.getAllCommentsBySubjectId(id));
-                deal.setTasks(taskDAO.getAllTasksBySubjectId(id));
+                //Здесь глючит при наличии тасков. Получается бесконечный цикл
+//                deal.setTasks(taskDAO.getAllTasksBySubjectId(id));
+                deal.setTasks(new ArrayList<Task>());
                 result.add(deal);
             }
         } catch (SQLException e) {

@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URL;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -51,11 +52,17 @@ public class TaskController extends HttpServlet{
                         Subject subject = subjectDao.read(Integer.parseInt(request.getParameter("subjectid")));
                         task.setSubject(subject);
                         task.setDateCreated(new Date());
-                        task.setDueTime(new Date());
+                        String duedate = request.getParameter("duedate");
+                        if(!duedate.equals("")){
+                            SimpleDateFormat format = new SimpleDateFormat();
+                            format.applyPattern("mm/dd/yyyy");
+                            Date docDate= format.parse(duedate);
+                            task.setDueTime(docDate);
+                        }
                         task.setUser((User) request.getSession().getAttribute("user"));
                         task.setComment(request.getParameter("taskcomment"));
                         task.setType(TaskType.valueOf(request.getParameter("tasktype")));
-//                        taskDao.create(task);
+                        taskDao.create(task);
                         logger.info("task created:");
                         logger.info(task.getId());
                         logger.info(task.getSubject());
@@ -68,7 +75,7 @@ public class TaskController extends HttpServlet{
                         task = (Task) taskDao.read(getId(request));
                         task.setComment(request.getParameter("taskcomment"));
                         task.setType(TaskType.valueOf(request.getParameter("tasktype")));
-//                        taskDao.update(task);
+                        taskDao.update(task);
                         logger.info("task updated:");
                         logger.info(task.getId());
                         logger.info(task.getComment());
@@ -77,6 +84,9 @@ public class TaskController extends HttpServlet{
                     request.getRequestDispatcher(request.getParameter("backurl")).forward(request, response);
                 } catch (DataBaseException e) {
                     logger.error("Error while updating task");
+                    logger.catching(e);
+                } catch (ParseException e) {
+                    logger.error("Error parse date");
                     logger.catching(e);
                 }
                 break;

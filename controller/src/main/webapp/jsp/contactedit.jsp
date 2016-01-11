@@ -85,10 +85,10 @@
                     <c:forEach items="${phonetypes}" var="phonetype">
                         <c:choose>
                             <c:when test="${phonetype == contact.phoneType}">
-                                <option selected value=${phonetype}>${phonetype}</option>
+                                <option selected value=${phonetype}>${phonetype.toString()}</option>
                             </c:when>
                             <c:otherwise>
-                                <option value=${phonetype}>${phonetype}</option>
+                                <option value=${phonetype}>${phonetype.toString()}</option>
                             </c:otherwise>
                         </c:choose>
                     </c:forEach>

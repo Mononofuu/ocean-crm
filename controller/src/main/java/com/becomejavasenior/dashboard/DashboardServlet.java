@@ -1,7 +1,9 @@
 package com.becomejavasenior.dashboard;
 
 import com.becomejavasenior.*;
+import com.becomejavasenior.impl.DealServiceImpl;
 import com.becomejavasenior.impl.TaskServiceImpl;
+import com.becomejavasenior.interfaceservice.DealService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -9,7 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Lybachevskiy.Vladislav
@@ -154,10 +156,14 @@ public class DashboardServlet extends HttpServlet {
     }
 
     private List getAllDeals() {
-        GenericDao genericDao = getGenericDao(Deal.class);
-        List deals = null;
+//        GenericDao genericDao = getGenericDao(Deal.class);
+//        GenericDao<Deal> genericDao = getGenericDao(Deal.class);
+        List<Deal> deals = new ArrayList<Deal>();
+//        List deals = null;
         try {
-            deals = genericDao.readAll();
+            DealService dealService = new DealServiceImpl();
+            deals = dealService.findDeals();
+//            deals = genericDao.readAll();
         } catch (DataBaseException e) {
             e.printStackTrace();
         }
@@ -191,7 +197,8 @@ public class DashboardServlet extends HttpServlet {
     }
 
     private List getAllTasks() {
-        List tasks = null;
+        List<Task> tasks = new ArrayList<Task>();
+//        List tasks = null;
         try {
             tasks = new TaskServiceImpl().getAllTask();
         } catch (DataBaseException e) {

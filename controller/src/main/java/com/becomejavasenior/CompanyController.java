@@ -1,5 +1,7 @@
 package com.becomejavasenior;
 
+import com.becomejavasenior.impl.CompanyServiceImpl;
+import com.becomejavasenior.interfaceservice.CompanyService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -40,16 +42,16 @@ public class CompanyController extends HttpServlet{
             case "create":
                 try {
                     dao = new PostgreSqlDaoFactory();
-                    GenericDao<Company> companyDao = dao.getDao(Company.class);
-//                    int id = Integer.parseInt(request.getParameter("id"));
+//                    GenericDao<Company> companyDao = dao.getDao(Company.class);
+                    CompanyService companyService = new CompanyServiceImpl();
                     company = new Company();
-//                    company.setId(id);
                     company.setName(request.getParameter("name"));
                     company.setPhoneNumber(request.getParameter("phoneNumber"));
                     company.setEmail(request.getParameter("email"));
                     company.setWeb(new URL(request.getParameter("web")));
                     company.setAdress(request.getParameter("address"));
-                    companyDao.create(company);
+//                    companyDao.create(company);
+                    companyService.saveCompany(company);
                     logger.info("Company created:");
                     logger.info(company.getId());
                     logger.info(company.getName());
@@ -65,15 +67,18 @@ public class CompanyController extends HttpServlet{
             case "update":
                 try {
                     dao = new PostgreSqlDaoFactory();
-                    GenericDao<Company> companyDao = dao.getDao(Company.class);
+//                    GenericDao<Company> companyDao = dao.getDao(Company.class);
+                    CompanyService companyService = new CompanyServiceImpl();
                     int id = Integer.parseInt(request.getParameter("id"));
-                    company = (Company) companyDao.read(getId(request));
+//                    company = (Company) companyDao.read(getId(request));
+                    company = companyService.findCompanyById(getId(request));
                     company.setName(request.getParameter("name"));
                     company.setPhoneNumber(request.getParameter("phoneNumber"));
                     company.setEmail(request.getParameter("email"));
                     company.setWeb(new URL(request.getParameter("web")));
                     company.setAdress(request.getParameter("address"));
-                    companyDao.update(company);
+//                    companyDao.update(company);
+                    companyService.saveCompany(company);
                     logger.info("Company updated:");
                     logger.info(company.getId());
                     logger.info(company.getName());
@@ -90,8 +95,10 @@ public class CompanyController extends HttpServlet{
             case "edit":
                 try {
                     dao = new PostgreSqlDaoFactory();
-                    GenericDao<Company> companyDao = dao.getDao(Company.class);
-                    company = (Company) companyDao.read(getId(request));
+//                    GenericDao<Company> companyDao = dao.getDao(Company.class);
+                    CompanyService companyService = new CompanyServiceImpl();
+//                    company = (Company) companyDao.read(getId(request));
+                    company = companyService.findCompanyById(getId(request));
                     request.setAttribute("company", company);
                     request.getRequestDispatcher("jsp/companyedit.jsp").forward(request, response);
                 } catch (DataBaseException e) {

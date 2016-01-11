@@ -100,7 +100,12 @@ public class TaskDAOImpl extends AbstractJDBCDao<Task> implements TaskDAO {
         try {
             statement.setInt(1, object.getSubject().getId());
             statement.setTimestamp(2, new Timestamp(object.getDateCreated().getTime()));
-            statement.setTimestamp(3, new Timestamp(object.getDueTime().getTime()));
+            Date dueTime = object.getDueTime();
+            if(dueTime == null){
+                statement.setTimestamp(3, null);
+            }else{
+                statement.setTimestamp(3, new Timestamp(object.getDueTime().getTime()));
+            }
             statement.setInt(4, object.getUser().getId());
             statement.setInt(5, object.getType().ordinal() + 1);
             statement.setString(6, object.getComment());
@@ -114,7 +119,12 @@ public class TaskDAOImpl extends AbstractJDBCDao<Task> implements TaskDAO {
         try {
             statement.setInt(1, object.getSubject().getId());
             statement.setTimestamp(2, new Timestamp(object.getDateCreated().getTime()));
-            statement.setTimestamp(3, new Timestamp(object.getDueTime().getTime()));
+            Date dueTime = object.getDueTime();
+            if(dueTime == null){
+                statement.setTimestamp(3, null);
+            }else{
+                statement.setTimestamp(3, new Timestamp(object.getDueTime().getTime()));
+            }
             statement.setInt(4, object.getUser().getId());
             statement.setInt(5, object.getType().ordinal() + 1);
             statement.setString(6, object.getComment());

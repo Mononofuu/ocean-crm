@@ -14,6 +14,15 @@
 <html>
 <head>
     <title>Редактирование задачи</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.17/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.17/themes/smoothness/jquery-ui.css"/>
+    <script>
+    $(function() {
+    $( "#datepicker" ).datepicker();
+    });
+    </script>
+
 </head>
 <body>
 
@@ -40,6 +49,13 @@
             <label class="col-xs-2 control-label" for="taskcomment">Комментарий</label>
             <div class="col-xs-4">
                 <input id="taskcomment" name="taskcomment" type="text" placeholder="" class="form-control input-md" required="" value="${task.comment}">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-xs-2 control-label" for="datepicker">Дата закрытия</label>
+            <div class="col-xs-4">
+                <input class="form-control" type="text" id="datepicker" name="duedate" value="${task.dueTime}">
             </div>
         </div>
 

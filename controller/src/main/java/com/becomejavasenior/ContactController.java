@@ -1,5 +1,9 @@
 package com.becomejavasenior;
 
+import com.becomejavasenior.impl.CompanyServiceImpl;
+import com.becomejavasenior.impl.ContactServiceImpl;
+import com.becomejavasenior.interfaceservice.CompanyService;
+import com.becomejavasenior.interfaceservice.ContactService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -9,7 +13,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.net.URL;
 import java.util.List;
 import java.util.Objects;
 
@@ -39,10 +42,9 @@ public class ContactController extends HttpServlet {
             case "create":
                 try {
                     dao = new PostgreSqlDaoFactory();
-                    GenericDao<Contact> contactDao = dao.getDao(Contact.class);
-//                    int id = Integer.parseInt(request.getParameter("id"));
+//                    GenericDao<Contact> contactDao = dao.getDao(Contact.class);
+                    ContactService contactService = new ContactServiceImpl();
                     contact = new Contact();
-//                    contact.setId(id);
                     contact.setName(request.getParameter("name"));
                     GenericDao<Company> companyDao = dao.getDao(Company.class);
                     Company company = companyDao.read(Integer.parseInt(request.getParameter("companyid")));
@@ -52,7 +54,8 @@ public class ContactController extends HttpServlet {
                     contact.setPhone(request.getParameter("contactphonenumber"));
                     contact.setEmail(request.getParameter("contactemail"));
                     contact.setSkype(request.getParameter("contactskype"));
-                    Contact createdContact = contactDao.create(contact);
+//                    Contact createdContact = contactDao.create(contact);
+                    contactService.saveContact(contact);
                     logger.info("Contact created:");
                     logger.info(contact.getId());
                     logger.info(contact.getName());
@@ -71,20 +74,24 @@ public class ContactController extends HttpServlet {
             case "update":
                 try {
                     dao = new PostgreSqlDaoFactory();
-                    GenericDao<Contact> contactDao = dao.getDao(Contact.class);
+//                    GenericDao<Contact> contactDao = dao.getDao(Contact.class);
+                    ContactService contactService = new ContactServiceImpl();
                     int id = Integer.parseInt(request.getParameter("id"));
                     contact = new Contact();
                     contact.setId(id);
                     contact.setName(request.getParameter("name"));
-                    GenericDao<Company> companyDao = dao.getDao(Company.class);
-                    Company company = companyDao.read(Integer.parseInt(request.getParameter("companyid")));
+//                    GenericDao<Company> companyDao = dao.getDao(Company.class);
+                    CompanyService companyService = new CompanyServiceImpl();
+//                    Company company = companyDao.read(Integer.parseInt(request.getParameter("companyid")));
+                    Company company = companyService.findCompanyById(Integer.parseInt(request.getParameter("companyid")));
                     contact.setCompany(company);
                     contact.setPost(request.getParameter("contactpost"));
                     contact.setPhoneType(PhoneType.valueOf(request.getParameter("contactphonetype")));
                     contact.setPhone(request.getParameter("contactphone"));
                     contact.setEmail(request.getParameter("contactemail"));
                     contact.setSkype(request.getParameter("contactskype"));
-                    contactDao.update(contact);
+//                    contactDao.update(contact);
+                    contactService.saveContact(contact);
                     logger.info("Contact updated:");
                     logger.info(contact.getId());
                     logger.info(contact.getName());
@@ -104,11 +111,15 @@ public class ContactController extends HttpServlet {
             case "edit":
                 try {
                     dao = new PostgreSqlDaoFactory();
-                    GenericDao<Contact> contactDao = dao.getDao(Contact.class);
-                    contact = (Contact) contactDao.read(getId(request));
+//                    GenericDao<Contact> contactDao = dao.getDao(Contact.class);
+                    ContactService contactService = new ContactServiceImpl();
+//                    contact = (Contact) contactDao.read(getId(request));
+                    contact = contactService.findContactById(getId(request));
                     request.setAttribute("contact", contact);
-                    GenericDao companyDao = dao.getDao(Company.class);
-                    List<Company> companyList = companyDao.readAll();
+//                    GenericDao companyDao = dao.getDao(Company.class);
+                    CompanyService companyService = new CompanyServiceImpl();
+//                    List<Company> companyList = companyDao.readAll();
+                    List<Company> companyList = companyService.findCompaniesLite();
                     request.setAttribute("companies", companyList);
                     GenericDao userDao = dao.getDao(User.class);
                     List<User> userList = userDao.readAll();

@@ -178,7 +178,7 @@
                         <c:forEach items="${dealcontacts}" var="contact" varStatus="status">
                             <li><a href="#contact${contact.id}" data-toggle="tab">${contact.name}</a></li>
                         </c:forEach>
-                        <li><a href="#contactnew" data-toggle="tab">Новый ...</a></li>
+                        <li><a href="#contactnew" data-toggle="tab">Добавить ...</a></li>
                     </ul>
 
                    <div class="tab-content col-xs-9">
@@ -195,6 +195,8 @@
 
 
                         <div class="tab-pane container-fluid" id="contact${contact.id}">
+                            <div class="form-group">
+
                             <form  class="form-horizontal" method="post" action="dealedit?action=contactupdate&contactid=${contact.id}&dealid=${deal.id}">
                                 <fieldset>
 
@@ -222,6 +224,11 @@
                                                 </c:forEach>
                                             </select>
                                         </div>
+                                        <div class="col-md-1">
+                                            <button type="submit" class="btn btn-default navbar-btn" name="button_updatecontact${contact.id}" value="companyedit">
+                                                <span class="glyphicon glyphicon-pencil"></span>
+                                            </button>
+                                        </div>
                                     </div>
 
                                     <div class="form-group">
@@ -247,10 +254,10 @@
                                                 <c:forEach items="${phonetypes}" var="phonetype">
                                                     <c:choose>
                                                         <c:when test="${phonetype == contact.phoneType}">
-                                                            <option selected value=${phonetype}>${phonetype}</option>
+                                                            <option selected value=${phonetype}>${phonetype.toString()}</option>
                                                         </c:when>
                                                         <c:otherwise>
-                                                            <option value=${phonetype}>${phonetype}</option>
+                                                            <option value=${phonetype}>${phonetype.toString()}</option>
                                                         </c:otherwise>
                                                     </c:choose>
                                                 </c:forEach>
@@ -292,12 +299,16 @@
 
                                     <label class="col-md-2 control-label" for="button_savecontact${contact.id}"></label>
                                     <div class="col-md-2">
-                                        <button id="button_savecontact${contact.id}" name="button_savecontact${contact.id}" class="btn btn-default navbar-btn">Записать</button>
+                                        <button id="button_savecontact${contact.id}" name="button_updatecontact${contact.id}" value="save" class="btn btn-default navbar-btn">Записать</button>
                                     </div>
-
+                                    <div class="col-md-2">
+                                        <button id="button_deletecontact${contact.id}" name="button_updatecontact${contact.id}" value="delete" class="btn btn-default navbar-btn">Удалить из сделки</button>
+                                    </div>
                                 </fieldset>
 
                             </form>
+
+                            </div>
                         </div>
                     </c:forEach>
                        <div class="tab-pane container-fluid" id="contactnew">
@@ -368,8 +379,10 @@
                     <table class="table table-striped table-bordered table-hover table-condensed">
                         <thead>
                         <tr>
-                            <th>Дата и время создания</th>
+                            <th>Дата создания</th>
+                            <th>Дата завершения</th>
                             <th>Имя пользователя</th>
+                            <th>Тип</th>
                             <th>Комментарий</th>
                             <th></th>
                             <th></th>
@@ -379,8 +392,10 @@
                         <c:forEach items="${tasks}" var="task">
                             <tr>
                                 <td>${task.dateCreated}</td>
+                                <td>${task.dueTime}</td>
                                 <td>${task.user.name}</td>
-                                <td>${task.text}</td>
+                                <td>${task.type.toString()}</td>
+                                <td>${task.comment}</td>
                                 <td>
                                     <a href="/taskedit?action=edit&id=${task.id}&backurl=/dealedit?action=edit&subjectid=${deal.id}">Изменить</a></td>
                                 </td>
