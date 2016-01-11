@@ -11,8 +11,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public class DealController extends HttpServlet {
     private final static Logger logger = LogManager.getLogger(DealController.class);
@@ -26,7 +28,6 @@ public class DealController extends HttpServlet {
         switch (action) {
             case "newdeal":
                 newDeal(request, response);
-                response.sendRedirect("/index.jsp");
                 break;
             case "newcontact":
                 newContact(request, response);
@@ -116,6 +117,17 @@ public class DealController extends HttpServlet {
     private void newDeal(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Comment createdComment = null;
         try {
+            Map<String, String[]> map = request.getParameterMap();
+            for (Map.Entry<String, String[]> entry : map.entrySet()) {
+                logger.debug("^^^^^^^^^");
+                logger.debug(entry.getKey());
+                for(String s : entry.getValue()){
+                    logger.debug(s);
+                }
+                logger.debug("###########   ");
+
+            }
+            String[] contactList = request.getParameterValues("dealcontactlist[]");
 
             Deal deal = new Deal();
             deal.setName(request.getParameter("dealname"));
@@ -128,12 +140,17 @@ public class DealController extends HttpServlet {
             deal.setDealCompany(companyDao.read(Integer.parseInt(request.getParameter("dealcompany"))));
 
             GenericDao<DealStatus> dealStatusDao = dao.getDao(DealStatus.class);
-            DealStatus status = dealStatusDao.read(Integer.parseInt(request.getParameter("dealphase")));
+            DealStatus status = dealStatusDao.read(Integer.parseInt(request.getParameter("tasktype")));
             deal.setStatus(status);
 
             GenericDao<Contact> contactDao = dao.getDao(Contact.class);
             Contact mainContact = contactDao.read(Integer.parseInt(request.getParameter("dealresp")));
             deal.setMainContact(mainContact);
+            List<Contact> dealContacts = new ArrayList<>();
+            for (String s : contactList){
+                dealContacts.add(contactDao.read(Integer.parseInt(s)));
+            }
+            deal.setContacts(dealContacts);
 
             GenericDao<Deal> dealDao = dao.getDao(Deal.class);
             logger.info("TRYING TO CREATE DEAL");

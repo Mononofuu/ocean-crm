@@ -10,9 +10,13 @@ newDeal.controller('DealController', function ($scope, $http) {
         getPhoneTypes($http, $scope);
         getTaskTypes($http, $scope);
         getUsers($http, $scope);
+        getDealStatuses($http, $scope);
+
     });
     $scope.selectedContacts = [];
     $scope.formData = {};
+    $scope.formData.dealcontactlist = [];
+
 
     $scope.selectContact = function (data) {
         var dataArray = data.split(","), index = -1;
@@ -26,6 +30,7 @@ newDeal.controller('DealController', function ($scope, $http) {
         }
         if (index == -1) {
             $scope.selectedContacts.push(object);
+            $scope.formData.dealcontactlist.push(object.id);
         }
     };
     $scope.removeContact = function (id) {
@@ -38,6 +43,7 @@ newDeal.controller('DealController', function ($scope, $http) {
         }
         if (index > -1) {
             $scope.selectedContacts.splice(index, 1);
+            $scope.formData.dealcontactlist.splice(index, 1);
         }
     };
 
@@ -101,6 +107,15 @@ function getUsers($http, $scope) {
         url: '../deal?action=getUsers'
     }).then(function successCallback(response) {
         $scope.users = response.data;
+    });
+}
+
+function getDealStatuses($http, $scope) {
+    $http({
+        method: 'GET',
+        url: '../deal?action=getDealStatuses'
+    }).then(function successCallback(response) {
+        $scope.dealStatuses = response.data;
     });
 }
 
