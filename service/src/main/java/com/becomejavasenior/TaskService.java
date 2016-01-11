@@ -26,4 +26,6 @@ public interface TaskService {
     List<Task> getTasksByParameters(Map<String, String[]> parameters) throws DataBaseException;
 
     List<TaskType> getAllTaskTypes() throws DataBaseException;
+
+    Subject getSubject(int id) throws DataBaseException;
 }

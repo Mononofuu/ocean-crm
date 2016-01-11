@@ -104,4 +104,9 @@ public class TaskServiceImpl implements TaskService {
     public List<TaskType> getAllTaskTypes() throws DataBaseException{
         return taskTypeDao.readAll();
     }
+
+    @Override
+    public Subject getSubject(int id) throws DataBaseException {
+        return taskDao.getSubject(id);
+    }
 }
