@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <style>
-    <%--<%@include file='../css/newdeal.css' %>--%>
+    <%@include file='../css/newdeal.css' %>
     <%@include file='../css/bootstrap.css' %>
 </style>
 <!DOCTYPE html>
@@ -27,14 +27,17 @@
 </div>
 <div ng-controller="DealController" class="col-lg-10">
     <div class="row">
-        <form class="col-md-3" name="dynamicForm" ng-submit="processForm('newdeal')">
+        <form class="col-md-3" name="dealForm" ng-submit="processForm('newdeal')" novalidate>
             <fieldset>
                 <legend>Добавить сделку</legend>
                 <input class="form-control" type="text" name="dealname" placeholder="Название сделки"
                        ng-model="formData.dealname" required/>
                 <br/>
+                <input class="form-control" type="date" name="dealcreated" placeholder="Дата создания"
+                       ng-model="formData.dealcreated" required/>
+                <br/>
                 <input class="form-control" type="text" name="dealtags" placeholder="Теги"
-                       ng-model="formData.dealtags" required/>
+                       ng-model="formData.dealtags"/>
                 <br/>
                 <select class="form-control" name="dealresp" ng-model="formData.dealresp">
                     <option ng-repeat="user in users" value="{{user.id}}">{{user.name}}</option>
@@ -43,11 +46,11 @@
                 <input class="form-control" type="text" name="dealbudget" placeholder="Бюджет" pattern="[0-9]*"
                        title="Цифра с плавающей точкой" ng-model="formData.dealbudget" required/>
                 <br/>
-                <select class="form-control" name="tasktype" ng-model="formData.tasktype">
+                <select class="form-control" name="dealstatus" ng-model="formData.dealstatus" required>
                     <option ng-repeat="status in dealStatuses" value="{{status.id}}">{{status.name}}</option>
                 </select>
                 <br/>
-            <textarea class="form-control textarea" name="dealcomment" placeholder="Примечание по сделке"
+                <textarea class="form-control textarea" name="dealcomment" placeholder="Примечание по сделке"
                       ng-model="formData.dealcomment"></textarea>
                 <br/>
 
@@ -58,7 +61,7 @@
 
             </fieldset>
         </form>
-        <form class="col-md-3" name="dynamicForm" ng-submit="processForm('newcontact')">
+        <form class="col-md-3" name="contactForm" ng-submit="processForm('newcontact')">
             <fieldset>
                 <legend>Добавить контакт</legend>
                 <a ng-click="removeContact(sc.id)" class="btn-info btn btn-block" ng-repeat="sc in selectedContacts"
@@ -93,13 +96,13 @@
                 <input class="form-control" type="text" name="contactskype" placeholder="Skype"
                        ng-model="formData.contactskype"/>
                 <br/>
-                <button type="submit" class="btn btn-sm btn-success btn-block">
+                <button type="submit" ng-disabled="contactForm.$invalid" class="btn btn-sm btn-success btn-block">
                     <span class="glyphicon"></span> Создать контакт
                 </button>
             </fieldset>
         </form>
 
-        <form class="col-md-3" name="dynamicForm" ng-submit="processForm('newcompany')">
+        <form class="col-md-3" name="companyForm" ng-submit="processForm('newcompany')">
             <fieldset>
                 <legend>Прикрепить компанию</legend>
                 <label>Выберите компанию</label>
@@ -123,13 +126,13 @@
                 <textarea class="form-control textarea" name="companyaddress" placeholder="Адрес"
                           ng-model="formData.companyaddress" required></textarea>
                 <br/>
-                <button type="submit" class="btn btn-sm btn-success btn-block">
+                <button type="submit" ng-disabled="companyForm.$invalid" class="btn btn-sm btn-success btn-block">
                     <span class="glyphicon"></span> Создать команию
                 </button>
             </fieldset>
         </form>
 
-        <form class="col-md-3" name="dynamicForm" ng-submit="processForm('newtask')" ng-init="addTask=false">
+        <form class="col-md-3" name="taskForm" ng-submit="processForm('newtask')" ng-init="addTask=false">
             <fieldset>
                 <legend>Запланировать задачу</legend>
                 <input type="checkbox" ng-model="addTask">Добавить задачу к новой сделке
@@ -143,7 +146,7 @@
                     <input class="form-control" type="datetime-local" name="taskduedate"
                            ng-model="formData.taskduedate" required>
                     <br/>
-                    <select class="form-control" name="taskuser" ng-model="formData.taskuser">
+                    <select class="form-control" name="taskuser" ng-model="formData.taskuser" required>
                         <option ng-repeat="user in users" value="{{user.id}}">{{user.name}}</option>
                     </select>
                     <br/>
@@ -158,7 +161,8 @@
         </form>
     </div>
     <div class="row">
-        <button type="submit" ng-click="processForm('newdeal')" class="btn btn-lg btn-primary btn-block">Создать сделку
+        <button ng-disabled="dealForm.$invalid" type="submit" ng-click="processForm('newdeal')"
+                class="btn btn-lg btn-primary btn-block">Создать сделку
         </button>
     </div>
 </div>

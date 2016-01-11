@@ -3,7 +3,7 @@
  */
 var newDeal = angular.module('newDeal', []);
 
-newDeal.controller('DealController', function ($scope, $http) {
+newDeal.controller('DealController', function ($scope, $http, $filter) {
     angular.element(document).ready(function () {
         getCompanies($http, $scope);
         getContacts($http, $scope);
@@ -49,6 +49,7 @@ newDeal.controller('DealController', function ($scope, $http) {
 
 
     $scope.processForm = function (type) {
+        $scope.formData.dealcreated = $filter("date")($scope.formData.dealcreated, 'yyyy-MM-dd');
         $http({
             method: 'POST',
             url: '/deal?action=' + type,

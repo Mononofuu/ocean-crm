@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * created by Alekseichenko Sergey <mononofuu@gmail.com>
@@ -141,22 +142,58 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
     }
 
     @Override
-    protected void prepareStatementForInsert(PreparedStatement statement, Deal object) throws DataBaseException {
+    protected void prepareStatementForInsert(PreparedStatement statement, Deal deal) throws DataBaseException {
         try {
-            statement.setInt(1, createSubject(object));
-            statement.setInt(2, object.getStatus().getId());
-            statement.setInt(3, object.getCurrency().getId());
-            statement.setInt(4, object.getBudget());
-            statement.setInt(5, object.getMainContact().getId());
-            statement.setInt(6, object.getDealCompany().getId());
-            if (object.getDateWhenDealClose() == null) {
-                statement.setNull(7, Types.TIMESTAMP);
+            statement.setInt(1, createSubject(deal));
 
-            } else {
-                statement.setTimestamp(7, new Timestamp(object.getDateWhenDealClose().getTime()));
+            Optional<DealStatus> dealStatus = Optional.ofNullable(deal.getStatus());
+            if (dealStatus.isPresent()){
+                statement.setInt(2, dealStatus.get().getId());
+            }else {
+                statement.setNull(2, Types.INTEGER);
             }
-            statement.setTimestamp(8, new Timestamp(object.getDateCreated().getTime()));
 
+            Optional<Currency> dealCurrency = Optional.ofNullable(deal.getCurrency());
+            if (dealCurrency.isPresent()){
+                statement.setInt(3, dealCurrency.get().getId());
+            }else {
+                statement.setNull(3, Types.INTEGER);
+            }
+
+            Optional<Integer> dealBudget = Optional.ofNullable(deal.getBudget());
+            if (dealBudget.isPresent()){
+                statement.setInt(4, dealBudget.get());
+            }else {
+                statement.setNull(4, Types.INTEGER);
+            }
+
+            Optional<User> dealMainContact = Optional.ofNullable(deal.getMainContact());
+            if (dealMainContact.isPresent()){
+                statement.setInt(5, dealMainContact.get().getId());
+            }else {
+                statement.setNull(5, Types.INTEGER);
+            }
+
+            Optional<Company> dealCompany = Optional.ofNullable(deal.getDealCompany());
+            if (dealCompany.isPresent()){
+                statement.setInt(6, dealCompany.get().getId());
+            }else {
+                statement.setNull(6, Types.INTEGER);
+            }
+
+            Optional<java.util.Date> dealCloseDate = Optional.ofNullable(deal.getDateWhenDealClose());
+            if (dealCloseDate.isPresent()){
+                statement.setTimestamp(7, new Timestamp(dealCloseDate.get().getTime()));
+            }else {
+                statement.setNull(7, Types.TIMESTAMP);
+            }
+
+            Optional<java.util.Date> dealCreatedDate = Optional.ofNullable(deal.getDateCreated());
+            if (dealCreatedDate.isPresent()){
+                statement.setTimestamp(8, new Timestamp(dealCreatedDate.get().getTime()));
+            }else {
+                statement.setNull(8, Types.TIMESTAMP);
+            }
         } catch (SQLException e) {
             logger.error("Error while prepare statement for insert new deal");
             logger.catching(e);

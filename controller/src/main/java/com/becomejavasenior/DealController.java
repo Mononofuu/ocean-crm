@@ -12,10 +12,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 public class DealController extends HttpServlet {
     private final static Logger logger = LogManager.getLogger(DealController.class);
@@ -116,102 +118,116 @@ public class DealController extends HttpServlet {
     }
 
     private void newDeal(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Comment createdComment = null;
         try {
-            Map<String, String[]> map = request.getParameterMap();
-//            for (Map.Entry<String, String[]> entry : map.entrySet()) {
-//                logger.debug("^^^^^^^^^");
-//                logger.debug(entry.getKey());
-//                for (String s : entry.getValue()) {
-//                    logger.debug(s);
-//                }
-//                logger.debug("###########   ");
-//            }
-
             Deal deal = new Deal();
-            deal.setName(request.getParameter("dealname"));
-            String[] contactList = request.getParameterValues("dealcontactlist[]");
-            GenericDao<User> userDao = dao.getDao(User.class);
-            User mainContact = userDao.read(Integer.parseInt(request.getParameter("dealresp")));
-            deal.setMainContact(mainContact);
-            deal.setBudget(Integer.parseInt(request.getParameter("dealbudget")));
-            GenericDao<DealStatus> dealStatusDao = dao.getDao(DealStatus.class);
-            DealStatus status = dealStatusDao.read(Integer.parseInt(request.getParameter("tasktype")));
-            deal.setStatus(status);
-            GenericDao<Company> companyDao = dao.getDao(Company.class);
-            deal.setDealCompany(companyDao.read(Integer.parseInt(request.getParameter("dealcompany"))));
+
+            Optional<String> dealName = Optional.ofNullable(request.getParameter("dealname"));
+            dealName.ifPresent(deal::setName);
+
+            Optional<String> dealResp = Optional.ofNullable(request.getParameter("dealresp"));
+            if (dealResp.isPresent()){
+                GenericDao<User> userDao = dao.getDao(User.class);
+                User mainContact = userDao.read(Integer.parseInt(dealResp.get()));
+                deal.setMainContact(mainContact);
+            }
+
+            Optional<String> dealBudget = Optional.ofNullable(request.getParameter("dealbudget"));
+            dealBudget.ifPresent(s -> deal.setBudget(Integer.parseInt(s)));
+
+            Optional<String> dealStatus = Optional.ofNullable(request.getParameter("dealstatus"));
+            if (dealStatus.isPresent()){
+                GenericDao<DealStatus> dealStatusDao = dao.getDao(DealStatus.class);
+                DealStatus status = dealStatusDao.read(Integer.parseInt(dealStatus.get()));
+                deal.setStatus(status);
+            }
+
+            Optional<String> dealCompany = Optional.ofNullable(request.getParameter("dealcompany"));
+            if (dealCompany.isPresent()){
+                GenericDao<Company> companyDao = dao.getDao(Company.class);
+                deal.setDealCompany(companyDao.read(Integer.parseInt(dealCompany.get())));
+            }
+
             GenericDao<Currency> currencyDao = dao.getDao(Currency.class);
-            deal.setCurrency(currencyDao.read(1));//TODO
+            Optional<Currency> dealCurrency = Optional.ofNullable(currencyDao.read(1)); //TODO
+            dealCurrency.ifPresent(deal::setCurrency);
+
             deal.setDateWhenDealClose(null);
-            deal.setDateCreated(new Timestamp(new Date().getTime()));
+
+            Optional<String> dealCreatedDate = Optional.ofNullable(request.getParameter("dealcreated"));
+            if (dealCreatedDate.isPresent()){
+                logger.debug(dealCreatedDate.get());
+                Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dealCreatedDate.get());
+                deal.setDateCreated(new Timestamp(date.getTime()));
+            }
 
             GenericDao<Deal> dealDao = dao.getDao(Deal.class);
             logger.info("TRYING TO CREATE DEAL");
             createdDeal = dealDao.create(deal);
             logger.info("DEAL CREATED");
 
-
-            DealContactDAOImpl dealContactDAO = new DealContactDAOImpl();
-            GenericDao<Contact> contactDao = dao.getDao(Contact.class);
-            List<Contact> dealContacts = new ArrayList<>();
-            for (String contactId : contactList) {
-                Contact contact = contactDao.read(Integer.parseInt(contactId));
-                DealContact dealContact = new DealContact();
-                dealContact.setDeal(createdDeal);//TODO
-                dealContact.setContact(contact);
-                dealContactDAO.create(dealContact);
-                dealContacts.add(contact);
-            }
-            deal.setContacts(dealContacts);
-
-
-            GenericDao<Tag> tagDAO = dao.getDao(Tag.class);
-            GenericDao<SubjectTag> subjectTagDAO = dao.getDao(SubjectTag.class);
             GenericDao<Subject> subjectDao = dao.getDao(Subject.class);
-            String tags = request.getParameter("dealtags");
-            String[] tagArray = tags.split(" ");
             Subject subject = subjectDao.read(createdDeal.getId());
 
+            Optional<String[]> contactList = Optional.ofNullable(request.getParameterValues("dealcontactlist[]"));
+            if (contactList.isPresent()){
+                DealContactDAOImpl dealContactDAO = new DealContactDAOImpl();
+                GenericDao<Contact> contactDao = dao.getDao(Contact.class);
+                List<Contact> dealContacts = new ArrayList<>();
 
-
-            for (String tag : tagArray) {
-                Tag tagInstance = new Tag();
-                tagInstance.setName(tag);
-                Tag returnedTag = tagDAO.create(tagInstance);
-                logger.info(String.format("Trying to create tag: %s", tag));
-                SubjectTag subjectTag = new SubjectTag();
-                subjectTag.setTag(returnedTag);
-                subjectTag.setSubject(subject);
-                subjectTagDAO.create(subjectTag);
+                for (String contactId : contactList.get()) {
+                    Contact contact = contactDao.read(Integer.parseInt(contactId));
+                    DealContact dealContact = new DealContact();
+                    dealContact.setDeal(createdDeal);
+                    dealContact.setContact(contact);
+                    dealContactDAO.create(dealContact);
+                    dealContacts.add(contact);
+                }
+                deal.setContacts(dealContacts);
             }
 
-            GenericDao<Comment> commentDao = dao.getDao(Comment.class);
-            Comment comment = new Comment();
-            comment.setText(request.getParameter("dealcomment"));
-            comment.setDateCreated(new Timestamp(new Date().getTime()));
-            comment.setSubject(subject);
-            User user = new User();
-            user.setId(1);
-            comment.setUser(user);
-            logger.info(String.format("Trying to create comment: %s", comment.getText()));
-            createdComment = commentDao.create(comment);
+            Optional<String> dealTags = Optional.ofNullable(request.getParameter("dealtags"));
+            if (dealTags.isPresent()){
+                GenericDao<Tag> tagDAO = dao.getDao(Tag.class);
+                GenericDao<SubjectTag> subjectTagDAO = dao.getDao(SubjectTag.class);
+                String[] tagArray = dealTags.get().split(" ");
 
+                for (String tag : tagArray) {
+                    Tag tagInstance = new Tag();
+                    tagInstance.setName(tag);
+                    Tag returnedTag = tagDAO.create(tagInstance);
+                    logger.info(String.format("Trying to create tag: %s", tag));
+                    SubjectTag subjectTag = new SubjectTag();
+                    subjectTag.setTag(returnedTag);
+                    subjectTag.setSubject(subject);
+                    subjectTagDAO.create(subjectTag);
+                }
+            }
+
+            Optional<String> dealComment = Optional.ofNullable(request.getParameter("dealcomment"));
+            if (dealComment.isPresent()){
+                GenericDao<Comment> commentDao = dao.getDao(Comment.class);
+                Comment comment = new Comment();
+                comment.setText(dealComment.get());
+                comment.setDateCreated(new Timestamp(new Date().getTime()));
+                comment.setSubject(subject);
+                User user = new User();
+                user.setId(1);
+                comment.setUser(user);
+                logger.info(String.format("Trying to create comment: %s", comment.getText()));
+                Comment createdComment = commentDao.create(comment);
+                logger.info(String.format("Contact id = %d created", createdComment.getId()));
+            }
 
         } catch (DataBaseException e) {
             logger.error("Error while creating new deal");
             logger.catching(e);
+        } catch (ParseException e) {
+            logger.catching(e);
         }
-
 
         response.getWriter().println("DEAL CREATED SUCCESSFULLY");
         logger.info("Deal created successfully");
         logger.info(String.format("Deal id = %d", createdDeal.getId()));
-        logger.info(String.format("Deal name: %s", request.getParameter("dealname")));
-        logger.info(String.format("Deal phase: %s", request.getParameter("dealphase")));
-        logger.info(String.format("Deal budget: %s", request.getParameter("dealbudget")));
-        logger.info(String.format("Deal responsible: %s", request.getParameter("dealresp")));
-        logger.info(String.format("Deal company: %s", request.getParameter("dealcompany")));
-        logger.info(String.format("Comment id = %d", createdComment.getId()));
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
