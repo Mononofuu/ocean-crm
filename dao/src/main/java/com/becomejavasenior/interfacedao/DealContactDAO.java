@@ -9,5 +9,5 @@ import java.util.List;
  * created by Alekseichenko Sergey <mononofuu@gmail.com>
  */
 public interface DealContactDAO {
-    List<Contact> getAllContactsBySubjectId(int id) throws DataBaseException;
+    List<Contact> getAllContactsByDealId(int id) throws DataBaseException;
 }

@@ -1,5 +1,6 @@
 package com.becomejavasenior;
 
+import com.becomejavasenior.impl.DealContactDAOImpl;
 import com.google.gson.Gson;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -118,43 +119,51 @@ public class DealController extends HttpServlet {
         Comment createdComment = null;
         try {
             Map<String, String[]> map = request.getParameterMap();
-            for (Map.Entry<String, String[]> entry : map.entrySet()) {
-                logger.debug("^^^^^^^^^");
-                logger.debug(entry.getKey());
-                for(String s : entry.getValue()){
-                    logger.debug(s);
-                }
-                logger.debug("###########   ");
-
-            }
-            String[] contactList = request.getParameterValues("dealcontactlist[]");
+//            for (Map.Entry<String, String[]> entry : map.entrySet()) {
+//                logger.debug("^^^^^^^^^");
+//                logger.debug(entry.getKey());
+//                for (String s : entry.getValue()) {
+//                    logger.debug(s);
+//                }
+//                logger.debug("###########   ");
+//            }
 
             Deal deal = new Deal();
             deal.setName(request.getParameter("dealname"));
+            String[] contactList = request.getParameterValues("dealcontactlist[]");
+            GenericDao<User> userDao = dao.getDao(User.class);
+            User mainContact = userDao.read(Integer.parseInt(request.getParameter("dealresp")));
+            deal.setMainContact(mainContact);
             deal.setBudget(Integer.parseInt(request.getParameter("dealbudget")));
-
-            GenericDao<Currency> currencyDao = dao.getDao(Currency.class);
-            deal.setCurrency(currencyDao.read(1));//TODO
-
-            GenericDao<Company> companyDao = dao.getDao(Company.class);
-            deal.setDealCompany(companyDao.read(Integer.parseInt(request.getParameter("dealcompany"))));
-
             GenericDao<DealStatus> dealStatusDao = dao.getDao(DealStatus.class);
             DealStatus status = dealStatusDao.read(Integer.parseInt(request.getParameter("tasktype")));
             deal.setStatus(status);
-
-            GenericDao<Contact> contactDao = dao.getDao(Contact.class);
-            Contact mainContact = contactDao.read(Integer.parseInt(request.getParameter("dealresp")));
-            deal.setMainContact(mainContact);
-            List<Contact> dealContacts = new ArrayList<>();
-            for (String s : contactList){
-                dealContacts.add(contactDao.read(Integer.parseInt(s)));
-            }
-            deal.setContacts(dealContacts);
+            GenericDao<Company> companyDao = dao.getDao(Company.class);
+            deal.setDealCompany(companyDao.read(Integer.parseInt(request.getParameter("dealcompany"))));
+            GenericDao<Currency> currencyDao = dao.getDao(Currency.class);
+            deal.setCurrency(currencyDao.read(1));//TODO
+            deal.setDateWhenDealClose(null);
+            deal.setDateCreated(new Timestamp(new Date().getTime()));
 
             GenericDao<Deal> dealDao = dao.getDao(Deal.class);
             logger.info("TRYING TO CREATE DEAL");
             createdDeal = dealDao.create(deal);
+            logger.info("DEAL CREATED");
+
+
+            DealContactDAOImpl dealContactDAO = new DealContactDAOImpl();
+            GenericDao<Contact> contactDao = dao.getDao(Contact.class);
+            List<Contact> dealContacts = new ArrayList<>();
+            for (String contactId : contactList) {
+                Contact contact = contactDao.read(Integer.parseInt(contactId));
+                DealContact dealContact = new DealContact();
+                dealContact.setDeal(createdDeal);//TODO
+                dealContact.setContact(contact);
+                dealContactDAO.create(dealContact);
+                dealContacts.add(contact);
+            }
+            deal.setContacts(dealContacts);
+
 
             GenericDao<Tag> tagDAO = dao.getDao(Tag.class);
             GenericDao<SubjectTag> subjectTagDAO = dao.getDao(SubjectTag.class);
@@ -162,6 +171,8 @@ public class DealController extends HttpServlet {
             String tags = request.getParameter("dealtags");
             String[] tagArray = tags.split(" ");
             Subject subject = subjectDao.read(createdDeal.getId());
+
+
 
             for (String tag : tagArray) {
                 Tag tagInstance = new Tag();

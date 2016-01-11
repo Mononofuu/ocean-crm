@@ -117,7 +117,7 @@ public abstract class AbstractJDBCDao<T> implements GenericDao<T>{
             throw new DataBaseException(e);
         }
         long time = (System.nanoTime() - startTime) / 1000000;
-        LOGGER.debug(this.getClass().getSimpleName() + " ==> Dao READ LITE method execution time(ms): " + time);
+//        LOGGER.debug(this.getClass().getSimpleName() + " ==> Dao READ LITE method execution time(ms): " + time);
         return result;
     }
 

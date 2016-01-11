@@ -2,6 +2,8 @@ package com.becomejavasenior.impl;
 
 import com.becomejavasenior.*;
 import com.becomejavasenior.interfacedao.DealDAO;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -11,6 +13,9 @@ import java.util.List;
  * created by Alekseichenko Sergey <mononofuu@gmail.com>
  */
 public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
+
+    private final static Logger logger = LogManager.getLogger(DealDAOImpl.class);
+
 
     public static final String DEAL_SELECT_STATUS_ID = " where status_id=?";
     public static final String DEAL_SELECT_USER_ID = " where id in(select subject.id from subject " +
@@ -58,7 +63,7 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
         try {
             GenericDao subjectDao = getDaoFromCurrentFactory(Subject.class);
             GenericDao companyDao = getDaoFromCurrentFactory(Company.class);
-            GenericDao contactDao = getDaoFromCurrentFactory(Contact.class);
+            GenericDao userDao = getDaoFromCurrentFactory(User.class);
             GenericDao dealStatusDao = getDaoFromCurrentFactory(DealStatus.class);
             GenericDao currencyDao = getDaoFromCurrentFactory(Currency.class);
             SubjectTagDAOImpl subjectTagDAOImpl = (SubjectTagDAOImpl) getDaoFromCurrentFactory(SubjectTag.class);
@@ -77,21 +82,22 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
                 deal.setDateCreated(rs.getTimestamp("created_date"));
                 Company company = (Company) companyDao.readLite(rs.getInt("company_id"));
                 deal.setDealCompany(company);
-                Contact contact = (Contact) contactDao.readLite(rs.getInt("contact_main_id"));
-                deal.setMainContact(contact);
+                User user = (User) userDao.read(rs.getInt("contact_main_id"));
+                deal.setMainContact(user);
                 DealStatus dealStatus = (DealStatus) dealStatusDao.read(rs.getInt("status_id"));
                 deal.setStatus(dealStatus);
                 Currency currency = (Currency) currencyDao.read(rs.getInt("currency_id"));
                 deal.setCurrency(currency);
                 deal.setTags(subjectTagDAOImpl.getAllTagsBySubjectId(id));
-                deal.setContacts(dealContactDAOImpl.getAllContactsBySubjectId(id));
+                deal.setContacts(dealContactDAOImpl.getAllContactsByDealId(id));
                 deal.setFiles(fileDao.getAllFilesBySubjectId(id));
                 deal.setComments(commentDAO.getAllCommentsBySubjectId(id));
                 deal.setTasks(taskDAO.getAllTasksBySubjectId(id));
                 result.add(deal);
             }
         } catch (SQLException e) {
-            throw new DataBaseException(e);
+            logger.error("Error while parsing RS for deal");
+            logger.catching(e);
         }
         return result;
     }
@@ -102,7 +108,7 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
         List<Deal> result = new ArrayList<>();
         try {
             GenericDao companyDao = getDaoFromCurrentFactory(Company.class);
-            GenericDao contactDao = getDaoFromCurrentFactory(Contact.class);
+            GenericDao userDao = getDaoFromCurrentFactory(User.class);
             GenericDao dealStatusDao = getDaoFromCurrentFactory(DealStatus.class);
             GenericDao currencyDao = getDaoFromCurrentFactory(Currency.class);
             SubjectTagDAOImpl subjectTagDAOImpl = (SubjectTagDAOImpl) getDaoFromCurrentFactory(SubjectTag.class);
@@ -117,8 +123,8 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
                 deal.setDateCreated(rs.getTimestamp("created_date"));
                 Company company = (Company) companyDao.readLite(rs.getInt("company_id"));
                 deal.setDealCompany(company);
-                Contact contact = (Contact) contactDao.readLite(rs.getInt("contact_main_id"));
-                deal.setMainContact(contact);
+                User user = (User) userDao.read(rs.getInt("contact_main_id"));
+                deal.setMainContact(user);
                 DealStatus dealStatus = (DealStatus) dealStatusDao.read(rs.getInt("status_id"));
                 deal.setStatus(dealStatus);
                 Currency currency = (Currency) currencyDao.read(rs.getInt("currency_id"));
@@ -128,7 +134,8 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
                 result.add(deal);
             }
         } catch (SQLException e) {
-            throw new DataBaseException(e);
+            logger.error("Error while parsing RSLite for deal");
+            logger.catching(e);
         }
         return result;
     }
@@ -151,7 +158,8 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
             statement.setTimestamp(8, new Timestamp(object.getDateCreated().getTime()));
 
         } catch (SQLException e) {
-            throw new DataBaseException(e);
+            logger.error("Error while prepare statement for insert new deal");
+            logger.catching(e);
         }
     }
 
@@ -169,7 +177,8 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
             statement.setTimestamp(7, new Timestamp(object.getDateCreated().getTime()));
             statement.setInt(8, object.getId());
         } catch (SQLException e) {
-            throw new DataBaseException(e);
+            logger.error("Error while prepare statement for update new deal");
+            logger.catching(e);
         }
         }
 
@@ -183,6 +192,7 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
             throw new DataBaseException(e);
         }
         if (result == null) {
+            logger.error("Error while reading status filter");
             throw new DataBaseException();
         }
         return result;
@@ -198,6 +208,7 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
             throw new DataBaseException(e);
         }
         if (result == null) {
+            logger.error("Error while reading user filter");
             throw new DataBaseException();
         }
         return result;
@@ -214,6 +225,7 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
             throw new DataBaseException(e);
         }
         if (result == null) {
+            logger.error("Error while reading tag filter");
             throw new DataBaseException();
         }
         return result;

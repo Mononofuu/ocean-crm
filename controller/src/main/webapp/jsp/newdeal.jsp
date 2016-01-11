@@ -63,8 +63,6 @@
                 <legend>Добавить контакт</legend>
                 <a ng-click="removeContact(sc.id)" class="btn-info btn btn-block" ng-repeat="sc in selectedContacts"
                 >{{sc.name}}</a>
-                {{selectedContacts}}
-                {{formData.dealcontactlist}}
                 <label>Выберите контакт</label>
                 <select class="form-control" ng-model="selected" ng-change="selectContact(selected)">
                     <option ng-repeat="contact in contacts" value="{{contact.id +','+ contact.name}}">{{contact.name}}
