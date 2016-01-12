@@ -1,5 +1,9 @@
 package com.becomejavasenior;
 
+import com.google.gson.Gson;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -8,33 +12,270 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import java.sql.Timestamp;
+import java.util.*;
 
 /**
  * @author Anton Sakhno <sakhno83@gmail.com>
  */
-@WebServlet(name="newcompany", urlPatterns = "/new_company")
-public class NewCompanyServlet extends HttpServlet{
+@WebServlet(name = "newcompany", urlPatterns = "/new_company")
+public class NewCompanyServlet extends HttpServlet {
     private Logger logger = LogManager.getLogger(NewCompanyServlet.class);
     private DaoFactory dao;
+    private Deal createdDeal;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        this.process(req, resp);
+        try {
+            dao = new PostgreSqlDaoFactory();
+        } catch (DataBaseException e) {
+            logger.error("Error while getting DAO Factory");
+            logger.catching(e);
+        }
+
+        String action = req.getParameter("action");
+        logger.info("GET action = " + action);
+
+        String json = null;
+        try {
+            switch (action) {
+                case "getContacts":
+                    GenericDao<Contact> contactDao = dao.getDao(Contact.class);
+                    List<Contact> contactList = contactDao.readAll();
+                    json = new Gson().toJson(contactList);
+                    break;
+                case "getDealStatuses":
+                    GenericDao<DealStatus> dealStatusDao = dao.getDao(DealStatus.class);
+                    List<DealStatus> dealStatusList = dealStatusDao.readAll();
+                    json = new Gson().toJson(dealStatusList);
+                    break;
+                case "getPhoneTypes":
+                    json = new Gson().toJson(PhoneType.values());
+                    break;
+                case "getTaskTypes":
+                    json = new Gson().toJson(TaskType.values());
+                    break;
+                case "getUsers":
+                    GenericDao<User> userDao = dao.getDao(User.class);
+                    List<User> users = userDao.readAll();
+                    json = new Gson().toJson(users);
+                    break;
+                default:
+            }
+        } catch (DataBaseException e) {
+            logger.error("Error while getting DAO");
+            logger.catching(e);
+        }
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+        resp.getWriter().write(json);
     }
 
-    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        this.process(req, resp);
+        req.setCharacterEncoding("UTF-8");
+        String action = req.getParameter("action");
+        logger.debug(action);
+        switch (action) {
+            case "newcontact":
+                newContact(req, resp);
+                break;
+            case "newcompany":
+                newCompany(req, resp);
+                break;
+            case "newtask":
+                newTask(req, resp);
+                break;
+            default:
+        }
     }
+
+    private void newTask(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            Task task = new Task();
+            GenericDao<Task> taskDao = dao.getDao(Task.class);
+
+        } catch (DataBaseException e) {
+            logger.error("Error while creating new contact");
+            logger.catching(e);
+        }
+    }
+
+    private void newContact(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            Contact contact = new Contact();
+            contact.setName(request.getParameter("contactname"));
+            GenericDao<Company> companyDao = dao.getDao(Company.class);
+            Company company = companyDao.read(Integer.parseInt(request.getParameter("contactcompany")));
+            contact.setCompany(company);
+            contact.setPost(request.getParameter("contactposition"));
+            contact.setPhoneType(PhoneType.valueOf(request.getParameter("contactphonetype")));
+            contact.setPhone(request.getParameter("contactphonenumber"));
+            contact.setEmail(request.getParameter("contactemail"));
+            contact.setSkype(request.getParameter("contactskype"));
+            GenericDao<Contact> contactDao = dao.getDao(Contact.class);
+            Contact createdContact = contactDao.create(contact);
+
+            logger.info("NEW CONTACT CREATED:");
+            logger.info(createdContact.getId());
+            logger.info(createdContact.getName());
+            logger.info(createdContact.getCompany().getName());
+            logger.info(createdContact.getPost());
+            logger.info(createdContact.getPhoneType());
+            logger.info(createdContact.getPhone());
+            logger.info(createdContact.getEmail());
+            logger.info(createdContact.getSkype());
+
+        } catch (DataBaseException e) {
+            logger.error("Error while creating new contact");
+            logger.catching(e);
+        }
+    }
+
+    private void newCompany(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            Map<String, String[]> map = request.getParameterMap();
+
+            for (Map.Entry<String, String[]> entry : map.entrySet()){
+                System.out.println("+++++++++++++");
+                System.out.println(entry.getKey());
+                System.out.println(Arrays.toString(entry.getValue()));
+                System.out.println("+++++++++++++");
+
+            }
+
+
+
+            Company company = new Company();
+
+            company.setName(request.getParameter("companyname"));
+            company.setPhoneNumber(request.getParameter("companyphone"));
+            company.setEmail(request.getParameter("companyemail"));
+
+            Optional<String> webSite = Optional.ofNullable(request.getParameter("companysite"));
+            webSite.ifPresent(site -> {
+                try {
+                    company.setWeb(new URL(site));
+                } catch (MalformedURLException e) {
+                    logger.catching(e);
+                }
+            });
+
+            Optional<String> address = Optional.ofNullable(request.getParameter("companyaddress"));
+            address.ifPresent(company::setAdress);
+
+            Optional<String> responsible = Optional.ofNullable(request.getParameter("companyresp"));
+            if (responsible.isPresent()){
+                GenericDao<User> userDao = dao.getDao(User.class);
+                User mainContact = userDao.read(Integer.parseInt(responsible.get()));
+                company.setUser(mainContact);
+            }
+
+
+            Optional<String> text = Optional.ofNullable(request.getParameter("companycomment"));
+            if (text.isPresent()){
+                GenericDao<Comment> commentDao = dao.getDao(Comment.class);
+                Comment comment = new Comment();
+                comment.setText(text.get());
+                comment.setDateCreated(new Timestamp(new Date().getTime()));
+                comment.setSubject(company);
+                User user = new User();
+                user.setId(1);
+                comment.setUser(user);
+                logger.info(String.format("Trying to create comment: %s", comment.getText()));
+                Comment createdComment = commentDao.create(comment);
+                logger.info(String.format("Contact id = %d created", createdComment.getId()));
+            }
+
+            GenericDao<Company> companyDao = dao.getDao(Company.class);
+
+            Company createdCompany = companyDao.create(company);
+
+
+            logger.info("NEW COMPANY CREATED:");
+            logger.info(createdCompany.getId());
+            logger.info(createdCompany.getName());
+            logger.info(createdCompany.getPhoneNumber());
+            logger.info(createdCompany.getEmail());
+            logger.info(createdCompany.getWeb());
+            logger.info(createdCompany.getAdress());
+            logger.info(createdCompany.getComments());
+
+            Optional<String[]> companyContacts = Optional.ofNullable(request.getParameterValues("contactlist[]"));
+            if (companyContacts.isPresent()){
+                GenericDao<Contact> contactDao = dao.getDao(Contact.class);
+                List<Contact> contacts = new ArrayList<>();
+
+                for (String contactId : companyContacts.get()) {
+                    Contact contact = contactDao.read(Integer.parseInt(contactId));
+                    contact.setCompany(company);
+                    contactDao.update(contact);
+                    contacts.add(contact);
+                }
+                company.setContacts(contacts);
+                companyDao.update(company);
+            }
+
+            Optional<String[]> companyDeals = Optional.ofNullable(request.getParameterValues("addedDeals[]"));
+            if (companyDeals.isPresent()){
+                for(String a : companyDeals.get()){
+                    System.out.println(a);
+                }
+            }
+
+
+        } catch (DataBaseException e) {
+            logger.error("Error while creating new company");
+            logger.catching(e);
+        }
+    }
+
+    private void newDeal(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            Deal deal = new Deal();
+
+            Optional<String> dealName = Optional.ofNullable(request.getParameter("dealname"));
+            dealName.ifPresent(deal::setName);
+
+            Optional<String> dealBudget = Optional.ofNullable(request.getParameter("dealbudget"));
+            dealBudget.ifPresent(s -> deal.setBudget(Integer.parseInt(s)));
+
+            Optional<String> dealStatus = Optional.ofNullable(request.getParameter("dealstatus"));
+            if (dealStatus.isPresent()) {
+                GenericDao<DealStatus> dealStatusDao = dao.getDao(DealStatus.class);
+                DealStatus status = dealStatusDao.read(Integer.parseInt(dealStatus.get()));
+                deal.setStatus(status);
+            }
+
+            Optional<String> dealCompany = Optional.ofNullable(request.getParameter("dealcompany"));
+            if (dealCompany.isPresent()) {
+                GenericDao<Company> companyDao = dao.getDao(Company.class);
+                deal.setDealCompany(companyDao.read(Integer.parseInt(dealCompany.get())));
+            }
+
+            deal.setDateWhenDealClose(null);
+            deal.setDateCreated(new Timestamp(new Date().getTime()));
+
+            GenericDao<Deal> dealDao = dao.getDao(Deal.class);
+            logger.info("TRYING TO CREATE DEAL");
+            createdDeal = dealDao.create(deal);
+            logger.info("DEAL CREATED");
+        } catch (DataBaseException e) {
+            logger.error("Error while creating new deal");
+            logger.catching(e);
+        }
+
+        response.getWriter().println("DEAL CREATED SUCCESSFULLY");
+        logger.info("Deal created successfully");
+        logger.info(String.format("Deal id = %d", createdDeal.getId()));
+    }
+
 
     private void process(HttpServletRequest req, HttpServletResponse resp) {
         try {
             dao = new PostgreSqlDaoFactory();
             req.setCharacterEncoding("UTF-8");
             createCompanyFromRequest(req);
-            getServletContext().getRequestDispatcher("/new_contact_prepare").forward(req,resp);
+            getServletContext().getRequestDispatcher("/new_contact_prepare").forward(req, resp);
 
         } catch (DataBaseException e) {
             logger.error("Error while quick adding new company", e);
@@ -45,7 +286,7 @@ public class NewCompanyServlet extends HttpServlet{
         }
     }
 
-    private void createCompanyFromRequest(HttpServletRequest request){
+    private void createCompanyFromRequest(HttpServletRequest request) {
         try {
             Company result = new Company();
             GenericDao<Company> companyDao = dao.getDao(Company.class);
