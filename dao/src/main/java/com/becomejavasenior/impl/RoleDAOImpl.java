@@ -18,6 +18,10 @@ public class RoleDAOImpl extends AbstractJDBCDao<Role> implements RoleDAO {
 
     private final static Logger LOGGER = LogManager.getLogger(GrantsDAOImpl.class);
 
+    public RoleDAOImpl(DaoFactory daoFactory) {
+        super(daoFactory);
+    }
+
     @Override
     public String getReadAllQuery() {
         return "SELECT * FROM role";

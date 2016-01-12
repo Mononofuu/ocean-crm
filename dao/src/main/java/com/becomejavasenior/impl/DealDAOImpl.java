@@ -19,6 +19,9 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
     public static final String DEAL_SELECT_TAG = " where deal.id in(select subject_id from subject_tag " +
             "where subject_tag.tag_id in (select id from tag where name in (";
 
+    public DealDAOImpl(DaoFactory daoFactory) {
+        super(daoFactory);
+    }
 
     @Override
     protected String getConditionStatment() {

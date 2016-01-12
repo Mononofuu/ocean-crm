@@ -16,8 +16,13 @@ import java.util.stream.Collectors;
 public class DealServiceImpl implements DealService{
 
     static final Logger logger = LogManager.getRootLogger();
-    DealDAO dealDao = new DealDAOImpl();
+    DaoFactory daoFactory;
+    DealDAO dealDao;
 
+    public DealServiceImpl() throws DataBaseException{
+        daoFactory = new PostgreSqlDaoFactory();
+        dealDao = (DealDAO)daoFactory.getDao(Deal.class);
+    }
 
     @Override
     public void saveDeal(Deal deal) throws DataBaseException {

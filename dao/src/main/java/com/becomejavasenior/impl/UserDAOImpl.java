@@ -17,6 +17,10 @@ public class UserDAOImpl extends AbstractJDBCDao<User> implements UserDAO {
 
     private final static Logger LOGGER = LogManager.getLogger(UserDAOImpl.class);
 
+    public UserDAOImpl(DaoFactory daoFactory) {
+        super(daoFactory);
+    }
+
     @Override
     public String getDeleteQuery() {
         return "DELETE FROM users WHERE id= ?;";

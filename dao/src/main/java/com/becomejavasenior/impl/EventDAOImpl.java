@@ -14,6 +14,9 @@ import java.util.List;
  * @author Lybachevskiy.Vladislav
  */
 public class EventDAOImpl extends AbstractJDBCDao<Event> implements EventDAO {
+    public EventDAOImpl(DaoFactory daoFactory) {
+        super(daoFactory);
+    }
 
     @Override
     public String getReadAllQuery() {

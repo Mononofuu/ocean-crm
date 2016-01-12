@@ -19,6 +19,13 @@ public abstract class AbstractJDBCDao<T> implements GenericDao<T>{
         return daoFactory.getConnection();
     }
 
+    private AbstractJDBCDao() {
+    }
+
+    protected AbstractJDBCDao(DaoFactory daoFactory){
+        this.daoFactory = daoFactory;
+    }
+
     /**
      * Возвращает sql запрос для получения всех записей.
      * SELECT * FROM [Table]
