@@ -3,7 +3,7 @@ package com.becomejavasenior.dashboard;
 import com.becomejavasenior.*;
 import com.becomejavasenior.impl.DealServiceImpl;
 import com.becomejavasenior.impl.TaskServiceImpl;
-import com.becomejavasenior.interfaceservice.DealService;
+import com.becomejavasenior.DealService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

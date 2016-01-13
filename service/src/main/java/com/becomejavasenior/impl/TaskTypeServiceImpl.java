@@ -1,7 +1,7 @@
 package com.becomejavasenior.impl;
 
 import com.becomejavasenior.*;
-import com.becomejavasenior.interfaceservice.TaskTypeService;
+import com.becomejavasenior.TaskTypeService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

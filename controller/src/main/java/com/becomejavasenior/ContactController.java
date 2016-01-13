@@ -2,8 +2,6 @@ package com.becomejavasenior;
 
 import com.becomejavasenior.impl.CompanyServiceImpl;
 import com.becomejavasenior.impl.ContactServiceImpl;
-import com.becomejavasenior.interfaceservice.CompanyService;
-import com.becomejavasenior.interfaceservice.ContactService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

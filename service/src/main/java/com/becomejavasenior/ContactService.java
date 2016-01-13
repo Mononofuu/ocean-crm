@@ -1,4 +1,4 @@
-package com.becomejavasenior.interfaceservice;
+package com.becomejavasenior;
 
 import com.becomejavasenior.DataBaseException;
 import com.becomejavasenior.Contact;

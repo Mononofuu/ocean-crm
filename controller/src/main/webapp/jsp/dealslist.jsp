@@ -55,7 +55,6 @@
     </form>
 
 
-
     <div class="table-responsive col-xs-7">
         <h3>Список сделок</h3>
         <table class="table table-striped table-bordered table-hover table-condensed">
@@ -82,11 +81,11 @@
         </table>
     </div>
 
-    <form  class="well col-xs-3">
+    <form action="/dealslist" method="post" class="well col-xs-3">
         <h3>Фильтры</h3>
         <div class="form-group">
             <select class="form-control" name="selectedfilter" title="Стандартные фильтры" size="8">
-                <option value="" disabled selected>Выберите фильтр</option>
+                <option value="" selected>Без стандартных фильтров</option>
                 <option value="open">Открытые сделки</option>
                 <option value="my">Только мои сделки</option>
                 <option value="success">Успешно завершенные</option>
@@ -97,59 +96,60 @@
             </select>
         </div>
 
-
+        <div class="form-group">
+            <button class="btn btn-default" type="submit" name="action" value="applyfilter">Применить фильтр</button>
+        </div>
 
         <div class="form-group">
-            <select class="form-control" name="tasks">
-                <option value="">Все задачи</option>
-                <option value="">Не учитывать</option>
-                <option value="">На сегодня</option>
-                <option value="">На завтра</option>
-                <option value="">На этой неделе</option>
-                <option value="">В этом месяце</option>
-                <option value="">В этом квартале</option>
-                <option value="">Нет задач</option>
-                <option value="">Просрочены</option>
-            </select>
+            <input class="form-control" type="text" name="name" placeholder="Название фильтра"/>
+            <select class="form-control" id="when" name="when" title="Когда">
+                <c:forEach items="${filterperiod}" var="item">
+                    <option value="${item}">${item.toString()}</option>
+                </c:forEach>
+            </select><br>
         </div>
 
         <div class="form-group form-control">
             <div class="col-xs-6">
-                <input class="form-control" type="text" id="from" name="datebegin">
+                <input class="form-control" type="text" id="from" name="date_from">
             </div>
             <div class="col-xs-6">
-                <input class="form-control" type="text" id="to" name="dateend">
+                <input class="form-control" type="text" id="to" name="date_to">
             </div>
         </div>
 
         <div class="form-group">
-            <select class="form-control" name="dealstatus">
+            <select class="form-control" name="phase">
                 <option value="">Все этапы</option>
-                <c:forEach items="${deals_statuses}" var="status">
-                    <option value=${status.id}>${status.name}</option>
+                <c:forEach items="${deals_map}" var="item">
+                    <option value=${item.id}>${item.name}</option>
                 </c:forEach>
             </select>
         </div>
 
         <div class="form-group">
-            <select class="form-control" name="user">
+            <select class="form-control" name="manager">
                 <option value=""><b>Все менеджеры</b></option>
-                <c:forEach items="${users}" var="user">
-                    <option value=${user.id}>${user.name}</option>
+                <c:forEach items="${managers}" var="manager">
+                    <option value=${manager.id}>${manager.name}</option>
                 </c:forEach>
             </select>
         </div>
 
-
-
+        <div class="form-group">
+            <select class="form-control" name="tasks">
+                <c:forEach items="${filtertask}" var="item">
+                    <option value="${item}">${item.toString()}</option>
+                </c:forEach>
+            </select>
+        </div>
 
         <div class="form-group">
             <input type="text" class="form-control" name="tags" placeholder="Теги">
         </div>
         <div class="form-group">
-            <input class="btn btn-default navbar-btn" type="submit" value="Сохранить">
+            <button class="btn btn-default" type="submit" name="action" value="savefilter">Сохранить фильтр</button>
         </div>
-
 
     </form>
 

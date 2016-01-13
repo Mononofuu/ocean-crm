@@ -1,7 +1,6 @@
 package com.becomejavasenior;
 
 import com.becomejavasenior.impl.CompanyServiceImpl;
-import com.becomejavasenior.interfaceservice.CompanyService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -12,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 import java.util.Objects;
 
 /**

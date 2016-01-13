@@ -3,7 +3,7 @@ package com.becomejavasenior.impl;
 import com.becomejavasenior.DataBaseException;
 import com.becomejavasenior.Contact;
 import com.becomejavasenior.interfacedao.ContactDAO;
-import com.becomejavasenior.interfaceservice.ContactService;
+import com.becomejavasenior.ContactService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

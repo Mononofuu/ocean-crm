@@ -2,10 +2,11 @@ package com.becomejavasenior.impl;
 
 import com.becomejavasenior.*;
 import com.becomejavasenior.interfacedao.DealDAO;
-import com.becomejavasenior.interfaceservice.DealService;
+import com.becomejavasenior.DealService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.sql.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -58,7 +59,7 @@ public class DealServiceImpl implements DealService{
 
     @Override
     public List<Deal> findDealsByUser(int userId) throws DataBaseException {
-        List<Deal> dealList = dealDao.readStatusFilter(Integer.valueOf(userId));
+        List<Deal> dealList = dealDao.readUserFilter(Integer.valueOf(userId));
         return dealList;
     }
 
@@ -70,15 +71,38 @@ public class DealServiceImpl implements DealService{
 
     @Override
     public List<Deal> findDealsByFilters(List<List<Deal>> list) throws DataBaseException{
+
         Iterator<List<Deal>> listIterator = list.iterator();
         List<Deal> dealsList = listIterator.next();
         while (dealsList.size() != 0 && listIterator.hasNext()) {
+            dealsList.retainAll(listIterator.next());
+/*
             dealsList = dealsList.stream()
                     .filter(deal ->
                             (listIterator.next().stream().map(Deal::getId).collect(Collectors.toList())).contains(deal.getId()))
                     .collect(Collectors.toList());
+*/
         }
         return dealsList;
+
+    }
+
+    @Override
+    public List<Deal> findDealsByConditions(int condition) throws DataBaseException {
+        List<Deal> dealList = dealDao.readAllWithConditions(condition);
+        return dealList;
+    }
+
+    @Override
+    public List<Deal> findDealsByCreatedDateInterval(Date dateBegin, Date dateEnd) throws DataBaseException {
+        List<Deal> dealList = dealDao.readAllByCreatedDateInterval(dateBegin, dateEnd);
+        return dealList;
+    }
+
+    @Override
+    public List<Deal> findDealsByTasksDueDateInterval(Date dateBegin, Date dateEnd) throws DataBaseException {
+        List<Deal> dealList = dealDao.readAllByTasksDueDateInterval(dateBegin, dateEnd);
+        return dealList;
     }
 
 }

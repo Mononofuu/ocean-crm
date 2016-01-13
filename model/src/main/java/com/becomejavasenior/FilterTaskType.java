@@ -26,7 +26,7 @@ public enum FilterTaskType implements Serializable {
             case EXPIRED:
                 return "Просрочены";
             default:
-                return "Не учитывать";
+                return "Не учитывать задачи";
         }
     }
 }

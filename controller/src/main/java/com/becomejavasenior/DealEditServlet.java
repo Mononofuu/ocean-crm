@@ -5,9 +5,6 @@ import com.becomejavasenior.interfacedao.CommentDAO;
 import com.becomejavasenior.interfacedao.DealContactDAO;
 import com.becomejavasenior.interfacedao.TagDAO;
 import com.becomejavasenior.interfacedao.TaskDAO;
-import com.becomejavasenior.interfaceservice.CompanyService;
-import com.becomejavasenior.interfaceservice.ContactService;
-import com.becomejavasenior.interfaceservice.DealService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
