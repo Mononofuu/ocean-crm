@@ -11,6 +11,10 @@ import java.util.List;
  * created by Alekseichenko Sergey <mononofuu@gmail.com>
  */
 public class FilterDAOImpl extends AbstractJDBCDao<Filter> implements FilterDAO {
+    public FilterDAOImpl(DaoFactory daoFactory) {
+        super(daoFactory);
+    }
+
     @Override
     public String getReadAllQuery() {
         return "SELECT * FROM filter";

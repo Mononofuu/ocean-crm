@@ -26,6 +26,12 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
     public static final String DEAL_SELECT_DELETED = " WHERE deal.status_id=7";
     public static final String DEAL_SELECT_PERIOD_CREATED_DATE = " WHERE DATE(deal.created_date) BETWEEN ? AND ?";
     public static final String DEAL_SELECT_TASK_DUE_DATE_INTERVAL = "WHERE deal.id IN (SELECT subject_id FROM task WHERE DATE(due_date) BETWEEN ? AND ? GROUP BY subject_id)";
+    public static final String DEAL_SELECT_TAG = " where deal.id in(select subject_id from subject_tag " +
+            "where subject_tag.tag_id in (select id from tag where name in (";
+
+    public DealDAOImpl(DaoFactory daoFactory) {
+        super(daoFactory);
+    }
 
     @Override
     protected String getConditionStatment() {
@@ -191,17 +197,23 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
         } catch (SQLException e) {
             throw new DataBaseException(e);
         }
+        if (result == null) {
+            throw new DataBaseException();
+        }
         return result;
     }
 
     public List<Deal> readUserFilter(int userId) throws DataBaseException {
         List<Deal> result;
-        try (PreparedStatement statement = getConnection().prepareStatement(getReadAllQuery() + DEAL_SELECT_BY_USER)) {
+        try (PreparedStatement statement = getConnection().prepareStatement(getReadAllQuery() + DEAL_SELECT_USER_ID)) {
             statement.setInt(1, userId);
             ResultSet rs = statement.executeQuery();
             result = parseResultSet(rs);
         } catch (SQLException e) {
             throw new DataBaseException(e);
+        }
+        if (result == null) {
+            throw new DataBaseException();
         }
         return result;
     }
@@ -209,6 +221,8 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
     public List<Deal> readTagFilter(String tag) throws DataBaseException {
         List<Deal> result;
         try (PreparedStatement statement = getConnection().prepareStatement(getReadAllQuery() + DEAL_SELECT_TAG + tag)){
+//            statement.setString(1, tag);
+//            statement.setObject(1, tag);
             ResultSet rs = statement.executeQuery();
             result = parseResultSet(rs);
         } catch (SQLException e) {
@@ -294,5 +308,6 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
         }
         return result;
     }
+
 
 }

@@ -63,6 +63,10 @@ public class ContactDAOImpl extends AbstractJDBCDao<Contact> implements ContactD
         return result;
     }
 
+    public ContactDAOImpl(DaoFactory daoFactory) {
+        super(daoFactory);
+    }
+
     @Override
     protected List<Contact> parseResultSetLite(ResultSet rs) throws DataBaseException {
         List<Contact> result = new ArrayList<>();

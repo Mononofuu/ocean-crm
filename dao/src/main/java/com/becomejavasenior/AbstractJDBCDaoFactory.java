@@ -81,25 +81,25 @@ public abstract class AbstractJDBCDaoFactory implements DaoFactory {
     protected abstract String getPropertyFileName();
 
     private void initializeDaoClasses() throws DataBaseException {
-        daoClasses.put(Contact.class, new ContactDAOImpl());
-        daoClasses.put(Subject.class, new SubjectDAOImpl());
-        daoClasses.put(Company.class, new CompanyDAOImpl());
-        daoClasses.put(PhoneType.class, new PhoneTypeDAOImpl());
-        daoClasses.put(SubjectTag.class, new SubjectTagDAOImpl());
-        daoClasses.put(Tag.class, new TagDAOImpl());
-        daoClasses.put(User.class, new UserDAOImpl());
-        daoClasses.put(Comment.class, new CommentDAOImpl());
-        daoClasses.put(Currency.class, new CurrencyDAOImpl());
-        daoClasses.put(DealContact.class, new DealContactDAOImpl());
-        daoClasses.put(Deal.class, new DealDAOImpl());
-        daoClasses.put(DealStatus.class, new DealStatusDAOImpl());
-        daoClasses.put(Task.class, new TaskDAOImpl());
-        daoClasses.put(File.class, new FileDAOImpl());
-        daoClasses.put(TaskType.class, new TaskTypeDAOImpl());
-        daoClasses.put(Filter.class, new FilterDAOImpl());
-        daoClasses.put(Grants.class, new GrantsDAOImpl());
-        daoClasses.put(Role.class, new RoleDAOImpl());
-        daoClasses.put(Event.class, new EventDAOImpl());
+        daoClasses.put(Contact.class, new ContactDAOImpl(this));
+        daoClasses.put(Subject.class, new SubjectDAOImpl(this));
+        daoClasses.put(Company.class, new CompanyDAOImpl(this));
+        daoClasses.put(PhoneType.class, new PhoneTypeDAOImpl(this));
+        daoClasses.put(SubjectTag.class, new SubjectTagDAOImpl(this));
+        daoClasses.put(Tag.class, new TagDAOImpl(this));
+        daoClasses.put(User.class, new UserDAOImpl(this));
+        daoClasses.put(Comment.class, new CommentDAOImpl(this));
+        daoClasses.put(Currency.class, new CurrencyDAOImpl(this));
+        daoClasses.put(DealContact.class, new DealContactDAOImpl(this));
+        daoClasses.put(Deal.class, new DealDAOImpl(this));
+        daoClasses.put(DealStatus.class, new DealStatusDAOImpl(this));
+        daoClasses.put(Task.class, new TaskDAOImpl(this));
+        daoClasses.put(File.class, new FileDAOImpl(this));
+        daoClasses.put(TaskType.class, new TaskTypeDAOImpl(this));
+        daoClasses.put(Filter.class, new FilterDAOImpl(this));
+        daoClasses.put(Grants.class, new GrantsDAOImpl(this));
+        daoClasses.put(Role.class, new RoleDAOImpl(this));
+        daoClasses.put(Event.class, new EventDAOImpl(this));
 
     }
 }

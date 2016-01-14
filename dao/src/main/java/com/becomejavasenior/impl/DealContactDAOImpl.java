@@ -15,6 +15,10 @@ import java.util.List;
  */
 public class DealContactDAOImpl extends AbstractJDBCDao<DealContact> implements DealContactDAO {
 
+    public DealContactDAOImpl(DaoFactory daoFactory) {
+        super(daoFactory);
+    }
+
     @Override
     public List<Contact> getAllContactsBySubjectId(int id) throws DataBaseException {
         List<Contact> result = new ArrayList<>();

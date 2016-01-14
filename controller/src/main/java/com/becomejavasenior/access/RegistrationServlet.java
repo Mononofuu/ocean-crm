@@ -1,6 +1,10 @@
 package com.becomejavasenior.access;
 
-import com.becomejavasenior.*;
+import com.becomejavasenior.Comment;
+import com.becomejavasenior.DataBaseException;
+import com.becomejavasenior.Language;
+import com.becomejavasenior.User;
+import com.becomejavasenior.impl.AuthServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -46,14 +50,14 @@ public class RegistrationServlet extends HttpServlet {
         user.setComments(comments);
         List<String> errors = new ArrayList<>();
         try {
-            user.setPassword(UserServiceImpl.getEncryptedPassword(request.getParameter("password"), user.getLogin()));
+            user.setPassword(AuthServiceImpl.getEncryptedPassword(request.getParameter("password"), user.getLogin()));
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             LOGGER.error(e.getMessage());
             errors.add(e.getMessage());
             request.getRequestDispatcher("/registration.jsp").forward(request, response);
         }
         try {
-            new UserServiceImpl().registration(user);
+            new AuthServiceImpl().registration(user);
         } catch (DataBaseException e) {
             LOGGER.error(e.getMessage());
             errors.add(e.getMessage());

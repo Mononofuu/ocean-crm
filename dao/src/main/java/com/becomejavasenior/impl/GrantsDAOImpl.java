@@ -18,6 +18,10 @@ public class GrantsDAOImpl extends AbstractJDBCDao<Grants> implements GrantsDAO 
 
     private final static Logger LOGGER = LogManager.getLogger(GrantsDAOImpl.class);
 
+    public GrantsDAOImpl(DaoFactory daoFactory) {
+        super(daoFactory);
+    }
+
     @Override
     public String getReadAllQuery() {
         return "SELECT * FROM grants";

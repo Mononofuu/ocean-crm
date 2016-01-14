@@ -2,8 +2,8 @@ package com.becomejavasenior.access;
 
 
 import com.becomejavasenior.User;
-import com.becomejavasenior.UserServiceImpl;
 import com.becomejavasenior.exception.IncorrectDataException;
+import com.becomejavasenior.impl.AuthServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -45,7 +45,7 @@ public class SignInServlet extends HttpServlet {
             return;
         }
         try {
-            User user = new UserServiceImpl().authenticate(password,login);
+            User user = new AuthServiceImpl().authenticate(password,login);
             if (user == null) {
                 errors.add("Invalid user name or password.");
                 req.setAttribute("errors", errors);

@@ -1,6 +1,7 @@
 package com.becomejavasenior.impl;
 
 import com.becomejavasenior.AbstractJDBCDao;
+import com.becomejavasenior.DaoFactory;
 import com.becomejavasenior.DataBaseException;
 import com.becomejavasenior.DealStatus;
 import com.becomejavasenior.interfacedao.DealStatusDAO;
@@ -16,6 +17,10 @@ import java.util.List;
  * created by Alekseichenko Sergey <mononofuu@gmail.com>
  */
 public class DealStatusDAOImpl extends AbstractJDBCDao<DealStatus> implements DealStatusDAO {
+
+    public DealStatusDAOImpl(DaoFactory daoFactory) {
+        super(daoFactory);
+    }
 
     @Override
     public String getReadAllQuery() {

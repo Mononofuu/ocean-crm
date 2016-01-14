@@ -14,6 +14,10 @@ import java.util.List;
 
 public class CompanyDAOImpl extends AbstractJDBCDao<Company> implements CompanyDAO {
 
+    public CompanyDAOImpl(DaoFactory daoFactory) {
+        super(daoFactory);
+    }
+
     @Override
     protected String getConditionStatment() {
         return "WHERE company.id = ?";

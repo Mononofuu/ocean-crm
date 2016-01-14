@@ -11,6 +11,10 @@ import java.util.Set;
 
 public class SubjectTagDAOImpl extends AbstractJDBCDao<SubjectTag> implements SubjectTagDAO {
 
+    public SubjectTagDAOImpl(DaoFactory daoFactory) {
+        super(daoFactory);
+    }
+
     @Override
     protected String getConditionStatment() {
         return " WHERE subject_id = ?";

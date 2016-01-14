@@ -16,6 +16,10 @@ import java.util.List;
 
 public class FileDAOImpl extends AbstractJDBCDao<File> implements FileDAO {
 
+    public FileDAOImpl(DaoFactory daoFactory) {
+        super(daoFactory);
+    }
+
     @Override
     public String getReadAllQuery() {
         return "SELECT * FROM file";

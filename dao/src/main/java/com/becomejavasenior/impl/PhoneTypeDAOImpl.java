@@ -1,6 +1,7 @@
 package com.becomejavasenior.impl;
 
 import com.becomejavasenior.AbstractJDBCDao;
+import com.becomejavasenior.DaoFactory;
 import com.becomejavasenior.DataBaseException;
 import com.becomejavasenior.PhoneType;
 import com.becomejavasenior.interfacedao.PhoneTypeDAO;
@@ -13,6 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PhoneTypeDAOImpl extends AbstractJDBCDao<PhoneType> implements PhoneTypeDAO {
+
+    public PhoneTypeDAOImpl(DaoFactory daoFactory) {
+        super(daoFactory);
+    }
 
     @Override
     public String getReadAllQuery() {

@@ -11,6 +11,10 @@ import java.util.List;
 
 public class CommentDAOImpl extends AbstractJDBCDao<Comment> implements CommentDAO {
 
+    public CommentDAOImpl(DaoFactory daoFactory) {
+        super(daoFactory);
+    }
+
     @Override
     public String getReadAllQuery() {
         return "SELECT * FROM comment";

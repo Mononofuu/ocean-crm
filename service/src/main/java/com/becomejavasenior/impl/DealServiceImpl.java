@@ -17,7 +17,13 @@ import java.util.stream.Collectors;
 public class DealServiceImpl implements DealService{
 
     static final Logger logger = LogManager.getRootLogger();
-    DealDAO dealDao = new DealDAOImpl();
+    DaoFactory daoFactory;
+    DealDAO dealDao;
+
+    public DealServiceImpl() throws DataBaseException{
+        daoFactory = new PostgreSqlDaoFactory();
+        dealDao = (DealDAO)daoFactory.getDao(Deal.class);
+    }
 
     @Override
     public void saveDeal(Deal deal) throws DataBaseException {
@@ -71,7 +77,6 @@ public class DealServiceImpl implements DealService{
 
     @Override
     public List<Deal> findDealsByFilters(List<List<Deal>> list) throws DataBaseException{
-
         Iterator<List<Deal>> listIterator = list.iterator();
         List<Deal> dealsList = listIterator.next();
         while (dealsList.size() != 0 && listIterator.hasNext()) {

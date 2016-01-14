@@ -17,6 +17,10 @@ import java.util.Date;
 public class TaskDAOImpl extends AbstractJDBCDao<Task> implements TaskDAO {
     private Logger logger = LogManager.getLogger(TaskDAOImpl.class);
 
+    public TaskDAOImpl(DaoFactory daoFactory) {
+        super(daoFactory);
+    }
+
     @Override
     public List<Task> getAllTasksByParameters(String userId, Date date, String taskTypeId) throws DataBaseException {
         List<Task> result;

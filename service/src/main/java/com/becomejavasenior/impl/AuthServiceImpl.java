@@ -1,6 +1,10 @@
-package com.becomejavasenior;
+package com.becomejavasenior.impl;
 
+import com.becomejavasenior.DataBaseException;
+import com.becomejavasenior.PostgreSqlDaoFactory;
+import com.becomejavasenior.User;
 import com.becomejavasenior.exception.IncorrectDataException;
+import com.becomejavasenior.interfaceservice.AuthService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -13,7 +17,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class UserServiceImpl implements UserService {
+/**
+ * @author Lybachevskiy.Vladislav
+ */
+public class AuthServiceImpl implements AuthService {
 
     private static final Logger LOGGER = LogManager.getLogger(UserServiceImpl.class);
 

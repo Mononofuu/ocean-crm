@@ -12,6 +12,10 @@ import java.util.List;
 
 public class SubjectDAOImpl extends AbstractJDBCDao<Subject> implements SubjectDAO {
 
+    public SubjectDAOImpl(DaoFactory daoFactory) {
+        super(daoFactory);
+    }
+
     @Override
     public String getDeleteQuery() {
         return "DELETE FROM subject WHERE id= ?;";

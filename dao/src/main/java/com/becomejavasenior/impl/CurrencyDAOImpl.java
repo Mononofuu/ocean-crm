@@ -2,6 +2,7 @@ package com.becomejavasenior.impl;
 
 import com.becomejavasenior.AbstractJDBCDao;
 import com.becomejavasenior.Currency;
+import com.becomejavasenior.DaoFactory;
 import com.becomejavasenior.DataBaseException;
 import com.becomejavasenior.interfacedao.CurrencyDAO;
 
@@ -16,6 +17,10 @@ import java.util.List;
  * created by Alekseichenko Sergey <mononofuu@gmail.com>
  */
 public class CurrencyDAOImpl extends AbstractJDBCDao<Currency> implements CurrencyDAO {
+
+    public CurrencyDAOImpl(DaoFactory daoFactory) {
+        super(daoFactory);
+    }
 
     @Override
     public String getReadAllQuery() {

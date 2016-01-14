@@ -12,6 +12,10 @@ import java.util.List;
  */
 public class TaskTypeDAOImpl extends AbstractJDBCDao<TaskType> implements TaskTypeDAO {
 
+    public TaskTypeDAOImpl(DaoFactory daoFactory) {
+        super(daoFactory);
+    }
+
     @Override
     public String getReadAllQuery() {
         return "SELECT * FROM task_type";
