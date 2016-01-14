@@ -84,7 +84,8 @@ public class DealEditServlet extends HttpServlet {
                             break;
                         case "delete":
                             dao = new PostgreSqlDaoFactory();
-                            DealContactDAO dealContactDAO = new DealContactDAOImpl();
+//                            DealContactDAO dealContactDAO = new DealContactDAOImpl();
+                            DealContactDAO dealContactDAO = (DealContactDAO)dao.getDao(DealContact.class);
                             dealContactDAO.deleteDealContact(dealId, contactId);
                             logger.info("deal contact deleteded:");
                             logger.info("deal " + dealId);
@@ -228,11 +229,13 @@ public class DealEditServlet extends HttpServlet {
                         List<PhoneType> phoneTypeList = phoneTypeDao.readAll();
                         request.setAttribute("phonetypes", phoneTypeList);
 
-                        DealContactDAO dealContactService = new DealContactDAOImpl();
-                        List<Contact> dealContactList = dealContactService.getAllContactsBySubjectId(deal.getId());
+//                        DealContactDAO dealContactService = new DealContactDAOImpl();
+                        DealContactDAO dealContactDao = (DealContactDAO) dao.getDao(DealContact.class);
+                        List<Contact> dealContactList = dealContactDao.getAllContactsBySubjectId(deal.getId());
                         request.setAttribute("dealcontacts", dealContactList);
 
-                        TagDAO tagDAO = new TagDAOImpl();
+//                        TagDAO tagDAO = new TagDAOImpl();
+                        TagDAO tagDAO = (TagDAO) dao.getDao(Tag.class);
                         List<Tag> tagList = tagDAO.readAllSubjectTags(deal.getId());
                         StringBuilder sb = new StringBuilder();
                         for(Tag tag: tagList){
@@ -244,11 +247,13 @@ public class DealEditServlet extends HttpServlet {
                         List<Currency> currencyList = currencyDao.readAll();
                         request.setAttribute("currencies", currencyList);
 
-                        CommentDAO commentDao = new CommentDAOImpl();
+//                        CommentDAO commentDao = new CommentDAOImpl();
+                        CommentDAO commentDao = (CommentDAO) dao.getDao(Comment.class);
                         List<Comment> commentList = commentDao.getAllCommentsBySubjectId(deal.getId());
                         request.setAttribute("comments", commentList);
 
-                        TaskDAO taskDao = new TaskDAOImpl();
+//                        TaskDAO taskDao = new TaskDAOImpl();
+                        TaskDAO taskDao = (TaskDAO) dao.getDao(Task.class);
                         List<Task> taskList = taskDao.getAllTasksBySubjectId(deal.getId());
                         request.setAttribute("tasks", taskList);
 

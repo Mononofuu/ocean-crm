@@ -1,9 +1,7 @@
 package com.becomejavasenior.impl;
 
-import com.becomejavasenior.Company;
-import com.becomejavasenior.DataBaseException;
+import com.becomejavasenior.*;
 import com.becomejavasenior.interfacedao.CompanyDAO;
-import com.becomejavasenior.CompanyService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,7 +13,13 @@ import java.util.List;
 public class CompanyServiceImpl implements CompanyService{
 
     static final Logger logger = LogManager.getRootLogger();
-    CompanyDAO companyDao = new CompanyDAOImpl();
+    private DaoFactory dao;
+    private CompanyDAOImpl companyDao;
+
+    public CompanyServiceImpl() throws DataBaseException {
+        dao = new PostgreSqlDaoFactory();
+        companyDao = (CompanyDAOImpl)dao.getDao(Company.class);
+    }
 
     @Override
     public void saveCompany(Company company) throws DataBaseException {
