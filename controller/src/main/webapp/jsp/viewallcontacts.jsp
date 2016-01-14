@@ -38,7 +38,7 @@
 					<div class="form-group">
 						<div class="col-sm-12">
 							<select class="form-control" size="4" name="filtername" id="filtername">
-								<option value="allcontacts">Полный список контактов</option>
+								<option value="allcontacts" selected>Полный список контактов</option>
 								<option value="tasklesscontacts">Контакты без задач</option>
 								<option value="overduetaskcontacts">Контакты с просроченными задачами</option>
 								<option value="dellitedcontacts" selected>Удаленные</option>
@@ -74,7 +74,7 @@
 						<div class="formlable">
 							<label class="control-label">Этапы</label>
 						</div>
-						<select class="multipleselect col-sm-12" multiple="multiple">
+						<select class="multipleselect col-sm-12" multiple="multiple" name="dealfilters" id="dealfilters">
 							<option value="withoutdeal">Без сделок</option>
 							<option value="withoutopendeal">Без открытых сделок</option>
 							<option value="firstcontact">Первичный контакт</option>
@@ -82,8 +82,7 @@
 							<option value="takingdesision">Принимают решение</option>
 							<option value="agreement">Согласование договора</option>
 							<option value="success">Успешно реализованно</option>
-							<option value="closed">Закрыто</option>
-							<option value="notrealised">Не реализованно</option>
+							<option value="closedandnotrealised">Закрыто и не реализованно</option>
 						</select>
 					</div>
 					<div class="form-group">

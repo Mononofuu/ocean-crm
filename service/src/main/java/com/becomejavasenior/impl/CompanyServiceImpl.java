@@ -3,8 +3,8 @@ package com.becomejavasenior.impl;
 import com.becomejavasenior.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Peter on 18.12.2015.
@@ -62,4 +62,10 @@ public class CompanyServiceImpl implements CompanyService {
     public Company findCompanyByName(String name) throws DataBaseException {
         return companyDAO.readCompanyByName(name);
     }
+
+    @Override
+    public List<Company> getAllCompanyesByParameters(Map<String, String[]> parameters) throws DataBaseException {
+        return null;
+    }
 }
+

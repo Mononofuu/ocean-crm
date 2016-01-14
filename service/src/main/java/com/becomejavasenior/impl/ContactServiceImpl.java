@@ -4,8 +4,10 @@ import com.becomejavasenior.*;
 import com.becomejavasenior.interfacedao.ContactDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Peter on 18.12.2015.
@@ -36,6 +38,12 @@ public class ContactServiceImpl implements ContactService{
             }
         } else {
             contactDAO.update(contact);
+            if(contact.getTasks().size()>0){
+                saveTasks(contact.getTasks());
+            }
+            if(contact.getDeals().size()>0){
+                saveDeals(contact.getDeals());
+            }
         }
     }
 
@@ -85,5 +93,37 @@ public class ContactServiceImpl implements ContactService{
         for(Deal deal: deals){
             dealService.saveDeal(deal);
         }
+    }
+
+    @Override
+    public List<Contact> getAllContactsByParameters(Map<String, String[]> parameters) throws DataBaseException {
+        List<ContactFilters> parametersList = new ArrayList<>();
+        String userId = null;
+        List<Integer> tagIdList = new ArrayList<>();
+        Date taskStartDate = null;
+        Date taskDueDate = null;
+        String filter = parameters.get("filtername")[0];
+        switch (filter){
+            case "overduetaskcontacts":
+                parametersList.add(ContactFilters.WITH_OVERDUE_TASKS);
+                break;
+            case "tasklesscontacts":
+                parametersList.add(ContactFilters.WITHOUT_TASKS);
+                break;
+            default:
+                break;
+        }
+        String user = parameters.get("user")[0];
+        if(!"".equals(user)){
+            userId=user;
+        }
+
+        String[] dealfilters = parameters.get("dealfilters");
+        if(dealfilters.length>0){
+            for(String dealFilter: dealfilters){
+            }
+        }
+
+        return contactDAO.getAllContactsByParameters(parametersList, userId, tagIdList, taskStartDate, taskDueDate);
     }
 }

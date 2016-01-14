@@ -22,7 +22,6 @@ public class TagServiceImpl implements TagService {
         } catch (DataBaseException e) {
             logger.error(e);
         }
-
     }
 
     @Override

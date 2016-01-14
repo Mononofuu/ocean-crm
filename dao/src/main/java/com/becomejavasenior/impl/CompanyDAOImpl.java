@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CompanyDAOImpl extends AbstractJDBCDao<Company> implements CompanyDAO {
+    private Logger logger = LogManager.getLogger(CompanyDAOImpl.class);
 
     public CompanyDAOImpl(DaoFactory daoFactory) {
         super(daoFactory);
@@ -147,5 +148,39 @@ public class CompanyDAOImpl extends AbstractJDBCDao<Company> implements CompanyD
             throw new DataBaseException(e);
         }
         return result;
+    }
+
+    @Override
+    public List<Company> getAllCompanyesByParameters(String userId, List<Integer> idList) throws DataBaseException{
+        return realiseQuery(getParametrisedReadQuery(userId, idList));
+    }
+
+    private String getParametrisedReadQuery(String userId, List<Integer> idList){
+        String result = getReadAllQuery()+" WHERE 1=1";
+        if(userId!=null){
+            result+=" AND user_id = "+userId;
+        }
+        if(idList!=null&&idList.size()>0){
+            result+=" AND id IN (";
+            for(Integer id: idList){
+                result+=id+",";
+            }
+            result.substring(0, result.length()-1);
+            result+=")";
+        }
+        return result;
+    }
+
+    @Override
+    public List<Company> getAllCompanyesWithoutTasks() throws DataBaseException {
+        return realiseQuery(getCompanyessWithoutTasksQuery());
+    }
+
+    private String getCompanyessWithoutTasksQuery(){
+        return getReadAllQuery()+" LEFT JOIN task ON company.id=task.subject_id WHERE subject_id is NULL";
+    }
+
+    private String getCompanyesWithOverdueTasksQuery(){
+        return getReadAllQuery()+" LEFT JOIN task ON company.id=task.subject_id WHERE task.due_date < NOW()";
     }
 }

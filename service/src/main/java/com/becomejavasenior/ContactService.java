@@ -1,9 +1,7 @@
 package com.becomejavasenior;
 
-import com.becomejavasenior.DataBaseException;
-import com.becomejavasenior.Contact;
-
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -18,4 +16,5 @@ public interface ContactService {
         List<Contact> findContactsLite() throws DataBaseException;
         Contact findContactByName(String name) throws DataBaseException;
         List<PhoneType> getAllPhoneTypes() throws DataBaseException;
+        List<Contact> getAllContactsByParameters(Map<String, String[]> parameters) throws DataBaseException;
 }

@@ -1,9 +1,7 @@
 package com.becomejavasenior;
 
-import com.becomejavasenior.Company;
-import com.becomejavasenior.DataBaseException;
-
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -17,4 +15,5 @@ public interface CompanyService {
         List<Company> findCompanies() throws DataBaseException;
         List<Company> findCompaniesLite() throws DataBaseException;
         Company findCompanyByName(String name) throws DataBaseException;
+        List<Company> getAllCompanyesByParameters(Map<String, String[]> parameters) throws DataBaseException;
 }
