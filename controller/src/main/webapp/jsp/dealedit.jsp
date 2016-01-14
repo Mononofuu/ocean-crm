@@ -5,6 +5,7 @@
   Time: 22:11
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="com.becomejavasenior.PhoneType" %>
 <style>
@@ -361,7 +362,7 @@
                         <tbody>
                         <c:forEach items="${comments}" var="comment">
                             <tr>
-                                <td>${comment.dateCreated}</td>
+                                <td><fmt:formatDate pattern="dd.MM.yyyy HH:mm" value="${comment.dateCreated}"/></td>
                                 <td>${comment.user.name}</td>
                                 <td>${comment.text}</td>
                                 <td>
@@ -391,8 +392,8 @@
                         <tbody>
                         <c:forEach items="${tasks}" var="task">
                             <tr>
-                                <td>${task.dateCreated}</td>
-                                <td>${task.dueTime}</td>
+                                <td><fmt:formatDate pattern="dd.MM.yyyy HH:mm" value="${task.dateCreated}"/></td>
+                                <td><fmt:formatDate pattern="dd.MM.yyyy HH:mm" value="${task.dueTime}"/></td>
                                 <td>${task.user.name}</td>
                                 <td>${task.type.toString()}</td>
                                 <td>${task.comment}</td>

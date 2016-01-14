@@ -6,6 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <style>
     <%@include file='../css/bootstrap.css' %>
@@ -55,7 +56,26 @@
         <div class="form-group">
             <label class="col-xs-2 control-label" for="datepicker">Дата закрытия</label>
             <div class="col-xs-4">
-                <input class="form-control" type="text" id="datepicker" name="duedate" value="${task.dueTime}">
+                <fmt:formatDate value="${task.dueTime}" pattern="MM/dd/yyyy" var="theFormattedDueTime"/>
+                <input class="form-control" type="text" id="datepicker" name="duedate" value="${theFormattedDueTime}"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-xs-2 control-label" for="tasktype">Ответственный</label>
+            <div class="col-xs-4">
+                <select id="user" name="user" class="form-control">
+                    <c:forEach items="${users}" var="user">
+                        <c:choose>
+                            <c:when test="${user == task.user}">
+                                <option selected value=${user.id}>${user.name}</option>
+                            </c:when>
+                            <c:otherwise>
+                                <option value=${user.id}>${user.name}</option>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:forEach>
+                </select>
             </div>
         </div>
 
@@ -79,8 +99,10 @@
 
         <div class="form-group">
             <label class="col-md-2 control-label" for="btn_task_save"></label>
-            <div class="col-md-2">
+            <div class="col-md-6">
                 <button id="btn_task_save" name="btn_task_save" class="btn btn-default">Записать</button>
+                <button id="btn_task_close" name="btn_task_close" class="btn btn-default">Закрыть</button>
+                <button id="btn_task_delete" name="btn_task_delete" class="btn btn-default">Удалить</button>
                 <button id="btn_task_cancel" name="btn_task_cancel" class="btn btn-default" onclick="window.history.back()">Отмена</button>
             </div>
             <div class="col-md-2">

@@ -1,5 +1,6 @@
 package com.becomejavasenior;
 
+import com.becomejavasenior.impl.UserServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -9,8 +10,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.net.URL;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -51,6 +50,9 @@ public class TaskController extends HttpServlet{
                         GenericDao<Subject> subjectDao = dao.getDao(Subject.class);
                         Subject subject = subjectDao.read(Integer.parseInt(request.getParameter("subjectid")));
                         task.setSubject(subject);
+                        GenericDao<User> userDao = dao.getDao(User.class);
+                        User user = userDao.read(Integer.parseInt(request.getParameter("user")));
+                        task.setUser(user);
                         task.setDateCreated(new Date());
                         String duedate = request.getParameter("duedate");
                         if(!duedate.equals("")){
@@ -59,7 +61,7 @@ public class TaskController extends HttpServlet{
                             Date docDate= format.parse(duedate);
                             task.setDueTime(docDate);
                         }
-                        task.setUser((User) request.getSession().getAttribute("user"));
+//                        task.setUser((User) request.getSession().getAttribute("user"));
                         task.setComment(request.getParameter("taskcomment"));
                         task.setType(TaskType.valueOf(request.getParameter("tasktype")));
                         taskDao.create(task);
@@ -75,9 +77,21 @@ public class TaskController extends HttpServlet{
                         task = (Task) taskDao.read(getId(request));
                         task.setComment(request.getParameter("taskcomment"));
                         task.setType(TaskType.valueOf(request.getParameter("tasktype")));
+                        String duedate = request.getParameter("duedate");
+                        if(!duedate.equals("")){
+                            SimpleDateFormat format = new SimpleDateFormat();
+                            format.applyPattern("mm/dd/yyyy");
+                            Date docDate= format.parse(duedate);
+                            task.setDueTime(docDate);
+                        }
+                        GenericDao<User> userDao = dao.getDao(User.class);
+                        User user = userDao.read(Integer.parseInt(request.getParameter("user")));
+                        task.setUser(user);
                         taskDao.update(task);
                         logger.info("task updated:");
                         logger.info(task.getId());
+                        logger.info(task.getDueTime());
+                        logger.info(task.getUser());
                         logger.info(task.getComment());
                         logger.info(task.getType());
                     }
@@ -108,6 +122,9 @@ public class TaskController extends HttpServlet{
                 try {
                     dao = new PostgreSqlDaoFactory();
                     int id = getId(request);
+                    GenericDao userDao = dao.getDao(User.class);
+                    List<User> userList = userDao.readAll();
+                    request.setAttribute("users", userList);
                     GenericDao taskTypeDao = dao.getDao(TaskType.class);
                     List<TaskType> taskTypeList = taskTypeDao.readAll();
                     request.setAttribute("tasktypes", taskTypeList);
