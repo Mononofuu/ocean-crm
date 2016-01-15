@@ -27,9 +27,8 @@ public interface DealService{
         List<Deal> findDealsByStatus(int statusId) throws DataBaseException;
         List<Deal> findDealsByUser(int statusId) throws DataBaseException;
         List<Deal> findDealsByTags(String tag) throws DataBaseException;
-        List<Deal> findDealsByFilters(List<List<Deal>> listsOfDeals) throws DataBaseException;
         List<Deal> findDealsByConditions(int condition) throws DataBaseException;
         List<Deal> findDealsByCreatedDateInterval(Date dateBegin, Date dateEnd) throws DataBaseException;
         List<Deal> findDealsByTasksDueDateInterval(Date dateBegin, Date dateEnd) throws DataBaseException;
-
+        List<Deal> findDealsByFilters(List<String> listOfFilters) throws DataBaseException;
 }

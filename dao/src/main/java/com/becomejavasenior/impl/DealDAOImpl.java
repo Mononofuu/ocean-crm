@@ -80,7 +80,7 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
             while (rs.next()) {
                 Deal deal = new Deal();
                 int id = rs.getInt("id");
-                Subject subject = (Subject) subjectDao.readLite(id);
+                Subject subject = (Subject) subjectDao.read(id);
                 deal.setId(id);
                 deal.setName(subject.getName());
                 deal.setBudget(rs.getInt("budget"));
@@ -101,6 +101,7 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
                 //Здесь глючит при наличии тасков. Получается бесконечный цикл
 //                deal.setTasks(taskDAO.getAllTasksBySubjectId(id));
                 deal.setTasks(new ArrayList<Task>());
+                deal.setUser(subject.getUser());
                 result.add(deal);
             }
         } catch (SQLException e) {
@@ -178,7 +179,11 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
             statement.setInt(3, object.getBudget());
             statement.setInt(4, object.getMainContact().getId());
             statement.setInt(5, object.getDealCompany().getId());
-            statement.setTimestamp(6, new Timestamp(object.getDateWhenDealClose().getTime()));
+            if (object.getDateWhenDealClose() == null) {
+                statement.setTimestamp(6, null);
+            }else{
+                statement.setTimestamp(6, new Timestamp(object.getDateWhenDealClose().getTime()));
+            }
             statement.setTimestamp(7, new Timestamp(object.getDateCreated().getTime()));
             statement.setInt(8, object.getId());
         } catch (SQLException e) {

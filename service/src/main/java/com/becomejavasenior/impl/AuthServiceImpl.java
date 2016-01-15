@@ -4,7 +4,7 @@ import com.becomejavasenior.DataBaseException;
 import com.becomejavasenior.PostgreSqlDaoFactory;
 import com.becomejavasenior.User;
 import com.becomejavasenior.exception.IncorrectDataException;
-import com.becomejavasenior.interfaceservice.AuthService;
+import com.becomejavasenior.AuthService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

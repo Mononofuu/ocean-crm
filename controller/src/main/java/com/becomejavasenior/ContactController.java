@@ -125,7 +125,6 @@ public class ContactController extends HttpServlet {
                     GenericDao phoneTypeDao = dao.getDao(PhoneType.class);
                     List<PhoneType> phoneTypeList = phoneTypeDao.readAll();
                     request.setAttribute("phonetypes", phoneTypeList);
-
                     request.getRequestDispatcher("jsp/contactedit.jsp").forward(request, response);
                 } catch (DataBaseException e) {
                     logger.error("Error while editing contact");

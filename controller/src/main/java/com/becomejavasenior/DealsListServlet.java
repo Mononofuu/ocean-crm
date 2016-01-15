@@ -67,270 +67,57 @@ public class DealsListServlet extends HttpServlet{
                 switch (action) {
                     case "applyfilter":
 
-                        List<List<Deal>> list = new ArrayList<>();
+                        List<String> list = new ArrayList<>();
                         String filterName = request.getParameter("selectedfilter");
-                        switch (filterName) {
-                            case "open":
-                                dealsList = dealService.findDealsByConditions(DealService.CONDITION_DEALS_OPENED);
-                                list.add(dealsList);
-                                break;
-                            case "my":
-                                int userId = ((User) request.getSession().getAttribute("user")).getId();
-                                dealsList = dealService.findDealsByUser(userId);
-                                list.add(dealsList);
-                                break;
-                            case "success":
-                                dealsList = dealService.findDealsByConditions(DealService.CONDITION_DEALS_SUCCESS);
-                                list.add(dealsList);
-                                break;
-                            case "fail":
-                                dealsList = dealService.findDealsByConditions(DealService.CONDITION_DEALS_CLOSED_AND_NOT_IMPLEMENTED);
-                                list.add(dealsList);
-                                break;
-                            case "notask":
-                                dealsList = dealService.findDealsByConditions(DealService.CONDITION_DEALS_WITHOUT_TASKS);
-                                list.add(dealsList);
-                                break;
-                            case "expired":
-                                dealsList = dealService.findDealsByConditions(DealService.CONDITION_DEALS_WITH_EXPIRED_TASKS);
-                                list.add(dealsList);
-                                break;
-                            case "deleted":
-                                dealsList = dealService.findDealsByConditions(DealService.CONDITION_DEALS_DELETED);
-                                list.add(dealsList);
-                                break;
-                            default:
-//                                dealsList = dealService.findDeals();
-//                                list.add(dealsList);
-                                break;
+                        if(filterName.equals("my")){
+                            int userId = ((User) request.getSession().getAttribute("user")).getId();
+                            list.add("selectedfilter_"+filterName+"_"+userId);
+                        }else if(!filterName.equals("")){
+                            list.add("selectedfilter_"+filterName);
                         }
 
                         String dealStatusId = request.getParameter("phase");
-                        String dealUserId = request.getParameter("manager");
-                        String tags = request.getParameter("tags");
                         if (dealStatusId != null && dealStatusId.equals("") == false) {
-                            dealsList = dealService.findDealsByStatus(Integer.valueOf(dealStatusId));
-                            list.add(dealsList);
-                            logger.info("DealsListServlet. Used filter dealStatusId " + dealStatusId);
+                            list.add("phase_"+dealStatusId);
                         }
+
+                        String dealUserId = request.getParameter("manager");
                         if (dealUserId != null && dealUserId.equals("") == false) {
-                            dealsList = dealService.findDealsByUser(Integer.valueOf(dealUserId));
-                            list.add(dealsList);
-                            logger.info("DealsListServlet. Used filter dealUserId " + dealUserId);
+                            list.add("manager_"+dealUserId);
                         }
+
+                        String tags = request.getParameter("tags");
                         if (tags != null) {
                             String tag = tags.trim().replaceAll("\\s+", "','");
                             if (!tag.equals("")) {
-                                dealsList = dealService.findDealsByTags(tag);
-                                list.add(dealsList);
-                                logger.info("DealsListServlet. Used filter dealTag " + tag);
+                                list.add("tags_"+tag);
                             }
                         }
 
                         String when = request.getParameter("when");
-                        if(!when.equals("ALL_TIME")){
+                        if(!when.equals("ALL_TIME")) {
+                            if(when.equals("PERIOD")){
                             String dateFrom = request.getParameter("date_from");
                             String dateTo = request.getParameter("date_to");
-                            SimpleDateFormat formatter = new SimpleDateFormat();
-                            formatter.applyPattern("mm/dd/yyyy");
-                            Calendar cal = Calendar.getInstance();
-                            cal.set(Calendar.HOUR_OF_DAY, 0);
-                            cal.set(Calendar.MINUTE, 0);
-                            cal.set(Calendar.SECOND, 0);
-                            cal.set(Calendar.MILLISECOND, 0);
-                            java.util.Date currentDate = cal.getTime();
-                            Date dateBegin = new java.sql.Date(currentDate.getTime());
-                            Date dateEnd = dateBegin;
-                            boolean useFilter = true;
-                            switch (when){
-                                case "TODAY":
-                                    break;
-                                case "FOR_THREE_DAYS":
-                                    cal.add(Calendar.DATE,-2);
-                                    currentDate = cal.getTime();
-                                    dateBegin = new java.sql.Date(currentDate.getTime());
-                                    break;
-                                case "WEEK":
-                                    cal.add(Calendar.DATE,-6);
-                                    currentDate = cal.getTime();
-                                    dateBegin = new java.sql.Date(currentDate.getTime());
-                                    break;
-                                case "MONTH":
-                                    cal.add(Calendar.MONTH,-1);
-                                    cal.add(Calendar.DATE,1);
-                                    currentDate = cal.getTime();
-                                    dateBegin = new java.sql.Date(currentDate.getTime());
-                                    break;
-                                case "QUARTER":
-                                    cal.add(Calendar.MONTH,-3);
-                                    cal.add(Calendar.DATE,1);
-                                    currentDate = cal.getTime();
-                                    dateBegin = new java.sql.Date(currentDate.getTime());
-                                    break;
-                                case "PERIOD":
-                                    if (!dateFrom.equals("") && !dateTo.equals("")){
-                                        java.util.Date date = formatter.parse(dateFrom);
-                                        dateBegin = new java.sql.Date(date.getTime());
-                                        date = formatter.parse(dateTo);
-                                        dateEnd = new java.sql.Date(date.getTime());
-                                    }else{
-                                        logger.error("Bad date in filter in DealsListServlet");
-                                        useFilter = false;
-                                    }
-                                    break;
-                                default:
-                                    logger.info("Uncnown condition in created date filter in DealsListServlet");
-                                    useFilter = false;
-                                    break;
+                            if (!dateFrom.equals("") && !dateTo.equals("")) {
+                                list.add("when_" + when + "_" + dateFrom + "_" + dateTo);
+                            }else{
+                                logger.error("Bad date in filter in DealsListServlet");
                             }
-                            if(useFilter) {
-                                dealsList = dealService.findDealsByCreatedDateInterval(dateBegin, dateEnd);
-                                list.add(dealsList);
+                            }else{
+                                list.add("when_" + when);
                             }
                         }
 
                         String tasks = request.getParameter("tasks");
-                        if(!tasks.equals("IGNORE")){
-                            SimpleDateFormat formatter = new SimpleDateFormat();
-                            formatter.applyPattern("mm/dd/yyyy");
-                            Calendar cal = Calendar.getInstance();
-                            cal.set(Calendar.HOUR_OF_DAY, 0);
-                            cal.set(Calendar.MINUTE, 0);
-                            cal.set(Calendar.SECOND, 0);
-                            cal.set(Calendar.MILLISECOND, 0);
-                            java.util.Date currentDate = cal.getTime();
-                            Date dateBegin = new java.sql.Date(currentDate.getTime());
-                            Date dateEnd = dateBegin;
-                            boolean useFilter = true;
-                            switch (tasks){
-                                case "TODAY":
-                                    break;
-                                case "TOMORROW":
-                                    cal.add(Calendar.DATE,1);
-                                    currentDate = cal.getTime();
-                                    dateBegin = new java.sql.Date(currentDate.getTime());
-                                    dateEnd = dateBegin;
-                                    break;
-                                case "THIS_WEEK":
-                                    int day = cal.get(Calendar.DAY_OF_WEEK);
-                                    int correction = 0;
-                                    switch(day){
-                                        case 1:
-                                            correction = 6;
-                                            break;
-                                        case 3:
-                                        case 4:
-                                        case 5:
-                                        case 6:
-                                        case 7:
-                                            correction = day-2;
-                                            break;
-                                        default:
-                                            break;
-                                    }
-                                    cal.add(Calendar.DATE,-correction);
-                                    currentDate = cal.getTime();
-                                    dateBegin = new java.sql.Date(currentDate.getTime());
-                                    cal.add(Calendar.DATE,6);
-                                    currentDate = cal.getTime();
-                                    dateEnd = new java.sql.Date(currentDate.getTime());
-                                    break;
-                                case "THIS_MONTHS":
-                                    cal.set(Calendar.DAY_OF_MONTH, 1);
-                                    currentDate = cal.getTime();
-                                    dateBegin = new java.sql.Date(currentDate.getTime());
-                                    cal.add(Calendar.MONTH,1);
-                                    cal.add(Calendar.DATE,-1);
-                                    currentDate = cal.getTime();
-                                    dateEnd = new java.sql.Date(currentDate.getTime());
-                                    break;
-                                case "THIS_QUARTER":
-                                    cal.set(Calendar.DAY_OF_MONTH, 1);
-                                    cal.add(Calendar.MONTH, -cal.get(Calendar.MONTH)%3);
-                                    currentDate = cal.getTime();
-                                    dateBegin = new java.sql.Date(currentDate.getTime());
-                                    cal.add(Calendar.MONTH,3);
-                                    cal.add(Calendar.DATE,-1);
-                                    currentDate = cal.getTime();
-                                    dateEnd = new java.sql.Date(currentDate.getTime());
-                                    break;
-                                case "WO_TASKS":
-                                    break;
-                                case "EXPIRED":
-                                    break;
-                                default:
-                                    logger.info("Uncnown condition in created date filter in DealsListServlet");
-                                    useFilter = false;
-                                    break;
-                            }
-                            if(useFilter) {
-                                switch (tasks) {
-                                    case "WO_TASKS":
-                                        dealsList = dealService.findDealsByConditions(DealService.CONDITION_DEALS_WITHOUT_TASKS);
-                                        break;
-                                    case "EXPIRED":
-                                        dealsList = dealService.findDealsByConditions(DealService.CONDITION_DEALS_WITH_EXPIRED_TASKS);
-                                        break;
-                                    default:
-                                        dealsList = dealService.findDealsByTasksDueDateInterval(dateBegin, dateEnd);
-                                        break;
-                                }
-                                list.add(dealsList);
-                            }
+                        if(!tasks.equals("IGNORE")) {
+                            list.add("tasks_" + tasks);
                         }
 
-                        if (list.size() == 0) {
-                            dealsList = dealService.findDeals();
-                        } else {
-                            dealsList = dealService.findDealsByFilters(list);
-                        }
-                        break;
+                        dealsList = dealService.findDealsByFilters(list);
                 }
 
-
-                    /*
-                    case "savefilter":
-                        Filter filter = new Filter();
-                        filter.setName(request.getParameter("name"));
-                        String periodName = request.getParameter("when");
-                        User user = (User) request.getSession().getAttribute("user");
-                        filter.setUser(user);
-                        if(!periodName.equals("")){
-                            filter.setType(FilterPeriod.valueOf(periodName));
-                            if (periodName.equals("PERIOD")) {
-                                SimpleDateFormat format = new SimpleDateFormat("yyy-mm-dd");
-                                filter.setDate_from(new Timestamp(format.parse((request.getParameter("date_from"))).getTime()));
-                                filter.setDate_to(new Timestamp(format.parse((request.getParameter("date_to"))).getTime()));
-                            }
-                        }
-
-                        String statusParam = request.getParameter("phase");
-                        if (statusParam != "") {
-                            DealStatus status = dealStatusDao.read(Integer.parseInt(statusParam));
-                            filter.setStatus(status);
-                        }
-
-                        String managerParam = request.getParameter("managers");
-                        if (managerParam != "") {
-                            Contact manager = contactDao.read(Integer.parseInt(managerParam));
-                            filter.setManager(manager);
-                        }
-
-                        String taskType = request.getParameter("tasks");
-                        if(taskType != ""){
-                        filter.setTaskType(FilterTaskType.valueOf(taskType));
-                        }
-
-                        filter.setTags(request.getParameter("tags"));
-
-                        filterDao.create(filter);
-
-                    default:
-                        dealsList = dealService.findDeals();
-                        break;
-                }
-                */
-                }
+           }
                 request.setAttribute("deals", dealsList);
                 request.setAttribute("deals_map", dealStatusList);
                 request.setAttribute("managers", userList);
@@ -343,8 +130,6 @@ public class DealsListServlet extends HttpServlet{
                 logger.error("Error when prepearing data for dealslist.jsp", e);
             }catch(ServletException e){
                 logger.error("Error when prepearing data for dealslist.jsp", e);
-            } catch (ParseException e) {
-            e.printStackTrace();
         }
     }
     }

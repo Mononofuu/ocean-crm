@@ -18,7 +18,7 @@ public enum FilterTaskType implements Serializable {
             case THIS_WEEK:
                 return "На этой неделе";
             case THIS_MONTHS:
-                return "В этом месяцу";
+                return "В этом месяце";
             case THIS_QUARTER:
                 return "В этом квартале";
             case WO_TASKS:
