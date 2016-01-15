@@ -49,7 +49,7 @@ public class SignInServlet extends HttpServlet {
             if (user == null) {
                 errors.add("Invalid user name or password.");
                 req.setAttribute("errors", errors);
-                req.getRequestDispatcher("/signin").forward(req, resp);
+                req.getRequestDispatcher("WEB-INF/auth/sign_in.jsp").forward(req, resp);
                 return;
             }
             req.getSession().setAttribute("user", user);
