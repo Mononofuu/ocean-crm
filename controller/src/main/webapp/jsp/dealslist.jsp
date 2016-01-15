@@ -47,12 +47,10 @@
 <div class="left-container">
 
 
-    <form action="dealspyramid" class="form-inline col-xs-10">
         <div class="form-group">
-            <input class="btn btn-default navbar-btn" type="submit" value="Воронка">
-            <!--<input class="btn btn-default navbar-btn" type="submit" value="Список">-->
+            <button class="btn btn-default" onclick="location.href= '/dealspyramid'">Воронка</button>
+            <button class="btn btn-default" onclick="location.href= '/deal'">Добавить сделку</button>
         </div>
-    </form>
 
 
     <div class="table-responsive col-xs-7">
