@@ -3,7 +3,7 @@
  */
 var newDeal = angular.module('newDeal', []);
 
-newDeal.controller('DealController', function ($scope, $http, $filter) {
+newDeal.controller('DealController', function ($scope, $http, $filter, $window) {
     angular.element(document).ready(function () {
         getCompanies($http, $scope);
         getContacts($http, $scope);
@@ -57,9 +57,13 @@ newDeal.controller('DealController', function ($scope, $http, $filter) {
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}  // set the headers so angular passing info as form data (not request payload)
         })
             .success(function () {
-                $scope.formData = {};
-                getContacts($http, $scope);
-                getCompanies($http, $scope);
+                if (type == 'newdeal') {
+                    $window.location.href = '/';
+                } else {
+                    $scope.formData = {};
+                    getContacts($http, $scope);
+                    getCompanies($http, $scope);
+                }
             });
     };
 });

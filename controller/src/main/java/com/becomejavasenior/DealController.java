@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -21,6 +22,7 @@ import java.util.Optional;
 
 public class DealController extends HttpServlet {
     private final static Logger logger = LogManager.getLogger(DealController.class);
+    private final static String nextJSP = "/jsp/newdeal.jsp";
     private DaoFactory dao;
     private Deal createdDeal;
 
@@ -125,7 +127,7 @@ public class DealController extends HttpServlet {
             dealName.ifPresent(deal::setName);
 
             Optional<String> dealResp = Optional.ofNullable(request.getParameter("dealresp"));
-            if (dealResp.isPresent()){
+            if (dealResp.isPresent()) {
                 GenericDao<User> userDao = dao.getDao(User.class);
                 User mainContact = userDao.read(Integer.parseInt(dealResp.get()));
                 deal.setMainContact(mainContact);
@@ -135,14 +137,14 @@ public class DealController extends HttpServlet {
             dealBudget.ifPresent(s -> deal.setBudget(Integer.parseInt(s)));
 
             Optional<String> dealStatus = Optional.ofNullable(request.getParameter("dealstatus"));
-            if (dealStatus.isPresent()){
+            if (dealStatus.isPresent()) {
                 GenericDao<DealStatus> dealStatusDao = dao.getDao(DealStatus.class);
                 DealStatus status = dealStatusDao.read(Integer.parseInt(dealStatus.get()));
                 deal.setStatus(status);
             }
 
             Optional<String> dealCompany = Optional.ofNullable(request.getParameter("dealcompany"));
-            if (dealCompany.isPresent()){
+            if (dealCompany.isPresent()) {
                 GenericDao<Company> companyDao = dao.getDao(Company.class);
                 deal.setDealCompany(companyDao.read(Integer.parseInt(dealCompany.get())));
             }
@@ -154,7 +156,7 @@ public class DealController extends HttpServlet {
             deal.setDateWhenDealClose(null);
 
             Optional<String> dealCreatedDate = Optional.ofNullable(request.getParameter("dealcreated"));
-            if (dealCreatedDate.isPresent()){
+            if (dealCreatedDate.isPresent()) {
                 logger.debug(dealCreatedDate.get());
                 Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dealCreatedDate.get());
                 deal.setDateCreated(new Timestamp(date.getTime()));
@@ -169,7 +171,7 @@ public class DealController extends HttpServlet {
             Subject subject = subjectDao.read(createdDeal.getId());
 
             Optional<String[]> contactList = Optional.ofNullable(request.getParameterValues("dealcontactlist[]"));
-            if (contactList.isPresent()){
+            if (contactList.isPresent()) {
                 DealContactDAOImpl dealContactDAO = new DealContactDAOImpl();
                 GenericDao<Contact> contactDao = dao.getDao(Contact.class);
                 List<Contact> dealContacts = new ArrayList<>();
@@ -186,7 +188,7 @@ public class DealController extends HttpServlet {
             }
 
             Optional<String> dealTags = Optional.ofNullable(request.getParameter("dealtags"));
-            if (dealTags.isPresent()){
+            if (dealTags.isPresent()) {
                 GenericDao<Tag> tagDAO = dao.getDao(Tag.class);
                 GenericDao<SubjectTag> subjectTagDAO = dao.getDao(SubjectTag.class);
                 String[] tagArray = dealTags.get().split(" ");
@@ -204,7 +206,7 @@ public class DealController extends HttpServlet {
             }
 
             Optional<String> dealComment = Optional.ofNullable(request.getParameter("dealcomment"));
-            if (dealComment.isPresent()){
+            if (dealComment.isPresent()) {
                 GenericDao<Comment> commentDao = dao.getDao(Comment.class);
                 Comment comment = new Comment();
                 comment.setText(dealComment.get());
@@ -241,43 +243,58 @@ public class DealController extends HttpServlet {
         String action = request.getParameter("action");
         logger.info("GET action = " + action);
 
-        String json = null;
-        try {
-            switch (action) {
-                case "getCompanies":
-                    GenericDao<Company> companyDao = dao.getDao(Company.class);
-                    List<Company> companyList = companyDao.readAll();
-                    json = new Gson().toJson(companyList);
-                    break;
-                case "getContacts":
-                    GenericDao<Contact> contactDao = dao.getDao(Contact.class);
-                    List<Contact> contactList = contactDao.readAll();
-                    json = new Gson().toJson(contactList);
-                    break;
-                case "getDealStatuses":
-                    GenericDao<DealStatus> dealStatusDao = dao.getDao(DealStatus.class);
-                    List<DealStatus> dealStatusList = dealStatusDao.readAll();
-                    json = new Gson().toJson(dealStatusList);
-                    break;
-                case "getPhoneTypes":
-                    json = new Gson().toJson(PhoneType.values());
-                    break;
-                case "getTaskTypes":
-                    json = new Gson().toJson(TaskType.values());
-                    break;
-                case "getUsers":
-                    GenericDao<User> userDao = dao.getDao(User.class);
-                    List<User> users = userDao.readAll();
-                    json = new Gson().toJson(users);
-                    break;
-                default:
+        if (action == null || action.isEmpty()) {
+            redirectTo(request, response, nextJSP);
+        } else {
+            String json = null;
+            try {
+                switch (action) {
+                    case "getCompanies":
+                        GenericDao<Company> companyDao = dao.getDao(Company.class);
+                        List<Company> companyList = companyDao.readAll();
+                        json = new Gson().toJson(companyList);
+                        break;
+                    case "getContacts":
+                        GenericDao<Contact> contactDao = dao.getDao(Contact.class);
+                        List<Contact> contactList = contactDao.readAll();
+                        json = new Gson().toJson(contactList);
+                        break;
+                    case "getDealStatuses":
+                        GenericDao<DealStatus> dealStatusDao = dao.getDao(DealStatus.class);
+                        List<DealStatus> dealStatusList = dealStatusDao.readAll();
+                        json = new Gson().toJson(dealStatusList);
+                        break;
+                    case "getPhoneTypes":
+                        json = new Gson().toJson(PhoneType.values());
+                        break;
+                    case "getTaskTypes":
+                        json = new Gson().toJson(TaskType.values());
+                        break;
+                    case "getUsers":
+                        GenericDao<User> userDao = dao.getDao(User.class);
+                        List<User> users = userDao.readAll();
+                        json = new Gson().toJson(users);
+                        break;
+                    default:
+                        redirectTo(request, response, nextJSP);
+                }
+            } catch (DataBaseException e) {
+                logger.error("Error while getting DAO");
+                logger.catching(e);
             }
-        } catch (DataBaseException e) {
-            logger.error("Error while getting DAO");
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write(json);
+        }
+    }
+
+    private void redirectTo(HttpServletRequest request, HttpServletResponse response, String page) {
+        try {
+            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(page);
+            logger.info(String.format("REDIRECTING TO %s", nextJSP));
+            dispatcher.forward(request, response);
+        } catch (ServletException | IOException e) {
             logger.catching(e);
         }
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(json);
     }
 }
