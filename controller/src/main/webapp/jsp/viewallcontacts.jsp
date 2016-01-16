@@ -16,7 +16,8 @@
 	<script src="../resources//js/tasklist.js" type="text/javascript"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 
-	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.17/jquery-ui.min.js"></script>
+
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
 	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.17/themes/smoothness/jquery-ui.css"/>
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.8.7/jquery.timepicker.min.js"></script>
@@ -135,7 +136,7 @@
 				</ul>
 				<div class="tab-content">
 					<div class="tab-pane active container-fluid" id="all">
-						<table class="table table-striped">
+						<table id="tableData1" class="table table-striped">
 							<thead>
 							<tr>
 								<th>Наименование</th>
@@ -165,7 +166,7 @@
 						</table>
 					</div>
 					<div class="tab-pane container-fluid" id="contacts">
-						<table class="table table-striped">
+						<table id="tableData2" class="table table-striped">
 							<thead>
 							<tr>
 								<th>Наименование</th>
@@ -187,7 +188,7 @@
 						</table>
 					</div>
 					<div class="tab-pane container-fluid" id="companies">
-						<table class="table table-striped">
+						<table id="tableData3" class="table table-striped">
 							<thead>
 							<tr>
 								<th>Наименование</th>
@@ -210,6 +211,15 @@
 			</div>
 		</div>
 	</div>
+
+	<script type="text/javascript" src="/js/pagination.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$('#tableData1').paging({limit: 13});
+			$('#tableData2').paging({limit: 13});
+			$('#tableData3').paging({limit: 13});
+		});
+	</script>
 </body>
 </html>
 
