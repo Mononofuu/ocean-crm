@@ -29,13 +29,6 @@ public class SignInServlet extends HttpServlet {
         String login = req.getParameter("login");
         String password = req.getParameter("password");
         List<String> errors = new ArrayList<>();
-        if (login != null) {
-            if (login.trim().isEmpty()) {
-                errors.add("Please enter email");
-            } else if (!login.matches("([^.@]+)(\\.[^.@]+)*@([^.@]+\\.)+([^.@]+)")) {
-                errors.add("Invalid email, please try again.");
-            }
-        }
         if (password != null && password.trim().isEmpty()) {
             errors.add("Please enter password");
         }

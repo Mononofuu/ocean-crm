@@ -7,10 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>CRM_OCEAN - Registration page</title>
-    <link href="css/bootstrap.css" rel="stylesheet">
-    <link href="css/crm-ocean.css" rel="stylesheet">
-    <link href="css/signin.css" rel="stylesheet">
-
+    <link href="${pageContext.request.contextPath}/resources/css/bootstrap.min.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/css/crm-ocean.css" rel="stylesheet">
 </head>
 <body>
 <div class="container">
@@ -27,7 +25,7 @@
             <div class="form-group">
                 <label for="email" class="required col-sm-3 control-label">Login</label>
                 <div class="col-sm-9">
-                    <input name="login" type="login" id="login" placeholder="Email" class="form-control"
+                    <input name="login" type="text" id="login" placeholder="Email" class="form-control"
                            required="required">
                 </div>
             </div>
@@ -60,7 +58,7 @@
             <div class="form-group">
                 <label for="phoneWork" class="col-sm-3 control-label">Phone work</label>
                 <div class="col-sm-9">
-                    <input name="phoneWork" type="phone" id="phoneWork" placeholder="Phone work" class="form-control">
+                    <input name="phoneWork" type="tel" id="phoneWork" placeholder="Phone work" class="form-control">
                 </div>
             </div>
             <div class="form-group">
