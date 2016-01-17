@@ -28,10 +28,10 @@ public class ContactServiceImpl implements ContactService{
     public void saveContact(Contact contact) throws DataBaseException {
         if (contact.getId() == 0) {
             contactDAO.create(contact);
-            if(contact.getTasks().size()>0){
+            if(contact.getTasks()!=null&&contact.getTasks().size()>0){
                 saveTasks(contact.getTasks());
             }
-            if(contact.getDeals().size()>0){
+            if(contact.getDeals()!=null&&contact.getDeals().size()>0){
                 saveDeals(contact.getDeals());
             }
         } else {
@@ -65,6 +65,12 @@ public class ContactServiceImpl implements ContactService{
     @Override
     public Contact findContactByName(String name) throws DataBaseException {
         return contactDAO.readContactByName(name);
+    }
+
+    @Override
+    public List<PhoneType> getAllPhoneTypes() throws DataBaseException {
+        GenericDao<PhoneType> phoneTypeDAO = dao.getDao(PhoneType.class);
+        return phoneTypeDAO.readAll();
     }
 
     private void saveTasks(List<Task> tasks) throws DataBaseException{

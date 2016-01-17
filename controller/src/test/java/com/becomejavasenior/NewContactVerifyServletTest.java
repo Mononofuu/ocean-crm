@@ -49,7 +49,16 @@ public class NewContactVerifyServletTest extends Mockito {
         ObjectMapper mapper = new ObjectMapper();
         Map<String, String> map = mapper.readValue(result, new TypeReference<HashMap<String, String>>() {
         });
-        logger.debug(result);
+        verify(req, atLeastOnce()).getParameter("name");
+        verify(req, atLeastOnce()).getParameter("phonenumber");
+        verify(req, atLeastOnce()).getParameter("email");
+        verify(req, atLeastOnce()).getParameter("tags");
+        verify(req, atLeastOnce()).getParameter("skype");
+        verify(req, atLeastOnce()).getParameter("newdealname");
+        verify(req, atLeastOnce()).getParameter("budget");
+        verify(req, atLeastOnce()).getParameter("taskresponsible");
+        verify(req, atLeastOnce()).getParameter("tasktype");
+        verify(resp, atLeastOnce()).getWriter();
         assertEquals(6, map.size());
     }
 }

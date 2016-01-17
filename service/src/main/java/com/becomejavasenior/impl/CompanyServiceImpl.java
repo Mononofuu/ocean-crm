@@ -1,7 +1,6 @@
 package com.becomejavasenior.impl;
 
 import com.becomejavasenior.*;
-import com.becomejavasenior.interfacedao.CompanyDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -27,12 +26,12 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public void saveCompany(Company company) throws DataBaseException {
-
+    public Company saveCompany(Company company) throws DataBaseException {
         if (company.getId() == 0) {
-            companyDAO.create(company);
+            return companyDAO.create(company);
         } else {
             companyDAO.update(company);
+            return companyDAO.read(company.getId());
         }
     }
 

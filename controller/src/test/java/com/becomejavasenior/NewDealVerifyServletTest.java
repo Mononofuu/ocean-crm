@@ -34,6 +34,9 @@ public class NewDealVerifyServletTest extends Mockito {
         ObjectMapper mapper = new ObjectMapper();
         Map<String, String> map = mapper.readValue(sWriter.getBuffer().toString(), new TypeReference<HashMap<String, String>>() {
         });
+        verify(req, atLeastOnce()).getParameter("newdealname");
+        verify(req, atLeastOnce()).getParameter("budget");
+        verify(resp, atLeastOnce()).getWriter();
         assertEquals(2, map.size());
     }
 }

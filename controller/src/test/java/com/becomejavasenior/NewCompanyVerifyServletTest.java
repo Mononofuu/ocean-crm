@@ -36,6 +36,11 @@ public class NewCompanyVerifyServletTest extends Mockito {
         ObjectMapper mapper = new ObjectMapper();
         Map<String, String> map = mapper.readValue(sWriter.getBuffer().toString(), new TypeReference<HashMap<String, String>>() {
         });
+        verify(req, atLeastOnce()).getParameter("newcompanyname");
+        verify(req, atLeastOnce()).getParameter("newcompanyphone");
+        verify(req, atLeastOnce()).getParameter("newcompanyemail");
+        verify(req, atLeastOnce()).getParameter("newcompanywebaddress");
+        verify(resp).getWriter();
         assertEquals(4, map.size());
     }
 
