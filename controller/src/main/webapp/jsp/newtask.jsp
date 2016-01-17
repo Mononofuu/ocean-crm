@@ -32,7 +32,7 @@
 <div class="container">
     <div class="row">
         <div class="col-xs-5 window autowindow">
-            <form class="form-horizontal" action="newtask" method="post">
+            <form class="form-horizontal" action="newtask" method="post" id="newtaskform">
                 <h4 align="center">Новая задача</h4>
                 <div class="form-group">
                     <label class="col-sm-3 control-label" for="period">Период</label>
@@ -60,6 +60,7 @@
                     <label class="col-sm-3 control-label" for="subject">Название</label>
                     <div class="col-sm-9">
                         <select class="form-control" name="subject" id="subject">
+                            <option value="" disabled selected>Выбрать</option>
                             <c:forEach var="deal" items="${deallist}">
                                 <option value="${deal.id}">${deal.name}</option>
                             </c:forEach>
@@ -76,6 +77,7 @@
                     <label class="col-sm-3 control-label" for="taskresponsible">Ответственный</label>
                     <div class="col-sm-9">
                         <select class="form-control" name="taskresponsible" id="taskresponsible">
+                            <option value="" disabled selected>Выбрать</option>
                             <c:forEach var="user" items="${userslist}">
                                 <option value="${user.id}">${user.name}</option>
                             </c:forEach>

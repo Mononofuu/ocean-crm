@@ -35,7 +35,7 @@ public class TaskListServlet extends HttpServlet{
         try {
             TaskService taskService = new TaskServiceImpl();
             List<Task> allTasks;
-            if(request.getParameterMap().size()>0){
+            if(request.getParameter("filtername")!=null){
                 allTasks = taskService.getTasksByParameters(request.getParameterMap());
             }else {
                 allTasks = taskService.getAllTask();

@@ -43,3 +43,20 @@ $(document).on("submit", "#newcontactform", function(event){
     });
     event.preventDefault();
 });
+$(document).on("submit", "#newtaskform", function(event){
+    var $form = $(this);
+    $.post("/new_task_verify", $form.serialize(), function(responseJson){
+        if(Object.keys(responseJson).length>0){
+            $(".removefeild").remove();//очищаем ранее созданные span с сообщениями об ошибке
+            $(".has-error").removeClass("has-error"); //убираем всю ранее созданную красную подсветку
+            $.each(responseJson, function(key, value) { // проходимся по всей map переданной из сервлета
+                $("#"+key).attr("placeholder", value);//заменем  pleceholder на сообщение об ошибке
+                $("#"+key).parent().addClass("has-error");//добавляем красную подсветку
+                $("#"+key).parent().append($("<span>").addClass("help-block removefeild").text(value));//добавляем элемент span с сообщением об ошибке
+            });
+        }else{
+            $form.submit();
+        }
+    });
+    event.preventDefault();
+});

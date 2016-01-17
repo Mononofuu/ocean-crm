@@ -1,11 +1,6 @@
 package com.becomejavasenior;
 
-import com.becomejavasenior.impl.DealServiceImpl;
-import com.becomejavasenior.impl.TaskServiceImpl;
-import com.becomejavasenior.impl.UserServiceImpl;
-import com.becomejavasenior.interfaceservice.DealService;
-import com.becomejavasenior.interfaceservice.TaskService;
-import com.becomejavasenior.interfaceservice.UserService;
+import com.becomejavasenior.impl.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,7 +10,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,15 +34,17 @@ public class NewTaskPrepareServlet extends HttpServlet {
             TaskService taskService = new TaskServiceImpl();
             UserService userService = new UserServiceImpl();
             DealService dealService = new DealServiceImpl();
+            ContactService contactService = new ContactServiceImpl();
+            CompanyService companyService = new CompanyServiceImpl();
             List<User> usersList = userService.getAllUsers();
             req.setAttribute("userslist", usersList);
             List<TaskType> taskTypeList = taskService.getAllTaskTypes();
             req.setAttribute("tasktypes", taskTypeList);
             List<Deal> dealList = dealService.findDeals();
             req.setAttribute("deallist", dealList);
-            List<Contact> contactList = new ArrayList<>();// нужно заменить когда появится сервис контактов
+            List<Contact> contactList = contactService.findContacts();
             req.setAttribute("contactlist", contactList);
-            List<Company> companyList = new ArrayList<>();// нужно заменить когда появится сервис компаний
+            List<Company> companyList = companyService.findCompanies();
             req.setAttribute("companylist", companyList);
             getServletContext().getRequestDispatcher("/jsp/newtask.jsp").forward(req,resp);
         } catch (DataBaseException e) {
