@@ -90,6 +90,11 @@ public class DealEditServlet extends HttpServlet {
                             logger.info("deal contact deleteded:");
                             logger.info("deal " + dealId);
                             logger.info("contact " + contactId);
+                            DealService dealService = new DealServiceImpl();
+                            Deal deal = dealService.findDealById(dealId);
+                            deal.setMainContact(null);
+                            dealService.saveDeal(deal);
+                            logger.info("main contact deleted");
                             requestString = "/dealedit?action=edit&id="+request.getParameter("dealid");
                             break;
                     }

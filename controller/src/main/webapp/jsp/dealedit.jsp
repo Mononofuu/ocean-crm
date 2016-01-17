@@ -75,7 +75,8 @@
                             <label class="col-md-2 control-label" for="maincontact">Основной контакт</label>
                             <div class="col-md-4">
                                 <select id="maincontact" name="maincontact" class="form-control">
-                                    <c:forEach items="${contacts}" var="contact">
+                                    <option value="0">Отсутствует</option>
+                                    <c:forEach items="${dealcontacts}" var="contact">
                                         <c:choose>
                                             <c:when test="${contact.id == deal.mainContact.id}">
                                                 <option selected value=${contact.id}>${contact.name}</option>
