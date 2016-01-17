@@ -20,10 +20,15 @@ public class DealContactDAOImpl extends AbstractJDBCDao<DealContact> implements 
     }
 
     @Override
+    protected String getConditionStatment() {
+        return " WHERE deal_id = ?";
+    }
+
+    @Override
     public List<Contact> getAllContactsBySubjectId(int id) throws DataBaseException {
         List<Contact> result = new ArrayList<>();
         try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(getReadAllQuery() + " WHERE deal_id = ?")) {
+             PreparedStatement statement = connection.prepareStatement(getReadAllQuery() + getConditionStatment())) {
             statement.setInt(1, id);
             ResultSet rs = statement.executeQuery();
             List<DealContact> list = parseResultSet(rs);
@@ -65,19 +70,19 @@ public class DealContactDAOImpl extends AbstractJDBCDao<DealContact> implements 
 
     @Override
     public String getDeleteQuery() {
-        return "DELETE FROM deal_contact WHERE id= ?";
+        return "DELETE FROM deal_contact WHERE deal_id= ?";
     }
 
     @Override
     protected List<DealContact> parseResultSet(ResultSet rs) throws DataBaseException {
         List<DealContact> result = new ArrayList<>();
         try{
-            GenericDao subjectDao = getDaoFromCurrentFactory(Subject.class);
+            GenericDao dealDao = getDaoFromCurrentFactory(Deal.class);
             GenericDao contactDao = getDaoFromCurrentFactory(Contact.class);
             while (rs.next()) {
                 DealContact dealContact = new DealContact();
-                Subject subject = (Subject) subjectDao.read(rs.getInt("deal_id"));
-                dealContact.setSubject(subject);
+                Deal deal = (Deal) dealDao.readLite(rs.getInt("deal_id"));
+                dealContact.setDeal(deal);
                 Contact contact = (Contact) contactDao.read(rs.getInt("contact_id"));
                 dealContact.setContact(contact);
                 result.add(dealContact);
@@ -91,7 +96,7 @@ public class DealContactDAOImpl extends AbstractJDBCDao<DealContact> implements 
     @Override
     protected void prepareStatementForInsert(PreparedStatement statement, DealContact object) throws DataBaseException {
         try {
-            statement.setInt(1, object.getSubject().getId());
+            statement.setInt(1, object.getDeal().getId());
             statement.setInt(2, object.getContact().getId());
         } catch (SQLException e) {
             throw new DataBaseException(e);
@@ -100,12 +105,12 @@ public class DealContactDAOImpl extends AbstractJDBCDao<DealContact> implements 
 
     @Override
     protected void prepareStatementForUpdate(PreparedStatement statement, DealContact object) throws DataBaseException {
-        int subjectId = object.getSubject().getId();
+        int dealId = object.getDeal().getId();
         int contactId = object.getContact().getId();
         try {
-            statement.setInt(1, subjectId);
+            statement.setInt(1, dealId);
             statement.setInt(2, contactId);
-            statement.setInt(3, subjectId);
+            statement.setInt(3, dealId);
             statement.setInt(4, contactId);
         } catch (SQLException e) {
             throw new DataBaseException(e);

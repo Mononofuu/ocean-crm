@@ -4,10 +4,7 @@ package com.becomejavasenior.impl;
 import com.becomejavasenior.*;
 import com.becomejavasenior.interfacedao.ContactDAO;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -143,5 +140,23 @@ public class ContactDAOImpl extends AbstractJDBCDao<Contact> implements ContactD
     public void delete(int id) throws DataBaseException {
         GenericDao<Subject> subjectDao = getDaoFromCurrentFactory(Subject.class);
         subjectDao.delete(id);
+    }
+
+    @Override
+    public Contact readContactByName(String name) throws DataBaseException {
+        Contact result;
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(getReadAllQuery()+" WHERE name = ?")) {
+            statement.setString(1, name);
+            ResultSet rs = statement.executeQuery();
+            List<Contact> allObjects = parseResultSetLite(rs);
+            if (allObjects.size() == 0) {
+                return null;
+            }
+            result = allObjects.get(0);
+        } catch (SQLException e) {
+            throw new DataBaseException(e);
+        }
+        return result;
     }
 }

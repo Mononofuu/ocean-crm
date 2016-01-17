@@ -16,5 +16,6 @@ public interface ContactService {
         void deleteContact(int id) throws DataBaseException;
         List<Contact> findContacts() throws DataBaseException;
         List<Contact> findContactsLite() throws DataBaseException;
-
+        Contact findContactByName(String name) throws DataBaseException;
+        List<PhoneType> getAllPhoneTypes() throws DataBaseException;
 }

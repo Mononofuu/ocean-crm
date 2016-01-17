@@ -1,6 +1,8 @@
 package com.becomejavasenior;
 
-import com.becomejavasenior.impl.*;
+import com.becomejavasenior.impl.CompanyServiceImpl;
+import com.becomejavasenior.impl.ContactServiceImpl;
+import com.becomejavasenior.impl.DealServiceImpl;
 import com.becomejavasenior.interfacedao.CommentDAO;
 import com.becomejavasenior.interfacedao.DealContactDAO;
 import com.becomejavasenior.interfacedao.TagDAO;
@@ -130,7 +132,7 @@ public class DealEditServlet extends HttpServlet {
                                 ContactService contactService = new ContactServiceImpl();
 //                                Contact contact = contactDao.read(Integer.parseInt(request.getParameter("maincontact")));
                                 Contact contact = contactService.findContactById(Integer.parseInt(request.getParameter("maincontact")));
-                                deal.setMainContact(contact);
+//                                deal.setMainContact(contact); //TODO User needed
                                 Tag tag;
                                 Set<Tag> set = new HashSet<Tag>();
 //                                String tags = request.getParameter("tags").trim().replaceAll("\\s+","','");
@@ -179,7 +181,7 @@ public class DealEditServlet extends HttpServlet {
                                 GenericDao<Subject> subjectDao = dao.getDao(Subject.class);
                                 Subject subject = subjectDao.read(id);
                                 DealContact dealContact = new DealContact();
-                                dealContact.setSubject(subject);
+                                dealContact.setDeal((Deal) subject);
                                 dealContact.setContact(contact);
                                 GenericDao<DealContact> dealContactDAO = dao.getDao(DealContact.class);
                                 dealContactDAO.create(dealContact);

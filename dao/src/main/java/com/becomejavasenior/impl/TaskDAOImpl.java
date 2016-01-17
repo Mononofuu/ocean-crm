@@ -171,4 +171,41 @@ public class TaskDAOImpl extends AbstractJDBCDao<Task> implements TaskDAO {
         }
         return null;
     }
+
+    @Override
+    public List<Task> getAllTasksBySubject(Subject subject) throws DataBaseException {
+        List<Task> result;
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(getReadAllQuery() + " WHERE subject_id = ?")) {
+            statement.setInt(1, subject.getId());
+            ResultSet rs = statement.executeQuery();
+            result = parseResultSet(rs, subject);
+        } catch (SQLException e) {
+            throw new DataBaseException(e);
+        }
+        return result;
+    }
+
+    private List<Task> parseResultSet(ResultSet rs, Subject subject) throws DataBaseException {
+        List<Task> result = new ArrayList<>();
+        try {
+            GenericDao userDao = getDaoFromCurrentFactory(User.class);
+            while (rs.next()) {
+                Task task = new Task();
+                task.setId(rs.getInt("id"));
+                task.setSubject(subject);
+                User user = (User) userDao.read(rs.getInt("user_id"));
+                task.setUser(user);
+                task.setDateCreated(rs.getTimestamp("created_date"));
+                task.setDueTime(rs.getTimestamp("due_date"));
+                task.setType(TaskType.values()[rs.getInt("task_type_id")-1]);
+                task.setComment(rs.getString("comment"));
+                result.add(task);
+            }
+        } catch (SQLException e) {
+            throw new DataBaseException(e);
+        }
+        return result;
+    }
+
 }

@@ -19,11 +19,8 @@ public enum PhoneType implements Serializable {
                 return "Факс";
             case HOME_PHONE_NUMBER:
                 return "Домашний";
-            case OTHER_PHONE_NUMBER:
-                return "Другой";
             default:
                 return "Другой";
         }
     }
-
 }

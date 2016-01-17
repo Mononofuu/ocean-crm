@@ -1,5 +1,6 @@
 package com.becomejavasenior;
 
+import com.becomejavasenior.impl.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -14,7 +15,6 @@ import java.util.List;
 @WebServlet(name="new_contact_prepare", urlPatterns = "/new_contact_prepare")
 public class NewContactPrepareServlet extends HttpServlet {
     private Logger logger = LogManager.getLogger(NewContactPrepareServlet.class);
-    private DaoFactory dao;
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -26,19 +26,20 @@ public class NewContactPrepareServlet extends HttpServlet {
         this.process(req, resp);
     }
 
-    private void process(HttpServletRequest request, HttpServletResponse response) throws IOException{
+    private void process(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
         try {
-            dao = new PostgreSqlDaoFactory();
-            GenericDao companyDao = dao.getDao(Company.class);
-            List<Company> companyList = companyDao.readAll();
+            List<Company> companyList = new CompanyServiceImpl().findCompanies();
             request.setAttribute("companylist", companyList);
-            GenericDao userDao = dao.getDao(User.class);
-            List<User> usersList = userDao.readAll();
+            List<User> usersList = new UserServiceImpl().getAllUsers();
             request.setAttribute("userslist", usersList);
-            getServletContext().getRequestDispatcher("/jsp/newcontact.jsp").forward(request,response);
+            List<PhoneType> phoneTypes = new ContactServiceImpl().getAllPhoneTypes();
+            request.setAttribute("phonetypelist", phoneTypes);
+            List<TaskType> taskTypes = new TaskServiceImpl().getAllTaskTypes();
+            request.setAttribute("tasktypes", taskTypes);
+            List<DealStatus> dealStatuses = new DealServiceImpl().getAllDealStatuses();
+            request.setAttribute("dealstatuses", dealStatuses);
+            getServletContext().getRequestDispatcher("/jsp/newcontact_bootstrap.jsp").forward(request,response);
         } catch (DataBaseException e) {
-            logger.error("Error when prepearing data for newcontact.jsp",e);
-        } catch (ServletException e) {
             logger.error("Error when prepearing data for newcontact.jsp",e);
         }
     }

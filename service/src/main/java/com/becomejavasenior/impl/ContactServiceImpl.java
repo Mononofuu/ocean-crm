@@ -11,46 +11,79 @@ import java.util.List;
  * Created by Peter on 18.12.2015.
  */
 public class ContactServiceImpl implements ContactService{
-
-    static final Logger logger = LogManager.getRootLogger();
+    private static Logger logger = LogManager.getLogger(ContactServiceImpl.class);
     private DaoFactory dao;
-    private ContactDAOImpl contactDao;
+    private ContactDAO contactDAO;
 
-    public ContactServiceImpl() throws DataBaseException {
-        dao = new PostgreSqlDaoFactory();
-        contactDao = (ContactDAOImpl)dao.getDao(Contact.class);
+    public ContactServiceImpl(){
+        try {
+            dao = new PostgreSqlDaoFactory();
+            contactDAO = (ContactDAO) dao.getDao(Contact.class);
+        } catch (DataBaseException e) {
+            logger.error(e);
+        }
     }
 
     @Override
     public void saveContact(Contact contact) throws DataBaseException {
-        if(contact.getId() == 0){
-            contactDao.create(contact);
-        }else{
-            contactDao.update(contact);
+        if (contact.getId() == 0) {
+            contactDAO.create(contact);
+            if(contact.getTasks()!=null&&contact.getTasks().size()>0){
+                saveTasks(contact.getTasks());
+            }
+            if(contact.getDeals()!=null&&contact.getDeals().size()>0){
+                saveDeals(contact.getDeals());
+            }
+        } else {
+            contactDAO.update(contact);
         }
     }
 
     @Override
     public void deleteContact(int id) throws DataBaseException {
-        contactDao.delete(id);
+        contactDAO.delete(id);
     }
 
     @Override
     public Contact findContactById(int id) throws DataBaseException {
-        Contact contact = contactDao.read(id);
+        Contact contact = contactDAO.read(id);
         return contact;
     }
 
     @Override
     public List<Contact> findContacts() throws DataBaseException{
-        List<Contact> contactList = contactDao.readAll();
+        List<Contact> contactList = contactDAO.readAll();
         return contactList;
     }
 
     @Override
     public List<Contact> findContactsLite() throws DataBaseException{
-        List<Contact> contactList = contactDao.readAllLite();
+        List<Contact> contactList = contactDAO.readAllLite();
         return contactList;
     }
 
+    @Override
+    public Contact findContactByName(String name) throws DataBaseException {
+        return contactDAO.readContactByName(name);
+    }
+
+    @Override
+    public List<PhoneType> getAllPhoneTypes() throws DataBaseException {
+        GenericDao<PhoneType> phoneTypeDAO = dao.getDao(PhoneType.class);
+        return phoneTypeDAO.readAll();
+    }
+
+    private void saveTasks(List<Task> tasks) throws DataBaseException{
+        TaskService taskService = new TaskServiceImpl();
+        for(Task task: tasks){
+            taskService.saveTask(task);
+        }
+    }
+
+    private void saveDeals(List<Deal> deals) throws DataBaseException{
+        DealService dealService = new DealServiceImpl();
+        for(Deal deal: deals){
+            dealService.saveDeal(deal);
+        }
+    }
 }

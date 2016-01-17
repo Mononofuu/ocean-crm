@@ -66,7 +66,7 @@ public class RegistrationServlet extends HttpServlet {
             return;
         }
         if (request.getSession().getAttribute("user") == null) {
-            request.getRequestDispatcher("/signin").forward(request, response);
+            response.sendRedirect("/signin");
         }
     }
 

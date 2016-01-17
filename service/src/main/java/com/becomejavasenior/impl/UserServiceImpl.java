@@ -16,9 +16,13 @@ public class UserServiceImpl implements UserService {
     private DaoFactory dao;
     private GenericDao<User> userDao;
 
-    public UserServiceImpl() throws DataBaseException{
-        dao = new PostgreSqlDaoFactory();
-        userDao = dao.getDao(User.class);
+    public UserServiceImpl(){
+        try {
+            dao = new PostgreSqlDaoFactory();
+            userDao = dao.getDao(User.class);
+        } catch (DataBaseException e) {
+            LOGGER.error(e);
+        }
     }
 
     @Override

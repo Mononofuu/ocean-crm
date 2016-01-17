@@ -57,7 +57,7 @@ public class UserFilter implements Filter {
         URL2ROLES.put("/commentedit", commentRoles);
         URL2ROLES.put("/taskedit", tasklistRoles);
         URL2ROLES.put("/dashboard", dashboardRoles);
-        URL2ROLES.put("/contacts", contactsRoles);
+        URL2ROLES.put("/contactlist", contactsRoles);
         URL2ROLES.put("/tasklist", tasklistRoles);
         URL2ROLES.put("/settings", settingsRoles);
 

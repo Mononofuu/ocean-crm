@@ -15,13 +15,15 @@ import java.util.Map;
  * @author Lybachevskiy.Vladislav
  */
 public class TaskServiceImpl implements TaskService {
-    private Logger logger = LogManager.getLogger(TaskServiceImpl.class);
+    private static Logger logger = LogManager.getLogger(TaskServiceImpl.class);
     private DaoFactory dao;
     private TaskDAOImpl taskDao;
+    private TaskTypeDAOImpl taskTypeDao;
 
     public TaskServiceImpl() throws DataBaseException {
         dao = new PostgreSqlDaoFactory();
         taskDao = (TaskDAOImpl)dao.getDao(Task.class);
+        taskTypeDao = (TaskTypeDAOImpl)dao.getDao(TaskType.class);
     }
 
     @Override
@@ -92,9 +94,14 @@ public class TaskServiceImpl implements TaskService {
         }
         // добавление филтра по пользователю
         String user = parameters.get("user")[0];
-        if (!"".equals(user)){
+        if (user!=null&&!"".equals(user)){
             userId = user;
         }
         return taskDao.getAllTasksByParameters(userId, date, taskTypeId);
+    }
+
+    @Override
+    public List<TaskType> getAllTaskTypes() throws DataBaseException{
+        return taskTypeDao.readAll();
     }
 }

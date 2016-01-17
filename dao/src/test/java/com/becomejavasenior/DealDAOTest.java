@@ -1,6 +1,7 @@
 package com.becomejavasenior;
 
 
+import com.becomejavasenior.impl.DealContactDAOImpl;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -8,9 +9,7 @@ import org.junit.Test;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Timestamp;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 
@@ -89,9 +88,43 @@ public class DealDAOTest {
         contact.setCompany(company);
         GenericDao<Contact> contactDao = daoFactory.getDao(Contact.class);
         contact = contactDao.create(contact);
-        deal.setMainContact(contact);
+
+        Contact contact2 = new Contact();
+        contact2.setName(COMPANY_NAME);
+        contact2.setPhoneType(PhoneType.WORK_PHONE_NUMBER);
+        contact2.setPhone(CONTACT_PHONE);
+        contact2.setCompany(company);
+        contact2 = contactDao.create(contact2);
+
+
+        User user;
+        GenericDao<User> userDao = daoFactory.getDao(User.class);
+        user = userDao.read(1);
+        deal.setMainContact(user);
+
         Deal dbDeal = dealDao.create(deal);
+
+        DealContact dealContact = new DealContact();
+        dealContact.setDeal(dbDeal);
+        dealContact.setContact(contact);
+
+        DealContact dealContact2 = new DealContact();
+        dealContact2.setDeal(dbDeal);
+        dealContact2.setContact(contact2);
+
+        List<Contact> dealContactList = new ArrayList<>();
+        dealContactList.add(contact);
+        dealContactList.add(contact2);
+
+        DealContactDAOImpl dealContactDAO = new DealContactDAOImpl(daoFactory);
+
+        dealContactDAO.create(dealContact);
+        dealContactDAO.create(dealContact2);
+
         assertEquals(deal, dbDeal);
+
+        List<Contact> createdDealContactList = dealContactDAO.getAllContactsBySubjectId(dbDeal.getId());
+        Assert.assertEquals(dealContactList.size(), createdDealContactList.size());
     }
 
     @Test

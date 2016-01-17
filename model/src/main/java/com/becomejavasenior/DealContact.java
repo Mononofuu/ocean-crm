@@ -5,7 +5,7 @@ package com.becomejavasenior;
  */
 public class DealContact {
     private Contact contact;
-    private Subject subject;
+    private Deal deal;
 
     public DealContact() {
     }
@@ -18,11 +18,11 @@ public class DealContact {
         this.contact = contact;
     }
 
-    public Subject getSubject() {
-        return subject;
+    public Subject getDeal() {
+        return deal;
     }
 
-    public void setSubject(Subject subject) {
-        this.subject = subject;
+    public void setDeal(Deal deal) {
+        this.deal = deal;
     }
 }
