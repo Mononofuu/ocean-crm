@@ -103,27 +103,30 @@ public class NewCompanyServlet extends HttpServlet {
     private void newContact(HttpServletRequest request, HttpServletResponse response) {
         try {
             Contact contact = new Contact();
-            contact.setName(request.getParameter("contactname"));
-            GenericDao<Company> companyDao = dao.getDao(Company.class);
-            Company company = companyDao.read(Integer.parseInt(request.getParameter("contactcompany")));
-            contact.setCompany(company);
-            contact.setPost(request.getParameter("contactposition"));
-            contact.setPhoneType(PhoneType.valueOf(request.getParameter("contactphonetype")));
-            contact.setPhone(request.getParameter("contactphonenumber"));
-            contact.setEmail(request.getParameter("contactemail"));
-            contact.setSkype(request.getParameter("contactskype"));
+
+            Optional<String> contactName = Optional.ofNullable(request.getParameter("contactname"));
+            contactName.ifPresent(contact::setName);
+
+            Optional<String> contactPosition = Optional.ofNullable(request.getParameter("contactposition"));
+            contactPosition.ifPresent(contact::setPost);
+
+            Optional<String> contactPhoneType = Optional.ofNullable(request.getParameter("contactphonetype"));
+            contactPhoneType.ifPresent(s -> contact.setPhoneType(PhoneType.valueOf(contactPhoneType.get())));
+
+            Optional<String> contactPhoneNumber = Optional.ofNullable(request.getParameter("contactphonenumber"));
+            contactPhoneNumber.ifPresent(contact::setPhone);
+
+            Optional<String> contactEmail = Optional.ofNullable(request.getParameter("contactemail"));
+            contactEmail.ifPresent(contact::setEmail);
+
+            Optional<String> contactSkype = Optional.ofNullable(request.getParameter("contactskype"));
+            contactSkype.ifPresent(contact::setSkype);
+
             GenericDao<Contact> contactDao = dao.getDao(Contact.class);
             Contact createdContact = contactDao.create(contact);
 
             logger.info("NEW CONTACT CREATED:");
             logger.info(createdContact.getId());
-            logger.info(createdContact.getName());
-            logger.info(createdContact.getCompany().getName());
-            logger.info(createdContact.getPost());
-            logger.info(createdContact.getPhoneType());
-            logger.info(createdContact.getPhone());
-            logger.info(createdContact.getEmail());
-            logger.info(createdContact.getSkype());
 
         } catch (DataBaseException e) {
             logger.error("Error while creating new contact");
@@ -147,9 +150,14 @@ public class NewCompanyServlet extends HttpServlet {
 
             Company company = new Company();
 
-            company.setName(request.getParameter("companyname"));
-            company.setPhoneNumber(request.getParameter("companyphone"));
-            company.setEmail(request.getParameter("companyemail"));
+            Optional<String> companyName = Optional.ofNullable(request.getParameter("companyname"));
+            companyName.ifPresent(company::setName);
+
+            Optional<String> companyPhone = Optional.ofNullable(request.getParameter("companyphone"));
+            companyPhone.ifPresent(company::setPhoneNumber);
+
+            Optional<String> companyEmail = Optional.ofNullable(request.getParameter("companyemail"));
+            companyEmail.ifPresent(company::setEmail);
 
             Optional<String> webSite = Optional.ofNullable(request.getParameter("companysite"));
             webSite.ifPresent(site -> {
@@ -193,12 +201,6 @@ public class NewCompanyServlet extends HttpServlet {
 
             logger.info("NEW COMPANY CREATED:");
             logger.info(createdCompany.getId());
-            logger.info(createdCompany.getName());
-            logger.info(createdCompany.getPhoneNumber());
-            logger.info(createdCompany.getEmail());
-            logger.info(createdCompany.getWeb());
-            logger.info(createdCompany.getAdress());
-            logger.info(createdCompany.getComments());
 
             Optional<String[]> companyContacts = Optional.ofNullable(request.getParameterValues("contactlist[]"));
             if (companyContacts.isPresent()){
@@ -217,8 +219,16 @@ public class NewCompanyServlet extends HttpServlet {
 
             Optional<String[]> companyDeals = Optional.ofNullable(request.getParameterValues("addedDeals[]"));
             if (companyDeals.isPresent()){
+                GenericDao<Deal> dealDao = dao.getDao(Deal.class);
+                GenericDao<DealStatus> dealStatusDao = dao.getDao(DealStatus.class);
                 for(String a : companyDeals.get()){
-                    System.out.println(a);
+                    String[] dealValues = a.split(";");
+                    Deal deal = new Deal();
+                    deal.setName(dealValues[0]);
+                    DealStatus status = dealStatusDao.read(Integer.parseInt(dealValues[1]));
+                    deal.setStatus(status);
+                    deal.setBudget(Integer.parseInt(dealValues[2]));
+                    dealDao.create(deal);
                 }
             }
 
@@ -245,14 +255,6 @@ public class NewCompanyServlet extends HttpServlet {
                 DealStatus status = dealStatusDao.read(Integer.parseInt(dealStatus.get()));
                 deal.setStatus(status);
             }
-
-            Optional<String> dealCompany = Optional.ofNullable(request.getParameter("dealcompany"));
-            if (dealCompany.isPresent()) {
-                GenericDao<Company> companyDao = dao.getDao(Company.class);
-                deal.setDealCompany(companyDao.read(Integer.parseInt(dealCompany.get())));
-            }
-
-            deal.setDateWhenDealClose(null);
             deal.setDateCreated(new Timestamp(new Date().getTime()));
 
             GenericDao<Deal> dealDao = dao.getDao(Deal.class);

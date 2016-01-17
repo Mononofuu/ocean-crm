@@ -13,9 +13,10 @@ newCompany.controller('ContactController', function ($scope, $http, $filter) {
 
     });
     $scope.selectedContacts = [];
-    $scope.addedDeals = [];
     $scope.formData = {};
     $scope.formData.contactlist = [];
+    $scope.addedDeals = [];
+    $scope.formData.addedDeals = [];
 
 
     $scope.selectContact = function (data) {
@@ -48,7 +49,11 @@ newCompany.controller('ContactController', function ($scope, $http, $filter) {
     };
 
     $scope.addDeal = function () {
-        $scope.addedDeals.push({name: $scope.formData.dealname, status: $scope.formData.dealstatus, budget: $scope.formData.dealbudget})
+        $scope.addedDeals.push({
+            name: $scope.formData.dealname,
+            status: $scope.formData.dealstatus,
+            budget: $scope.formData.dealbudget
+        });
         $scope.formData.dealname = '';
         $scope.formData.dealstatus = '';
         $scope.formData.dealbudget = '';
@@ -73,11 +78,14 @@ newCompany.controller('ContactController', function ($scope, $http, $filter) {
             total += Number(deal.budget);
         }
         return total;
-    }
+    };
 
 
     $scope.processForm = function (type) {
-        $scope.formData.addedDeals = $scope.addedDeals;
+        for (var i = 0; i < $scope.addedDeals.length; i++) {
+            var text = $scope.addedDeals[i].name + ';' + $scope.addedDeals[i].status + ';' + $scope.addedDeals[i].budget;
+            $scope.formData.addedDeals.push(text)
+        }
         $http({
             method: 'POST',
             url: '/new_company?action=' + type,
