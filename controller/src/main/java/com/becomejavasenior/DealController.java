@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -52,9 +53,10 @@ public class DealController extends HttpServlet {
         try {
             Task task = new Task();
             GenericDao<Task> taskDao = dao.getDao(Task.class);
+            //TODO
 
         } catch (DataBaseException e) {
-            logger.error("Error while creating new contact");
+            logger.error("Error while creating new task");
             logger.catching(e);
         }
     }
@@ -62,27 +64,37 @@ public class DealController extends HttpServlet {
     private void newContact(HttpServletRequest request, HttpServletResponse response) {
         try {
             Contact contact = new Contact();
-            contact.setName(request.getParameter("contactname"));
-            GenericDao<Company> companyDao = dao.getDao(Company.class);
-            Company company = companyDao.read(Integer.parseInt(request.getParameter("contactcompany")));
-            contact.setCompany(company);
-            contact.setPost(request.getParameter("contactposition"));
-            contact.setPhoneType(PhoneType.valueOf(request.getParameter("contactphonetype")));
-            contact.setPhone(request.getParameter("contactphonenumber"));
-            contact.setEmail(request.getParameter("contactemail"));
-            contact.setSkype(request.getParameter("contactskype"));
+
+            Optional<String> contactName = Optional.ofNullable(request.getParameter("contactname"));
+            contactName.ifPresent(contact::setName);
+
+            Optional<String> contactCompany = Optional.ofNullable(request.getParameter("contactcompany"));
+            if (contactCompany.isPresent()) {
+                GenericDao<Company> companyDao = dao.getDao(Company.class);
+                Company company = companyDao.read(Integer.parseInt(contactCompany.get()));
+                contact.setCompany(company);
+            }
+
+            Optional<String> contactPosition = Optional.ofNullable(request.getParameter("contactposition"));
+            contactPosition.ifPresent(contact::setPost);
+
+            Optional<String> contactPhoneType = Optional.ofNullable(request.getParameter("contactphonetype"));
+            contactPhoneType.ifPresent(s -> contact.setPhoneType(PhoneType.valueOf(contactPhoneType.get())));
+
+            Optional<String> contactPhoneNumber = Optional.ofNullable(request.getParameter("contactphonenumber"));
+            contactPhoneNumber.ifPresent(contact::setPhone);
+
+            Optional<String> contactEmail = Optional.ofNullable(request.getParameter("contactemail"));
+            contactEmail.ifPresent(contact::setEmail);
+
+            Optional<String> contactSkype = Optional.ofNullable(request.getParameter("contactskype"));
+            contactSkype.ifPresent(contact::setSkype);
+
             GenericDao<Contact> contactDao = dao.getDao(Contact.class);
             Contact createdContact = contactDao.create(contact);
 
             logger.info("NEW CONTACT CREATED:");
             logger.info(createdContact.getId());
-            logger.info(createdContact.getName());
-            logger.info(createdContact.getCompany().getName());
-            logger.info(createdContact.getPost());
-            logger.info(createdContact.getPhoneType());
-            logger.info(createdContact.getPhone());
-            logger.info(createdContact.getEmail());
-            logger.info(createdContact.getSkype());
 
         } catch (DataBaseException e) {
             logger.error("Error while creating new contact");
@@ -93,26 +105,32 @@ public class DealController extends HttpServlet {
     private void newCompany(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             Company company = new Company();
-            company.setName(request.getParameter("companyname"));
-            company.setPhoneNumber(request.getParameter("companyphone"));
-            company.setEmail(request.getParameter("companyemail"));
-            company.setWeb(new URL(request.getParameter("companysite")));
-            company.setAdress(request.getParameter("companyaddress"));
+            Optional<String> companyName = Optional.ofNullable(request.getParameter("companyname"));
+            companyName.ifPresent(company::setName);
+
+            Optional<String> companyPhone = Optional.ofNullable(request.getParameter("companyphone"));
+            companyPhone.ifPresent(company::setPhoneNumber);
+
+            Optional<String> companyEmail = Optional.ofNullable(request.getParameter("companyemail"));
+            companyEmail.ifPresent(company::setEmail);
+
+            Optional<String> companySite = Optional.ofNullable(request.getParameter("companysite"));
+            companySite.ifPresent(s -> {
+                try {
+                    company.setWeb(new URL(s));
+                } catch (MalformedURLException e) {
+                    logger.catching(e);
+                }
+            });
+
+            Optional<String> companyAddress = Optional.ofNullable(request.getParameter("companyaddress"));
+            companyAddress.ifPresent(company::setAdress);
 
             GenericDao<Company> companyDao = dao.getDao(Company.class);
-
             Company createdCompany = companyDao.create(company);
 
             logger.info("NEW COMPANY CREATED:");
             logger.info(createdCompany.getId());
-            logger.info(createdCompany.getName());
-            logger.info(createdCompany.getPhoneNumber());
-            logger.info(createdCompany.getEmail());
-            logger.info(createdCompany.getWeb());
-            logger.info(createdCompany.getAdress());
-            logger.info(createdCompany.getComments());
-
-
         } catch (DataBaseException e) {
             logger.error("Error while creating new company");
             logger.catching(e);

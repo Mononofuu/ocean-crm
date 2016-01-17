@@ -145,11 +145,11 @@
                 <br/>
                 <label>Адрес</label>
                 <textarea class="form-control textarea" name="companyaddress"
-                          ng-model="formData.companyaddress" required></textarea>
+                          ng-model="formData.companyaddress"></textarea>
                 <br/>
                 <button type="submit" ng-hide="companyForm.companyname.$invalid" ng-disabled="companyForm.$invalid"
                         class="btn btn-sm btn-success btn-block">
-                    <span class="glyphicon"></span> Создать команию
+                    <span class="glyphicon"></span> Создать компанию
                 </button>
             </fieldset>
         </form>
