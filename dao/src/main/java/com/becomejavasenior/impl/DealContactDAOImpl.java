@@ -25,7 +25,7 @@ public class DealContactDAOImpl extends AbstractJDBCDao<DealContact> implements 
     }
 
     @Override
-    public List<Contact> getAllContactsByDealId(int id) throws DataBaseException {
+    public List<Contact> getAllContactsBySubjectId(int id) throws DataBaseException {
         List<Contact> result = new ArrayList<>();
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(getReadAllQuery() + getConditionStatment())) {

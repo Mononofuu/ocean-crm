@@ -116,14 +116,14 @@ public class DealDAOTest {
         dealContactList.add(contact);
         dealContactList.add(contact2);
 
-        DealContactDAOImpl dealContactDAO = new DealContactDAOImpl();
+        DealContactDAOImpl dealContactDAO = new DealContactDAOImpl(daoFactory);
 
         dealContactDAO.create(dealContact);
         dealContactDAO.create(dealContact2);
 
         assertEquals(deal, dbDeal);
 
-        List<Contact> createdDealContactList = dealContactDAO.getAllContactsByDealId(dbDeal.getId());
+        List<Contact> createdDealContactList = dealContactDAO.getAllContactsBySubjectId(dbDeal.getId());
         Assert.assertEquals(dealContactList.size(), createdDealContactList.size());
     }
 

@@ -8,7 +8,6 @@ import org.apache.logging.log4j.Logger;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.sql.Date;
 import java.util.Optional;
 
 /**
@@ -17,7 +16,6 @@ import java.util.Optional;
 public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
     public static final String DEAL_SELECT_TAG = " WHERE deal.id IN(SELECT subject_id FROM subject_tag " +
             "WHERE subject_tag.tag_id IN (SELECT id FROM tag WHERE name IN (";
-    private final static Logger LOGGER = LogManager.getLogger(DealDAOImpl.class);
     public static final String DEAL_SELECT_STATUS_ID = " where status_id=?";
     public static final String DEAL_SELECT_USER_ID = " where id in(select subject.id from subject " +
             "where subject.content_owner_id = ?)";
@@ -30,6 +28,7 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
     public static final String DEAL_SELECT_DELETED = " WHERE deal.status_id=7";
     public static final String DEAL_SELECT_PERIOD_CREATED_DATE = " WHERE DATE(deal.created_date) BETWEEN ? AND ?";
     public static final String DEAL_SELECT_TASK_DUE_DATE_INTERVAL = "WHERE deal.id IN (SELECT subject_id FROM task WHERE DATE(due_date) BETWEEN ? AND ? GROUP BY subject_id)";
+    private final static Logger LOGGER = LogManager.getLogger(DealDAOImpl.class);
 
     public DealDAOImpl(DaoFactory daoFactory) {
         super(daoFactory);
@@ -106,8 +105,8 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
                 result.add(deal);
             }
         } catch (SQLException e) {
-            logger.error("Error while parsing RS for deal");
-            logger.catching(e);
+            LOGGER.error("Error while parsing RS for deal");
+            LOGGER.catching(e);
         }
         return result;
     }
@@ -144,8 +143,8 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
                 result.add(deal);
             }
         } catch (SQLException e) {
-            logger.error("Error while parsing RSLite for deal");
-            logger.catching(e);
+            LOGGER.error("Error while parsing RSLite for deal");
+            LOGGER.catching(e);
         }
         return result;
     }
@@ -204,8 +203,8 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
                 statement.setNull(8, Types.TIMESTAMP);
             }
         } catch (SQLException e) {
-            logger.error("Error while prepare statement for insert new deal");
-            logger.catching(e);
+            LOGGER.error("Error while prepare statement for insert new deal");
+            LOGGER.catching(e);
         }
     }
 
@@ -223,8 +222,8 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
             statement.setTimestamp(7, new Timestamp(object.getDateCreated().getTime()));
             statement.setInt(8, object.getId());
         } catch (SQLException e) {
-            logger.error("Error while prepare statement for update new deal");
-            logger.catching(e);
+            LOGGER.error("Error while prepare statement for update new deal");
+            LOGGER.catching(e);
         }
         }
 
@@ -238,7 +237,7 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
             throw new DataBaseException(e);
         }
         if (result == null) {
-            logger.error("Error while reading status filter");
+            LOGGER.error("Error while reading status filter");
             throw new DataBaseException();
         }
         return result;
@@ -254,7 +253,7 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
             throw new DataBaseException(e);
         }
         if (result == null) {
-            logger.error("Error while reading user filter");
+            LOGGER.error("Error while reading user filter");
             throw new DataBaseException();
         }
         return result;
@@ -314,8 +313,8 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
                     break;
                 default:
                     break;
-            };
-                ResultSet rs = statement.executeQuery();
+            }
+            ResultSet rs = statement.executeQuery();
             result = parseResultSet(rs);
         } catch (SQLException e) {
             throw new DataBaseException(e);

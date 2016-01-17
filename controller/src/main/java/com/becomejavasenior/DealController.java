@@ -190,7 +190,7 @@ public class DealController extends HttpServlet {
 
             Optional<String[]> contactList = Optional.ofNullable(request.getParameterValues("dealcontactlist[]"));
             if (contactList.isPresent()) {
-                DealContactDAOImpl dealContactDAO = new DealContactDAOImpl();
+                DealContactDAOImpl dealContactDAO = new DealContactDAOImpl(dao);
                 GenericDao<Contact> contactDao = dao.getDao(Contact.class);
                 List<Contact> dealContacts = new ArrayList<>();
 
