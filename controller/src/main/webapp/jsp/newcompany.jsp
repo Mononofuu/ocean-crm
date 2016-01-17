@@ -30,6 +30,7 @@
         <form class="col-md-3" name="companyForm" ng-submit="processForm('newcompany')" novalidate>
             <fieldset>
                 <legend>Создать компанию</legend>
+                <label>Название компании</label>
                 <input class="form-control" type="text" name="companyname" placeholder="Название компании"
                        ng-model="formData.companyname" required/>
                 <br/>
@@ -37,18 +38,30 @@
                 <select title="Ответственный" class="form-control" name="companyresp" ng-model="formData.companyresp">
                     <option ng-repeat="user in users" value="{{user.id}}">{{user.name}}</option>
                 </select>
-                <input class="form-control" type="tel" name="companyphone" placeholder="Телефон"
-                       ng-model="formData.companyphone" required>
+                <label>Тип и номер телефона</label>
+                <div class="form-inline">
+                    <select class="form-control" style="padding-left: 1%; padding-right: 1%; width: 23%"
+                            name="companyphonetype" ng-model="formData.companyphonetype">
+                        <option ng-repeat="phoneType in phoneTypes" value="{{phoneType}}">{{phoneType}}</option>
+                    </select>
+                    <input class="form-control" type="tel" style="padding-left: 1%;width: 75%"
+                           name="companyphone" placeholder="Номер телефона"
+                           ng-model="formData.companyphone"/>
+                </div>
                 <br/>
+                <label>Email</label>
                 <input class="form-control" type="email" name="companyemail" placeholder="Email"
                        ng-model="formData.companyemail" required>
                 <br/>
+                <label>Web-адрес</label>
                 <input class="form-control" type="url" name="companysite" placeholder="Web-адрес"
                        ng-model="formData.companysite">
                 <br/>
+                <label>Адрес</label>
                 <textarea class="form-control textarea" name="companyaddress" placeholder="Адрес"
                           ng-model="formData.companyaddress"></textarea>
                 <br/>
+                <label>Примечание по компании</label>
                 <textarea class="form-control textarea" name="companycomment"
                           placeholder="Примечание по компании"
                           ng-model="formData.companycomment"></textarea>
@@ -70,14 +83,17 @@
                     </option>
                 </select>
                 <br/>
-                <label>или создайте новый</label>
+                <label>или создайте новый:</label>
+                <label>Имя Фамилия</label>
                 <input class="form-control" type="text" name="contactname" placeholder="Имя Фамилия"
                        ng-model="formData.contactname" required/>
                 <br/>
+                <label>Должность</label>
                 <input class="form-control" type="text" name="contactposition"
                        placeholder="Должность (Название должности)"
                        ng-model="formData.contactposition"/>
                 <br/>
+                <label>Тип и номер телефона</label>
                 <div class="form-inline">
                     <select class="form-control" style="padding-left: 1%; padding-right: 1%; width: 23%"
                             name="contactphonetype" ng-model="formData.contactphonetype">
@@ -88,13 +104,16 @@
                            ng-model="formData.contactphonenumber"/>
                 </div>
                 <br/>
+                <label>Email</label>
                 <input class="form-control" type="email" name="contactemail" placeholder="Email"
                        ng-model="formData.contactemail"/>
                 <br/>
+                <label>Skype</label>
                 <input class="form-control" type="text" name="contactskype" placeholder="Skype"
                        ng-model="formData.contactskype"/>
                 <br/>
-                <button type="submit" ng-disabled="contactForm.$invalid" class="btn btn-sm btn-success btn-block">
+                <button type="submit" ng-hide="contactForm.contactname.$invalid" ng-disabled="contactForm.$invalid"
+                        class="btn btn-sm btn-success btn-block">
                     <span class="glyphicon"></span> Создать контакт
                 </button>
             </fieldset>
@@ -108,15 +127,21 @@
                     <a ng-click="removeDeal(deal)" class="btn-info btn btn-block" ng-repeat="deal in addedDeals"
                     >Название:{{deal.name}}<br>Этап:{{deal.status}}<br>Бюджет:{{deal.budget}}</a>
                 </div>
-                <label>Быстрое добавление сделки</label>
+                <br/>
+                <label>Название сделки</label>
                 <input class="form-control" type="text" name="dealname" placeholder="Название сделки"
                        ng-model="formData.dealname" required/>
-                    <select class="form-control" name="dealstatus" ng-model="formData.dealstatus" required>
+                <br/>
+                <label>Этап</label>
+                <select class="form-control" name="dealstatus" ng-model="formData.dealstatus" required>
                     <option ng-repeat="status in dealStatuses" value="{{status.id}}">{{status.name}}</option>
                 </select>
+                <br/>
+                <label>Бюджет</label>
                 <input class="form-control" type="text" name="dealbudget" placeholder="Бюджет" pattern="[0-9]*"
                        title="Цифра с плавающей точкой" ng-model="formData.dealbudget" required/>
-                <button type="submit" ng-disabled="dealForm.$invalid" class="btn btn-sm btn-success btn-block">
+                <button type="submit" ng-hide="dealForm.dealname.$invalid" ng-disabled="dealForm.$invalid"
+                        class="btn btn-sm btn-success btn-block">
                     <span class="glyphicon"></span> Добавить сделку
                 </button>
             </fieldset>
@@ -126,25 +151,29 @@
                 <legend>Запланировать задачу</legend>
                 <input type="checkbox" ng-model="addTask">Добавить задачу к компании
                 <div ng-show="addTask">
+                    <label>Период</label>
                     <select class="form-control" name="taskperiod" ng-model="formData.taskperiod">
                         <option>Сегодня</option>
                         <option>Завтра</option>
                         <option>Послезавтра</option>
                     </select>
-                    <label>или</label>
+                    <label>или выбрать дату</label>
                     <input class="form-control" type="datetime-local" name="taskduedate"
                            ng-model="formData.taskduedate" required>
                     <br/>
+                    <label>Ответственный</label>
                     <select class="form-control" name="taskuser" ng-model="formData.taskuser" required>
                         <option ng-repeat="user in users" value="{{user.id}}">{{user.name}}</option>
                     </select>
                     <br/>
+                    <label>Тип задачи</label>
                     <select class="form-control" name="tasktype" ng-model="formData.tasktype">
                         <option ng-repeat="taskType in taskTypes" value="{{taskType}}">{{taskType}}</option>
                     </select>
                     <br/>
-                <textarea class="form-control textarea" name="taskcomment" placeholder="Текст задачи"
-                          ng-model="formData.taskcomment"></textarea>
+                    <label>Текст задачи</label>
+                    <textarea class="form-control textarea" name="taskcomment" placeholder="Текст задачи"
+                              ng-model="formData.taskcomment"></textarea>
                 </div>
             </fieldset>
         </form>

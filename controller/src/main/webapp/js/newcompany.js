@@ -3,7 +3,7 @@
  */
 var newCompany = angular.module('newCompany', []);
 
-newCompany.controller('ContactController', function ($scope, $http, $filter) {
+newCompany.controller('ContactController', function ($scope, $http, $filter, $window) {
     angular.element(document).ready(function () {
         getContacts($http, $scope);
         getPhoneTypes($http, $scope);
@@ -12,11 +12,11 @@ newCompany.controller('ContactController', function ($scope, $http, $filter) {
         getDealStatuses($http, $scope);
 
     });
-    $scope.selectedContacts = [];
     $scope.formData = {};
     $scope.formData.contactlist = [];
-    $scope.addedDeals = [];
     $scope.formData.addedDeals = [];
+    $scope.addedDeals = [];
+    $scope.selectedContacts = [];
 
 
     $scope.selectContact = function (data) {
@@ -88,13 +88,19 @@ newCompany.controller('ContactController', function ($scope, $http, $filter) {
         }
         $http({
             method: 'POST',
-            url: '/new_company?action=' + type,
+            url: '/newcompany?action=' + type,
             data: $.param($scope.formData),  // pass in data as strings
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}  // set the headers so angular passing info as form data (not request payload)
         })
             .success(function () {
-                $scope.formData = {};
-                getContacts($http, $scope);
+                if (type == 'newcompany') {
+                    $window.location.href = '/';
+                } else {
+                    $scope.formData = {};
+                    $scope.selectedContacts = [];
+                    $scope.addedDeals = [];
+                    getContacts($http, $scope);
+                }
             });
     };
 });
@@ -104,7 +110,7 @@ function getContacts($http, $scope) {
     $scope.contacts = [];
     $http({
         method: 'GET',
-        url: '../new_company?action=getContacts'
+        url: '../newcompany?action=getContacts'
     }).then(function successCallback(response) {
         $scope.contacts = response.data;
     });
@@ -113,7 +119,7 @@ function getContacts($http, $scope) {
 function getPhoneTypes($http, $scope) {
     $http({
         method: 'GET',
-        url: '../new_company?action=getPhoneTypes'
+        url: '../newcompany?action=getPhoneTypes'
     }).then(function successCallback(response) {
         $scope.phoneTypes = response.data;
     });
@@ -122,7 +128,7 @@ function getPhoneTypes($http, $scope) {
 function getTaskTypes($http, $scope) {
     $http({
         method: 'GET',
-        url: '../new_company?action=getTaskTypes'
+        url: '../newcompany?action=getTaskTypes'
     }).then(function successCallback(response) {
         $scope.taskTypes = response.data;
     });
@@ -131,7 +137,7 @@ function getTaskTypes($http, $scope) {
 function getUsers($http, $scope) {
     $http({
         method: 'GET',
-        url: '../new_company?action=getUsers'
+        url: '../newcompany?action=getUsers'
     }).then(function successCallback(response) {
         $scope.users = response.data;
     });
@@ -140,7 +146,7 @@ function getUsers($http, $scope) {
 function getDealStatuses($http, $scope) {
     $http({
         method: 'GET',
-        url: '../new_company?action=getDealStatuses'
+        url: '../newcompany?action=getDealStatuses'
     }).then(function successCallback(response) {
         $scope.dealStatuses = response.data;
     });
