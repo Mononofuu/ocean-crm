@@ -1,10 +1,6 @@
 package com.becomejavasenior;
 
-import com.becomejavasenior.impl.ContactServiceImpl;
-import com.becomejavasenior.impl.DealContactDAOImpl;
-import com.becomejavasenior.impl.SubjectTagDAOImpl;
-import com.becomejavasenior.impl.TaskServiceImpl;
-import com.becomejavasenior.impl.UserServiceImpl;
+import com.becomejavasenior.impl.*;
 import com.google.gson.Gson;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -185,7 +181,6 @@ public class DealController extends HttpServlet {
             GenericDao<Subject> subjectDao = dao.getDao(Subject.class);
             Subject subject = subjectDao.read(createdDeal.getId());
 
-            Optional<String[]> contactList = Optional.ofNullable(request.getParameterValues("dealcontactlist[]"));
             if (contactList.isPresent()) {
                 DealContactDAOImpl dealContactDAO = new DealContactDAOImpl(dao);
                 GenericDao<Contact> contactDao = dao.getDao(Contact.class);
