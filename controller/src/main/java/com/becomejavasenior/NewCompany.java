@@ -1,6 +1,8 @@
 package com.becomejavasenior;
 
 import com.becomejavasenior.impl.SubjectTagDAOImpl;
+import com.becomejavasenior.impl.TaskServiceImpl;
+import com.becomejavasenior.impl.UserServiceImpl;
 import com.google.gson.Gson;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,6 +17,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -24,9 +28,11 @@ import java.util.*;
 @WebServlet(urlPatterns = "/newcompany")
 public class NewCompany extends HttpServlet {
     private final static String nextJSP = "/jsp/newcompany.jsp";
+    private static TaskService taskService;
     private Logger logger = LogManager.getLogger(NewCompanyServlet.class);
     private DaoFactory dao;
-    private Deal createdDeal;
+    private Company createdCompany;
+
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -91,21 +97,7 @@ public class NewCompany extends HttpServlet {
             case "newcompany":
                 newCompany(req, resp);
                 break;
-            case "newtask":
-                newTask(req, resp);
-                break;
             default:
-        }
-    }
-
-    private void newTask(HttpServletRequest request, HttpServletResponse response) {
-        try {
-            Task task = new Task();
-            GenericDao<Task> taskDao = dao.getDao(Task.class);
-
-        } catch (DataBaseException e) {
-            logger.error("Error while creating new contact");
-            logger.catching(e);
         }
     }
 
@@ -145,17 +137,6 @@ public class NewCompany extends HttpServlet {
 
     private void newCompany(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
-            Map<String, String[]> map = request.getParameterMap();
-
-            for (Map.Entry<String, String[]> entry : map.entrySet()) {
-                System.out.println("+++++++++++++");
-                System.out.println(entry.getKey());
-                System.out.println(Arrays.toString(entry.getValue()));
-                System.out.println("+++++++++++++");
-
-            }
-
-
             Company company = new Company();
 
             Optional<String> companyName = Optional.ofNullable(request.getParameter("companyname"));
@@ -204,7 +185,7 @@ public class NewCompany extends HttpServlet {
 
             GenericDao<Company> companyDao = dao.getDao(Company.class);
 
-            Company createdCompany = companyDao.create(company);
+            createdCompany = companyDao.create(company);
 
 
             logger.info("NEW COMPANY CREATED:");
@@ -261,49 +242,18 @@ public class NewCompany extends HttpServlet {
                     }
                 }
             }
+
+            Optional<String> addTask = Optional.ofNullable(request.getParameter("addTask"));
+            if (addTask.isPresent() && addTask.get().equals("true")) {
+                Task task = getTaskFromRequest(request);
+                taskService = new TaskServiceImpl();
+                taskService.saveTask(task);
+            }
             logger.info("DONE");
 
         } catch (DataBaseException e) {
             logger.error("Error while creating new company");
             logger.catching(e);
-        }
-    }
-
-    private void process(HttpServletRequest req, HttpServletResponse resp) {
-        try {
-            dao = new PostgreSqlDaoFactory();
-            req.setCharacterEncoding("UTF-8");
-            createCompanyFromRequest(req);
-            getServletContext().getRequestDispatcher("/new_contact_prepare").forward(req, resp);
-
-        } catch (DataBaseException e) {
-            logger.error("Error while quick adding new company", e);
-        } catch (ServletException e) {
-            logger.error("Error while quick adding new company", e);
-        } catch (IOException e) {
-            logger.error("Error while quick adding new company", e);
-        }
-    }
-
-    private void createCompanyFromRequest(HttpServletRequest request) {
-        try {
-            Company result = new Company();
-            GenericDao<Company> companyDao = dao.getDao(Company.class);
-            result.setName(request.getParameter("newcompanyname"));
-            result.setPhoneNumber(request.getParameter("newcompanyphone"));
-            result.setEmail(request.getParameter("newcompanyemail"));
-            String url = request.getParameter("newcompanywebaddress");
-            try {
-                result.setWeb(new URL(url));
-            } catch (MalformedURLException e) {
-                result.setWeb(null);
-                logger.warn("Incorrect URL", e);
-            }
-            result.setAdress(request.getParameter("newcompanyaddress"));
-            companyDao.create(result);
-
-        } catch (DataBaseException e) {
-            logger.error("Error while quick adding new company", e);
         }
     }
 
@@ -315,6 +265,70 @@ public class NewCompany extends HttpServlet {
         } catch (ServletException | IOException e) {
             logger.catching(e);
         }
+    }
+
+    private Task getTaskFromRequest(HttpServletRequest request) throws DataBaseException {
+        Task task = new Task();
+        Optional<String> taskUser = Optional.ofNullable(request.getParameter("taskuser"));
+        if (taskUser.isPresent()) {
+            UserService userService = new UserServiceImpl();
+            User user = userService.findUserById(Integer.parseInt(taskUser.get()));
+            task.setUser(user);
+        }
+        task.setSubject(createdCompany);
+        Optional<String> taskType = Optional.ofNullable(request.getParameter("tasktype"));
+        taskType.ifPresent(s -> task.setType(TaskType.valueOf(s)));
+        Optional<String> taskComment = Optional.ofNullable(request.getParameter("taskcomment"));
+        taskComment.ifPresent(task::setComment);
+        task.setDateCreated(new Date());
+        Optional<String> taskDueDate = Optional.ofNullable(request.getParameter("taskduedate"));
+        if (taskDueDate.isPresent() & !taskDueDate.get().equals("undefined")) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+            try {
+                task.setDueTime(dateFormat.parse(taskDueDate.get()));
+            } catch (ParseException e) {
+                logger.catching(e);
+            }
+        } else {
+            String period = request.getParameter("taskperiod");
+            Calendar c = Calendar.getInstance();
+            c.set(Calendar.HOUR_OF_DAY, 0);
+            c.set(Calendar.MINUTE, 0);
+            c.set(Calendar.SECOND, 0);
+            c.set(Calendar.MILLISECOND, 0);
+            switch (period) {
+                case "today":
+                    c.add(Calendar.DAY_OF_MONTH, 1);
+                    c.add(Calendar.MINUTE, -1);
+                    break;
+                case "allday":
+                    c.add(Calendar.DAY_OF_MONTH, 1);
+                    c.add(Calendar.MINUTE, -1);
+                    break;
+                case "tomorow":
+                    c.add(Calendar.DAY_OF_MONTH, 2);
+                    c.add(Calendar.MINUTE, -1);
+                    break;
+                case "nextweek":
+                    c.set(Calendar.DAY_OF_WEEK, 0);
+                    c.add(Calendar.DAY_OF_MONTH, 14);
+                    c.add(Calendar.MINUTE, -1);
+                    break;
+                case "nextmonth":
+                    c.set(Calendar.DAY_OF_MONTH, 0);
+                    c.add(Calendar.MONTH, 2);
+                    c.add(Calendar.MINUTE, -1);
+                    break;
+                case "nextyear":
+                    c.set(Calendar.DAY_OF_MONTH, 0);
+                    c.set(Calendar.MONTH, 0);
+                    c.add(Calendar.YEAR, 2);
+                    c.add(Calendar.MINUTE, -1);
+                    break;
+            }
+            task.setDueTime(c.getTime());
+        }
+        return task;
     }
 
 }

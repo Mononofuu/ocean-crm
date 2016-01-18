@@ -154,16 +154,19 @@
             </fieldset>
         </form>
 
-        <form class="col-md-3" name="taskForm" ng-submit="processForm('newtask')" ng-init="addTask=false">
+        <form class="col-md-3" name="taskForm" ng-init="formData.addTask=false">
             <fieldset>
                 <legend>Запланировать задачу</legend>
-                <input type="checkbox" ng-model="addTask">Добавить задачу к новой сделке
-                <div ng-show="addTask">
+                <input type="checkbox" ng-model="formData.addTask">Добавить задачу к новой сделке
+                <div ng-show="formData.addTask">
                     <label>Период</label>
                     <select class="form-control" name="taskperiod" ng-model="formData.taskperiod">
-                        <option>Сегодня</option>
-                        <option>Завтра</option>
-                        <option>Послезавтра</option>
+                        <option value="today">Сегодня</option>
+                        <option value="allday">Весь день</option>
+                        <option value="tomorow">Завтра</option>
+                        <option value="nextweek">Следующая неделя</option>
+                        <option value="nextmonth">Следующий месяц</option>
+                        <option value="nextyear">Следующий год</option>
                     </select>
                     <label>или выбрать дату</label>
                     <input class="form-control" type="datetime-local" name="taskduedate"
@@ -180,7 +183,7 @@
                     </select>
                     <br/>
                     <label>Текст задачи</label>
-                    <textarea class="form-control textarea" name="taskcomment"
+                    <textarea class="form-control textarea" name="taskcomment" placeholder="Текст задачи"
                               ng-model="formData.taskcomment"></textarea>
                 </div>
             </fieldset>
