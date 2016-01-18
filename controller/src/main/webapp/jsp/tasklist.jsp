@@ -116,7 +116,7 @@
                     <li><a href="#weekstasks" data-toggle="tab">Неделя</a></li>
                     <li><a href="#monthtasks" data-toggle="tab">Месяц</a></li>
                     <li><a href="#tasklist" data-toggle="tab">Список</a></li>
-                    <a class="btn btn-success addtask" href="#">Добавить задачу</a>
+                    <a class="btn btn-success addtask" href="new_task_prepare">Добавить задачу</a>
                 </ul>
 
                 <div class="tab-content">

@@ -153,7 +153,7 @@ public class TaskDAOImpl extends AbstractJDBCDao<Task> implements TaskDAO {
         return result;
     }
 
-    private Subject getSubject(int id)throws DataBaseException{
+    public Subject getSubject(int id)throws DataBaseException{
         GenericDao<Contact> contactDao = getDaoFromCurrentFactory(Contact.class);
         GenericDao<Company> companyDao = getDaoFromCurrentFactory(Company.class);
         GenericDao<Deal> dealDao = getDaoFromCurrentFactory(Deal.class);
@@ -207,5 +207,4 @@ public class TaskDAOImpl extends AbstractJDBCDao<Task> implements TaskDAO {
         }
         return result;
     }
-
 }

@@ -18,7 +18,7 @@
 </head>
 <body>
 <div class="row-fluid">
-    <div style="float:left;width: 72%;height: 100%;">
+    <div style="float:left;width: 65%;height: 100%;">
         <fieldset class="scheduler-border">
             <legend class="scheduler-border">Виджеты</legend>
             <div class="row-fluid">
