@@ -34,6 +34,10 @@
                 <input class="form-control" type="text" name="companyname" placeholder="Название компании"
                        ng-model="formData.companyname" required/>
                 <br/>
+                <label>Теги</label>
+                <input class="form-control" type="text" name="companytags"
+                       ng-model="formData.companytags"/>
+                <br/>
                 <label>Ответственный</label>
                 <select title="Ответственный" class="form-control" name="companyresp" ng-model="formData.companyresp">
                     <option ng-repeat="user in users" value="{{user.id}}">{{user.name}}</option>

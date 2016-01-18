@@ -1,6 +1,7 @@
 package com.becomejavasenior;
 
 import com.becomejavasenior.impl.DealContactDAOImpl;
+import com.becomejavasenior.impl.SubjectTagDAOImpl;
 import com.google.gson.Gson;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,10 +17,7 @@ import java.net.URL;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class DealController extends HttpServlet {
     private final static Logger logger = LogManager.getLogger(DealController.class);
@@ -208,18 +206,21 @@ public class DealController extends HttpServlet {
             Optional<String> dealTags = Optional.ofNullable(request.getParameter("dealtags"));
             if (dealTags.isPresent()) {
                 GenericDao<Tag> tagDAO = dao.getDao(Tag.class);
-                GenericDao<SubjectTag> subjectTagDAO = dao.getDao(SubjectTag.class);
+                SubjectTagDAOImpl subjectTagDAO = (SubjectTagDAOImpl) dao.getDao(SubjectTag.class);
                 String[] tagArray = dealTags.get().split(" ");
 
                 for (String tag : tagArray) {
+                    Set<Tag> existedTags = subjectTagDAO.getAllTagsBySubjectId(createdDeal.getId());
                     Tag tagInstance = new Tag();
                     tagInstance.setName(tag);
-                    Tag returnedTag = tagDAO.create(tagInstance);
-                    logger.info(String.format("Trying to create tag: %s", tag));
-                    SubjectTag subjectTag = new SubjectTag();
-                    subjectTag.setTag(returnedTag);
-                    subjectTag.setSubject(subject);
-                    subjectTagDAO.create(subjectTag);
+                    if (existedTags.stream().filter(tag1 -> tag1.getName().equals(tag)).count() < 1) {
+                        Tag returnedTag = tagDAO.create(tagInstance);
+                        logger.info(String.format("Trying to create tag: %s", tag));
+                        SubjectTag subjectTag = new SubjectTag();
+                        subjectTag.setTag(returnedTag);
+                        subjectTag.setSubject(createdDeal);
+                        subjectTagDAO.create(subjectTag);
+                    }
                 }
             }
 

@@ -1,5 +1,6 @@
 package com.becomejavasenior;
 
+import com.becomejavasenior.impl.SubjectTagDAOImpl;
 import com.google.gson.Gson;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -237,6 +238,27 @@ public class NewCompany extends HttpServlet {
                     Optional<Currency> dealCurrency = Optional.ofNullable(currencyDao.read(1)); //TODO
                     dealCurrency.ifPresent(deal::setCurrency);
                     dealDao.create(deal);
+                }
+            }
+
+            Optional<String> companyTags = Optional.ofNullable(request.getParameter("companytags"));
+            if (companyTags.isPresent()) {
+                GenericDao<Tag> tagDAO = dao.getDao(Tag.class);
+                SubjectTagDAOImpl subjectTagDAO = (SubjectTagDAOImpl) dao.getDao(SubjectTag.class);
+                String[] tagArray = companyTags.get().split(" ");
+
+                for (String tag : tagArray) {
+                    Set<Tag> existedTags = subjectTagDAO.getAllTagsBySubjectId(createdCompany.getId());
+                    Tag tagInstance = new Tag();
+                    tagInstance.setName(tag);
+                    if (existedTags.stream().filter(tag1 -> tag1.getName().equals(tag)).count() < 1) {
+                        Tag returnedTag = tagDAO.create(tagInstance);
+                        logger.info(String.format("Trying to create tag: %s", tag));
+                        SubjectTag subjectTag = new SubjectTag();
+                        subjectTag.setTag(returnedTag);
+                        subjectTag.setSubject(createdCompany);
+                        subjectTagDAO.create(subjectTag);
+                    }
                 }
             }
             logger.info("DONE");
