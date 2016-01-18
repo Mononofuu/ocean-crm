@@ -20,7 +20,7 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
     public static final String DEAL_SELECT_USER_ID = " where id in(select subject.id from subject " +
             "where subject.content_owner_id = ?)";
     public static final String DEAL_SELECT_OPENED = " WHERE deal.data_close IS null";
-    public static final String DEAL_SELECT_BY_USER = " WHERE subject.content_owner_id=?";
+    public static final String DEAL_SELECT_BY_USER = " WHERE responsible_id=?";
     public static final String DEAL_SELECT_WITHOUT_TASKS = " WHERE NOT deal.id IN (SELECT subject_id FROM task GROUP BY subject_id)";
     public static final String DEAL_SELECT_WITH_EXPIRED_TASKS = " WHERE deal.id IN (SELECT subject_id FROM task WHERE NOT (due_date IS null) AND due_date < ? GROUP BY subject_id)";
     public static final String DEAL_SELECT_SUCCESS = " WHERE deal.status_id=5";
@@ -41,7 +41,7 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
 
     @Override
     public String getReadAllQuery() {
-        return "SELECT deal.id, status_id, currency_id, budget, contact_main_id, company_id, data_close, deal.created_date, name FROM deal JOIN subject ON subject.id=deal.id ";
+        return "SELECT deal.id, status_id, currency_id, budget, contact_main_id, company_id, data_close, deal.created_date, name, responsible_id FROM deal JOIN subject ON subject.id=deal.id ";
     }
 
     @Override
@@ -51,14 +51,14 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
 
     @Override
     public String getCreateQuery() {
-        return "INSERT INTO deal(id, status_id, currency_id, budget, contact_main_id, company_id, data_close, created_date) " +
-                "VALUES(?,?,?,?,?,?,?,?)";
+        return "INSERT INTO deal(id, status_id, currency_id, budget, contact_main_id, company_id, data_close, created_date, responsible_id) " +
+                "VALUES(?,?,?,?,?,?,?,?,?)";
     }
 
     @Override
     public String getUpdateQuery() {
         return "UPDATE deal SET status_id = ?, currency_id = ?, budget = ?, contact_main_id = ?," +
-                "company_id = ?, data_close = ?, created_date = ? WHERE id = ?";
+                "company_id = ?, data_close = ?, created_date = ?, responsible_id = ? WHERE id = ?";
     }
 
     @Override
@@ -75,6 +75,7 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
             GenericDao contactDao = getDaoFromCurrentFactory(Contact.class);
             GenericDao dealStatusDao = getDaoFromCurrentFactory(DealStatus.class);
             GenericDao currencyDao = getDaoFromCurrentFactory(Currency.class);
+            GenericDao userDao = getDaoFromCurrentFactory(User.class);
             SubjectTagDAOImpl subjectTagDAOImpl = (SubjectTagDAOImpl) getDaoFromCurrentFactory(SubjectTag.class);
             DealContactDAOImpl dealContactDAOImpl = (DealContactDAOImpl) getDaoFromCurrentFactory(DealContact.class);
             FileDAOImpl fileDao = (FileDAOImpl) getDaoFromCurrentFactory(File.class);
@@ -83,7 +84,7 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
             while (rs.next()) {
                 Deal deal = new Deal();
                 int id = rs.getInt("id");
-                Subject subject = (Subject) subjectDao.read(id);
+                Subject subject = (Subject) subjectDao.readLite(id);
                 deal.setId(id);
                 deal.setName(subject.getName());
                 deal.setBudget(rs.getInt("budget"));
@@ -93,6 +94,8 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
                 deal.setDealCompany(company);
                 Contact contact = (Contact) contactDao.readLite(rs.getInt("contact_main_id"));
                 deal.setMainContact(contact);
+                User responsible = (User) userDao.readLite(rs.getInt("responsible_id"));
+                deal.setResponsible(responsible);
                 DealStatus dealStatus = (DealStatus) dealStatusDao.read(rs.getInt("status_id"));
                 deal.setStatus(dealStatus);
                 Currency currency = (Currency) currencyDao.read(rs.getInt("currency_id"));
@@ -102,6 +105,7 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
                 deal.setFiles(fileDao.getAllFilesBySubjectId(id));
                 deal.setComments(commentDAO.getAllCommentsBySubjectId(id));
                 deal.setTasks(taskDAO.getAllTasksBySubject(deal));
+                deal.setUser(subject.getUser());
                 result.add(deal);
             }
         } catch (SQLException e) {
@@ -132,7 +136,7 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
                 deal.setDateCreated(rs.getTimestamp("created_date"));
                 Company company = (Company) companyDao.readLite(rs.getInt("company_id"));
                 deal.setDealCompany(company);
-                Contact contact = (Contact) contactDao.readLite(rs.getInt("contact_main_id"));
+                Contact contact = (Contact) contactDao.read(rs.getInt("contact_main_id"));
                 deal.setMainContact(contact);
                 DealStatus dealStatus = (DealStatus) dealStatusDao.read(rs.getInt("status_id"));
                 deal.setStatus(dealStatus);
@@ -175,7 +179,7 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
                 statement.setNull(4, Types.INTEGER);
             }
 
-            Optional<User> dealMainContact = Optional.ofNullable(deal.getMainContact());
+            Optional<Contact> dealMainContact = Optional.ofNullable(deal.getMainContact());
             if (dealMainContact.isPresent()){
                 statement.setInt(5, dealMainContact.get().getId());
             }else {
@@ -202,6 +206,14 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
             }else {
                 statement.setNull(8, Types.TIMESTAMP);
             }
+
+            Optional<User> dealResponsible = Optional.ofNullable(deal.getResponsible());
+            if (dealResponsible.isPresent()){
+                statement.setInt(9, dealResponsible.get().getId());
+            }else {
+                statement.setNull(9, Types.INTEGER);
+            }
+
         } catch (SQLException e) {
             LOGGER.error("Error while prepare statement for insert new deal");
             LOGGER.catching(e);
@@ -216,7 +228,11 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
             statement.setInt(1, object.getStatus().getId());
             statement.setInt(2, object.getCurrency().getId());
             statement.setInt(3, object.getBudget());
-            statement.setInt(4, object.getMainContact().getId());
+            if (object.getMainContact() == null) {
+                statement.setNull(4, Types.INTEGER);
+            }else{
+                statement.setInt(4, object.getMainContact().getId());
+            }
             statement.setInt(5, object.getDealCompany().getId());
             if (object.getDateWhenDealClose() == null) {
                 statement.setTimestamp(6, null);
@@ -224,7 +240,8 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
                 statement.setTimestamp(6, new Timestamp(object.getDateWhenDealClose().getTime()));
             }
             statement.setTimestamp(7, new Timestamp(object.getDateCreated().getTime()));
-            statement.setInt(8, object.getId());
+            statement.setInt(8, object.getResponsible().getId());
+            statement.setInt(9, object.getId());
         } catch (SQLException e) {
             LOGGER.error("Error while prepare statement for update new deal");
             LOGGER.catching(e);

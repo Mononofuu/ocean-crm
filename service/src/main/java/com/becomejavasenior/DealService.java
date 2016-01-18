@@ -20,7 +20,7 @@ public interface DealService{
         public static final int CONDITION_DEALS_DELETED = 6;
 
         Deal findDealById(int id) throws DataBaseException;
-        void saveDeal(Deal deal) throws DataBaseException;
+        Deal saveDeal(Deal deal) throws DataBaseException;
         void deleteDeal(int id) throws DataBaseException;
         List<Deal> findDeals() throws DataBaseException;
         List<Deal> findDealsLite() throws DataBaseException;

@@ -100,7 +100,7 @@ public class DealDAOTest {
         User user;
         GenericDao<User> userDao = daoFactory.getDao(User.class);
         user = userDao.read(1);
-        deal.setMainContact(user);
+        deal.setMainContact(contact);
 
         Deal dbDeal = dealDao.create(deal);
 

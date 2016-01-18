@@ -7,7 +7,8 @@ public class Deal extends Subject {
 
     private static final long serialVersionUID = -5045712962652077587L;
 
-    private User mainContact;
+    private Contact mainContact;
+    private User responsible;
     private DealStatus status;
     private int budget;
     private Currency currency;
@@ -32,12 +33,20 @@ public class Deal extends Subject {
         this.dateCreated = dateCreated;
     }
 
-    public User getMainContact() {
+    public Contact getMainContact() {
         return mainContact;
     }
 
-    public void setMainContact(User mainContact) {
+    public void setMainContact(Contact mainContact) {
         this.mainContact = mainContact;
+    }
+
+    public User getResponsible() {
+        return responsible;
+    }
+
+    public void setResponsible(User responsible) {
+        this.responsible = responsible;
     }
 
     public DealStatus getStatus() {

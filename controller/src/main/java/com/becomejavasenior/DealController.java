@@ -1,5 +1,6 @@
 package com.becomejavasenior;
 
+import com.becomejavasenior.impl.ContactServiceImpl;
 import com.becomejavasenior.impl.DealContactDAOImpl;
 import com.google.gson.Gson;
 import org.apache.logging.log4j.LogManager;
@@ -147,8 +148,8 @@ public class DealController extends HttpServlet {
             Optional<String> dealResp = Optional.ofNullable(request.getParameter("dealresp"));
             if (dealResp.isPresent()) {
                 GenericDao<User> userDao = dao.getDao(User.class);
-                User mainContact = userDao.read(Integer.parseInt(dealResp.get()));
-                deal.setMainContact(mainContact);
+                User responsible = userDao.read(Integer.parseInt(dealResp.get()));
+                deal.setResponsible(responsible);
             }
 
             Optional<String> dealBudget = Optional.ofNullable(request.getParameter("dealbudget"));
@@ -180,6 +181,16 @@ public class DealController extends HttpServlet {
                 deal.setDateCreated(new Timestamp(date.getTime()));
             }
 
+            Optional<String[]> contactList = Optional.ofNullable(request.getParameterValues("dealcontactlist[]"));
+            if (contactList.isPresent()) {
+                int mainContactId = Integer.parseInt(contactList.get()[0]);
+                ContactService contactService = new ContactServiceImpl();
+                Contact mainContact = contactService.findContactById(mainContactId);
+                deal.setMainContact(mainContact);
+            }
+
+            deal.setUser((User) request.getSession().getAttribute("user"));
+
             GenericDao<Deal> dealDao = dao.getDao(Deal.class);
             logger.info("TRYING TO CREATE DEAL");
             createdDeal = dealDao.create(deal);
@@ -188,8 +199,9 @@ public class DealController extends HttpServlet {
             GenericDao<Subject> subjectDao = dao.getDao(Subject.class);
             Subject subject = subjectDao.read(createdDeal.getId());
 
-            Optional<String[]> contactList = Optional.ofNullable(request.getParameterValues("dealcontactlist[]"));
+//            Optional<String[]> contactList = Optional.ofNullable(request.getParameterValues("dealcontactlist[]"));
             if (contactList.isPresent()) {
+
                 DealContactDAOImpl dealContactDAO = new DealContactDAOImpl(dao);
                 GenericDao<Contact> contactDao = dao.getDao(Contact.class);
                 List<Contact> dealContacts = new ArrayList<>();
@@ -209,7 +221,7 @@ public class DealController extends HttpServlet {
             if (dealTags.isPresent()) {
                 GenericDao<Tag> tagDAO = dao.getDao(Tag.class);
                 GenericDao<SubjectTag> subjectTagDAO = dao.getDao(SubjectTag.class);
-                String[] tagArray = dealTags.get().split(" ");
+                String[] tagArray = dealTags.get().replaceAll(" +"," ").trim().split(" ");
 
                 for (String tag : tagArray) {
                     Tag tagInstance = new Tag();
@@ -235,7 +247,7 @@ public class DealController extends HttpServlet {
                 comment.setUser(user);
                 logger.info(String.format("Trying to create comment: %s", comment.getText()));
                 Comment createdComment = commentDao.create(comment);
-                logger.info(String.format("Contact id = %d created", createdComment.getId()));
+                logger.info(String.format("Comment id = %d created", createdComment.getId()));
             }
 
         } catch (DataBaseException e) {

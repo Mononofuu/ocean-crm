@@ -29,11 +29,12 @@ public class DealServiceImpl implements com.becomejavasenior.DealService {
     }
 
     @Override
-    public void saveDeal(Deal deal) throws DataBaseException {
+    public Deal saveDeal(Deal deal) throws DataBaseException {
         if(deal.getId() == 0){
-            dealDao.create(deal);
+            return dealDao.create(deal);
         }else{
             dealDao.update(deal);
+            return dealDao.read(deal.getId());
         }
     }
 
