@@ -2,6 +2,9 @@ package com.becomejavasenior;
 
 import com.becomejavasenior.impl.ContactServiceImpl;
 import com.becomejavasenior.impl.DealContactDAOImpl;
+import com.becomejavasenior.impl.SubjectTagDAOImpl;
+import com.becomejavasenior.impl.TaskServiceImpl;
+import com.becomejavasenior.impl.UserServiceImpl;
 import com.google.gson.Gson;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,14 +20,12 @@ import java.net.URL;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class DealController extends HttpServlet {
     private final static Logger logger = LogManager.getLogger(DealController.class);
     private final static String nextJSP = "/jsp/newdeal.jsp";
+    private static TaskServiceImpl taskService;
     private DaoFactory dao;
     private Deal createdDeal;
 
@@ -42,24 +43,9 @@ public class DealController extends HttpServlet {
             case "newcompany":
                 newCompany(request, response);
                 break;
-            case "newtask":
-                newTask(request, response);
-                break;
             default:
         }
 
-    }
-
-    private void newTask(HttpServletRequest request, HttpServletResponse response) {
-        try {
-            Task task = new Task();
-            GenericDao<Task> taskDao = dao.getDao(Task.class);
-            //TODO
-
-        } catch (DataBaseException e) {
-            logger.error("Error while creating new task");
-            logger.catching(e);
-        }
     }
 
     private void newContact(HttpServletRequest request, HttpServletResponse response) {
@@ -199,9 +185,8 @@ public class DealController extends HttpServlet {
             GenericDao<Subject> subjectDao = dao.getDao(Subject.class);
             Subject subject = subjectDao.read(createdDeal.getId());
 
-//            Optional<String[]> contactList = Optional.ofNullable(request.getParameterValues("dealcontactlist[]"));
+            Optional<String[]> contactList = Optional.ofNullable(request.getParameterValues("dealcontactlist[]"));
             if (contactList.isPresent()) {
-
                 DealContactDAOImpl dealContactDAO = new DealContactDAOImpl(dao);
                 GenericDao<Contact> contactDao = dao.getDao(Contact.class);
                 List<Contact> dealContacts = new ArrayList<>();
@@ -220,18 +205,21 @@ public class DealController extends HttpServlet {
             Optional<String> dealTags = Optional.ofNullable(request.getParameter("dealtags"));
             if (dealTags.isPresent()) {
                 GenericDao<Tag> tagDAO = dao.getDao(Tag.class);
-                GenericDao<SubjectTag> subjectTagDAO = dao.getDao(SubjectTag.class);
-                String[] tagArray = dealTags.get().replaceAll(" +"," ").trim().split(" ");
+                SubjectTagDAOImpl subjectTagDAO = (SubjectTagDAOImpl) dao.getDao(SubjectTag.class);
+                String[] tagArray = dealTags.get().trim().split(" ");
 
                 for (String tag : tagArray) {
+                    Set<Tag> existedTags = subjectTagDAO.getAllTagsBySubjectId(createdDeal.getId());
                     Tag tagInstance = new Tag();
                     tagInstance.setName(tag);
-                    Tag returnedTag = tagDAO.create(tagInstance);
-                    logger.info(String.format("Trying to create tag: %s", tag));
-                    SubjectTag subjectTag = new SubjectTag();
-                    subjectTag.setTag(returnedTag);
-                    subjectTag.setSubject(subject);
-                    subjectTagDAO.create(subjectTag);
+                    if (existedTags.stream().filter(tag1 -> tag1.getName().equals(tag)).count() < 1) {
+                        Tag returnedTag = tagDAO.create(tagInstance);
+                        logger.info(String.format("Trying to create tag: %s", tag));
+                        SubjectTag subjectTag = new SubjectTag();
+                        subjectTag.setTag(returnedTag);
+                        subjectTag.setSubject(createdDeal);
+                        subjectTagDAO.create(subjectTag);
+                    }
                 }
             }
 
@@ -247,7 +235,15 @@ public class DealController extends HttpServlet {
                 comment.setUser(user);
                 logger.info(String.format("Trying to create comment: %s", comment.getText()));
                 Comment createdComment = commentDao.create(comment);
-                logger.info(String.format("Comment id = %d created", createdComment.getId()));
+                logger.info(String.format("Contact id = %d created", createdComment.getId()));
+            }
+
+            Optional<String> addTask = Optional.ofNullable(request.getParameter("addTask"));
+            if (addTask.isPresent() && addTask.get().equals("true")) {
+                logger.debug("Adding task");
+                Task task = getTaskFromRequest(request);
+                taskService = new TaskServiceImpl();
+                taskService.saveTask(task);
             }
 
         } catch (DataBaseException e) {
@@ -326,5 +322,69 @@ public class DealController extends HttpServlet {
         } catch (ServletException | IOException e) {
             logger.catching(e);
         }
+    }
+
+    private Task getTaskFromRequest(HttpServletRequest request) throws DataBaseException {
+        Task task = new Task();
+        Optional<String> taskUser = Optional.ofNullable(request.getParameter("taskuser"));
+        if (taskUser.isPresent()) {
+            UserService userService = new UserServiceImpl();
+            User user = userService.findUserById(Integer.parseInt(taskUser.get()));
+            task.setUser(user);
+        }
+        task.setSubject(createdDeal);
+        Optional<String> taskType = Optional.ofNullable(request.getParameter("tasktype"));
+        taskType.ifPresent(s -> task.setType(TaskType.valueOf(s)));
+        Optional<String> taskComment = Optional.ofNullable(request.getParameter("taskcomment"));
+        taskComment.ifPresent(task::setComment);
+        task.setDateCreated(new Date());
+        Optional<String> taskDueDate = Optional.ofNullable(request.getParameter("taskduedate"));
+        if (taskDueDate.isPresent() & !taskDueDate.get().equals("undefined")) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+            try {
+                task.setDueTime(dateFormat.parse(taskDueDate.get()));
+            } catch (ParseException e) {
+                logger.catching(e);
+            }
+        } else {
+            String period = request.getParameter("taskperiod");
+            Calendar c = Calendar.getInstance();
+            c.set(Calendar.HOUR_OF_DAY, 0);
+            c.set(Calendar.MINUTE, 0);
+            c.set(Calendar.SECOND, 0);
+            c.set(Calendar.MILLISECOND, 0);
+            switch (period) {
+                case "today":
+                    c.add(Calendar.DAY_OF_MONTH, 1);
+                    c.add(Calendar.MINUTE, -1);
+                    break;
+                case "allday":
+                    c.add(Calendar.DAY_OF_MONTH, 1);
+                    c.add(Calendar.MINUTE, -1);
+                    break;
+                case "tomorow":
+                    c.add(Calendar.DAY_OF_MONTH, 2);
+                    c.add(Calendar.MINUTE, -1);
+                    break;
+                case "nextweek":
+                    c.set(Calendar.DAY_OF_WEEK, 0);
+                    c.add(Calendar.DAY_OF_MONTH, 14);
+                    c.add(Calendar.MINUTE, -1);
+                    break;
+                case "nextmonth":
+                    c.set(Calendar.DAY_OF_MONTH, 0);
+                    c.add(Calendar.MONTH, 2);
+                    c.add(Calendar.MINUTE, -1);
+                    break;
+                case "nextyear":
+                    c.set(Calendar.DAY_OF_MONTH, 0);
+                    c.set(Calendar.MONTH, 0);
+                    c.add(Calendar.YEAR, 2);
+                    c.add(Calendar.MINUTE, -1);
+                    break;
+            }
+            task.setDueTime(c.getTime());
+        }
+        return task;
     }
 }

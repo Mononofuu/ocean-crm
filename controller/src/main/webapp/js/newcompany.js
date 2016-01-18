@@ -82,6 +82,7 @@ newCompany.controller('ContactController', function ($scope, $http, $filter, $wi
 
 
     $scope.processForm = function (type) {
+        $scope.formData.taskduedate = $filter("date")($scope.formData.taskduedate, 'MM/dd/yyyy HH:mm');
         for (var i = 0; i < $scope.addedDeals.length; i++) {
             var text = $scope.addedDeals[i].name + ';' + $scope.addedDeals[i].status + ';' + $scope.addedDeals[i].budget;
             $scope.formData.addedDeals.push(text)

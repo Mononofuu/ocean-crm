@@ -50,6 +50,7 @@ newDeal.controller('DealController', function ($scope, $http, $filter, $window) 
 
     $scope.processForm = function (type) {
         $scope.formData.dealcreated = $filter("date")($scope.formData.dealcreated, 'yyyy-MM-dd');
+        $scope.formData.taskduedate = $filter("date")($scope.formData.taskduedate, 'MM/dd/yyyy HH:mm');
         $http({
             method: 'POST',
             url: '/deal?action=' + type,
