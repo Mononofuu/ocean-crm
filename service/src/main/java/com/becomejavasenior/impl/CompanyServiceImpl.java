@@ -10,7 +10,7 @@ import java.util.Map;
  * Created by Peter on 18.12.2015.
  */
 
-public class CompanyServiceImpl implements CompanyService {
+public class CompanyServiceImpl extends AbstractContactService<Company> implements CompanyService {
 
     private static Logger logger = LogManager.getLogger(CompanyServiceImpl.class);
     private DaoFactory dao;
@@ -64,8 +64,13 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
+    protected AbstractContactDAO<Company> getDao() {
+        return companyDAO;
+    }
+
+    @Override
     public List<Company> getAllCompanyesByParameters(Map<String, String[]> parameters) throws DataBaseException {
-        return null;
+        return getAllContactsByParameters(parameters);
     }
 }
 

@@ -8,10 +8,9 @@ import org.apache.logging.log4j.Logger;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-public class CompanyDAOImpl extends AbstractJDBCDao<Company> implements CompanyDAO {
+public class CompanyDAOImpl extends AbstractContactDAO<Company> implements CompanyDAO {
     private Logger logger = LogManager.getLogger(CompanyDAOImpl.class);
 
     public CompanyDAOImpl(DaoFactory daoFactory) {
@@ -25,7 +24,7 @@ public class CompanyDAOImpl extends AbstractJDBCDao<Company> implements CompanyD
 
     @Override
     public String getReadAllQuery() {
-        return "SELECT company.id, phone_number, email, web, address, name  FROM company JOIN subject ON subject.id=company.id ";
+        return "SELECT DISTINCT company.id, phone_number, email, web, address, name  FROM company JOIN subject ON subject.id=company.id ";
     }
 
     @Override
@@ -151,36 +150,17 @@ public class CompanyDAOImpl extends AbstractJDBCDao<Company> implements CompanyD
     }
 
     @Override
-    public List<Company> getAllCompanyesByParameters(String userId, List<Integer> idList) throws DataBaseException{
-        return realiseQuery(getParametrisedReadQuery(userId, idList));
-    }
-
-    private String getParametrisedReadQuery(String userId, List<Integer> idList){
-        String result = getReadAllQuery()+" WHERE 1=1";
-        if(userId!=null){
-            result+=" AND user_id = "+userId;
-        }
-        if(idList!=null&&idList.size()>0){
-            result+=" AND id IN (";
-            for(Integer id: idList){
-                result+=id+",";
-            }
-            result.substring(0, result.length()-1);
-            result+=")";
-        }
-        return result;
+    protected String getLeftJoinTask() {
+        return " LEFT JOIN task ON company.id=task.subject_id";
     }
 
     @Override
-    public List<Company> getAllCompanyesWithoutTasks() throws DataBaseException {
-        return realiseQuery(getCompanyessWithoutTasksQuery());
+    protected String getLeftJoinDeal() {
+        return " LEFT JOIN deal ON company.id=deal.contact_main_id";
     }
 
-    private String getCompanyessWithoutTasksQuery(){
-        return getReadAllQuery()+" LEFT JOIN task ON company.id=task.subject_id WHERE subject_id is NULL";
-    }
-
-    private String getCompanyesWithOverdueTasksQuery(){
-        return getReadAllQuery()+" LEFT JOIN task ON company.id=task.subject_id WHERE task.due_date < NOW()";
+    @Override
+    protected String getLeftJoinSubjectTag() {
+        return " JOIN subject_tag ON company.id=subject_tag.subject_id";
     }
 }

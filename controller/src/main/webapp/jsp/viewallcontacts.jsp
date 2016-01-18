@@ -41,7 +41,7 @@
 								<option value="allcontacts" selected>Полный список контактов</option>
 								<option value="tasklesscontacts">Контакты без задач</option>
 								<option value="overduetaskcontacts">Контакты с просроченными задачами</option>
-								<option value="dellitedcontacts" selected>Удаленные</option>
+								<option value="dellitedcontacts">Удаленные</option>
 							</select>
 						</div>
 					</div>
@@ -89,8 +89,9 @@
 						<div class="col-sm-10">
 							<label for="users">Менеджеры</label>
 							<select class="form-control" name="user" id="users">
+								<option value="">Не учитывать</option>
 								<c:forEach var="user" items="${users}">
-									<option value="user.id">${user.name}</option>
+									<option value="${user.id}">${user.name}</option>
 								</c:forEach>
 							</select>
 						</div>
@@ -101,7 +102,7 @@
 						</div>
 						<div class="col-sm-12">
 							<select class="form-control" name="tasks" id="tasks">
-								<option value="donotmention">Не учитывать</option>
+								<option value="">Не учитывать</option>
 								<option value="today">На сегодня</option>
 								<option value="tomorow">На завтра</option>
 								<option value="thisweek">На  этой неделе</option>
@@ -114,10 +115,10 @@
 					</div>
 					<div class="form-group">
 						<div class="col-sm-12">
-							<label for="users">Теги</label>
-							<select class="multipleselect col-sm-12" multiple="multiple">
+							<label for="tags">Теги</label>
+							<select class="multipleselect col-sm-12" multiple="multiple" name="tags" id="tags">
 								<c:forEach var="tag" items="${tags}">
-									<option value="tag.id">${tag.name}</option>
+									<option value="${tag.id}">${tag.name}</option>
 								</c:forEach>
 							</select>
 						</div>

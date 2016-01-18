@@ -41,7 +41,7 @@ public class ViewAllContactsServlet extends HttpServlet {
             TagService tagService = new TagServiceImpl();
             List<Contact> allContacts;
             List<Company> allCompanies;
-            if(req.getParameterMap().size()>0){
+            if(req.getParameter("filtername")!=null){
                 allContacts = contactService.getAllContactsByParameters(req.getParameterMap());
                 allCompanies = companyService.getAllCompanyesByParameters(req.getParameterMap());
             }else {

@@ -7,13 +7,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.*;
 
-public class ContactDAOImpl extends AbstractJDBCDao<Contact> implements ContactDAO {
+public class ContactDAOImpl extends AbstractContactDAO<Contact> implements ContactDAO {
     private Logger logger = LogManager.getLogger(ContactDAOImpl.class);
 
     @Override
@@ -23,7 +19,7 @@ public class ContactDAOImpl extends AbstractJDBCDao<Contact> implements ContactD
 
     @Override
     public String getReadAllQuery() {
-        return "SELECT contact.id, post, phone_type_id, phone, email, skype, company_id, name  FROM contact JOIN subject ON subject.id=contact.id ";
+        return "SELECT DISTINCT contact.id, post, phone_type_id, phone, email, skype, contact.company_id, name  FROM contact JOIN subject ON subject.id=contact.id ";
     }
 
     @Override
@@ -167,108 +163,17 @@ public class ContactDAOImpl extends AbstractJDBCDao<Contact> implements ContactD
     }
 
     @Override
-    public List<Contact> getAllContactsByParameters(List<ContactFilters> parameters, String userId, List<Integer> tagIdList, Date taskStartDate, Date taskDueDate) throws DataBaseException {
-        return realiseQuery(getParametrisedReadQuery(parameters, userId, tagIdList, taskStartDate, taskDueDate));
+    protected String getLeftJoinTask() {
+        return " LEFT JOIN task ON contact.id=task.subject_id";
     }
 
-    private String getParametrisedReadQuery(List<ContactFilters> parameters, String userId, List<Integer> tagIdList, Date taskStartDate, Date taskDueDate){
-        String result = getReadAllQuery();
-        if(parameters!=null&&parameters.size()>0){
-            if(parameters.contains(ContactFilters.WITHOUT_TASKS)){
-                result+=getContactsWithoutTasksQuery();
-            }
-            if(parameters.contains(ContactFilters.WITH_OVERDUE_TASKS)){
-                result+=getContactsWithOverdueTasksQuery();
-            }
-            if(parameters.contains(ContactFilters.WITHOUT_DEALS)){
-                result+=getContactsWithoutDealsQuery();
-            }
-            if(parameters.contains(ContactFilters.WITHOUT_OPEN_DEALS)){
-                result+=getContactsWithoutOpenDealsQuery();
-            }
-            if(parameters.contains(ContactFilters.PRIMARY_CONTACTS)){
-                result+=getPrimaryContactsQuery();
-            }
-            if(parameters.contains(ContactFilters.CONVERSATION_CONTACTS)){
-                result+=getConversationContactsQuery();
-            }
-            if(parameters.contains(ContactFilters.MAKING_DECISION_CONTACTS)){
-                result+=getMakingDecisionContactsQuery();
-            }
-            if(parameters.contains(ContactFilters.SUCCESS_CONTACTS)){
-                result+=getSuccessContactsQuery();
-            }
-            if(parameters.contains(ContactFilters.NOT_REALISED_CONTACTS)){
-                result+=getNotRealisedContactsQuery();
-            }
-        }
-        result+=" WHERE 1=1";
-        if(userId!=null){
-            result+=" AND user_id = "+userId;
-        }
-        if(tagIdList!=null&&tagIdList.size()>0){
-            result+=getContactsByTagsQuery(tagIdList);
-        }
-        if(taskStartDate!=null&&taskDueDate!=null){
-            result+=getContactsByTaskPeriod(taskStartDate, taskDueDate);
-        }
-
-        return result;
+    @Override
+    protected String getLeftJoinDeal() {
+        return " LEFT JOIN deal ON contact.id=deal.contact_main_id";
     }
 
-    private String getContactsWithoutTasksQuery(){
-        return " LEFT JOIN task ON contact.id=task.subject_id WHERE subject_id is NULL";
-    }
-
-    private String getContactsWithOverdueTasksQuery(){
-        return " LEFT JOIN task ON contact.id=task.subject_id WHERE task.due_date < NOW()";
-    }
-
-    private String getContactsWithoutDealsQuery(){
-        return " LEFT JOIN task ON contact.id=deal.contact_main_id WHERE deal.contact_main_id is NULL";
-    }
-
-    private String getContactsWithoutOpenDealsQuery(){
-        return " LEFT JOIN task ON contact.id=deal.contact_main_id WHERE deal.status_id ON (5, 6)";
-    }
-
-    private String getPrimaryContactsQuery(){
-        return " LEFT JOIN task ON contact.id=deal.contact_main_id WHERE deal.status_id = 1";
-    }
-
-    private String getConversationContactsQuery(){
-        return " LEFT JOIN task ON contact.id=deal.contact_main_id WHERE deal.status_id = 2";
-    }
-
-    private String getMakingDecisionContactsQuery(){
-        return " LEFT JOIN task ON contact.id=deal.contact_main_id WHERE deal.status_id = 3";
-    }
-
-    private String getApprovalContractContactsQuery(){
-        return " LEFT JOIN task ON contact.id=deal.contact_main_id WHERE deal.status_id = 4";
-    }
-
-    private String getSuccessContactsQuery(){
-        return " LEFT JOIN task ON contact.id=deal.contact_main_id WHERE deal.status_id = 5";
-    }
-
-    private String getNotRealisedContactsQuery(){
-        return " LEFT JOIN task ON contact.id=deal.contact_main_id WHERE deal.status_id = 6";
-    }
-
-    private String getContactsByTagsQuery(List<Integer> tagIdList){
-        String result = " JOIN subject_tag ON contact.id=subject_tag.subject_id WHERE subject_tag.subject_id ON (";
-        for(Integer id: tagIdList){
-            result+=id+",";
-        }
-        result.substring(0, result.length()-1);
-        result+=")";
-        return result;
-    }
-
-    private String getContactsByTaskPeriod(Date taskStartDate, Date taskDueDate){
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-        return  " LEFT JOIN task ON contact.id=task.subject_id WHERE task.due_date BETWEEN '"+dateFormat.format(taskStartDate)+"' AND '"+dateFormat.format(taskDueDate)+"'";
+    @Override
+    protected String getLeftJoinSubjectTag() {
+        return " JOIN subject_tag ON contact.id=subject_tag.subject_id";
     }
 }
