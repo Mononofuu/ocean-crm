@@ -61,13 +61,13 @@ public class TaskDAOImpl extends AbstractJDBCDao<Task> implements TaskDAO {
 
     @Override
     public String getCreateQuery() {
-        return "INSERT INTO task (subject_id, created_date, due_date, user_id, task_type_id, comment) " +
-                "VALUES (?,?,?,?,?,?)";
+        return "INSERT INTO task (subject_id, created_date, due_date, user_id, task_type_id, comment, is_closed, is_deleted) " +
+                "VALUES (?,?,?,?,?,?,?,?)";
     }
 
     @Override
     public String getUpdateQuery() {
-        return "UPDATE task SET subject_id = ?, created_date = ?, due_date = ?, user_id = ?, task_type_id = ?, comment = ? WHERE id = ?";
+        return "UPDATE task SET subject_id = ?, created_date = ?, due_date = ?, user_id = ?, task_type_id = ?, comment = ?, is_closed = ?, is_deleted = ? WHERE id = ?";
     }
 
     @Override
@@ -91,6 +91,8 @@ public class TaskDAOImpl extends AbstractJDBCDao<Task> implements TaskDAO {
                 task.setDueTime(rs.getTimestamp("due_date"));
                 task.setType(TaskType.values()[rs.getInt("task_type_id")-1]);
                 task.setComment(rs.getString("comment"));
+                task.setIsClosed(rs.getByte("is_closed"));
+                task.setisDeleted(rs.getByte("is_deleted"));
                 result.add(task);
             }
         } catch (SQLException e) {
@@ -113,6 +115,8 @@ public class TaskDAOImpl extends AbstractJDBCDao<Task> implements TaskDAO {
             statement.setInt(4, object.getUser().getId());
             statement.setInt(5, object.getType().ordinal() + 1);
             statement.setString(6, object.getComment());
+            statement.setByte(7, object.getIsClosed());
+            statement.setByte(8, object.getIsDeleted());
         } catch (SQLException e) {
             throw new DataBaseException(e);
         }
@@ -132,7 +136,9 @@ public class TaskDAOImpl extends AbstractJDBCDao<Task> implements TaskDAO {
             statement.setInt(4, object.getUser().getId());
             statement.setInt(5, object.getType().ordinal() + 1);
             statement.setString(6, object.getComment());
-            statement.setInt(7, object.getId());
+            statement.setByte(7, object.getIsClosed());
+            statement.setByte(8, object.getIsDeleted());
+            statement.setInt(9, object.getId());
 
         } catch (SQLException e) {
             throw new DataBaseException(e);
@@ -200,6 +206,8 @@ public class TaskDAOImpl extends AbstractJDBCDao<Task> implements TaskDAO {
                 task.setDueTime(rs.getTimestamp("due_date"));
                 task.setType(TaskType.values()[rs.getInt("task_type_id")-1]);
                 task.setComment(rs.getString("comment"));
+                task.setIsClosed(rs.getByte("is_closed"));
+                task.setisDeleted(rs.getByte("is_deleted"));
                 result.add(task);
             }
         } catch (SQLException e) {

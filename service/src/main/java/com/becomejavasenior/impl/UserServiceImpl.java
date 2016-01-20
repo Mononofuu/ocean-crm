@@ -26,11 +26,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void saveUser(User user) throws DataBaseException {
+    public User saveUser(User user) throws DataBaseException {
         if(user.getId() == 0){
-            userDao.create(user);
+            return userDao.create(user);
         }else{
             userDao.update(user);
+            return userDao.read(user.getId());
         }
     }
 

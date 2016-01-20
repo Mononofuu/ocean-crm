@@ -21,8 +21,8 @@ public class TaskTypeServiceImpl implements TaskTypeService {
     }
 
     @Override
-    public void saveTaskType(TaskType taskType) throws DataBaseException {
-        taskTypeDAO.create(taskType);
+    public TaskType saveTaskType(TaskType taskType) throws DataBaseException {
+        return taskTypeDAO.create(taskType);
     }
 
     @Override

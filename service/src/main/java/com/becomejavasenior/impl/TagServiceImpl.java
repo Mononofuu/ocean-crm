@@ -26,11 +26,12 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public void saveTag(Tag tag) throws DataBaseException {
+    public Tag saveTag(Tag tag) throws DataBaseException {
         if (tag.getId() == 0) {
-            tagDao.create(tag);
+            return tagDao.create(tag);
         } else {
             tagDao.update(tag);
+            return tagDao.read(tag.getId());
         }
     }
 

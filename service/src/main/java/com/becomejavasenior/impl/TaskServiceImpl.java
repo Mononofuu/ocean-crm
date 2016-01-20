@@ -27,11 +27,12 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void saveTask(Task task) throws DataBaseException {
+    public Task saveTask(Task task) throws DataBaseException {
         if (task.getId() == 0) {
-            taskDao.create(task);
+            return taskDao.create(task);
         } else {
             taskDao.update(task);
+            return taskDao.read(task.getId());
         }
     }
 

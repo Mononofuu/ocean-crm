@@ -12,7 +12,7 @@ import java.util.List;
 public interface ContactService {
 
         Contact findContactById(int id) throws DataBaseException;
-        void saveContact(Contact contact) throws DataBaseException;
+        Contact saveContact(Contact contact) throws DataBaseException;
         void deleteContact(int id) throws DataBaseException;
         List<Contact> findContacts() throws DataBaseException;
         List<Contact> findContactsLite() throws DataBaseException;

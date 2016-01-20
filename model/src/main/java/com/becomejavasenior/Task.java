@@ -15,6 +15,8 @@ public class Task implements Serializable {
     private Date dueTime;
     private TaskType type;
     private String comment;
+    private byte isClosed;
+    private byte isDeleted;
 
     public Task() {
     }
@@ -73,6 +75,22 @@ public class Task implements Serializable {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public byte getIsClosed() {
+        return isClosed;
+    }
+
+    public void setIsClosed(byte isClosed) {
+        this.isClosed = isClosed;
+    }
+
+    public byte getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setisDeleted(byte isDeleted) {
+        this.isDeleted = isDeleted;
     }
 
     @Override

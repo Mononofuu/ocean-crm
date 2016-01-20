@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public interface TaskService {
 
-    void saveTask(Task task) throws DataBaseException;
+    Task saveTask(Task task) throws DataBaseException;
 
     void deleteTask(int id) throws DataBaseException;
 

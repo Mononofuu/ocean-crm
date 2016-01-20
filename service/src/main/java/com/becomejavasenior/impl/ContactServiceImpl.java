@@ -25,17 +25,19 @@ public class ContactServiceImpl implements ContactService{
     }
 
     @Override
-    public void saveContact(Contact contact) throws DataBaseException {
+    public Contact saveContact(Contact contact) throws DataBaseException {
         if (contact.getId() == 0) {
-            contactDAO.create(contact);
+            contact = contactDAO.create(contact);
             if(contact.getTasks()!=null&&contact.getTasks().size()>0){
                 saveTasks(contact.getTasks());
             }
             if(contact.getDeals()!=null&&contact.getDeals().size()>0){
                 saveDeals(contact.getDeals());
             }
+            return contact;
         } else {
             contactDAO.update(contact);
+            return contactDAO.read(contact.getId());
         }
     }
 

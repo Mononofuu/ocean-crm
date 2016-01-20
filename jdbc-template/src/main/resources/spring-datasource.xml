@@ -13,5 +13,19 @@
         <property name="username" value="${user}"/>
         <property name="password" value="${password}"/>
     </bean>
-
+    <bean id="dealDAO" class="com.becomejavasenior.impl.DealTemplateDAOImpl">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+    <bean id="taskDAO" class="com.becomejavasenior.impl.TaskTemplateDAOImpl">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+    <bean id="companyDAO" class="com.becomejavasenior.impl.CompanyTemplateDAOImpl">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+    <bean id="contactDAO" class="com.becomejavasenior.impl.ContactTemplateDAOImpl">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+    <bean id="eventDAO" class="com.becomejavasenior.impl.EventTemplateDAOImpl">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
 </beans>

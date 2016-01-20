@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.becomejavasenior.Event" %><%--
   Author: Vladislav Lybachevskiy
@@ -116,10 +117,11 @@
             <legend class="scheduler-border">Последние события</legend>
             <c:forEach var="event" items="${events}">
                 <fieldset class="scheduler-border">
-                    <a href="">${event.getEventDate()}</a><br>
-                        <a href="">${event.getUser().getLogin()}</a><br>
-                        ${event.getOperationType()}<br>
-                        <a href="">${event.getEventContent()}</a>
+                    <fmt:formatDate value="${event.getEventDate()}" pattern="dd-MM-yyyy HH:mm" var="theFormattedEventDate"/>
+                    <a href="">${theFormattedEventDate}</a><br>
+                    <a href="">${event.getUser().getLogin()}</a><br>
+                    ${event.getOperationType().toString()}<br>
+                    <a href="">${event.getEventContent()}</a>
                 </fieldset>
             </c:forEach>
         </fieldset>
