@@ -1,9 +1,13 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ page isELIgnored="false" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <style>
     <%@include file='../css/bootstrap.css' %>
 </style>
 <!DOCTYPE html>
 <html>
+<fmt:bundle basename="app">
 <head>
     <title>Edit status</title>
 </head>
@@ -13,19 +17,19 @@
 </div>
 <div class="col-lg-10">
     <section>
-        <h3>Edit status</h3>
+        <h3><fmt:message key="dealphaseedit"/></h3>
         <hr>
         <jsp:useBean id="status" type="com.becomejavasenior.DealStatus" scope="request"/>
         <form method="post" action="deal_status?action=edit">
             <input type="hidden" name="id" value="${status.id}">
             <dl>
-                <dt>Name:</dt>
+                <dt><fmt:message key="name"/>:</dt>
                 <dd><input type="text" value="${status.name}" name="name"></dd>
             </dl>
             <dl>
-                <dt>Color:</dt>
+                <dt><fmt:message key="color"/>:</dt>
                 <dd>
-                    <select name="color" title="Цвет">
+                    <select name="color" title=<fmt:message key="color"/>>
                         <option value="${status.color}" disabled selected
                                 style="background-color: ${status.color}"></option>
                         <option value="#0040ff" style="background-color: #0040ff"></option>
@@ -50,10 +54,11 @@
                     </select>
                 </dd>
             </dl>
-            <button type="submit" class="btn btn-success">Save</button>
-            <button class="btn btn-default" onclick="window.history.back()">Cancel</button>
+            <button type="submit" class="btn btn-success"><fmt:message key="save"/></button>
+            <button class="btn btn-default" onclick="window.history.back()"><fmt:message key="cancel"/></button>
         </form>
     </section>
 </div>
 </body>
+    </fmt:bundle>
 </html>

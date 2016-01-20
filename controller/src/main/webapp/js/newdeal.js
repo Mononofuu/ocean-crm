@@ -11,7 +11,6 @@ newDeal.controller('DealController', function ($scope, $http, $filter, $window) 
         getTaskTypes($http, $scope);
         getUsers($http, $scope);
         getDealStatuses($http, $scope);
-
     });
     $scope.selectedContacts = [];
     $scope.formData = {};
@@ -77,6 +76,16 @@ function getContacts($http, $scope) {
         url: '../deal?action=getContacts'
     }).then(function successCallback(response) {
         $scope.contacts = response.data;
+    });
+}
+//Demo function
+function getCountry($http, $scope) {
+    $scope.country = [];
+    $http({
+        method: 'GET',
+        url: 'http://ip-api.com/json/'
+    }).then(function successCallback(response) {
+        $scope.country = response.data;
     });
 }
 
