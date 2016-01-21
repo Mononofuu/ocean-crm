@@ -92,7 +92,7 @@ public class TaskDAOImpl extends AbstractJDBCDao<Task> implements TaskDAO {
                 task.setType(TaskType.values()[rs.getInt("task_type_id")-1]);
                 task.setComment(rs.getString("comment"));
                 task.setIsClosed(rs.getByte("is_closed"));
-                task.setisDeleted(rs.getByte("is_deleted"));
+                task.setIsDeleted(rs.getByte("is_deleted"));
                 result.add(task);
             }
         } catch (SQLException e) {
@@ -207,7 +207,7 @@ public class TaskDAOImpl extends AbstractJDBCDao<Task> implements TaskDAO {
                 task.setType(TaskType.values()[rs.getInt("task_type_id")-1]);
                 task.setComment(rs.getString("comment"));
                 task.setIsClosed(rs.getByte("is_closed"));
-                task.setisDeleted(rs.getByte("is_deleted"));
+                task.setIsDeleted(rs.getByte("is_deleted"));
                 result.add(task);
             }
         } catch (SQLException e) {

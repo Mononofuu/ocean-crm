@@ -385,7 +385,8 @@
                             <th>Дата завершения</th>
                             <th>Имя пользователя</th>
                             <th>Тип</th>
-                            <th>Комментарий</th>
+                            <th>Текст задачи</th>
+                            <th></th>
                             <th></th>
                             <th></th>
                         </tr>
@@ -398,11 +399,31 @@
                                 <td>${task.user.name}</td>
                                 <td>${task.type.toString()}</td>
                                 <td>${task.comment}</td>
-                                <td>
-                                    <a href="/taskedit?action=edit&id=${task.id}&backurl=/dealedit?action=edit&subjectid=${deal.id}">Изменить</a></td>
-                                </td>
-                                <td>
-                                    <a href="/taskedit?action=delete&id=${task.id}&backurl=/dealedit?action=edit&subjectid=${deal.id}">Удалить</a></td>
+                                <c:choose>
+                                    <c:when test="${(task.isClosed == 1) || (task.isDeleted == 1)}">
+                                        <td></td>
+                                        <td></td>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <td><a href="/taskedit?action=edit&id=${task.id}&backurl=/dealedit?action=edit&subjectid=${deal.id}">Изменить</a></td>
+                                        <td><a href="/taskedit?action=delete&id=${task.id}&backurl=/dealedit?action=edit&subjectid=${deal.id}">Удалить</a></td>
+                                    </c:otherwise>
+                                </c:choose>
+                                <c:choose>
+                                    <c:when test="${task.isClosed == 1}">
+                                        <td>Закрыта</td>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <c:choose>
+                                            <c:when test="${task.isDeleted == 1}">
+                                                <td>Удалена</td>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <td></td>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </c:otherwise>
+                                </c:choose>
                             </tr>
                         </c:forEach>
                         </tbody>

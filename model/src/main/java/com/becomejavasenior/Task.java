@@ -89,7 +89,7 @@ public class Task implements Serializable {
         return isDeleted;
     }
 
-    public void setisDeleted(byte isDeleted) {
+    public void setIsDeleted(byte isDeleted) {
         this.isDeleted = isDeleted;
     }
 

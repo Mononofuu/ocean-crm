@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -50,16 +51,17 @@ public class TaskController extends HttpServlet{
                         GenericDao<Subject> subjectDao = dao.getDao(Subject.class);
                         Subject subject = subjectDao.read(Integer.parseInt(request.getParameter("subjectid")));
                         task.setSubject(subject);
-                        GenericDao<User> userDao = dao.getDao(User.class);
-                        User user = userDao.read(Integer.parseInt(request.getParameter("user")));
+                        User user = new UserServiceImpl().findUserById(Integer.parseInt(request.getParameter("user")));
                         task.setUser(user);
                         task.setDateCreated(new Date());
                         String duedate = request.getParameter("duedate");
                         if(!duedate.equals("")){
-                            SimpleDateFormat format = new SimpleDateFormat();
-                            format.applyPattern("mm/dd/yyyy");
-                            Date docDate= format.parse(duedate);
-                            task.setDueTime(docDate);
+                            String duetime = request.getParameter("duetime");
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyyHH:mm");
+                            task.setDueTime(dateFormat.parse(duedate+duetime));
+                        }else {
+                            String period = request.getParameter("period");
+                            task.setDueTime(getCalendarDate(period));
                         }
 //                        task.setUser((User) request.getSession().getAttribute("user"));
                         task.setComment(request.getParameter("taskcomment"));
@@ -79,14 +81,26 @@ public class TaskController extends HttpServlet{
                         task.setType(TaskType.valueOf(request.getParameter("tasktype")));
                         String duedate = request.getParameter("duedate");
                         if(!duedate.equals("")){
-                            SimpleDateFormat format = new SimpleDateFormat();
-                            format.applyPattern("mm/dd/yyyy");
-                            Date docDate= format.parse(duedate);
-                            task.setDueTime(docDate);
+                            String duetime = request.getParameter("duetime");
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyyHH:mm");
+                            task.setDueTime(dateFormat.parse(duedate+duetime));
+                        }else {
+                            String period = request.getParameter("period");
+                            task.setDueTime(getCalendarDate(period));
                         }
-                        GenericDao<User> userDao = dao.getDao(User.class);
-                        User user = userDao.read(Integer.parseInt(request.getParameter("user")));
+                        User user = new UserServiceImpl().findUserById(Integer.parseInt(request.getParameter("user")));
                         task.setUser(user);
+                        String submitname = request.getParameter("btn_task_update");
+                        switch (submitname){
+                            case "close":
+                                task.setIsClosed((byte)1);
+                                break;
+                            case "delete":
+                                task.setIsDeleted((byte)1);
+                                break;
+                            default:
+                                break;
+                        }
                         taskDao.update(task);
                         logger.info("task updated:");
                         logger.info(task.getId());
@@ -154,5 +168,42 @@ public class TaskController extends HttpServlet{
         return Integer.valueOf(paramId);
     }
 
-
+    private Date getCalendarDate(String period){
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
+        switch (period){
+            case "today":
+                c.add(Calendar.DAY_OF_MONTH, 1);
+                c.add(Calendar.MINUTE, -1);
+                break;
+            case "allday":
+                c.add(Calendar.DAY_OF_MONTH, 1);
+                c.add(Calendar.MINUTE, -1);
+                break;
+            case "tomorow":
+                c.add(Calendar.DAY_OF_MONTH, 2);
+                c.add(Calendar.MINUTE, -1);
+                break;
+            case "nextweek":
+                c.set(Calendar.DAY_OF_WEEK, 2);
+                c.add(Calendar.DAY_OF_MONTH,14);
+                c.add(Calendar.MINUTE, -1);
+                break;
+            case "nextmonth":
+                c.set(Calendar.DAY_OF_MONTH,0);
+                c.add(Calendar.MONTH, 2);
+                c.add(Calendar.MINUTE, -1);
+                break;
+            case "nextyear":
+                c.set(Calendar.DAY_OF_MONTH,0);
+                c.set(Calendar.MONTH,0);
+                c.add(Calendar.YEAR, 2);
+                c.add(Calendar.MINUTE, -1);
+                break;
+        }
+        return c.getTime();
+    }
 }
