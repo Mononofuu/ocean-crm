@@ -28,4 +28,7 @@
     <bean id="eventDAO" class="com.becomejavasenior.impl.EventTemplateDAOImpl">
         <property name="dataSource" ref="dataSource" />
     </bean>
+    <bean id="userDAO" class="com.becomejavasenior.impl.UserTemplateDAOImpl">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
 </beans>

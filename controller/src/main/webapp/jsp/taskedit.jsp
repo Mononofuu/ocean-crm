@@ -7,6 +7,7 @@
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="cal" uri="/WEB-INF/callendarTag" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <style>
     <%@include file='../css/bootstrap.css' %>
@@ -15,14 +16,18 @@
 <html>
 <head>
     <title>Редактирование задачи</title>
+    <link href="../resources/css/tasklist.css" rel="stylesheet" type="text/css"/>
+
+    <script src="../resources/js/jquery-1.11.3.min.js" type="text/javascript"></script>
+    <script src="../resources/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="../resources//js/tasklist.js" type="text/javascript"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.17/jquery-ui.min.js"></script>
     <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.17/themes/smoothness/jquery-ui.css"/>
-    <script>
-    $(function() {
-    $( "#datepicker" ).datepicker();
-    });
-    </script>
+
+    <link href="../resources/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="../resources/css/bootstrap-datetimepicker.min.css"/>
 
 </head>
 <body>
@@ -30,6 +35,7 @@
 <jsp:useBean id="task" type="com.becomejavasenior.Task" scope="request">
 <jsp:setProperty name="task" property="*" />
 </jsp:useBean>
+<jsp:useBean id="datetime" class="java.util.Date"/>
 
 <div class="col-xs-2">
     <jsp:include page="menu.jsp"/>
@@ -54,10 +60,30 @@
         </div>
 
         <div class="form-group">
-            <label class="col-xs-2 control-label" for="datepicker">Дата закрытия</label>
+            <label class="col-sm-2 control-label" for="period">Период</label>
+            <div class="col-sm-4">
+                <select class="form-control" name="period" id="period">
+                    <option value="today">Сегодня</option>
+                    <option value="allday">Весь день</option>
+                    <option value="tomorow">Завтра</option>
+                    <option value="nextweek">Следующая неделя</option>
+                    <option value="nextmonth">Следующий месяц</option>
+                    <option value="nextyear">Следующий год</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-xs-2 control-label" for="datepicker">или выбрать</label>
             <div class="col-xs-4">
-                <fmt:formatDate value="${task.dueTime}" pattern="MM/dd/yyyy" var="theFormattedDueTime"/>
-                <input class="form-control" type="text" id="datepicker" name="duedate" value="${theFormattedDueTime}"/>
+                <div class="col-xs-7">
+                    <fmt:formatDate value="${task.dueTime}" pattern="MM/dd/yyyy" var="theFormattedDateDueTime"/>
+                    <input class="form-control" type="text" id="datepicker" name="duedate" value="${theFormattedDateDueTime}"/>
+                </div>
+                <div class="col-xs-5">
+                    <fmt:formatDate value="${task.dueTime}" pattern="HH:ss" var="theFormattedTimeDueTime"/>
+                    <input class="form-control" type="text" id="timepicker" name="duetime" value="${theFormattedTimeDueTime}">
+                </div>
             </div>
         </div>
 

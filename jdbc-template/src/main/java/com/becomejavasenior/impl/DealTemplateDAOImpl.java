@@ -3,6 +3,8 @@ package com.becomejavasenior.impl;
 import com.becomejavasenior.*;
 import com.becomejavasenior.interfaceDAO.GenericTemplateDAO;
 import com.becomejavasenior.mapper.DealRowMapper;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 

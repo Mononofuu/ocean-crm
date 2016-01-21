@@ -2,6 +2,7 @@ package com.becomejavasenior.dashboard;
 
 import com.becomejavasenior.*;
 import com.becomejavasenior.impl.*;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import javax.servlet.ServletException;
@@ -17,7 +18,7 @@ import java.io.IOException;
 @WebServlet(name = "dashboardServlet")
 public class DashboardServlet extends HttpServlet {
 
-    private org.springframework.context.ApplicationContext context;
+    private ApplicationContext context;
     private DealTemplateDAOImpl dealDAO;
     private TaskTemplateDAOImpl taskDAO;
     private ContactTemplateDAOImpl contactDAO;
