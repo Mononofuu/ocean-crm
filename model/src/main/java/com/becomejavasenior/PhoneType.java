@@ -9,18 +9,18 @@ public enum PhoneType implements Serializable {
     @Override
     public String toString() {
         switch (this){
-            case WORK_PHONE_NUMBER:
-                return "Рабочий";
+            case WORK_PHONE_NUMBER:System.out.println("<spring:message code=\"label.phonework\"/>");
+                return "label.phonework";
             case WORK_DIRECT_PHONE_NUMBER:
-                return "Рабочий прямой";
+                return "label.phoneworkdirect";
             case MOBILE_PHONE_NUMBER:
-                return "Мобильный";
+                return "label.phonemobile";
             case FAX_NUMBER:
-                return "Факс";
+                return "label.phonefax";
             case HOME_PHONE_NUMBER:
-                return "Домашний";
+                return "label.phonehome";
             default:
-                return "Другой";
+                return "label.phoneother";
         }
     }
 }

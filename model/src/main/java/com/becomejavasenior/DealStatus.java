@@ -110,17 +110,17 @@ public class DealStatus implements Serializable, Comparable {
     public String toString() {
         switch (name){
             case "PRIMARY CONTACT":
-                return "Первичный контакт";
+                return "label.dealphase.primary";
             case "CONVERSATION":
-                return "Обсуждение";
+                return "label.dealphase.conversation";
             case "MAKE THE DECISION":
-                return "Принимают решение";
+                return "label.dealphase.makedecision";
             case "APPROVAL OF THE CONTRACT":
-                return "Согласование договора";
+                return "label.dealphase.approvalcontract";
             case "SUCCESS":
-                return "Успешно реализованно";
+                return "label.dealphase.success";
             case "CLOSED AND NOT IMPLEMENTED":
-                return "Закрыто и нереализованно";
+                return "label.dealphase.closedandnotimpl";
             default:
                 return name;
         }

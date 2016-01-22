@@ -8,11 +8,11 @@ public enum TaskType {
     public String toString() {
         switch (this){
             case FOLLOW_UP:
-                return "Follow-up";
+                return "label.tasktype.followup";
             case MEETING:
-                return "Встреча";
+                return "label.tasktype.meeting";
             default:
-                return "Другой";
+                return "label.tasktype.other";
         }
     }
 }

@@ -55,7 +55,7 @@ public class FilterDAOTest {
         System.out.println(returned.getDate_from());
         System.out.println(returned.getDate_to());
         System.out.println(returned.getStatus().getName());
-        System.out.println(returned.getManager().getName());
+        //System.out.println(returned.getManager().getName());
         System.out.println(returned.getTaskType().name());
         System.out.println(returned.getTags());
 

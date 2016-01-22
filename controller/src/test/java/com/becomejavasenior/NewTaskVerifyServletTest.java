@@ -37,6 +37,6 @@ public class NewTaskVerifyServletTest extends Mockito {
         verify(req, atLeastOnce()).getParameter("tasktext");
         verify(req, atLeastOnce()).getParameter("taskresponsible");
         verify(resp, atLeastOnce()).getWriter();
-        assertEquals(2, map.size());
+        assertEquals(3, map.size());
     }
 }

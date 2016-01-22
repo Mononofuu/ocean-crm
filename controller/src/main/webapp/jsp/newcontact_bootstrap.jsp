@@ -4,6 +4,7 @@
 -->
 <!--
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page isELIgnored="false" %>
 -->
@@ -35,21 +36,21 @@
               id="newcontactform">
         <div class="col-xs-4 autowindow">
 
-                <h4>Создание контакта</h4>
+                <h4><spring:message code="label.addcontact"/> </h4>
                 <div class="form-group">
                     <div class="col-sm-12">
-                        <input class="form-control" type="text" name="name" id="name" placeholder="Имя Фамилия">
+                        <input class="form-control" type="text" name="name" id="name" placeholder='<spring:message code="label.namesurname"/>'>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-sm-12">
-                        <input class="form-control" type="text" name="tags" id="tags" placeholder="Теги">
+                        <input class="form-control" type="text" name="tags" id="tags" placeholder='<spring:message code="label.tags"/>'>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-sm-12">
                         <select class="form-control" name="responsible" id="responsible">
-                            <option value="" disabled selected>Ответственный</option>
+                            <option value="" disabled selected><spring:message code="label.responsible"/> </option>
                             <c:forEach var="user" items="${userslist}">
                                 <option value="${user.id}">${user.name}</option>
                             </c:forEach>
@@ -58,35 +59,35 @@
                 </div>
                 <div class="form-group">
                     <div class="col-sm-12">
-                        <input class="form-control" type="text" name="position" id="position" placeholder="Должность">
+                        <input class="form-control" type="text" name="position" id="position" placeholder='<spring:message code="label.position"/>'>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-sm-7">
                         <input class="form-control" type="text" name="phonenumber" id="phonenumber"
-                               placeholder="Номер телефона">
+                               placeholder='<spring:message code="label.phonenumber"/>'>
                     </div>
                     <div class="col-sm-5">
                         <select class="form-control" name="phonetype" id="phonetype">
                             <c:forEach var="phonetype" items="${phonetypelist}">
-                                <option value="${phonetype}">${phonetype.toString()}</option>
+                                <option value="${phonetype}"><spring:message code="${phonetype.toString()}"/></option>
                             </c:forEach>
                         </select>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-sm-12">
-                        <input class="form-control" type="text" name="email" id="email" placeholder="Email">
+                        <input class="form-control" type="text" name="email" id="email" placeholder='<spring:message code="label.email"/>'>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-sm-12">
-                        <input class="form-control" type="text" name="skype" id="skype" placeholder="Skype">
+                        <input class="form-control" type="text" name="skype" id="skype" placeholder='<spring:message code="label.skype"/>'>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-sm-12">
-                        <textarea class="form-control" name="notes" id="notes" placeholder="Примечание к контакту"
+                        <textarea class="form-control" name="notes" id="notes" placeholder='<spring:message code="label.contactnote"/>'
                                   rows="4"></textarea>
                     </div>
                 </div>
@@ -95,65 +96,65 @@
                         <input type="file" min="1" max="10" name="file[]" id="file" multiple="true">
                     </div>
                 </div>
-                <input class="btn btn-primary" type="submit" value="Добавить" id="addcontact">
-                <input class="btn resetbutton" type="reset" value="Сбросить" id="resetcontact">
+                <input class="btn btn-primary" type="submit" value='<spring:message code="label.add"/>' id="addcontact">
+                <input class="btn resetbutton" type="reset" value='<spring:message code="label.reset"/>' id="resetcontact">
 
         </div>
         <div class="col-xs-4">
             <div class="col-sm-12 autowindow">
-                    <h4>Быстрое добавление сделки</h4>
+                    <h4><spring:message code="label.quickdealadd"/></h4>
                     <div class="form-group">
                         <div class="col-sm-12">
-                            <input class="form-control" type="text" name="newdealname" id="newdealname" placeholder="Название сделки">
+                            <input class="form-control" type="text" name="newdealname" id="newdealname" placeholder='<spring:message code="label.dealname"/>'>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-sm-12">
                             <select class="form-control" name="dealtype" id="dealtype">
-                                <option value="" disabled selected>Этап</option>
+                                <option value="" disabled selected><spring:message code="label.phase"/></option>
                                 <c:forEach var="dealstatus" items="${dealstatuses}">
-                                    <option value="${dealstatus.id}">${dealstatus.toString()}</option>
+                                    <option value="${dealstatus.id}"><spring:message code="${dealstatus.toString()}"/></option>
                                 </c:forEach>
                             </select>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-sm-9">
-                            <input class="form-control" type="text" name="budget" id="budget" placeholder="Бюджет">
+                            <input class="form-control" type="text" name="budget" id="budget" placeholder='<spring:message code="label.budget"/>'>
                         </div>
                         <div class="col-sm-2">
-                            <label for="budget">Гр.</label>
+                            <label for="budget"><spring:message code="label.uan"/></label>
                         </div>
                     </div>
-                    <input class="btn btn-primary" type="submit" value="Добавить" id="adddeal">
+                    <input class="btn btn-primary" type="submit" value='<spring:message code="label.add"/>' id="adddeal">
             </div>
             <div class="col-sm-12 autowindow">
-                    <h4>Запланировать действие</h4>
+                    <h4><spring:message code="label.addtask"/></h4>
                     <div class="form-group small-gutter">
                         <div class="col-sm-4">
                             <select class="form-control" name="period" id="period">
-                                <option value="today">Сегодня</option>
-                                <option value="allday">Весь день</option>
-                                <option value="tomorow">Завтра</option>
-                                <option value="nextweek">Следующая неделя</option>
-                                <option value="nextmonth">Следующий месяц</option>
-                                <option value="nextyear">Следующий год</option>
+                                <option value="today"><spring:message code="label.today"/></option>
+                                <option value="allday"><spring:message code="label.allday"/></option>
+                                <option value="tomorow"><spring:message code="label.tomorow"/></option>
+                                <option value="nextweek"><spring:message code="label.nextweek"/></option>
+                                <option value="nextmonth"><spring:message code="label.nextmonth"/></option>
+                                <option value="nextyear"><spring:message code="label.nextyear"/></option>
                             </select>
                         </div>
                         <div class="col-sm-1">
-                            <label for="period">или</label>
+                            <label for="period"><spring:message code="label.or"/></label>
                         </div>
                         <div class="col-sm-3">
-                            <input class="form-control" type="text" id="datepicker" name="duedate" placeholder="дата">
+                            <input class="form-control" type="text" id="datepicker" name="duedate" placeholder='<spring:message code="label.date"/>'>
                         </div>
                         <div class="col-sm-3">
-                            <input class="form-control" type="text" id="timepicker" name="duetime" placeholder="время">
+                            <input class="form-control" type="text" id="timepicker" name="duetime" placeholder='<spring:message code="label.time"/>'>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-sm-12">
                             <select class="form-control" name="taskresponsible" id="taskresponsible">
-                                <option value="" disabled selected>Ответственный</option>
+                                <option value="" disabled selected><spring:message code="label.responsible"/></option>
                                 <c:forEach var="user" items="${userslist}">
                                     <option value="${user.id}">${user.name}</option>
                                 </c:forEach>
@@ -163,29 +164,29 @@
                     <div class="form-group">
                         <div class="col-sm-12">
                             <select class="form-control" name="tasktype" id="tasktype">
-                                <option value="" disabled selected>Тип задачи</option>
+                                <option value="" disabled selected><spring:message code="label.tasktype"/></option>
                                 <c:forEach var="tasktype" items="${tasktypes}">
-                                    <option value="${tasktype.ordinal()}">${tasktype.toString()}</option>
+                                    <option value="${tasktype.ordinal()}"><spring:message code="${tasktype.toString()}"/></option>
                                 </c:forEach>
                             </select>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-sm-12">
-                            <textarea class="form-control" name="tasktext" id="tasktext" placeholder="Текст задачи"
+                            <textarea class="form-control" name="tasktext" id="tasktext" placeholder='<spring:message code="label.tasknote"/>'
                                       rows="2"></textarea>
                         </div>
                     </div>
-                    <input class="btn btn-primary" type="submit" value="Добавить" id="addtask">
+                    <input class="btn btn-primary" type="submit" value='<spring:message code="label.add"/>' id="addtask">
             </div>
         </div>
         </form>
         <div class="col-xs-2 autowindow">
             <div class="row">
                 <div class="form-group">
-                    <label for="companyselect">Выбрать компанию</label>
+                    <label for="companyselect"><spring:message code="label.choosecompany"/></label>
                     <select class="form-control" id="companyselect" name="companyid" form="newcontactform">
-                        <option value="" disabled selected>Выбор Компании</option>
+                        <option value="" disabled selected></option>
                         <c:forEach var="company" items="${companylist}">
                             <option value="${company.id}">${company.name}</option>
                         </c:forEach>
@@ -195,27 +196,27 @@
             <div class="row">
                 <form method="post" id="newcompanyform" action="/new_company">
                     <div class="form-group">
-                        <label for="newcompanyname">Создайть новую компанию</label>
+                        <label for="newcompanyname"><spring:message code="label.addcompany"/></label>
                         <input class="form-control" type="text" name="newcompanyname" id="newcompanyname"
-                               placeholder="Название компании">
+                               placeholder='<spring:message code="label.companyname"/>'>
                     </div>
                     <div class="form-group">
                         <input class="form-control" type="text" name="newcompanyphone" id="newcompanyphone"
-                               placeholder="Телефон">
+                        placeholder='<spring:message code="label.phonenumber"/>'>
                     </div>
                     <div class="form-group">
                         <input class="form-control" type="text" name="newcompanyemail" id="newcompanyemail"
-                               placeholder="Email">
+                               placeholder='<spring:message code="label.email"/>'>
                     </div>
                     <div class="form-group">
                         <input class="form-control" type="text" name="newcompanywebaddress" id="newcompanywebaddress"
-                               placeholder="Web-адрес">
+                               placeholder='<spring:message code="label.web"/>'>
                     </div>
                     <div class="form-group">
                         <input class="form-control" type="text" name="newcompanyaddress" id="newcompanyaddress"
-                               placeholder="Адрес">
+                               placeholder='<spring:message code="label.address"/>'>
                     </div>
-                    <input name="submit" class="btn btn-primary" type="submit" value="Добавить Компанию">
+                    <input name="submit" class="btn btn-primary" type="submit" value='<spring:message code="label.addcompany"/>'>
                 </form>
             </div>
         </div>

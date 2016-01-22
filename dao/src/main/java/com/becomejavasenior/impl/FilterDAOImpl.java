@@ -113,7 +113,11 @@ public class FilterDAOImpl extends AbstractJDBCDao<Filter> implements FilterDAO 
             statement.setTimestamp(4, object.getDate_from());
             statement.setTimestamp(5, object.getDate_to());
             statement.setInt(6, object.getStatus().getId());
-            statement.setInt(7, object.getManager().getId());
+            if(object.getManager()!=null){
+                statement.setInt(7, object.getManager().getId());
+            }else {
+                statement.setNull(7, Types.INTEGER);
+            }
             statement.setString(8, object.getTaskType().name());
             statement.setString(9, object.getTags());
             statement.setInt(10, object.getId());
