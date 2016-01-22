@@ -3,12 +3,14 @@ package com.becomejavasenior.impl;
 
 import com.becomejavasenior.*;
 import com.becomejavasenior.interfacedao.ContactDAO;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-public class ContactDAOImpl extends AbstractJDBCDao<Contact> implements ContactDAO {
+public class ContactDAOImpl extends AbstractContactDAO<Contact> implements ContactDAO {
+    private Logger logger = LogManager.getLogger(ContactDAOImpl.class);
 
     @Override
     protected String getConditionStatment() {
@@ -17,7 +19,7 @@ public class ContactDAOImpl extends AbstractJDBCDao<Contact> implements ContactD
 
     @Override
     public String getReadAllQuery() {
-        return "SELECT contact.id, post, phone_type_id, phone, email, skype, company_id, name  FROM contact JOIN subject ON subject.id=contact.id ";
+        return "SELECT DISTINCT contact.id, post, phone_type_id, phone, email, skype, contact.company_id, name  FROM contact JOIN subject ON subject.id=contact.id ";
     }
 
     @Override
@@ -158,5 +160,20 @@ public class ContactDAOImpl extends AbstractJDBCDao<Contact> implements ContactD
             throw new DataBaseException(e);
         }
         return result;
+    }
+
+    @Override
+    protected String getLeftJoinTask() {
+        return " LEFT JOIN task ON contact.id=task.subject_id";
+    }
+
+    @Override
+    protected String getLeftJoinDeal() {
+        return " LEFT JOIN deal ON contact.id=deal.contact_main_id";
+    }
+
+    @Override
+    protected String getLeftJoinSubjectTag() {
+        return " JOIN subject_tag ON contact.id=subject_tag.subject_id";
     }
 }

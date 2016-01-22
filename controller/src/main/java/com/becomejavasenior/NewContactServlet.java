@@ -22,7 +22,7 @@ import java.util.*;
  */
 @WebServlet("/new_contact_add")
 public class NewContactServlet extends HttpServlet {
-    private Logger logger = LogManager.getLogger(NewContactServlet.class);
+    private static Logger logger = LogManager.getLogger(NewContactServlet.class);
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         this.process(request, response);

@@ -8,10 +8,10 @@ import org.apache.logging.log4j.Logger;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-public class CompanyDAOImpl extends AbstractJDBCDao<Company> implements CompanyDAO {
+public class CompanyDAOImpl extends AbstractContactDAO<Company> implements CompanyDAO {
+    private Logger logger = LogManager.getLogger(CompanyDAOImpl.class);
 
     public CompanyDAOImpl(DaoFactory daoFactory) {
         super(daoFactory);
@@ -24,7 +24,7 @@ public class CompanyDAOImpl extends AbstractJDBCDao<Company> implements CompanyD
 
     @Override
     public String getReadAllQuery() {
-        return "SELECT company.id, phone_number, email, web, address, name  FROM company JOIN subject ON subject.id=company.id ";
+        return "SELECT DISTINCT company.id, phone_number, email, web, address, name  FROM company JOIN subject ON subject.id=company.id ";
     }
 
     @Override
@@ -147,5 +147,20 @@ public class CompanyDAOImpl extends AbstractJDBCDao<Company> implements CompanyD
             throw new DataBaseException(e);
         }
         return result;
+    }
+
+    @Override
+    protected String getLeftJoinTask() {
+        return " LEFT JOIN task ON company.id=task.subject_id";
+    }
+
+    @Override
+    protected String getLeftJoinDeal() {
+        return " LEFT JOIN deal ON company.id=deal.contact_main_id";
+    }
+
+    @Override
+    protected String getLeftJoinSubjectTag() {
+        return " JOIN subject_tag ON company.id=subject_tag.subject_id";
     }
 }

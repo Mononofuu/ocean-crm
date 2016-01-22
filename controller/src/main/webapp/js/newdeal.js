@@ -11,7 +11,6 @@ newDeal.controller('DealController', function ($scope, $http, $filter, $window) 
         getTaskTypes($http, $scope);
         getUsers($http, $scope);
         getDealStatuses($http, $scope);
-
     });
     $scope.selectedContacts = [];
     $scope.formData = {};
@@ -50,6 +49,7 @@ newDeal.controller('DealController', function ($scope, $http, $filter, $window) 
 
     $scope.processForm = function (type) {
         $scope.formData.dealcreated = $filter("date")($scope.formData.dealcreated, 'yyyy-MM-dd');
+        $scope.formData.taskduedate = $filter("date")($scope.formData.taskduedate, 'MM/dd/yyyy HH:mm');
         $http({
             method: 'POST',
             url: '/deal?action=' + type,
@@ -76,6 +76,16 @@ function getContacts($http, $scope) {
         url: '../deal?action=getContacts'
     }).then(function successCallback(response) {
         $scope.contacts = response.data;
+    });
+}
+//Demo function
+function getCountry($http, $scope) {
+    $scope.country = [];
+    $http({
+        method: 'GET',
+        url: 'http://ip-api.com/json/'
+    }).then(function successCallback(response) {
+        $scope.country = response.data;
     });
 }
 

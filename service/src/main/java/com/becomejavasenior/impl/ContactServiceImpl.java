@@ -1,24 +1,22 @@
 package com.becomejavasenior.impl;
 
 import com.becomejavasenior.*;
-import com.becomejavasenior.interfacedao.ContactDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import java.util.List;
 
 /**
  * Created by Peter on 18.12.2015.
  */
-public class ContactServiceImpl implements ContactService{
+public class ContactServiceImpl extends AbstractContactService<Contact> implements ContactService{
     private static Logger logger = LogManager.getLogger(ContactServiceImpl.class);
     private DaoFactory dao;
-    private ContactDAO contactDAO;
+    private ContactDAOImpl contactDAO;
 
     public ContactServiceImpl(){
         try {
             dao = new PostgreSqlDaoFactory();
-            contactDAO = (ContactDAO) dao.getDao(Contact.class);
+            contactDAO = (ContactDAOImpl) dao.getDao(Contact.class);
         } catch (DataBaseException e) {
             logger.error(e);
         }
@@ -37,6 +35,12 @@ public class ContactServiceImpl implements ContactService{
             return contact;
         } else {
             contactDAO.update(contact);
+            if(contact.getTasks().size()>0){
+                saveTasks(contact.getTasks());
+            }
+            if(contact.getDeals().size()>0){
+                saveDeals(contact.getDeals());
+            }
             return contactDAO.read(contact.getId());
         }
     }
@@ -87,5 +91,10 @@ public class ContactServiceImpl implements ContactService{
         for(Deal deal: deals){
             dealService.saveDeal(deal);
         }
+    }
+
+    @Override
+    protected AbstractContactDAO<Contact> getDao() {
+        return contactDAO;
     }
 }

@@ -33,27 +33,32 @@ public class ViewAllContactsServlet extends HttpServlet {
         process(req, resp);
     }
 
-    private void process(HttpServletRequest req, HttpServletResponse resp) throws IOException{
+    private void process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException{
         try {
             ContactService contactService = new ContactServiceImpl();
             CompanyService companyService = new CompanyServiceImpl();
             UserService userService = new UserServiceImpl();
             TagService tagService = new TagServiceImpl();
-            List<Contact> allContacts = contactService.findContacts();
+            List<Contact> allContacts;
+            List<Company> allCompanies;
+            if(req.getParameter("filtername")!=null){
+                allContacts = contactService.getAllContactsByParameters(req.getParameterMap());
+                allCompanies = companyService.getAllCompanyesByParameters(req.getParameterMap());
+            }else {
+                allContacts = contactService.findContacts();
+                allCompanies = companyService.findCompanies();
+            }
             Collections.sort(allContacts, (o1, o2) -> o1.getName().compareTo(o2.getName()));
+            Collections.sort(allCompanies, (o1, o2) -> o1.getName().compareTo(o2.getName()));
             req.setAttribute("contactlist", allContacts);
-            List<Company> allCompanies = companyService.findCompanies();
-            Collections.sort(allCompanies, ((o1, o2) -> o1.getName().compareTo(o2.getName())));
             req.setAttribute("companylist", allCompanies);
             List<Tag> tags = tagService.getAllTags();
             Collections.sort(tags, ((o1, o2) -> o1.getName().compareTo(o2.getName())));
             req.setAttribute("tags", tags);
             req.setAttribute("users", userService.getAllUsers());
-            getServletContext().getRequestDispatcher("/jsp/viewallcontacts.jsp").forward(req,resp);
         } catch (DataBaseException e) {
-            logger.error("Error when prepearing data for tasklist.jsp",e);
-        } catch (ServletException e) {
-            logger.error("Error when prepearing data for tasklist.jsp",e);
+            logger.error(e);
         }
+        getServletContext().getRequestDispatcher("/jsp/viewallcontacts.jsp").forward(req,resp);
     }
 }

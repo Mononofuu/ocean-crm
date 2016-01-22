@@ -247,4 +247,22 @@ public abstract class AbstractJDBCDao<T> implements GenericDao<T>{
             }
         }
     }
+
+    protected List<T> realiseQuery(String query)throws DataBaseException{
+        List<T> result;
+        try (Connection connection = getConnection();
+             Statement statement = connection.createStatement()
+        ){
+            LOGGER.info(query);
+            ResultSet rs = statement.executeQuery(query);
+            result = parseResultSet(rs);
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+            throw new DataBaseException(e);
+        }
+        if (result == null) {
+            throw new DataBaseException();
+        }
+        return result;
+    }
 }
