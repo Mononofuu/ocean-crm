@@ -67,7 +67,7 @@
 					<div class="form-group">
 						<div class="col-sm-12">
 							<label class="radio-inline"><input type="radio" name="periodtype" value="created" checked="checked">созданы</label>
-							<label class="radio-inline"><input type="radio" name="periodtype" value="edited">изменены</label>
+							<label class="radio-inline"><input type="radio" name="periodtype" value="updated">изменены</label>
 						</div>
 					</div>
 					<div class="form-group col-sm-12">

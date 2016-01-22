@@ -10,5 +10,5 @@ import java.util.List;
 
 public interface CompanyDAO extends GenericDao<Company>{
     Company readCompanyByName(String name)throws DataBaseException;
-    List<Company> getAllContactsByParameters(List<ContactFilters> parameters, String userId, List<Integer> tagIdList, Date taskStartDate, Date taskDueDate) throws DataBaseException;
+    List<Company> getAllContactsByParameters(List<ContactFilters> parameters, String userId, List<Integer> tagIdList, List<Date> taskDate, List<Date> createUpdateDate, String createUpdateFlag) throws DataBaseException;
 }

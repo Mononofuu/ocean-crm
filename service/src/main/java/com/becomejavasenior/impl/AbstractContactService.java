@@ -5,6 +5,8 @@ import com.becomejavasenior.DataBaseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -19,8 +21,9 @@ public abstract class AbstractContactService<T> {
         List<ContactFilters> parametersList = new ArrayList<>();
         String userId = null;
         List<Integer> tagIdList = new ArrayList<>();
-        Date taskStartDate = null;
-        Date taskDueDate = null;
+        List<Date> taskDate = new ArrayList<>();
+        List<Date> createUpdateDate = new ArrayList<>();
+        String createUpdate = null;
         String filter = parameters.get("filtername")[0];
         switch (filter){
             case "overduetaskcontacts":
@@ -29,6 +32,8 @@ public abstract class AbstractContactService<T> {
             case "tasklesscontacts":
                 parametersList.add(ContactFilters.WITHOUT_TASKS);
                 break;
+            case "dellitedcontacts":
+                parametersList.add(ContactFilters.DELETED_CONTACTS);
             default:
                 break;
         }
@@ -54,16 +59,41 @@ public abstract class AbstractContactService<T> {
                     parametersList.add(ContactFilters.WITH_OVERDUE_TASKS);
                     break;
                 default:
-                    List<Date> dates = setStartAndDueDates(period);
-                    taskStartDate = dates.get(0);
-                    taskDueDate = dates.get(1);
+                    taskDate = getStartAndDueTaskDates(period);
             }
         }
-        logger.debug(taskStartDate);
-        logger.debug(taskDueDate);
-        return getDao().getAllContactsByParameters(parametersList, userId, tagIdList, taskStartDate, taskDueDate);
+        String createPeriod = parameters.get("period")[0];
+        if(!"".equals(createPeriod)&&!"all".equals(createPeriod)){
+            String strDate = parameters.get("duedate")[0];
+            if("period".equals(createPeriod)&&!"".equals(strDate)){
+                createUpdateDate = getPeriodCreateUpdateDates(strDate);
+            }else {
+                createUpdateDate = getStartAndDueCreateUpdateDates(createPeriod);
+            }
+            createUpdate = parameters.get("periodtype")[0];
+        }
+        return getDao().getAllContactsByParameters(parametersList, userId, tagIdList, taskDate, createUpdateDate, createUpdate);
     }
 
+    private List<Date> getPeriodCreateUpdateDates(String strDate){
+        List<Date> result = new ArrayList<>();
+        SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+        Calendar date = Calendar.getInstance();
+        try {
+            date.setTime(format.parse(strDate));
+            date.set(Calendar.HOUR_OF_DAY, 0);
+            date.set(Calendar.MINUTE, 0);
+            date.set(Calendar.SECOND, 0);
+            date.set(Calendar.MILLISECOND, 0);
+            result.add(date.getTime());
+            date.add(Calendar.DAY_OF_MONTH, 1);
+            date.add(Calendar.MINUTE, -1);
+            result.add(date.getTime());
+        } catch (ParseException e) {
+            logger.error(e);
+        }
+        return result;
+    }
     private List<ContactFilters> parseDealFilters(String[] filters){
         List<ContactFilters> result = new ArrayList<>();
         if(filters!=null&&filters.length>0){
@@ -98,7 +128,57 @@ public abstract class AbstractContactService<T> {
         return result;
     }
 
-    private List<Date> setStartAndDueDates(String period){
+    private List<Date> getStartAndDueCreateUpdateDates(String period){
+        Date startDate = null;
+        Date dueDate = null;
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
+        switch (period){
+            case "today":
+                startDate = c.getTime();
+                c.add(Calendar.DAY_OF_MONTH, 1);
+                c.add(Calendar.MINUTE, -1);
+                dueDate = c.getTime();
+                break;
+            case "3days":
+                c.add(Calendar.DAY_OF_MONTH, -2);
+                startDate = c.getTime();
+                c.add(Calendar.DAY_OF_MONTH, 3);
+                c.add(Calendar.MINUTE, -1);
+                dueDate = c.getTime();
+                break;
+            case "week":
+                c.add(Calendar.DAY_OF_MONTH, -7);
+                startDate = c.getTime();
+                c.add(Calendar.DAY_OF_MONTH, 8);
+                c.add(Calendar.MINUTE, -1);
+                dueDate = c.getTime();
+                break;
+            case "month":
+                c.add(Calendar.DAY_OF_MONTH, -30);
+                startDate = c.getTime();
+                c.add(Calendar.DAY_OF_MONTH, 31);
+                c.add(Calendar.MINUTE, -1);
+                dueDate = c.getTime();
+                break;
+            case "quarter":
+                c.add(Calendar.DAY_OF_MONTH, -90);
+                startDate = c.getTime();
+                c.add(Calendar.DAY_OF_MONTH, 91);
+                c.add(Calendar.MINUTE, -1);
+                dueDate = c.getTime();
+                break;
+        }
+        List<Date> result = new ArrayList<>();
+        result.add(startDate);
+        result.add(dueDate);
+        return result;
+    }
+
+    private List<Date> getStartAndDueTaskDates(String period){
         Date startDate = null;
         Date dueDate = null;
         Calendar c = Calendar.getInstance();

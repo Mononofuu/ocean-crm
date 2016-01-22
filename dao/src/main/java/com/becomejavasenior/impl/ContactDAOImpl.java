@@ -19,7 +19,7 @@ public class ContactDAOImpl extends AbstractContactDAO<Contact> implements Conta
 
     @Override
     public String getReadAllQuery() {
-        return "SELECT DISTINCT contact.id, post, phone_type_id, phone, email, skype, contact.company_id, name  FROM contact JOIN subject ON subject.id=contact.id ";
+        return "SELECT DISTINCT contact.id, post, phone_type_id, phone, email, skype, contact.company_id, name, removed  FROM contact JOIN subject ON subject.id=contact.id ";
     }
 
     @Override
@@ -175,5 +175,10 @@ public class ContactDAOImpl extends AbstractContactDAO<Contact> implements Conta
     @Override
     protected String getLeftJoinSubjectTag() {
         return " JOIN subject_tag ON contact.id=subject_tag.subject_id";
+    }
+
+    @Override
+    protected String getTableName() {
+        return "contact";
     }
 }

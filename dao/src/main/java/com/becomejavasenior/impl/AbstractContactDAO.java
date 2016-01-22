@@ -24,11 +24,11 @@ public abstract class AbstractContactDAO<T> extends AbstractJDBCDao<T> {
 
     protected abstract String getLeftJoinSubjectTag();
 
-    public List<T> getAllContactsByParameters(List<ContactFilters> parameters, String userId, List<Integer> tagIdList, Date taskStartDate, Date taskDueDate) throws DataBaseException {
-        return realiseQuery(getParametrisedReadQuery(parameters, userId, tagIdList, taskStartDate, taskDueDate));
+    public List<T> getAllContactsByParameters(List<ContactFilters> parameters, String userId, List<Integer> tagIdList, List<Date> taskDate, List<Date> createUpdateDate, String createUpdateFlag) throws DataBaseException {
+        return realiseQuery(getParametrisedReadQuery(parameters, userId, tagIdList, taskDate, createUpdateDate, createUpdateFlag));
     }
 
-    protected String getParametrisedReadQuery(List<ContactFilters> parameters, String userId, List<Integer> tagIdList, Date taskStartDate, Date taskDueDate){
+    protected String getParametrisedReadQuery(List<ContactFilters> parameters, String userId, List<Integer> tagIdList, List<Date> taskDate, List<Date> createUpdateDate, String createUpdateFlag){
         StringBuilder result = new StringBuilder(getReadAllQuery());
         Set<String> joinQueries = new HashSet<>();//заполняется JOIN запроссами
         Set<String> whereQueries = new HashSet<>();//заполняется WHERE условиями
@@ -63,6 +63,9 @@ public abstract class AbstractContactDAO<T> extends AbstractJDBCDao<T> {
             if(parameters.contains(ContactFilters.NOT_REALISED_CONTACTS)){
                 fillSets(joinQueries, whereQueries, getNotRealisedContactsQuery());
             }
+            if(parameters.contains(ContactFilters.DELETED_CONTACTS)){
+                whereQueries.add(" AND removed = TRUE");
+            }
         }
         if(userId!=null){
             whereQueries.add(" AND content_owner_id = "+userId);
@@ -70,9 +73,13 @@ public abstract class AbstractContactDAO<T> extends AbstractJDBCDao<T> {
         if(tagIdList!=null&&tagIdList.size()>0){
             fillSets(joinQueries, whereQueries, getContactsByTagsQuery(tagIdList));
         }
-        if(taskStartDate!=null&&taskDueDate!=null){
-            fillSets(joinQueries, whereQueries, getContactsByTaskPeriod(taskStartDate, taskDueDate));
+        if(taskDate!=null&&taskDate.size()>0){
+            fillSets(joinQueries, whereQueries, getContactsByTaskPeriod(taskDate.get(0), taskDate.get(1)));
         }
+        if(createUpdateDate!=null&&createUpdateDate.size()>0){
+            whereQueries.add(getContactsByCreatePeriod(createUpdateDate.get(0), createUpdateDate.get(1), createUpdateFlag));
+        }
+
         for(String join: joinQueries){
             result.append(join);
         }
@@ -154,4 +161,14 @@ public abstract class AbstractContactDAO<T> extends AbstractJDBCDao<T> {
         String[] result = {getLeftJoinTask(), andStatment};
         return  result;
     }
+
+    private String getContactsByCreatePeriod(Date startDate, Date endDate, String createUpdateFlag){
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String result = " AND "+getTableName()+".date_"+createUpdateFlag+" BETWEEN '"+dateFormat.format(startDate)+"' AND '"+dateFormat.format(endDate)+"'";
+        return result;
+    }
+
+    protected abstract String getTableName();
+
+
 }

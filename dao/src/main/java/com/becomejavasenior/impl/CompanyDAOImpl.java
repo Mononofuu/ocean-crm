@@ -24,7 +24,7 @@ public class CompanyDAOImpl extends AbstractContactDAO<Company> implements Compa
 
     @Override
     public String getReadAllQuery() {
-        return "SELECT DISTINCT company.id, phone_number, email, web, address, name  FROM company JOIN subject ON subject.id=company.id ";
+        return "SELECT DISTINCT company.id, phone_number, email, web, address, name, removed  FROM company JOIN subject ON subject.id=company.id ";
     }
 
     @Override
@@ -162,5 +162,10 @@ public class CompanyDAOImpl extends AbstractContactDAO<Company> implements Compa
     @Override
     protected String getLeftJoinSubjectTag() {
         return " JOIN subject_tag ON company.id=subject_tag.subject_id";
+    }
+
+    @Override
+    protected String getTableName() {
+        return "company";
     }
 }
