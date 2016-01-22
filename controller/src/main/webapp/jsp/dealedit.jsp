@@ -26,6 +26,7 @@
     <jsp:include page="menu.jsp"/>
 </div>
 <div class="col-xs-10">
+
     <h3>Редактирование сделки</h3>
     <div class="tabbable tabs-below col-md-10">
         <ul class="nav nav-tabs">
@@ -175,176 +176,187 @@
             </div>
 
             <div class="tab-pane container-fluid" id="contacts">
-                <div class="tabbable tabs-left">
-                    <ul class="nav nav-tabs" for="dealstatus">
-                        <c:forEach items="${dealcontacts}" var="contact" varStatus="status">
-                            <li><a href="#contact${contact.id}" data-toggle="tab">${contact.name}</a></li>
-                        </c:forEach>
-                        <li><a href="#contactnew" data-toggle="tab">Добавить ...</a></li>
-                    </ul>
 
-                   <div class="tab-content col-xs-9">
-                        <c:forEach items="${dealcontacts}" var="contact" varStatus="status">
+                <div class="panel-group" id="accordion">
 
-                        <c:choose>
-                            <c:when test="${status.getIndex() == 0}">
+                    <c:forEach items="${dealcontacts}" var="contact" varStatus="status">
 
-                            </c:when>
-                            <c:otherwise>
+                        <div class="panel-info">
+                            <div class="panel-heading">
+                            <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#accordion${contact.id}">
+                            ${contact.name}
+                            </a>
+                            </h4>
+                        </div>
 
-                            </c:otherwise>
-                        </c:choose>
+                            <div id="accordion${contact.id}" class="panel-collapse collapse">
+                                <div class="panel-body">
+
+                                    <form  class="form-horizontal" method="post" action="dealedit?action=contactupdate&contactid=${contact.id}&dealid=${deal.id}">
+                                        <fieldset>
+
+                                            <div class="form-group">
+                                                <label class="col-xs-2 control-label" for="contactname${contact.id}">Имя</label>
+                                                <div class="col-xs-8">
+                                                    <input id="contactname${contact.id}" name="contactname${contact.id}" type="text" placeholder="" class="form-control input-md" value="${contact.name}">
+
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="col-xs-2 control-label" for="contactcompany${contact.id}">Компания</label>
+                                                <div class="col-xs-8">
+                                                    <select id="contactcompany${contact.id}" name="contactcompany${contact.id}" class="form-control">
+                                                        <c:forEach items="${companies}" var="company">
+                                                            <c:choose>
+                                                                <c:when test="${company.id == contact.company.id}">
+                                                                    <option selected value=${company.id}>${company.name}</option>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <option value=${company.id}>${company.name}</option>
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                        </c:forEach>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <button type="submit" class="btn btn-default navbar-btn" name="button_updatecontact${contact.id}" value="companyedit">
+                                                        <span class="glyphicon glyphicon-pencil"></span>
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="col-xs-2 control-label" for="contactpost${contact.id}">Должность</label>
+                                                <div class="col-xs-8">
+                                                    <input id="contactpost${contact.id}" name="contactpost${contact.id}" type="text" placeholder="" class="form-control input-md" value="${contact.post}">
+
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="col-xs-2 control-label" for="contactphone${contact.id}">Номер телефона</label>
+                                                <div class="col-xs-8">
+                                                    <input id="contactphone${contact.id}" name="contactphone${contact.id}" type="text" placeholder="" class="form-control input-md" required="" value="${contact.phone}">
+
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="col-xs-2 control-label" for="contactphonetype${contact.id}"></label>
+                                                <div class="col-xs-8">
+                                                    <select id="contactphonetype${contact.id}" name="contactphonetype${contact.id}" class="form-control">
+                                                        <c:forEach items="${phonetypes}" var="phonetype">
+                                                            <c:choose>
+                                                                <c:when test="${phonetype == contact.phoneType}">
+                                                                    <option selected value=${phonetype}>${phonetype.toString()}</option>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <option value=${phonetype}>${phonetype.toString()}</option>
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                        </c:forEach>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="col-xs-2 control-label" for="contactuser${contact.id}">Ответственный</label>
+                                                <div class="col-xs-8">
+                                                    <select id="contactuser${contact.id}" name="contactuser${contact.id}" class="form-control">
+                                                        <c:forEach items="${users}" var="user">
+                                                            <c:choose>
+                                                                <c:when test="${user.id == contact.user.id}">
+                                                                    <option selected value=${user.id}>${user.name}</option>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <option value=${user.id}>${user.name}</option>
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                        </c:forEach>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="col-xs-2 control-label" for="contactemail${contact.id}">E-mail</label>
+                                                <div class="col-xs-8">
+                                                    <input id="contactemail${contact.id}" name="contactemail${contact.id}" type="text" placeholder="" class="form-control input-md" value="${contact.email}"}>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="col-xs-2 control-label" for="contactskype${contact.id}">Skype</label>
+                                                <div class="col-xs-8">
+                                                    <input id="contactskype${contact.id}" name="contactskype${contact.id}" type="text" placeholder="" class="form-control input-md" value="${contact.skype}">
+                                                </div>
+                                            </div>
+
+                                            <label class="col-md-2 control-label" for="button_savecontact${contact.id}"></label>
+                                            <div class="col-md-2">
+                                                <button id="button_savecontact${contact.id}" name="button_updatecontact${contact.id}" value="save" class="btn btn-default navbar-btn">Записать</button>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <button id="button_deletecontact${contact.id}" name="button_updatecontact${contact.id}" value="delete" class="btn btn-default navbar-btn">Удалить из сделки</button>
+                                            </div>
+                                        </fieldset>
+
+                                    </form>
 
 
-                        <div class="tab-pane container-fluid" id="contact${contact.id}">
-                            <div class="form-group">
 
-                            <form  class="form-horizontal" method="post" action="dealedit?action=contactupdate&contactid=${contact.id}&dealid=${deal.id}">
-                                <fieldset>
-
-                                    <div class="form-group">
-                                        <label class="col-xs-2 control-label" for="contactname${contact.id}">Имя</label>
-                                        <div class="col-xs-8">
-                                            <input id="contactname${contact.id}" name="contactname${contact.id}" type="text" placeholder="" class="form-control input-md" value="${contact.name}">
-
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label class="col-xs-2 control-label" for="contactcompany${contact.id}">Компания</label>
-                                        <div class="col-xs-8">
-                                            <select id="contactcompany${contact.id}" name="contactcompany${contact.id}" class="form-control">
-                                                <c:forEach items="${companies}" var="company">
-                                                    <c:choose>
-                                                        <c:when test="${company.id == contact.company.id}">
-                                                            <option selected value=${company.id}>${company.name}</option>
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                            <option value=${company.id}>${company.name}</option>
-                                                        </c:otherwise>
-                                                    </c:choose>
-                                                </c:forEach>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-1">
-                                            <button type="submit" class="btn btn-default navbar-btn" name="button_updatecontact${contact.id}" value="companyedit">
-                                                <span class="glyphicon glyphicon-pencil"></span>
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label class="col-xs-2 control-label" for="contactpost${contact.id}">Должность</label>
-                                        <div class="col-xs-8">
-                                            <input id="contactpost${contact.id}" name="contactpost${contact.id}" type="text" placeholder="" class="form-control input-md" value="${contact.post}">
-
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label class="col-xs-2 control-label" for="contactphone${contact.id}">Номер телефона</label>
-                                        <div class="col-xs-8">
-                                            <input id="contactphone${contact.id}" name="contactphone${contact.id}" type="text" placeholder="" class="form-control input-md" required="" value="${contact.phone}">
-
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label class="col-xs-2 control-label" for="contactphonetype${contact.id}"></label>
-                                        <div class="col-xs-8">
-                                            <select id="contactphonetype${contact.id}" name="contactphonetype${contact.id}" class="form-control">
-                                                <c:forEach items="${phonetypes}" var="phonetype">
-                                                    <c:choose>
-                                                        <c:when test="${phonetype == contact.phoneType}">
-                                                            <option selected value=${phonetype}>${phonetype.toString()}</option>
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                            <option value=${phonetype}>${phonetype.toString()}</option>
-                                                        </c:otherwise>
-                                                    </c:choose>
-                                                </c:forEach>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label class="col-xs-2 control-label" for="contactuser${contact.id}">Ответственный</label>
-                                        <div class="col-xs-8">
-                                            <select id="contactuser${contact.id}" name="contactuser${contact.id}" class="form-control">
-                                                <c:forEach items="${users}" var="user">
-                                                    <c:choose>
-                                                        <c:when test="${user.id == contact.user.id}">
-                                                            <option selected value=${user.id}>${user.name}</option>
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                            <option value=${user.id}>${user.name}</option>
-                                                        </c:otherwise>
-                                                    </c:choose>
-                                                </c:forEach>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label class="col-xs-2 control-label" for="contactemail${contact.id}">E-mail</label>
-                                        <div class="col-xs-8">
-                                            <input id="contactemail${contact.id}" name="contactemail${contact.id}" type="text" placeholder="" class="form-control input-md" value="${contact.email}"}>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label class="col-xs-2 control-label" for="contactskype${contact.id}">Skype</label>
-                                        <div class="col-xs-8">
-                                            <input id="contactskype${contact.id}" name="contactskype${contact.id}" type="text" placeholder="" class="form-control input-md" required="" value="${contact.skype}">
-                                        </div>
-                                    </div>
-
-                                    <label class="col-md-2 control-label" for="button_savecontact${contact.id}"></label>
-                                    <div class="col-md-2">
-                                        <button id="button_savecontact${contact.id}" name="button_updatecontact${contact.id}" value="save" class="btn btn-default navbar-btn">Записать</button>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <button id="button_deletecontact${contact.id}" name="button_updatecontact${contact.id}" value="delete" class="btn btn-default navbar-btn">Удалить из сделки</button>
-                                    </div>
-                                </fieldset>
-
-                            </form>
+                                </div>
 
                             </div>
+
                         </div>
+
                     </c:forEach>
-                       <div class="tab-pane container-fluid" id="contactnew">
-                           <form  class="form-horizontal" method="post" action="dealedit?action=update">
-                               <input type="hidden" name="id" value="${deal.id}">
-                               <fieldset>
 
-                        <div class="tab-content col-xs-8">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#accordionnew">
+                                    Добавить ...
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="accordionnew" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <form  class="form-horizontal" method="post" action="dealedit?action=update">
+                                    <fieldset>
+                                        <div class="tab-pane container-fluid" id="contactnew">
+                                            <form  class="form-horizontal" method="post" action="dealedit?action=update">
+                                                <input type="hidden" name="id" value="${deal.id}">
+                                                <fieldset>
+                                                    <div class="tab-content col-xs-8">
 
-                        <div class="form-group">
-                            <label class="col-xs-2 control-label" for="newcontact">Имя</label>
-                            <div class="col-xs-8">
-                                <select id="newcontact" name="newcontact" class="form-control">
-                                    <c:forEach items="${contacts}" var="contact">
-                                        <option value=${contact.id}>${contact.name}</option>
-                                    </c:forEach>
-                                </select>
+                                                        <div class="form-group">
+                                                            <label class="col-xs-2 control-label" for="newcontact">Имя</label>
+                                                            <div class="col-xs-8">
+                                                                <select id="newcontact" name="newcontact" class="form-control">
+                                                                    <c:forEach items="${contacts}" var="contact">
+                                                                        <option value=${contact.id}>${contact.name}</option>
+                                                                    </c:forEach>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <label class="col-md-2 control-label" for="button_addcontact"></label>
+                                                        <div class="col-md-2">
+                                                            <button type="submit" id="button_addcontact" value="dealcontactadd" name="submit" class="btn btn-default navbar-btn">Добавить контакт</button>
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+                                            </form>
+                                        </div>
+                                    </fieldset>
+                                </form>
                             </div>
                         </div>
-
-                            <label class="col-md-2 control-label" for="button_addcontact"></label>
-                            <div class="col-md-2">
-                                <button type="submit" id="button_addcontact" value="dealcontactadd" name="submit" class="btn btn-default navbar-btn">Добавить контакт</button>
-                            </div>
-
-                        </div>
-                        </fieldset>
-                        </form>
-                        </div>
-
+                    </div>
                 </div>
-
-                   </div>
-                </div>
+            </div>
 
             <div class="tab-pane container-fluid" id="tasks">
 
