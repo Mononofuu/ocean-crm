@@ -1,8 +1,6 @@
 package com.becomejavasenior;
 
-import com.becomejavasenior.impl.SubjectTagDAOImpl;
-import com.becomejavasenior.impl.TaskServiceImpl;
-import com.becomejavasenior.impl.UserServiceImpl;
+import com.becomejavasenior.impl.*;
 import com.google.gson.Gson;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,7 +17,10 @@ import java.net.URL;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * created by Alekseichenko Sergey <mononofuu@gmail.com>
@@ -27,22 +28,19 @@ import java.util.*;
 
 @WebServlet(urlPatterns = "/newcompany")
 public class NewCompany extends HttpServlet {
-    private final static String nextJSP = "/jsp/newcompany.jsp";
-    private static TaskService taskService;
-    private Logger logger = LogManager.getLogger(NewCompanyServlet.class);
-    private DaoFactory dao;
-    private Company createdCompany;
-
+    private static final String nextJSP = "/jsp/newcompany.jsp";
+    private static Logger logger = LogManager.getLogger(NewCompanyServlet.class);
+    private static DealService dealService = new DealServiceImpl();
+    private static ContactService contactService = new ContactServiceImpl();
+    private static CompanyService companyService = new CompanyServiceImpl();
+    private static UserService userService = new UserServiceImpl();
+    private static CurrencyService currencyService = new CurrencyServiceImpl();
+    private static TagService tagService = new TagServiceImpl();
+    private static CommentService commentService = new CommentServiceImpl();
+    private static TaskService taskService = new TaskServiceImpl();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        try {
-            dao = new PostgreSqlDaoFactory();
-        } catch (DataBaseException e) {
-            logger.error("Error while getting DAO Factory");
-            logger.catching(e);
-        }
-
         String action = req.getParameter("action");
         logger.info("GET action = " + action);
 
@@ -54,13 +52,11 @@ public class NewCompany extends HttpServlet {
             try {
                 switch (action) {
                     case "getContacts":
-                        GenericDao<Contact> contactDao = dao.getDao(Contact.class);
-                        List<Contact> contactList = contactDao.readAll();
+                        List<Contact> contactList = contactService.findContacts();
                         json = new Gson().toJson(contactList);
                         break;
                     case "getDealStatuses":
-                        GenericDao<DealStatus> dealStatusDao = dao.getDao(DealStatus.class);
-                        List<DealStatus> dealStatusList = dealStatusDao.readAll();
+                        List<DealStatus> dealStatusList = dealService.getAllDealStatuses();
                         json = new Gson().toJson(dealStatusList);
                         break;
                     case "getPhoneTypes":
@@ -70,8 +66,7 @@ public class NewCompany extends HttpServlet {
                         json = new Gson().toJson(TaskType.values());
                         break;
                     case "getUsers":
-                        GenericDao<User> userDao = dao.getDao(User.class);
-                        List<User> users = userDao.readAll();
+                        List<User> users = userService.getAllUsers();
                         json = new Gson().toJson(users);
                         break;
                     default:
@@ -86,6 +81,7 @@ public class NewCompany extends HttpServlet {
         }
     }
 
+    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
         String action = req.getParameter("action");
@@ -123,8 +119,7 @@ public class NewCompany extends HttpServlet {
             Optional<String> contactSkype = Optional.ofNullable(request.getParameter("contactskype"));
             contactSkype.ifPresent(contact::setSkype);
 
-            GenericDao<Contact> contactDao = dao.getDao(Contact.class);
-            Contact createdContact = contactDao.create(contact);
+            Contact createdContact = contactService.saveContact(contact);
 
             logger.info("NEW CONTACT CREATED:");
             logger.info(createdContact.getId());
@@ -162,15 +157,13 @@ public class NewCompany extends HttpServlet {
 
             Optional<String> responsible = Optional.ofNullable(request.getParameter("companyresp"));
             if (responsible.isPresent()) {
-                GenericDao<User> userDao = dao.getDao(User.class);
-                User mainContact = userDao.read(Integer.parseInt(responsible.get()));
+                User mainContact = userService.findUserById(Integer.parseInt(responsible.get()));
                 company.setUser(mainContact);
             }
 
 
             Optional<String> text = Optional.ofNullable(request.getParameter("companycomment"));
             if (text.isPresent()) {
-                GenericDao<Comment> commentDao = dao.getDao(Comment.class);
                 Comment comment = new Comment();
                 comment.setText(text.get());
                 comment.setDateCreated(new Timestamp(new Date().getTime()));
@@ -179,13 +172,11 @@ public class NewCompany extends HttpServlet {
                 user.setId(1);
                 comment.setUser(user);
                 logger.info(String.format("Trying to create comment: %s", comment.getText()));
-                Comment createdComment = commentDao.create(comment);
+                Comment createdComment = commentService.saveComment(comment);
                 logger.info(String.format("Contact id = %d created", createdComment.getId()));
             }
 
-            GenericDao<Company> companyDao = dao.getDao(Company.class);
-
-            createdCompany = companyDao.create(company);
+            Company createdCompany = companyService.saveCompany(company);
 
 
             logger.info("NEW COMPANY CREATED:");
@@ -193,60 +184,44 @@ public class NewCompany extends HttpServlet {
 
             Optional<String[]> companyContacts = Optional.ofNullable(request.getParameterValues("contactlist[]"));
             if (companyContacts.isPresent()) {
-                GenericDao<Contact> contactDao = dao.getDao(Contact.class);
-
                 for (String contactId : companyContacts.get()) {
-                    Contact contact = contactDao.read(Integer.parseInt(contactId));
+                    Contact contact = contactService.findContactById(Integer.parseInt(contactId));
                     contact.setCompany(createdCompany);
-                    contactDao.update(contact);
+                    contactService.saveContact(contact);
                 }
             }
 
             Optional<String[]> companyDeals = Optional.ofNullable(request.getParameterValues("addedDeals[]"));
             if (companyDeals.isPresent()) {
-                GenericDao<Deal> dealDao = dao.getDao(Deal.class);
-                GenericDao<DealStatus> dealStatusDao = dao.getDao(DealStatus.class);
                 for (String a : companyDeals.get()) {
                     String[] dealValues = a.split(";");
                     Deal deal = new Deal();
                     deal.setName(dealValues[0]);
-                    DealStatus status = dealStatusDao.read(Integer.parseInt(dealValues[1]));
+                    DealStatus status = dealService.findDealStatus(Integer.parseInt(dealValues[1]));
                     deal.setStatus(status);
                     deal.setBudget(Integer.parseInt(dealValues[2]));
                     deal.setDealCompany(createdCompany);
                     deal.setDateCreated(new Timestamp(new Date().getTime()));
-                    GenericDao<Currency> currencyDao = dao.getDao(Currency.class);
-                    Optional<Currency> dealCurrency = Optional.ofNullable(currencyDao.read(1)); //TODO
+                    Optional<Currency> dealCurrency = Optional.ofNullable(currencyService.findCurrencyById(1)); //TODO
                     dealCurrency.ifPresent(deal::setCurrency);
-                    dealDao.create(deal);
+                    dealService.saveDeal(deal);
                 }
             }
 
             Optional<String> companyTags = Optional.ofNullable(request.getParameter("companytags"));
             if (companyTags.isPresent()) {
-                GenericDao<Tag> tagDAO = dao.getDao(Tag.class);
-                SubjectTagDAOImpl subjectTagDAO = (SubjectTagDAOImpl) dao.getDao(SubjectTag.class);
                 String[] tagArray = companyTags.get().split(" ");
-
                 for (String tag : tagArray) {
-                    Set<Tag> existedTags = subjectTagDAO.getAllTagsBySubjectId(createdCompany.getId());
                     Tag tagInstance = new Tag();
                     tagInstance.setName(tag);
-                    if (existedTags.stream().filter(tag1 -> tag1.getName().equals(tag)).count() < 1) {
-                        Tag returnedTag = tagDAO.create(tagInstance);
-                        logger.info(String.format("Trying to create tag: %s", tag));
-                        SubjectTag subjectTag = new SubjectTag();
-                        subjectTag.setTag(returnedTag);
-                        subjectTag.setSubject(createdCompany);
-                        subjectTagDAO.create(subjectTag);
-                    }
+                    tagService.addTagToSubject(createdCompany, tagInstance);
                 }
             }
 
             Optional<String> addTask = Optional.ofNullable(request.getParameter("addTask"));
-            if (addTask.isPresent() && addTask.get().equals("true")) {
+            if (addTask.isPresent() && "true".equals(addTask.get())) {
                 Task task = getTaskFromRequest(request);
-                taskService = new TaskServiceImpl();
+                task.setSubject(createdCompany);
                 taskService.saveTask(task);
             }
             logger.info("DONE");
@@ -275,14 +250,13 @@ public class NewCompany extends HttpServlet {
             User user = userService.findUserById(Integer.parseInt(taskUser.get()));
             task.setUser(user);
         }
-        task.setSubject(createdCompany);
         Optional<String> taskType = Optional.ofNullable(request.getParameter("tasktype"));
         taskType.ifPresent(s -> task.setType(TaskType.valueOf(s)));
         Optional<String> taskComment = Optional.ofNullable(request.getParameter("taskcomment"));
         taskComment.ifPresent(task::setComment);
         task.setDateCreated(new Date());
         Optional<String> taskDueDate = Optional.ofNullable(request.getParameter("taskduedate"));
-        if (taskDueDate.isPresent() & !taskDueDate.get().equals("undefined")) {
+        if (taskDueDate.isPresent() & !"undefined".equals(taskDueDate.get())) {
             SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
             try {
                 task.setDueTime(dateFormat.parse(taskDueDate.get()));

@@ -190,7 +190,7 @@ public class DealEditServlet extends HttpServlet {
                             request.getRequestDispatcher("/dealedit?action=edit&id="+request.getParameter("id")).forward(request, response);
                             break;
                     }
-                    if(!requestString.equals("")){
+                    if (!"".equals(requestString)) {
                         request.setAttribute("backurl", "/dealedit?action=edit&id="+request.getParameter("id"));
                         request.getRequestDispatcher(requestString).forward(request, response);
                     }

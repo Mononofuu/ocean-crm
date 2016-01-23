@@ -4,6 +4,7 @@ import com.becomejavasenior.*;
 import com.becomejavasenior.interfacedao.DealContactDAO;
 import com.becomejavasenior.interfacedao.DealDAO;
 import com.becomejavasenior.interfacedao.DealStatusDAO;
+import com.becomejavasenior.interfacedao.FilterDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -25,12 +26,18 @@ public class DealServiceImpl implements com.becomejavasenior.DealService {
     DealDAO dealDao;
     DealStatusDAO dealStatusDao;
     DealContactDAO dealContactDAO;
+    FilterDAO filterDAO;
 
-    public DealServiceImpl() throws DataBaseException{
-        daoFactory = new PostgreSqlDaoFactory();
-        dealDao = (DealDAO)daoFactory.getDao(Deal.class);
-        dealStatusDao = (DealStatusDAO) daoFactory.getDao(DealStatus.class);
-        dealContactDAO = (DealContactDAO) daoFactory.getDao(DealContact.class);
+    public DealServiceImpl() {
+        try {
+            daoFactory = new PostgreSqlDaoFactory();
+            dealDao = (DealDAO) daoFactory.getDao(Deal.class);
+            dealStatusDao = (DealStatusDAO) daoFactory.getDao(DealStatus.class);
+            dealContactDAO = (DealContactDAO) daoFactory.getDao(DealContact.class);
+            filterDAO = (FilterDAO) daoFactory.getDao(Filter.class);
+        } catch (DataBaseException e) {
+            logger.catching(e);
+        }
     }
 
     @Override
@@ -335,10 +342,52 @@ public class DealServiceImpl implements com.becomejavasenior.DealService {
     }
 
     @Override
+    public void deleteDealStatus(int id) throws DataBaseException {
+        dealStatusDao.delete(id);
+    }
+
+    @Override
+    public DealStatus saveDealStatus(DealStatus dealStatus) throws DataBaseException {
+        if (dealStatus.getId() == 0) {
+            return dealStatusDao.create(dealStatus);
+        } else {
+            dealStatusDao.update(dealStatus);
+            return dealStatusDao.read(dealStatus.getId());
+        }
+    }
+
+    @Override
     public void addContactToDeal(Deal createdDeal, Contact contact) throws DataBaseException {
         DealContact dealContact = new DealContact();
         dealContact.setDeal(createdDeal);
         dealContact.setContact(contact);
         dealContactDAO.create(dealContact);
     }
+
+    @Override
+    public Filter saveDealFilter(Filter filter) throws DataBaseException {
+        if (filter.getId() == 0) {
+            return filterDAO.create(filter);
+        } else {
+            filterDAO.update(filter);
+            return filterDAO.read(filter.getId());
+        }
+    }
+
+    @Override
+    public List<Filter> findDealFilters() throws DataBaseException {
+        return filterDAO.readAll();
+    }
+
+    @Override
+    public Filter findDealFilterById(int id) throws DataBaseException {
+        return filterDAO.read(id);
+    }
+
+    @Override
+    public void deleteDealFilter(int id) throws DataBaseException {
+        filterDAO.delete(id);
+    }
+
+
 }

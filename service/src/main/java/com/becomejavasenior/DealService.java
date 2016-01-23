@@ -44,5 +44,17 @@ public interface DealService {
 
     DealStatus findDealStatus(int id) throws DataBaseException;
 
+    void deleteDealStatus(int id) throws DataBaseException;
+
+    DealStatus saveDealStatus(DealStatus dealStatus) throws DataBaseException;
+
     void addContactToDeal(Deal deal, Contact contact) throws DataBaseException;
+
+    Filter saveDealFilter(Filter filter) throws DataBaseException;
+
+    List<Filter> findDealFilters() throws DataBaseException;
+
+    Filter findDealFilterById(int id) throws DataBaseException;
+
+    void deleteDealFilter(int id) throws DataBaseException;
 }

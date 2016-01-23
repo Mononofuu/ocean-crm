@@ -11,19 +11,19 @@ public abstract class AbstractJDBCDao<T> implements GenericDao<T>{
     private final static Logger LOGGER = LogManager.getLogger(AbstractJDBCDao.class);
     private static DaoFactory daoFactory;
 
+    private AbstractJDBCDao() {
+    }
+
+    protected AbstractJDBCDao(DaoFactory daoFactory) {
+        AbstractJDBCDao.daoFactory = daoFactory;
+    }
+
     public static void setDaoFactory(DaoFactory daoFactory) {
         AbstractJDBCDao.daoFactory = daoFactory;
     }
 
-    protected Connection getConnection()throws DataBaseException{
+    protected Connection getConnection() throws DataBaseException {
         return daoFactory.getConnection();
-    }
-
-    private AbstractJDBCDao() {
-    }
-
-    protected AbstractJDBCDao(DaoFactory daoFactory){
-        this.daoFactory = daoFactory;
     }
 
     /**
@@ -87,7 +87,6 @@ public abstract class AbstractJDBCDao<T> implements GenericDao<T>{
     @Override
     public T read(int key) throws DataBaseException {
         T result;
-        long startTime = System.nanoTime();
         try (Connection connection = daoFactory.getConnection();
              PreparedStatement statement = connection.prepareStatement(getReadQuery())) {
             statement.setInt(1, key);
@@ -101,21 +100,18 @@ public abstract class AbstractJDBCDao<T> implements GenericDao<T>{
             LOGGER.error(e.getMessage());
             throw new DataBaseException(e);
         }
-        long time = (System.nanoTime() - startTime) / 1000000;
-//        LOGGER.debug(this.getClass().getSimpleName() + " ==> Dao READ method execution time(ms): " + time);
         return result;
     }
 
     @Override
     public T readLite(int key) throws DataBaseException {
         T result;
-        long startTime = System.nanoTime();
         try (Connection connection = daoFactory.getConnection();
              PreparedStatement statement = connection.prepareStatement(getReadQuery())) {
             statement.setInt(1, key);
             ResultSet rs = statement.executeQuery();
             List<T> allObjects = parseResultSetLite(rs);
-            if (allObjects.size() == 0) {
+            if (allObjects.isEmpty()) {
                 return null;
             }
             result = allObjects.get(0);
@@ -123,8 +119,6 @@ public abstract class AbstractJDBCDao<T> implements GenericDao<T>{
             LOGGER.error(e.getMessage());
             throw new DataBaseException(e);
         }
-        long time = (System.nanoTime() - startTime) / 1000000;
-//        LOGGER.debug(this.getClass().getSimpleName() + " ==> Dao READ LITE method execution time(ms): " + time);
         return result;
     }
 

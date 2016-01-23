@@ -1,7 +1,6 @@
 package com.becomejavasenior.impl;
 
 import com.becomejavasenior.*;
-import com.becomejavasenior.TaskService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -20,10 +19,14 @@ public class TaskServiceImpl implements TaskService {
     private TaskDAOImpl taskDao;
     private TaskTypeDAOImpl taskTypeDao;
 
-    public TaskServiceImpl() throws DataBaseException {
-        dao = new PostgreSqlDaoFactory();
-        taskDao = (TaskDAOImpl)dao.getDao(Task.class);
-        taskTypeDao = (TaskTypeDAOImpl)dao.getDao(TaskType.class);
+    public TaskServiceImpl() {
+        try {
+            dao = new PostgreSqlDaoFactory();
+            taskDao = (TaskDAOImpl) dao.getDao(Task.class);
+            taskTypeDao = (TaskTypeDAOImpl) dao.getDao(TaskType.class);
+        } catch (DataBaseException e) {
+            logger.catching(e);
+        }
     }
 
     @Override
