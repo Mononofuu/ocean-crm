@@ -5,6 +5,7 @@ import com.becomejavasenior.interfacedao.DealContactDAO;
 import com.becomejavasenior.interfacedao.DealDAO;
 import com.becomejavasenior.interfacedao.DealStatusDAO;
 import com.becomejavasenior.interfacedao.FilterDAO;
+import com.becomejavasenior.interfacedao.TagDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -389,5 +390,8 @@ public class DealServiceImpl implements com.becomejavasenior.DealService {
         filterDAO.delete(id);
     }
 
-
+    public List<Tag> getAllDealTags() throws DataBaseException {
+        TagDAO tagDAO = (TagDAO)daoFactory.getDao(Tag.class);
+        return tagDAO.readAll(SubjectType.CONTACT_TAG);
+    }
 }

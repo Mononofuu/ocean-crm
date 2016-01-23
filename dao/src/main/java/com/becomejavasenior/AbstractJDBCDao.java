@@ -235,6 +235,13 @@ public abstract class AbstractJDBCDao<T> implements GenericDao<T>{
             GenericDao<SubjectTag> subjectTagDao = getDaoFromCurrentFactory(SubjectTag.class);
             for (Tag tag : tags) {
                 SubjectTag subjectTag = new SubjectTag();
+                if(object instanceof Contact){
+                    tag.setSubjectType(SubjectType.CONTACT_TAG);
+                }else if(object instanceof Company){
+                    tag.setSubjectType(SubjectType.COMPANY_TAG);
+                }else if(object instanceof Deal){
+                    tag.setSubjectType(SubjectType.DEAL_TAG);
+                }
                 tag = tagDao.create(tag);
                 subjectTag.setTag(tag);
                 subjectTag.setSubject(object);
@@ -248,7 +255,6 @@ public abstract class AbstractJDBCDao<T> implements GenericDao<T>{
         try (Connection connection = getConnection();
              Statement statement = connection.createStatement()
         ){
-            LOGGER.info(query);
             ResultSet rs = statement.executeQuery(query);
             result = parseResultSet(rs);
         } catch (SQLException e) {

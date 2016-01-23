@@ -1,9 +1,6 @@
 package com.becomejavasenior.impl;
 
-import com.becomejavasenior.AbstractJDBCDao;
-import com.becomejavasenior.DaoFactory;
-import com.becomejavasenior.DataBaseException;
-import com.becomejavasenior.Tag;
+import com.becomejavasenior.*;
 import com.becomejavasenior.interfacedao.TagDAO;
 
 import java.sql.Connection;
@@ -49,13 +46,14 @@ public class TagDAOImpl extends AbstractJDBCDao<Tag> implements TagDAO {
 
     @Override
     public String getCreateQuery() {
-        return "INSERT INTO tag (name) VALUES (?);";
+        return "INSERT INTO tag (name, subject_type) VALUES (?, ?);";
     }
 
     @Override
     protected void prepareStatementForInsert(PreparedStatement statement, Tag object) throws DataBaseException {
         try {
             statement.setString(1, object.getName());
+            statement.setInt(2, object.getSubjectType().ordinal());
         } catch (SQLException e) {
             throw new DataBaseException(e);
         }
@@ -106,17 +104,11 @@ public class TagDAOImpl extends AbstractJDBCDao<Tag> implements TagDAO {
 
     @Override
     public List<Tag> readAllSubjectTags(int subjectId) throws DataBaseException {
-        List<Tag> result;
-        try (PreparedStatement statement = getConnection().prepareStatement(getReadAllQuery() + SELECT_ALL_SUBJECT_TAGS)){
-            statement.setInt(1, subjectId);
-            ResultSet rs = statement.executeQuery();
-            result = parseResultSet(rs);
-        } catch (SQLException e) {
-            throw new DataBaseException(e);
-        }
-        if (result == null) {
-            throw new DataBaseException();
-        }
-        return result;
+        return realiseQuery(getReadAllQuery() + SELECT_ALL_SUBJECT_TAGS);
+    }
+
+    @Override
+    public List<Tag> readAll(SubjectType subjectType) throws DataBaseException {
+        return realiseQuery(getReadAllQuery()+" WHERE subject_type = "+subjectType.ordinal());
     }
 }

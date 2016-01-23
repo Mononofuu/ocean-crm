@@ -57,4 +57,6 @@ public interface DealService {
     Filter findDealFilterById(int id) throws DataBaseException;
 
     void deleteDealFilter(int id) throws DataBaseException;
+
+    List<Tag> getAllDealTags() throws DataBaseException;
 }

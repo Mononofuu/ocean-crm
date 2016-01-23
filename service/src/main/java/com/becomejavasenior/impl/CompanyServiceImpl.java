@@ -1,6 +1,7 @@
 package com.becomejavasenior.impl;
 
 import com.becomejavasenior.*;
+import com.becomejavasenior.interfacedao.TagDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -72,6 +73,12 @@ public class CompanyServiceImpl extends AbstractContactService<Company> implemen
     @Override
     public List<Company> getAllCompanyesByParameters(Map<String, String[]> parameters) throws DataBaseException {
         return getAllContactsByParameters(parameters);
+    }
+
+    @Override
+    public List<Tag> getAllCompanyTags() throws DataBaseException {
+        TagDAO tagDAO = (TagDAO)dao.getDao(Tag.class);
+        return tagDAO.readAll(SubjectType.COMPANY_TAG);
     }
 }
 

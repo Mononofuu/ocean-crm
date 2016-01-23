@@ -2,7 +2,6 @@ package com.becomejavasenior;
 
 import com.becomejavasenior.impl.CompanyServiceImpl;
 import com.becomejavasenior.impl.ContactServiceImpl;
-import com.becomejavasenior.impl.TagServiceImpl;
 import com.becomejavasenior.impl.UserServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -38,7 +38,6 @@ public class ViewAllContactsServlet extends HttpServlet {
             ContactService contactService = new ContactServiceImpl();
             CompanyService companyService = new CompanyServiceImpl();
             UserService userService = new UserServiceImpl();
-            TagService tagService = new TagServiceImpl();
             List<Contact> allContacts;
             List<Company> allCompanies;
             if(req.getParameter("filtername")!=null){
@@ -52,8 +51,10 @@ public class ViewAllContactsServlet extends HttpServlet {
             Collections.sort(allCompanies, (o1, o2) -> o1.getName().compareTo(o2.getName()));
             req.setAttribute("contactlist", allContacts);
             req.setAttribute("companylist", allCompanies);
-            List<Tag> tags = tagService.getAllTags();
-            Collections.sort(tags, (o1, o2) -> o1.getName().compareTo(o2.getName()));
+            List<Tag> tags = new ArrayList<>();
+            tags.addAll(contactService.getAllContactTags());
+            tags.addAll(companyService.getAllCompanyTags());
+            Collections.sort(tags, ((o1, o2) -> o1.getName().compareTo(o2.getName())));
             req.setAttribute("tags", tags);
             req.setAttribute("users", userService.getAllUsers());
         } catch (DataBaseException e) {

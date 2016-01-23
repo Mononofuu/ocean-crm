@@ -1,6 +1,7 @@
 package com.becomejavasenior.impl;
 
 import com.becomejavasenior.*;
+import com.becomejavasenior.interfacedao.TagDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -97,5 +98,11 @@ public class ContactServiceImpl extends AbstractContactService<Contact> implemen
     @Override
     protected AbstractContactDAO<Contact> getDao() {
         return contactDAO;
+    }
+
+    @Override
+    public List<Tag> getAllContactTags() throws DataBaseException {
+        TagDAO tagDAO = (TagDAO)dao.getDao(Tag.class);
+        return tagDAO.readAll(SubjectType.CONTACT_TAG);
     }
 }
