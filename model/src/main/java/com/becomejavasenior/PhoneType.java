@@ -9,7 +9,7 @@ public enum PhoneType implements Serializable {
     @Override
     public String toString() {
         switch (this){
-            case WORK_PHONE_NUMBER:System.out.println("<spring:message code=\"label.phonework\"/>");
+            case WORK_PHONE_NUMBER:
                 return "label.phonework";
             case WORK_DIRECT_PHONE_NUMBER:
                 return "label.phoneworkdirect";
