@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Timestamp;
@@ -19,40 +20,29 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class DealController extends HttpServlet {
-    private final static Logger logger = LogManager.getLogger(DealController.class);
-    private final static String nextJSP = "/jsp/newdeal.jsp";
-    private static TaskService taskService;
-    private static DealService dealService;
-    private static ContactService contactService;
-    private static CompanyService companyService;
-    private static UserService userService;
-    private static CurrencyService currencyService;
-    private static TagService tagService;
-    private static CommentService commentService;
+    private static final Logger LOGGER = LogManager.getLogger(DealController.class);
+    private static final String NEXT_JSP = "/jsp/newdeal.jsp";
+    private static DealService dealService = new DealServiceImpl();
+    private static ContactService contactService = new ContactServiceImpl();
+    private static CompanyService companyService = new CompanyServiceImpl();
+    private static UserService userService = new UserServiceImpl();
+    private static CurrencyService currencyService = new CurrencyServiceImpl();
+    private static TagService tagService = new TagServiceImpl();
+    private static CommentService commentService = new CommentServiceImpl();
 
-    static {
-        try {
-            taskService = new TaskServiceImpl();
-            dealService = new DealServiceImpl();
-            contactService = new ContactServiceImpl();
-            companyService = new CompanyServiceImpl();
-            userService = new UserServiceImpl();
-            currencyService = new CurrencyServiceImpl();
-            commentService = new CommentServiceImpl();
-            tagService = new TagServiceImpl();
 
-        } catch (DataBaseException e) {
-            logger.catching(e);
-        }
-    }
-
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
+        try {
+            request.setCharacterEncoding("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            LOGGER.catching(e);
+        }
         String action = request.getParameter("action");
-        logger.debug(action);
+        LOGGER.debug(action);
         switch (action) {
             case "newdeal":
-                newDeal(request, response);
+                newDeal(request);
                 break;
             case "newcontact":
                 newContact(request);
@@ -95,16 +85,16 @@ public class DealController extends HttpServlet {
 
             Contact createdContact = contactService.saveContact(contact);
 
-            logger.info("NEW CONTACT CREATED:");
-            logger.info(createdContact.getId());
+            LOGGER.info("NEW CONTACT CREATED:");
+            LOGGER.info(createdContact.getId());
 
         } catch (DataBaseException e) {
-            logger.error("Error while creating new contact");
-            logger.catching(e);
+            LOGGER.error("Error while creating new contact");
+            LOGGER.catching(e);
         }
     }
 
-    private void newCompany(HttpServletRequest request) throws IOException {
+    private void newCompany(HttpServletRequest request) {
         try {
             Company company = new Company();
             Optional<String> companyName = Optional.ofNullable(request.getParameter("companyname"));
@@ -121,7 +111,7 @@ public class DealController extends HttpServlet {
                 try {
                     company.setWeb(new URL(s));
                 } catch (MalformedURLException e) {
-                    logger.catching(e);
+                    LOGGER.catching(e);
                 }
             });
 
@@ -130,15 +120,15 @@ public class DealController extends HttpServlet {
 
             Company createdCompany = companyService.saveCompany(company);
 
-            logger.info("NEW COMPANY CREATED:");
-            logger.info(createdCompany.getId());
+            LOGGER.info("NEW COMPANY CREATED:");
+            LOGGER.info(createdCompany.getId());
         } catch (DataBaseException e) {
-            logger.error("Error while creating new company");
-            logger.catching(e);
+            LOGGER.error("Error while creating new company");
+            LOGGER.catching(e);
         }
     }
 
-    private void newDeal(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private void newDeal(HttpServletRequest request) {
         Deal createdDeal;
         try {
             Deal deal = new Deal();
@@ -173,7 +163,7 @@ public class DealController extends HttpServlet {
 
             Optional<String> dealCreatedDate = Optional.ofNullable(request.getParameter("dealcreated"));
             if (dealCreatedDate.isPresent()) {
-                logger.debug(dealCreatedDate.get());
+                LOGGER.debug(dealCreatedDate.get());
                 Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dealCreatedDate.get());
                 deal.setDateCreated(new Timestamp(date.getTime()));
             }
@@ -181,16 +171,15 @@ public class DealController extends HttpServlet {
             Optional<String[]> contactList = Optional.ofNullable(request.getParameterValues("dealcontactlist[]"));
             if (contactList.isPresent()) {
                 int mainContactId = Integer.parseInt(contactList.get()[0]);
-                ContactService contactService = new ContactServiceImpl();
                 Contact mainContact = contactService.findContactById(mainContactId);
                 deal.setMainContact(mainContact);
             }
 
             deal.setUser((User) request.getSession().getAttribute("user"));
 
-            logger.info("TRYING TO CREATE DEAL");
+            LOGGER.info("TRYING TO CREATE DEAL");
             createdDeal = dealService.saveDeal(deal);
-            logger.info("DEAL CREATED");
+            LOGGER.info("DEAL CREATED");
 
             if (contactList.isPresent()) {
                 List<Contact> dealContacts = new ArrayList<>();
@@ -223,37 +212,37 @@ public class DealController extends HttpServlet {
                 User user = new User();
                 user.setId(1);
                 comment.setUser(user);
-                logger.info(String.format("Trying to create comment: %s", comment.getText()));
+                LOGGER.info(String.format("Trying to create comment: %s", comment.getText()));
                 Comment createdComment = commentService.saveComment(comment);
-                logger.info(String.format("Contact id = %d created", createdComment.getId()));
+                LOGGER.info(String.format("Contact id = %d created", createdComment.getId()));
             }
 
             Optional<String> addTask = Optional.ofNullable(request.getParameter("addTask"));
-            if (addTask.isPresent() && addTask.get().equals("true")) {
-                logger.debug("Adding task");
+            if (addTask.isPresent() && "true".equals(addTask.get())) {
+                LOGGER.debug("Adding task");
                 Task task = getTaskFromRequest(request, createdDeal);
-                taskService = new TaskServiceImpl();
+                TaskService taskService = new TaskServiceImpl();
                 taskService.saveTask(task);
             }
 
-            logger.info("Deal created successfully");
-            logger.info(String.format("Deal id = %d", createdDeal.getId()));
+            LOGGER.info("Deal created successfully");
+            LOGGER.info(String.format("Deal id = %d", createdDeal.getId()));
 
         } catch (DataBaseException e) {
-            logger.error("Error while creating new deal");
-            logger.catching(e);
+            LOGGER.error("Error while creating new deal");
+            LOGGER.catching(e);
         } catch (ParseException e) {
-            logger.catching(e);
+            LOGGER.catching(e);
         }
-        response.getWriter().println("DEAL CREATED SUCCESSFULLY");
     }
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
-        logger.info("GET action = " + action);
+        LOGGER.info("GET action = " + action);
 
         if (action == null || action.isEmpty()) {
-            redirectTo(request, response, nextJSP);
+            redirectTo(request, response, NEXT_JSP);
         } else {
             String json = null;
             try {
@@ -281,16 +270,20 @@ public class DealController extends HttpServlet {
                         json = new Gson().toJson(users);
                         break;
                     default:
-                        redirectTo(request, response, nextJSP);
+                        redirectTo(request, response, NEXT_JSP);
                 }
+            } catch (DataBaseException e) {
+                LOGGER.error("Error while getting DAO");
+                LOGGER.catching(e);
+            }
+            try {
                 response.setContentType("application/json");
                 response.setCharacterEncoding("UTF-8");
                 if (json != null) {
                     response.getWriter().write(json);
                 }
-            } catch (DataBaseException e) {
-                logger.error("Error while getting DAO");
-                logger.catching(e);
+            } catch (IOException e) {
+                LOGGER.catching(e);
             }
         }
     }
@@ -298,10 +291,10 @@ public class DealController extends HttpServlet {
     private void redirectTo(HttpServletRequest request, HttpServletResponse response, String page) {
         try {
             RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(page);
-            logger.info(String.format("REDIRECTING TO %s", nextJSP));
+            LOGGER.info(String.format("REDIRECTING TO %s", NEXT_JSP));
             dispatcher.forward(request, response);
         } catch (ServletException | IOException e) {
-            logger.catching(e);
+            LOGGER.catching(e);
         }
     }
 
@@ -309,7 +302,6 @@ public class DealController extends HttpServlet {
         Task task = new Task();
         Optional<String> taskUser = Optional.ofNullable(request.getParameter("taskuser"));
         if (taskUser.isPresent()) {
-            UserService userService = new UserServiceImpl();
             User user = userService.findUserById(Integer.parseInt(taskUser.get()));
             task.setUser(user);
         }
@@ -320,12 +312,12 @@ public class DealController extends HttpServlet {
         taskComment.ifPresent(task::setComment);
         task.setDateCreated(new Date());
         Optional<String> taskDueDate = Optional.ofNullable(request.getParameter("taskduedate"));
-        if (taskDueDate.isPresent() & !taskDueDate.get().equals("undefined")) {
+        if (taskDueDate.isPresent() && !"undefined".equals(taskDueDate.get())) {
             SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
             try {
                 task.setDueTime(dateFormat.parse(taskDueDate.get()));
             } catch (ParseException e) {
-                logger.catching(e);
+                LOGGER.catching(e);
             }
         } else {
             String period = request.getParameter("taskperiod");
@@ -362,6 +354,8 @@ public class DealController extends HttpServlet {
                     c.set(Calendar.MONTH, 0);
                     c.add(Calendar.YEAR, 2);
                     c.add(Calendar.MINUTE, -1);
+                    break;
+                default:
                     break;
             }
             task.setDueTime(c.getTime());

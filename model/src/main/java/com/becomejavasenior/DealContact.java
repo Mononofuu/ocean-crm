@@ -7,9 +7,6 @@ public class DealContact {
     private Contact contact;
     private Deal deal;
 
-    public DealContact() {
-    }
-
     public Contact getContact() {
         return contact;
     }

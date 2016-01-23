@@ -15,9 +15,13 @@ public class CurrencyServiceImpl implements CurrencyService {
     DaoFactory daoFactory;
     CurrencyDAO currencyDAO;
 
-    public CurrencyServiceImpl() throws DataBaseException {
-        daoFactory = new PostgreSqlDaoFactory();
-        currencyDAO = (CurrencyDAO) daoFactory.getDao(Currency.class);
+    public CurrencyServiceImpl() {
+        try {
+            daoFactory = new PostgreSqlDaoFactory();
+            currencyDAO = (CurrencyDAO) daoFactory.getDao(Currency.class);
+        } catch (DataBaseException e) {
+            logger.catching(e);
+        }
     }
 
     @Override

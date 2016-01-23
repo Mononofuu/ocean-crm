@@ -1,5 +1,6 @@
 package com.becomejavasenior;
 
+import com.becomejavasenior.impl.DealServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -18,32 +19,21 @@ import java.util.Objects;
  */
 @WebServlet("/deal_status")
 public class StatusServlet extends HttpServlet {
-    private final static Logger logger = LogManager.getLogger(DealsPyramidServlet.class);
-    private final static String nextJSP = "/jsp/dealsstatus.jsp";
-    private final static String editStatusJSP = "/jsp/statusedit.jsp";
-    private GenericDao<DealStatus> statusDao;
+    private static final Logger LOGGER = LogManager.getLogger(DealsPyramidServlet.class);
+    private static final String nextJSP = "/jsp/dealsstatus.jsp";
+    private static final String editStatusJSP = "/jsp/statusedit.jsp";
+    private static DealService dealService = new DealServiceImpl();
 
-    @Override
-    public void init() throws ServletException {
-        try {
-            DaoFactory dao = new PostgreSqlDaoFactory();
-            statusDao = dao.getDao(DealStatus.class);
-
-        } catch (DataBaseException e) {
-            logger.error("Error while creating DaoFactory");
-            logger.catching(e);
-        }
-    }
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             int id = getId(req);
-            statusDao.delete(id);
-            logger.info("Delete status {}", id);
+            dealService.deleteDealStatus(id);
+            LOGGER.info("Delete status {}", id);
         } catch (DataBaseException e) {
-            logger.error("Error while deleting status");
-            logger.catching(e);
+            LOGGER.error("Error while deleting status");
+            LOGGER.catching(e);
         }
         resp.sendRedirect("deal_status");
     }
@@ -55,10 +45,10 @@ public class StatusServlet extends HttpServlet {
         status.setName(req.getParameter("name"));
         status.setColor(req.getParameter("color"));
         try {
-            statusDao.create(status);
+            dealService.saveDealStatus(status);
         } catch (DataBaseException e) {
-            logger.error("Error while creating new status");
-            logger.catching(e);
+            LOGGER.error("Error while creating new status");
+            LOGGER.catching(e);
         }
         resp.sendRedirect("/deal_status");
     }
@@ -68,20 +58,20 @@ public class StatusServlet extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
         String action = req.getParameter("action");
         try {
-            if (action.equals("create")) {
+            if ("create".equals(action)) {
                 doPut(req, resp);
-            } else if (action.equals("edit")) {
+            } else if ("edit".equals(action)) {
                 DealStatus status = new DealStatus();
                 status.setName(req.getParameter("name"));
                 status.setColor(req.getParameter("color"));
                 status.setId(getId(req));
-                statusDao.update(status);
-                logger.info("STATUS UPDATED:");
+                dealService.saveDealStatus(status);
+                LOGGER.info("STATUS UPDATED:");
                 resp.sendRedirect("/deal_status");
             }
         } catch (DataBaseException e) {
-            logger.error("Error while updating status");
-            logger.catching(e);
+            LOGGER.error("Error while updating status");
+            LOGGER.catching(e);
         }
     }
 
@@ -91,24 +81,24 @@ public class StatusServlet extends HttpServlet {
 
         try {
             if (action == null) {
-                List<DealStatus> statusList = statusDao.readAll();
+                List<DealStatus> statusList = dealService.getAllDealStatuses();
                 req.setAttribute("statusList", statusList);
                 RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextJSP);
                 dispatcher.forward(req, resp);
-                logger.info(String.format("REDIRECTING TO %s", nextJSP));
-            } else if (action.equals("delete")) {
+                LOGGER.info(String.format("REDIRECTING TO %s", nextJSP));
+            } else if ("delete".equals(action)) {
                 doDelete(req, resp);
-            } else if (action.equals("edit")) {
+            } else if ("edit".equals(action)) {
                 int id = getId(req);
-                DealStatus editStatus = statusDao.read(id);
-                logger.info("Edit status {}", id);
+                DealStatus editStatus = dealService.findDealStatus(id);
+                LOGGER.info("Edit status {}", id);
                 req.setAttribute("status", editStatus);
                 req.getRequestDispatcher(editStatusJSP).forward(req, resp);
             }
 
         } catch (DataBaseException e) {
-            logger.error("Error while getting DAO");
-            logger.catching(e);
+            LOGGER.error("Error while getting DAO");
+            LOGGER.catching(e);
         }
     }
 

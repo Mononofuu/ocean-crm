@@ -2,6 +2,8 @@ package com.becomejavasenior.impl;
 
 import com.becomejavasenior.*;
 import com.becomejavasenior.interfacedao.FilterDAO;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -11,6 +13,7 @@ import java.util.List;
  * created by Alekseichenko Sergey <mononofuu@gmail.com>
  */
 public class FilterDAOImpl extends AbstractJDBCDao<Filter> implements FilterDAO {
+    private static final Logger LOGGER = LogManager.getLogger(FilterDAO.class);
     public FilterDAOImpl(DaoFactory daoFactory) {
         super(daoFactory);
     }
@@ -76,6 +79,7 @@ public class FilterDAOImpl extends AbstractJDBCDao<Filter> implements FilterDAO 
                 result.add(filter);
             }
         } catch (SQLException e) {
+            LOGGER.catching(e);
             throw new DataBaseException(e);
         }
         return result;
@@ -100,6 +104,7 @@ public class FilterDAOImpl extends AbstractJDBCDao<Filter> implements FilterDAO 
             statement.setString(9, object.getTags());
 
         } catch (SQLException e) {
+            LOGGER.catching(e);
             throw new DataBaseException();
         }
     }
@@ -122,6 +127,7 @@ public class FilterDAOImpl extends AbstractJDBCDao<Filter> implements FilterDAO 
             statement.setString(9, object.getTags());
             statement.setInt(10, object.getId());
         } catch (SQLException e) {
+            LOGGER.catching(e);
             throw new DataBaseException();
         }
     }

@@ -15,9 +15,13 @@ public class CommentServiceImpl implements CommentService {
     DaoFactory daoFactory;
     CommentDAO commentDAO;
 
-    public CommentServiceImpl() throws DataBaseException {
-        daoFactory = new PostgreSqlDaoFactory();
-        commentDAO = (CommentDAO) daoFactory.getDao(Comment.class);
+    public CommentServiceImpl() {
+        try {
+            daoFactory = new PostgreSqlDaoFactory();
+            commentDAO = (CommentDAO) daoFactory.getDao(Comment.class);
+        } catch (DataBaseException e) {
+            logger.catching(e);
+        }
     }
 
     @Override
