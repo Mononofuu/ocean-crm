@@ -1,6 +1,7 @@
 package com.becomejavasenior.impl;
 
 import com.becomejavasenior.*;
+import com.becomejavasenior.interfacedao.DealContactDAO;
 import com.becomejavasenior.interfacedao.DealDAO;
 import com.becomejavasenior.interfacedao.DealStatusDAO;
 import org.apache.logging.log4j.LogManager;
@@ -9,8 +10,10 @@ import org.apache.logging.log4j.Logger;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by Peter on 18.12.2015.
@@ -21,11 +24,13 @@ public class DealServiceImpl implements com.becomejavasenior.DealService {
     DaoFactory daoFactory;
     DealDAO dealDao;
     DealStatusDAO dealStatusDao;
+    DealContactDAO dealContactDAO;
 
     public DealServiceImpl() throws DataBaseException{
         daoFactory = new PostgreSqlDaoFactory();
         dealDao = (DealDAO)daoFactory.getDao(Deal.class);
         dealStatusDao = (DealStatusDAO) daoFactory.getDao(DealStatus.class);
+        dealContactDAO = (DealContactDAO) daoFactory.getDao(DealContact.class);
     }
 
     @Override
@@ -45,7 +50,7 @@ public class DealServiceImpl implements com.becomejavasenior.DealService {
 
     @Override
     public Deal findDealById(int id) throws DataBaseException {
-        Deal deal = (Deal) dealDao.read(id);
+        Deal deal = dealDao.read(id);
         return deal;
     }
 
@@ -75,7 +80,7 @@ public class DealServiceImpl implements com.becomejavasenior.DealService {
 
     @Override
     public List<Deal> findDealsByTags(String tag) throws DataBaseException {
-        List<Deal> dealList = dealDao.readTagFilter("'" + tag + "')))");;
+        List<Deal> dealList = dealDao.readTagFilter("'" + tag + "')))");
         return dealList;
     }
 
@@ -327,5 +332,13 @@ public class DealServiceImpl implements com.becomejavasenior.DealService {
     @Override
     public DealStatus findDealStatus(int id) throws DataBaseException {
         return dealStatusDao.read(id);
+    }
+
+    @Override
+    public void addContactToDeal(Deal createdDeal, Contact contact) throws DataBaseException {
+        DealContact dealContact = new DealContact();
+        dealContact.setDeal(createdDeal);
+        dealContact.setContact(contact);
+        dealContactDAO.create(dealContact);
     }
 }

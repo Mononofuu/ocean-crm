@@ -21,9 +21,30 @@ import java.util.*;
 public class DealController extends HttpServlet {
     private final static Logger logger = LogManager.getLogger(DealController.class);
     private final static String nextJSP = "/jsp/newdeal.jsp";
-    private static TaskServiceImpl taskService;
-    private DaoFactory dao;
-    private Deal createdDeal;
+    private static TaskService taskService;
+    private static DealService dealService;
+    private static ContactService contactService;
+    private static CompanyService companyService;
+    private static UserService userService;
+    private static CurrencyService currencyService;
+    private static TagService tagService;
+    private static CommentService commentService;
+
+    static {
+        try {
+            taskService = new TaskServiceImpl();
+            dealService = new DealServiceImpl();
+            contactService = new ContactServiceImpl();
+            companyService = new CompanyServiceImpl();
+            userService = new UserServiceImpl();
+            currencyService = new CurrencyServiceImpl();
+            commentService = new CommentServiceImpl();
+            tagService = new TagServiceImpl();
+
+        } catch (DataBaseException e) {
+            logger.catching(e);
+        }
+    }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
@@ -34,17 +55,17 @@ public class DealController extends HttpServlet {
                 newDeal(request, response);
                 break;
             case "newcontact":
-                newContact(request, response);
+                newContact(request);
                 break;
             case "newcompany":
-                newCompany(request, response);
+                newCompany(request);
                 break;
             default:
         }
 
     }
 
-    private void newContact(HttpServletRequest request, HttpServletResponse response) {
+    private void newContact(HttpServletRequest request) {
         try {
             Contact contact = new Contact();
 
@@ -53,8 +74,7 @@ public class DealController extends HttpServlet {
 
             Optional<String> contactCompany = Optional.ofNullable(request.getParameter("contactcompany"));
             if (contactCompany.isPresent()) {
-                GenericDao<Company> companyDao = dao.getDao(Company.class);
-                Company company = companyDao.read(Integer.parseInt(contactCompany.get()));
+                Company company = companyService.findCompanyById(Integer.parseInt(contactCompany.get()));
                 contact.setCompany(company);
             }
 
@@ -73,8 +93,7 @@ public class DealController extends HttpServlet {
             Optional<String> contactSkype = Optional.ofNullable(request.getParameter("contactskype"));
             contactSkype.ifPresent(contact::setSkype);
 
-            GenericDao<Contact> contactDao = dao.getDao(Contact.class);
-            Contact createdContact = contactDao.create(contact);
+            Contact createdContact = contactService.saveContact(contact);
 
             logger.info("NEW CONTACT CREATED:");
             logger.info(createdContact.getId());
@@ -85,7 +104,7 @@ public class DealController extends HttpServlet {
         }
     }
 
-    private void newCompany(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private void newCompany(HttpServletRequest request) throws IOException {
         try {
             Company company = new Company();
             Optional<String> companyName = Optional.ofNullable(request.getParameter("companyname"));
@@ -109,8 +128,7 @@ public class DealController extends HttpServlet {
             Optional<String> companyAddress = Optional.ofNullable(request.getParameter("companyaddress"));
             companyAddress.ifPresent(company::setAdress);
 
-            GenericDao<Company> companyDao = dao.getDao(Company.class);
-            Company createdCompany = companyDao.create(company);
+            Company createdCompany = companyService.saveCompany(company);
 
             logger.info("NEW COMPANY CREATED:");
             logger.info(createdCompany.getId());
@@ -121,6 +139,7 @@ public class DealController extends HttpServlet {
     }
 
     private void newDeal(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Deal createdDeal;
         try {
             Deal deal = new Deal();
 
@@ -129,8 +148,7 @@ public class DealController extends HttpServlet {
 
             Optional<String> dealResp = Optional.ofNullable(request.getParameter("dealresp"));
             if (dealResp.isPresent()) {
-                GenericDao<User> userDao = dao.getDao(User.class);
-                User responsible = userDao.read(Integer.parseInt(dealResp.get()));
+                User responsible = userService.findUserById(Integer.parseInt(dealResp.get()));
                 deal.setResponsible(responsible);
             }
 
@@ -139,19 +157,16 @@ public class DealController extends HttpServlet {
 
             Optional<String> dealStatus = Optional.ofNullable(request.getParameter("dealstatus"));
             if (dealStatus.isPresent()) {
-                GenericDao<DealStatus> dealStatusDao = dao.getDao(DealStatus.class);
-                DealStatus status = dealStatusDao.read(Integer.parseInt(dealStatus.get()));
+                DealStatus status = dealService.findDealStatus(Integer.parseInt(dealStatus.get()));
                 deal.setStatus(status);
             }
 
             Optional<String> dealCompany = Optional.ofNullable(request.getParameter("dealcompany"));
             if (dealCompany.isPresent()) {
-                GenericDao<Company> companyDao = dao.getDao(Company.class);
-                deal.setDealCompany(companyDao.read(Integer.parseInt(dealCompany.get())));
+                deal.setDealCompany(companyService.findCompanyById(Integer.parseInt(dealCompany.get())));
             }
 
-            GenericDao<Currency> currencyDao = dao.getDao(Currency.class);
-            Optional<Currency> dealCurrency = Optional.ofNullable(currencyDao.read(1)); //TODO
+            Optional<Currency> dealCurrency = Optional.ofNullable(currencyService.findCurrencyById(1)); //TODO
             dealCurrency.ifPresent(deal::setCurrency);
 
             deal.setDateWhenDealClose(null);
@@ -173,25 +188,16 @@ public class DealController extends HttpServlet {
 
             deal.setUser((User) request.getSession().getAttribute("user"));
 
-            GenericDao<Deal> dealDao = dao.getDao(Deal.class);
             logger.info("TRYING TO CREATE DEAL");
-            createdDeal = dealDao.create(deal);
+            createdDeal = dealService.saveDeal(deal);
             logger.info("DEAL CREATED");
 
-            GenericDao<Subject> subjectDao = dao.getDao(Subject.class);
-            Subject subject = subjectDao.read(createdDeal.getId());
-
             if (contactList.isPresent()) {
-                DealContactDAOImpl dealContactDAO = new DealContactDAOImpl(dao);
-                GenericDao<Contact> contactDao = dao.getDao(Contact.class);
                 List<Contact> dealContacts = new ArrayList<>();
 
                 for (String contactId : contactList.get()) {
-                    Contact contact = contactDao.read(Integer.parseInt(contactId));
-                    DealContact dealContact = new DealContact();
-                    dealContact.setDeal(createdDeal);
-                    dealContact.setContact(contact);
-                    dealContactDAO.create(dealContact);
+                    Contact contact = contactService.findContactById(Integer.parseInt(contactId));
+                    dealService.addContactToDeal(createdDeal, contact);
                     dealContacts.add(contact);
                 }
                 deal.setContacts(dealContacts);
@@ -199,47 +205,39 @@ public class DealController extends HttpServlet {
 
             Optional<String> dealTags = Optional.ofNullable(request.getParameter("dealtags"));
             if (dealTags.isPresent()) {
-                GenericDao<Tag> tagDAO = dao.getDao(Tag.class);
-                SubjectTagDAOImpl subjectTagDAO = (SubjectTagDAOImpl) dao.getDao(SubjectTag.class);
                 String[] tagArray = dealTags.get().trim().split(" ");
 
                 for (String tag : tagArray) {
-                    Set<Tag> existedTags = subjectTagDAO.getAllTagsBySubjectId(createdDeal.getId());
                     Tag tagInstance = new Tag();
                     tagInstance.setName(tag);
-                    if (existedTags.stream().filter(tag1 -> tag1.getName().equals(tag)).count() < 1) {
-                        Tag returnedTag = tagDAO.create(tagInstance);
-                        logger.info(String.format("Trying to create tag: %s", tag));
-                        SubjectTag subjectTag = new SubjectTag();
-                        subjectTag.setTag(returnedTag);
-                        subjectTag.setSubject(createdDeal);
-                        subjectTagDAO.create(subjectTag);
-                    }
+                    tagService.addTagToSubject(createdDeal, tagInstance);
                 }
             }
 
             Optional<String> dealComment = Optional.ofNullable(request.getParameter("dealcomment"));
             if (dealComment.isPresent()) {
-                GenericDao<Comment> commentDao = dao.getDao(Comment.class);
                 Comment comment = new Comment();
                 comment.setText(dealComment.get());
                 comment.setDateCreated(new Timestamp(new Date().getTime()));
-                comment.setSubject(subject);
+                comment.setSubject(createdDeal);
                 User user = new User();
                 user.setId(1);
                 comment.setUser(user);
                 logger.info(String.format("Trying to create comment: %s", comment.getText()));
-                Comment createdComment = commentDao.create(comment);
+                Comment createdComment = commentService.saveComment(comment);
                 logger.info(String.format("Contact id = %d created", createdComment.getId()));
             }
 
             Optional<String> addTask = Optional.ofNullable(request.getParameter("addTask"));
             if (addTask.isPresent() && addTask.get().equals("true")) {
                 logger.debug("Adding task");
-                Task task = getTaskFromRequest(request);
+                Task task = getTaskFromRequest(request, createdDeal);
                 taskService = new TaskServiceImpl();
                 taskService.saveTask(task);
             }
+
+            logger.info("Deal created successfully");
+            logger.info(String.format("Deal id = %d", createdDeal.getId()));
 
         } catch (DataBaseException e) {
             logger.error("Error while creating new deal");
@@ -247,20 +245,10 @@ public class DealController extends HttpServlet {
         } catch (ParseException e) {
             logger.catching(e);
         }
-
         response.getWriter().println("DEAL CREATED SUCCESSFULLY");
-        logger.info("Deal created successfully");
-        logger.info(String.format("Deal id = %d", createdDeal.getId()));
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        try {
-            dao = new PostgreSqlDaoFactory();
-        } catch (DataBaseException e) {
-            logger.error("Error while getting DAO Factory");
-            logger.catching(e);
-        }
-
         String action = request.getParameter("action");
         logger.info("GET action = " + action);
 
@@ -271,18 +259,15 @@ public class DealController extends HttpServlet {
             try {
                 switch (action) {
                     case "getCompanies":
-                        GenericDao<Company> companyDao = dao.getDao(Company.class);
-                        List<Company> companyList = companyDao.readAll();
+                        List<Company> companyList = companyService.findCompanies();
                         json = new Gson().toJson(companyList);
                         break;
                     case "getContacts":
-                        GenericDao<Contact> contactDao = dao.getDao(Contact.class);
-                        List<Contact> contactList = contactDao.readAll();
+                        List<Contact> contactList = contactService.findContacts();
                         json = new Gson().toJson(contactList);
                         break;
                     case "getDealStatuses":
-                        GenericDao<DealStatus> dealStatusDao = dao.getDao(DealStatus.class);
-                        List<DealStatus> dealStatusList = dealStatusDao.readAll();
+                        List<DealStatus> dealStatusList = dealService.getAllDealStatuses();
                         json = new Gson().toJson(dealStatusList);
                         break;
                     case "getPhoneTypes":
@@ -292,20 +277,21 @@ public class DealController extends HttpServlet {
                         json = new Gson().toJson(TaskType.values());
                         break;
                     case "getUsers":
-                        GenericDao<User> userDao = dao.getDao(User.class);
-                        List<User> users = userDao.readAll();
+                        List<User> users = userService.getAllUsers();
                         json = new Gson().toJson(users);
                         break;
                     default:
                         redirectTo(request, response, nextJSP);
                 }
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                if (json != null) {
+                    response.getWriter().write(json);
+                }
             } catch (DataBaseException e) {
                 logger.error("Error while getting DAO");
                 logger.catching(e);
             }
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
-            response.getWriter().write(json);
         }
     }
 
@@ -319,7 +305,7 @@ public class DealController extends HttpServlet {
         }
     }
 
-    private Task getTaskFromRequest(HttpServletRequest request) throws DataBaseException {
+    private Task getTaskFromRequest(HttpServletRequest request, Deal createdDeal) throws DataBaseException {
         Task task = new Task();
         Optional<String> taskUser = Optional.ofNullable(request.getParameter("taskuser"));
         if (taskUser.isPresent()) {
