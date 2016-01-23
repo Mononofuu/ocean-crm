@@ -121,6 +121,8 @@ public class DealStatus implements Serializable, Comparable {
                 return "label.dealphase.success";
             case "CLOSED AND NOT IMPLEMENTED":
                 return "label.dealphase.closedandnotimpl";
+            case "DELETED":
+                return "label.deleted";
             default:
                 return name;
         }

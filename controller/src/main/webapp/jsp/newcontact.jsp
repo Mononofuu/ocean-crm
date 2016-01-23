@@ -1,132 +1,226 @@
 <!DOCTYPE html>
+<!--
+@author Anton Sakhno <sakhno83@gmail.com>
+-->
+<!--
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page isELIgnored="false" %>
-<style>
-    <%@include file='../resources/css/newcontact.css' %>
-</style>
+-->
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Создание контакта</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <jsp:include page="../jsp/menu.jsp"/>
-    <link rel="import" href="../jsp/menu.jsp"/>
+    <link href="../resources/css/tasklist.css" rel="stylesheet" type="text/css"/>
+
+    <script src="../resources/js/jquery-1.11.3.min.js" type="text/javascript"></script>
+    <script src="../resources/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="../resources//js/tasklist.js" type="text/javascript"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.17/jquery-ui.min.js"></script>
     <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.17/themes/smoothness/jquery-ui.css"/>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.8.7/jquery.timepicker.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.8.7/jquery.timepicker.css"/>
-
-    <link href="../resources/css/newcontact.css" rel="stylesheet" type="text/css"/>
-    <script src="../resources//js/tasklist.js" type="text/javascript"></script>
+    <link href="../resources/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/js/select2.min.js"></script>
 </head>
 <body>
-<div>
-    <form action="/new_contact_add" method="get" enctype="multipart/form-data">
-        <div class="floatleft">
-            <div class="tablename">Создание контакта</div>
-            <div class="frame">
-                <input class="field" type="text" name="name" placeholder="Имя Фамилия">
-                <input class="field tags" type="text" name="tags" placeholder="Теги">
-                <select class="field" name="responsible">
-                    <option value="" disabled selected>Ответственный</option>
-                    <c:forEach var="user" items="${userslist}">
-                        <option value="${user.id}">${user.name}</option>
-                    </c:forEach>
-                </select>
-                <input class="field" type="text" name="position" placeholder="Должность">
-                <input class="field phone" type="text" name="phonenumber" placeholder="Номер телефона">
-                <select class="field phonetype" name="phonetype">
-                    <option value="WORK_PHONE_NUMBER">Рабочий</option>
-                    <option value="WORK_DIRECT_PHONE_NUMBER">Раб.прямой</option>
-                    <option value="MOBILE_PHONE_NUMBER">Мобильный</option>
-                    <option value="FAX_NUMBER">Факс</option>
-                    <option value="HOME_PHONE_NUMBER">Домашний</option>
-                    <option value="OTHER_PHONE_NUMBER">Другой</option>
-                </select>
-                <input class="field" type="text" name="email" placeholder="Email">
-                <input class="field" type="text" name="skype" placeholder="Skype">
-                <textarea class="field bigtext" name="notes" placeholder="Примечание к контакту" rows="4"></textarea>
-                <input class="field bigtext" type="file" min="1" max="10" name="file[]" multiple="true">
-                <input class="button" type="submit" value="Добавить">
-                <a class="button cancel" href="../index.jsp">Отмена</a>
+<div class="container">
+    <div class="row">
+        <form class="form-horizontal" action="/new_contact_add" method="get" enctype="multipart/form-data"
+              id="newcontactform">
+        <div class="col-xs-4 autowindow">
+
+                <h4><spring:message code="label.addcontact"/> </h4>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <input class="form-control" type="text" name="name" id="name" placeholder='<spring:message code="label.namesurname"/>'>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <input class="form-control" type="text" name="tags" id="tags" placeholder='<spring:message code="label.tags"/>'>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <select class="form-control" name="responsible" id="responsible">
+                            <option value="" disabled selected><spring:message code="label.responsible"/> </option>
+                            <c:forEach var="user" items="${userslist}">
+                                <option value="${user.id}">${user.name}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <input class="form-control" type="text" name="position" id="position" placeholder='<spring:message code="label.position"/>'>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-7">
+                        <input class="form-control" type="text" name="phonenumber" id="phonenumber"
+                               placeholder='<spring:message code="label.phonenumber"/>'>
+                    </div>
+                    <div class="col-sm-5">
+                        <select class="form-control" name="phonetype" id="phonetype">
+                            <c:forEach var="phonetype" items="${phonetypelist}">
+                                <option value="${phonetype}"><spring:message code="${phonetype.toString()}"/></option>
+                            </c:forEach>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <input class="form-control" type="text" name="email" id="email" placeholder='<spring:message code="label.email"/>'>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <input class="form-control" type="text" name="skype" id="skype" placeholder='<spring:message code="label.skype"/>'>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <textarea class="form-control" name="notes" id="notes" placeholder='<spring:message code="label.contactnote"/>'
+                                  rows="4"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <input type="file" min="1" max="10" name="file[]" id="file" multiple="true">
+                    </div>
+                </div>
+                <input class="btn btn-primary" type="submit" value='<spring:message code="label.add"/>' id="addcontact">
+                <input class="btn resetbutton" type="reset" value='<spring:message code="label.reset"/>' id="resetcontact">
+
+        </div>
+        <div class="col-xs-4">
+            <div class="col-sm-12 autowindow">
+                    <h4><spring:message code="label.quickdealadd"/></h4>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <input class="form-control" type="text" name="newdealname" id="newdealname" placeholder='<spring:message code="label.dealname"/>'>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <select class="form-control" name="dealtype" id="dealtype">
+                                <option value="" disabled selected><spring:message code="label.phase"/></option>
+                                <c:forEach var="dealstatus" items="${dealstatuses}">
+                                    <option value="${dealstatus.id}"><spring:message code="${dealstatus.toString()}"/></option>
+                                </c:forEach>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-9">
+                            <input class="form-control" type="text" name="budget" id="budget" placeholder='<spring:message code="label.budget"/>'>
+                        </div>
+                        <div class="col-sm-2">
+                            <label for="budget"><spring:message code="label.uan"/></label>
+                        </div>
+                    </div>
+                    <input class="btn btn-primary" type="submit" value='<spring:message code="label.add"/>' id="adddeal">
+            </div>
+            <div class="col-sm-12 autowindow">
+                    <h4><spring:message code="label.addtask"/></h4>
+                    <div class="form-group small-gutter">
+                        <div class="col-sm-4">
+                            <select class="form-control" name="period" id="period">
+                                <option value="today"><spring:message code="label.today"/></option>
+                                <option value="allday"><spring:message code="label.allday"/></option>
+                                <option value="tomorow"><spring:message code="label.tomorow"/></option>
+                                <option value="nextweek"><spring:message code="label.nextweek"/></option>
+                                <option value="nextmonth"><spring:message code="label.nextmonth"/></option>
+                                <option value="nextyear"><spring:message code="label.nextyear"/></option>
+                            </select>
+                        </div>
+                        <div class="col-sm-1">
+                            <label for="period"><spring:message code="label.or"/></label>
+                        </div>
+                        <div class="col-sm-3">
+                            <input class="form-control" type="text" id="datepicker" name="duedate" placeholder='<spring:message code="label.date"/>'>
+                        </div>
+                        <div class="col-sm-3">
+                            <input class="form-control" type="text" id="timepicker" name="duetime" placeholder='<spring:message code="label.time"/>'>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <select class="form-control" name="taskresponsible" id="taskresponsible">
+                                <option value="" disabled selected><spring:message code="label.responsible"/></option>
+                                <c:forEach var="user" items="${userslist}">
+                                    <option value="${user.id}">${user.name}</option>
+                                </c:forEach>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <select class="form-control" name="tasktype" id="tasktype">
+                                <option value="" disabled selected><spring:message code="label.tasktype"/></option>
+                                <c:forEach var="tasktype" items="${tasktypes}">
+                                    <option value="${tasktype.ordinal()}"><spring:message code="${tasktype.toString()}"/></option>
+                                </c:forEach>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <textarea class="form-control" name="tasktext" id="tasktext" placeholder='<spring:message code="label.tasknote"/>'
+                                      rows="2"></textarea>
+                        </div>
+                    </div>
+                    <input class="btn btn-primary" type="submit" value='<spring:message code="label.add"/>' id="addtask">
             </div>
         </div>
-
-        <div class="floatleft">
-            <div class="tablename">Быстрое добавление сделки</div>
-            <div class="frame">
-                <input class="field bigtext" type="text" name="newdealname" placeholder="Название сделки">
-                <select class="field" name="dealtype">
-                    <option value="">Этап</option>
-                    <option value="firstcontact">Первичный контакт</option>
-                    <option value="makingdeсision">Принимают решение</option>
-                    <option value="contractdiscussion">Согласование договора</option>
-                    <option value="success">Успешно реализовано</option>
-                    <option value="fail">Закрыто и не реализовано</option>
-                </select>
-                <input class="field budget" type="number" name="budget" placeholder="Бюджет">
-
-                <div class="budget">гр.</div>
-                <a class="button addbutton" href="#1">Добавить</a>
-            </div>
-            <div class="tablename">Запланировать действие</div>
-            <div class="frame">
-                <select class="field period" name="period">
-                    <option value="today">Сегодня</option>
-                    <option value="allday">Весь день</option>
-                    <option value="tomorow">Завтра</option>
-                    <option value="nextweek">Следующая неделя</option>
-                    <option value="nextmonth">Следующий месяц</option>
-                    <option value="nextyear">Следующий год</option>
-                </select>
-
-                <div class="period smaltext">или выбрать</div>
-                <input class="period date" type="text" id="datepicker" name="duedate" placeholder="дата">
-                <input class="period time" type="text" id="timepicker" name="duetime" placeholder="время">
-                <select class="field" name="taskresponsible">
-                    <option value="" disabled selected>Ответственный</option>
-                    <c:forEach var="user" items="${userslist}">
-                        <option value="${user.id}">${user.name}</option>
-                    </c:forEach>
-                </select>
-                <select class="field" name="tasktype">
-                    <option value="" disabled selected>Тип задачи</option>
-                    <option value="FOLLOW_UP">Follow-up</option>
-                    <option value="MEETING">Встреча</option>
-                    <option value="OTHER">Другой</option>
-                </select>
-                <textarea class="field bigtext" name="tasktext" placeholder="Текст задачи" rows="4"></textarea>
-                <a class="button addbutton" href="#2">Добавить</a>
-            </div>
-        </div>
-
-    <div class="floatleft">
-        <select class="companyselect" id="companyselect" name="companyid">
-            <option value="" disabled selected>Выбор Компании</option>
-            <c:forEach var="company" items="${companylist}">
-                <option value="${company.id}">${company.name}</option>
-            </c:forEach>
-        </select>
-    </div>
-    </form>
-    <div class="floatleft">
-        <div class="tablename companyadd">Добавить компанию</div>
-        <form method="post" id="newcompanyform" action="/new_company">
-            <div class="floatleft frame rightframe" id="newcompanyframe">
-                <input class="field" type="text" name="newcompanyname" id="newcompanyname" placeholder="Название компании">
-                <input class="field" type="text" name="newcompanyphone" id="newcompanyphone" placeholder="Телефон">
-                <input class="field" type="text" name="newcompanyemail" id="newcompanyemail" placeholder="Email">
-                <input class="field" type="text" name="newcompanywebaddress" id="newcompanywebaddress" placeholder="Web-адрес">
-                <input class="field" type="text" name="newcompanyaddress" id="newcompanyaddress" placeholder="Адрес">
-                <input name="submit" class="button addbutton" type="submit" value="Добавить Компанию">
-            </div>
         </form>
+        <div class="col-xs-2 autowindow">
+            <div class="row">
+                <div class="form-group">
+                    <label for="companyselect"><spring:message code="label.choosecompany"/></label>
+                    <select class="form-control" id="companyselect" name="companyid" form="newcontactform">
+                        <option value="" disabled selected></option>
+                        <c:forEach var="company" items="${companylist}">
+                            <option value="${company.id}">${company.name}</option>
+                        </c:forEach>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <form method="post" id="newcompanyform" action="/new_company">
+                    <div class="form-group">
+                        <label for="newcompanyname"><spring:message code="label.addcompany"/></label>
+                        <input class="form-control" type="text" name="newcompanyname" id="newcompanyname"
+                               placeholder='<spring:message code="label.companyname"/>'>
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="text" name="newcompanyphone" id="newcompanyphone"
+                        placeholder='<spring:message code="label.phonenumber"/>'>
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="text" name="newcompanyemail" id="newcompanyemail"
+                               placeholder='<spring:message code="label.email"/>'>
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="text" name="newcompanywebaddress" id="newcompanywebaddress"
+                               placeholder='<spring:message code="label.web"/>'>
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="text" name="newcompanyaddress" id="newcompanyaddress"
+                               placeholder='<spring:message code="label.address"/>'>
+                    </div>
+                    <input name="submit" class="btn btn-primary" type="submit" value='<spring:message code="label.addcompany"/>'>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
-
 </body>
-
-
 </html>

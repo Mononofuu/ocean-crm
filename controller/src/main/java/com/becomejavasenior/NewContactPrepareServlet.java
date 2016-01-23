@@ -38,7 +38,7 @@ public class NewContactPrepareServlet extends HttpServlet {
             request.setAttribute("tasktypes", taskTypes);
             List<DealStatus> dealStatuses = new DealServiceImpl().getAllDealStatuses();
             request.setAttribute("dealstatuses", dealStatuses);
-            getServletContext().getRequestDispatcher("/jsp/newcontact_bootstrap.jsp").forward(request,response);
+            getServletContext().getRequestDispatcher("/jsp/newcontact.jsp").forward(request,response);
         } catch (DataBaseException e) {
             logger.error("Error when prepearing data for newcontact.jsp",e);
         }
