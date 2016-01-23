@@ -20,7 +20,7 @@ import java.net.URL;
  */
 @WebServlet(name = "newcompany", urlPatterns = "/new_company")
 public class NewCompanyServlet extends HttpServlet {
-    private Logger logger = LogManager.getLogger(NewCompanyServlet.class);
+    private static final Logger LOGGER = LogManager.getLogger(NewCompanyServlet.class);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -42,7 +42,7 @@ public class NewCompanyServlet extends HttpServlet {
         try {
             company = createCompanyFromRequest(req);
         } catch (DataBaseException e) {
-            logger.error(e);
+            LOGGER.error(e);
         }
         mapper.writeValue(writer, company);
         resp.getWriter().write(writer.toString());
@@ -60,7 +60,7 @@ public class NewCompanyServlet extends HttpServlet {
             try {
                 result.setWeb(new URL("http://"+url));
             } catch (MalformedURLException e1) {
-                logger.error("Incorrect URL", e);
+                LOGGER.error("Incorrect URL", e);
             }
         }
         result.setAdress(request.getParameter("newcompanyaddress"));

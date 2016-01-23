@@ -5,6 +5,7 @@ import com.becomejavasenior.DataBaseException;
 import com.becomejavasenior.impl.ContactServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -15,7 +16,7 @@ import java.util.Map;
  */
 @WebServlet(name="new_contact_verify", urlPatterns = "/new_contact_verify")
 public class NewContactVerifyServlet extends AbstractVerifyServlet{
-    private Logger logger = LogManager.getLogger(NewCompanyVerifyServlet.class);
+    private static final Logger LOGGER = LogManager.getLogger(NewCompanyVerifyServlet.class);
     private static ContactService contactService = new ContactServiceImpl();
 
     @Override
@@ -29,7 +30,7 @@ public class NewContactVerifyServlet extends AbstractVerifyServlet{
                 result.put("name", "Контакт уже существует в базе");
             }
         } catch (DataBaseException e) {
-            logger.error(e);
+            LOGGER.error(e);
         }
         String phonenNumber = req.getParameter("phonenumber");
         if(!"".equals(phonenNumber)&&!checkString(phonenNumber, PHONE_PATTERN)){
@@ -58,22 +59,10 @@ public class NewContactVerifyServlet extends AbstractVerifyServlet{
     }
 
     private boolean checkTaskFieldContent(HttpServletRequest req){
-        if(!"".equals(req.getParameter("dealtype"))){
-            return true;
-        }else if(!"".equals(req.getParameter("budget"))){
-            return true;
-        }else{
-            return false;
-        }
+        return !"".equals(req.getParameter("dealtype"))&&!"".equals(req.getParameter("budget"));
     }
 
     private boolean checkDealFieldContent(HttpServletRequest req){
-        if(!"".equals(req.getParameter("taskresponsible"))){
-            return true;
-        }else if(!"".equals(req.getParameter("tasktype"))){
-            return true;
-        }else{
-            return false;
-        }
+        return !"".equals(req.getParameter("taskresponsible"))&&!"".equals(req.getParameter("tasktype"));
     }
 }

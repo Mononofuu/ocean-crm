@@ -6,16 +6,16 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * created by Alekseichenko Sergey <mononofuu@gmail.com>
  */
 public class TaskDAOImpl extends AbstractJDBCDao<Task> implements TaskDAO {
-    private Logger logger = LogManager.getLogger(TaskDAOImpl.class);
+    private static final Logger LOGGER = LogManager.getLogger(TaskDAOImpl.class);
 
     public TaskDAOImpl(DaoFactory daoFactory) {
         super(daoFactory);
@@ -27,11 +27,11 @@ public class TaskDAOImpl extends AbstractJDBCDao<Task> implements TaskDAO {
         try (Connection connection = getConnection();
              Statement statement = connection.createStatement()
         ){
-            logger.info(getParametrisedReadQuery(userId, date, taskTypeId));
+            LOGGER.info(getParametrisedReadQuery(userId, date, taskTypeId));
             ResultSet rs = statement.executeQuery(getParametrisedReadQuery(userId, date, taskTypeId));
             result = parseResultSet(rs);
         } catch (SQLException e) {
-            logger.error(e.getMessage());
+            LOGGER.error(e.getMessage());
             throw new DataBaseException(e);
         }
         if (result == null) {

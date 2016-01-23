@@ -4,6 +4,7 @@ import com.becomejavasenior.impl.TaskServiceImpl;
 import com.becomejavasenior.impl.UserServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -20,8 +21,8 @@ import java.util.Date;
  */
 @WebServlet(name="newtask", urlPatterns = "/newtask")
 public class NewTaskServlet extends HttpServlet{
-    private Logger logger = LogManager.getLogger(NewTaskServlet.class);
-    private static TaskService taskService;
+    private static final Logger LOGGER = LogManager.getLogger(NewTaskServlet.class);
+    private TaskService taskService;
 
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         this.process(req, resp);
@@ -39,7 +40,7 @@ public class NewTaskServlet extends HttpServlet{
             taskService.saveTask(getTaskFromRequest(req));
             getServletContext().getRequestDispatcher("/tasklist").forward(req,resp);
         } catch (DataBaseException e) {
-            logger.error(e);
+            LOGGER.error(e);
         }
     }
 
@@ -48,8 +49,9 @@ public class NewTaskServlet extends HttpServlet{
         task.setUser(getUserFromRequest(request.getParameter("taskresponsible")));
         int subjectId = Integer.parseInt(request.getParameter("subject"));
         task.setSubject(taskService.getSubject(subjectId));
-        if(request.getParameter("tasktype")!=null&&!"".equals(request.getParameter("tasktype"))){
-            task.setType(TaskType.valueOf(request.getParameter("tasktype")));
+        String taskType = request.getParameter("tasktype");
+        if (taskType != null && !"".equals(taskType)) {
+            task.setType(TaskType.valueOf(taskType));
         }
         task.setComment(request.getParameter("tasktext"));
         task.setDateCreated(new Date());
@@ -60,7 +62,7 @@ public class NewTaskServlet extends HttpServlet{
             try {
                 task.setDueTime(dateFormat.parse(duedate+duetime));
             } catch (ParseException e) {
-                e.printStackTrace();
+                LOGGER.error(e);
             }
         }else{
             String period = request.getParameter("period");

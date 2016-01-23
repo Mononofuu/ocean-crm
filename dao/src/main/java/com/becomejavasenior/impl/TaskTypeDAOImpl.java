@@ -1,9 +1,14 @@
 package com.becomejavasenior.impl;
 
-import com.becomejavasenior.*;
+import com.becomejavasenior.AbstractJDBCDao;
+import com.becomejavasenior.DaoFactory;
+import com.becomejavasenior.DataBaseException;
+import com.becomejavasenior.TaskType;
 import com.becomejavasenior.interfacedao.TaskTypeDAO;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 

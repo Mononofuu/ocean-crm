@@ -1,7 +1,5 @@
 package com.becomejavasenior;
 
-import com.becomejavasenior.DataBaseException;
-import com.becomejavasenior.User;
 import com.becomejavasenior.exception.IncorrectDataException;
 
 import java.security.NoSuchAlgorithmException;

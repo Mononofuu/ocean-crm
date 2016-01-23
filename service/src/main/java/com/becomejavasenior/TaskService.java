@@ -1,10 +1,5 @@
 package com.becomejavasenior;
 
-import com.becomejavasenior.DataBaseException;
-import com.becomejavasenior.Subject;
-import com.becomejavasenior.Task;
-import com.becomejavasenior.TaskType;
-
 import java.util.List;
 import java.util.Map;
 

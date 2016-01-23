@@ -1,11 +1,16 @@
 package com.becomejavasenior;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
 
 public class Company extends Subject {
 
     private static final long serialVersionUID = 6412485489253693564L;
+    private final static Logger LOGGER = LogManager.getLogger(Contact.class);
 
     private String phoneNumber;
     private String email;
@@ -104,7 +109,11 @@ public class Company extends Subject {
 
         if (phoneNumber != null ? !phoneNumber.equals(company.phoneNumber) : company.phoneNumber != null) return false;
         if (email != null ? !email.equals(company.email) : company.email != null) return false;
-        if (web != null ? !web.equals(company.web) : company.web != null) return false;
+        try {
+            if (web != null ? !web.toURI().equals(company.web.toURI()) : company.web != null) return false;
+        } catch (URISyntaxException e) {
+            LOGGER.error(e);
+        }
         if (adress != null ? !adress.equals(company.adress) : company.adress != null) return false;
         if (comments != null ? !comments.equals(company.comments) : company.comments != null) return false;
         if (files != null ? !files.equals(company.files) : company.files != null) return false;
@@ -119,7 +128,11 @@ public class Company extends Subject {
         int result = super.hashCode();
         result = 31 * result + (phoneNumber != null ? phoneNumber.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
-        result = 31 * result + (web != null ? web.hashCode() : 0);
+        try {
+            result = 31 * result + (web != null ? web.toURI().hashCode() : 0);
+        } catch (URISyntaxException e) {
+            LOGGER.error(e);
+        }
         result = 31 * result + (adress != null ? adress.hashCode() : 0);
         result = 31 * result + (comments != null ? comments.hashCode() : 0);
         result = 31 * result + (files != null ? files.hashCode() : 0);

@@ -30,7 +30,6 @@ public class SubjectTagDAOImpl extends AbstractJDBCDao<SubjectTag> implements Su
             // получаем обратно новую запись через возвращенный id записи
             ResultSet rs = statement.getGeneratedKeys();
             rs.next();
-            int key = rs.getInt(1);
         } catch (SQLException e) {
             throw new DataBaseException(e);
         }

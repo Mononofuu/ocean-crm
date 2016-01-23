@@ -6,7 +6,6 @@ import com.becomejavasenior.DataBaseException;
 import com.becomejavasenior.PhoneType;
 import com.becomejavasenior.interfacedao.PhoneTypeDAO;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;

@@ -13,10 +13,14 @@ import java.util.*;
  * @author Anton Sakhno <sakhno83@gmail.com>
  */
 public abstract class AbstractCalendar extends TagSupport{
-    private Logger logger = LogManager.getLogger(this.getClass());
+    private static final Logger LOGGER = LogManager.getLogger(AbstractCalendar.class);
     private List<Task> tasks;
     private Map<String, List<Task>> actualTasks = new HashMap<>();
     private SimpleDateFormat dateFormat = new SimpleDateFormat(getDateFormatString());
+    protected final static String TD = "<td>";
+    protected final static String TD_CLOSE = "</td>";
+    protected final static String TR = "<tr>";
+    protected final static String TR_CLOSE = "</tr>";
 
     /**
      * Метод возвращающий строку для использования в качестве ключа к actualTasks
@@ -35,7 +39,7 @@ public abstract class AbstractCalendar extends TagSupport{
     }
 
     public Logger getLogger() {
-        return logger;
+        return LOGGER;
     }
 
     public SimpleDateFormat getDateFormat() {
@@ -62,9 +66,9 @@ public abstract class AbstractCalendar extends TagSupport{
                 if(actualTasks.containsKey(key)){
                     actualTasks.get(key).add(task);
                 }else{
-                    List<Task> tasks = new ArrayList<>();
-                    tasks.add(task);
-                    actualTasks.put(key, tasks);
+                    List<Task> newTasks = new ArrayList<>();
+                    newTasks.add(task);
+                    actualTasks.put(key, newTasks);
                 }
             }
         }

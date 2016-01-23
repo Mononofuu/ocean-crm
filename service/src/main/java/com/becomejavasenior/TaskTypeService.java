@@ -1,8 +1,5 @@
 package com.becomejavasenior;
 
-import com.becomejavasenior.DataBaseException;
-import com.becomejavasenior.TaskType;
-
 import java.util.List;
 
 /**

@@ -3,7 +3,8 @@ package com.becomejavasenior.jstl;
 import javax.servlet.jsp.JspException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 /**
  * @author Anton Sakhno <sakhno83@gmail.com>
@@ -26,31 +27,31 @@ public class DayCalendar extends AbstractCalendar {
         startDay.set(Calendar.MILLISECOND, 0);
         initializeTasks(startDay, 1); //инициируем карту со списками задач на отображаемый период
         output.append("<table class=\"table table-bordered table-striped table-condensed align-table\">");
-        output.append("<tr>");
+        output.append(TR);
         output.append("<td width=\"100px\"></td>");
         SimpleDateFormat dayDateFormat = new SimpleDateFormat("EEEE, d MMMM");
-        output.append("<td>"+dayDateFormat.format(startDay.getTime())+"</td>");
-        output.append("</tr>");
+        output.append(TD+dayDateFormat.format(startDay.getTime())+TD_CLOSE);
+        output.append(TR_CLOSE);
         //задачи на весь день (по времени 23:59)
-        output.append("<tr>");
+        output.append(TR);
         output.append("<td>Весь день</td>");
         startDay.set(Calendar.HOUR_OF_DAY, 23);
         startDay.set(Calendar.MINUTE, 59);
-        output.append("<td>");
+        output.append(TD);
         generateCellContent(output, startDay);
-        output.append("</td>");
-        output.append("</tr>");
+        output.append(TD_CLOSE);
+        output.append(TR_CLOSE);
         startDay.set(Calendar.HOUR_OF_DAY, 0);
         startDay.set(Calendar.MINUTE, 0);
 
         do{
-            output.append("<tr>");
-            output.append("<td>"+getDateFormat().format(startDay.getTime())+"</td>");
-            output.append("<td>");
+            output.append(TR);
+            output.append(TD+getDateFormat().format(startDay.getTime())+TD_CLOSE);
+            output.append(TD);
             generateCellContent(output, startDay);
-            output.append("</td>");
+            output.append(TD_CLOSE);
             startDay.add(Calendar.MINUTE, 30);
-            output.append("</tr>");
+            output.append(TR_CLOSE);
         }while (!"00:00".equals(getDateFormat().format(startDay.getTime())));
         output.append("</table>");
         try {

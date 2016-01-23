@@ -2,6 +2,8 @@ package com.becomejavasenior;
 
 import com.becomejavasenior.impl.*;
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.net.URI;
@@ -15,6 +17,7 @@ import java.util.Properties;
 public abstract class AbstractJDBCDaoFactory implements DaoFactory {
     private static BasicDataSource dataSource;
     private Map<Class, GenericDao> daoClasses = new HashMap<>();
+    private final static Logger LOGGER = LogManager.getLogger(AbstractJDBCDaoFactory.class);
 
     public AbstractJDBCDaoFactory() throws DataBaseException {
         try {
@@ -33,11 +36,12 @@ public abstract class AbstractJDBCDaoFactory implements DaoFactory {
         } catch (IOException e) {
             throw new DataBaseException(e);
         } catch (NullPointerException e){
+            LOGGER.warn("property file not found, trying to connect by getting system variable", e);
             URI dbUri = null;
             try {
                 dbUri = new URI(System.getenv("DATABASE_URL"));
             } catch (URISyntaxException e1) {
-                throw new DataBaseException(e);
+                throw new DataBaseException(e1);
             }
             dataSource.setDriverClassName("org.postgresql.Driver");
             dataSource.setUrl("jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath());
@@ -70,7 +74,7 @@ public abstract class AbstractJDBCDaoFactory implements DaoFactory {
             result = daoClasses.get(clazz);
         }
         if (result == null) {
-            throw new DataBaseException("Соответствующий класс не найден");
+            throw new DataBaseException("Class not found");
         }
         return result;
     }

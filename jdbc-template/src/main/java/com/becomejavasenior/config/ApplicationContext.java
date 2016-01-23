@@ -1,10 +1,8 @@
 package com.becomejavasenior.config;
 
-import com.becomejavasenior.Deal;
 import com.becomejavasenior.Grants;
 import com.becomejavasenior.Role;
 import com.becomejavasenior.User;
-import com.becomejavasenior.impl.DealTemplateDAOImpl;
 import com.becomejavasenior.impl.GrantsTemplateDAOImpl;
 import com.becomejavasenior.impl.RoleTemplateDAOImpl;
 import com.becomejavasenior.impl.UserTemplateDAOImpl;

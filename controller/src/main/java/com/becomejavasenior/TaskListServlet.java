@@ -1,6 +1,6 @@
 package com.becomejavasenior;
 
-import com.becomejavasenior.impl.*;
+import com.becomejavasenior.impl.TaskServiceImpl;
 import com.becomejavasenior.impl.UserServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,7 +19,7 @@ import java.util.*;
  */
 @WebServlet(name="tasklist", urlPatterns = "/tasklist")
 public class TaskListServlet extends HttpServlet{
-    private Logger logger = LogManager.getLogger(TaskListServlet.class);
+    private static final Logger LOGGER = LogManager.getLogger(TaskListServlet.class);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -63,13 +63,13 @@ public class TaskListServlet extends HttpServlet{
             request.setAttribute("users", new UserServiceImpl().getAllUsers());
             getServletContext().getRequestDispatcher("/jsp/tasklist.jsp").forward(request,response);
         } catch (DataBaseException e) {
-            logger.error("Error when prepearing data for tasklist.jsp",e);
+            LOGGER.error("Error when prepearing data for tasklist.jsp",e);
         } catch (ServletException e) {
-            logger.error("Error when prepearing data for tasklist.jsp",e);
+            LOGGER.error("Error when prepearing data for tasklist.jsp",e);
         }
     }
 
-    private List<String> getTimeList(){
+    private static List<String> getTimeList(){
         List<String> result = new ArrayList<>();
         Calendar c = GregorianCalendar.getInstance();
         c.set(Calendar.HOUR_OF_DAY, 0);

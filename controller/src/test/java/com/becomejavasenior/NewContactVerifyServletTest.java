@@ -1,14 +1,11 @@
 package com.becomejavasenior;
 
 import com.becomejavasenior.verification.NewContactVerifyServlet;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -23,10 +20,9 @@ import static org.junit.Assert.assertEquals;
  * @author Anton Sakhno <sakhno83@gmail.com>
  */
 public class NewContactVerifyServletTest extends Mockito {
-    private Logger logger = LogManager.getLogger(NewContactVerifyServletTest.class);
 
     @Test
-    public void testServlet() throws IOException, ServletException {
+    public void testServlet() throws IOException{
         HttpServletRequest req = mock(HttpServletRequest.class);
         HttpServletResponse resp = mock(HttpServletResponse.class);
         when(req.getParameter("name")).thenReturn("");//ошибка

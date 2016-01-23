@@ -34,6 +34,7 @@ public abstract class AbstractContactService<T> {
                 break;
             case "dellitedcontacts":
                 parametersList.add(ContactFilters.DELETED_CONTACTS);
+                break;
             default:
                 break;
         }
@@ -236,10 +237,13 @@ public abstract class AbstractContactService<T> {
         switch (quarter){
             case 2:
                 date.add(Calendar.MONTH, 3);
+                break;
             case 3:
-                date.add(Calendar.MONTH, 3);
+                date.add(Calendar.MONTH, 6);
+                break;
             case 4:
-                date.add(Calendar.MONTH, 3);
+                date.add(Calendar.MONTH, 9);
+                break;
         }
         return date;
     }

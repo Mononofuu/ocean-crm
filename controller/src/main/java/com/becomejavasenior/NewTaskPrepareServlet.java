@@ -17,7 +17,7 @@ import java.util.List;
  */
 @WebServlet(name="new_task_prepare", urlPatterns = "/new_task_prepare")
 public class NewTaskPrepareServlet extends HttpServlet {
-    private Logger logger = LogManager.getLogger(NewTaskPrepareServlet.class);
+    private static final Logger LOGGER = LogManager.getLogger(NewTaskPrepareServlet.class);
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -48,7 +48,7 @@ public class NewTaskPrepareServlet extends HttpServlet {
             req.setAttribute("companylist", companyList);
             getServletContext().getRequestDispatcher("/jsp/newtask.jsp").forward(req,resp);
         } catch (DataBaseException e) {
-            logger.error(e);
+            LOGGER.error(e);
         }
     }
 }

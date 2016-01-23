@@ -1,7 +1,6 @@
 package com.becomejavasenior;
 
 import java.util.List;
-import java.util.Set;
 
 public class Contact extends Subject {
 

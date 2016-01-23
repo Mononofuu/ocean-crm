@@ -5,10 +5,13 @@ import org.apache.logging.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -16,7 +19,7 @@ import static org.junit.Assert.assertEquals;
  * @author Anton Sakhno <sakhno83@gmail.com>
  */
 public class TaskDAOImplTest {
-    private Logger logger = LogManager.getLogger(TaskDAOImplTest.class);
+    private static final Logger LOGGER = LogManager.getLogger(TaskDAOImplTest.class);
     private DaoFactory daoFactory;
     private GenericDao<Task> taskDao;
     private Task task;
@@ -31,7 +34,7 @@ public class TaskDAOImplTest {
     private List<Object> objectsToDeleteFromDB = new ArrayList<>();
 
     @Before
-    public void SetUp() throws DataBaseException{
+    public void setUp() throws DataBaseException{
         daoFactory = new PostgreSqlDaoFactory();
         taskDao = daoFactory.getDao(Task.class);
         task = new Task();
@@ -44,15 +47,13 @@ public class TaskDAOImplTest {
     }
 
     @Test
-    public void CreateUpdateDeleteTest() throws DataBaseException {
+    public void createUpdateDeleteTest() throws DataBaseException {
         Task taskFromBD = taskDao.create(task);
         assertEquals(task.getComment(), taskFromBD.getComment());
         assertEquals(task.getDateCreated(), taskFromBD.getDateCreated());
         assertEquals(task.getDueTime(), taskFromBD.getDueTime());
         assertEquals(task.getSubject(), taskFromBD.getSubject());
         assertEquals(task.getType(), taskFromBD.getType());
-        //assertEquals(task.getUser(), taskFromBD.getUser());
-        //assertEquals(task, taskFromBD);
 
         task.setComment(COMMENT_2);
         task.setDueTime(getDueDate(DUE_DATE_2));
@@ -62,7 +63,6 @@ public class TaskDAOImplTest {
         taskFromBD.setUser(createUser(USER_NAME_2));
         taskDao.update(taskFromBD);
         taskFromBD = taskDao.read(taskFromBD.getId());
-        //assertEquals(task, taskFromBD);
 
         List listBefore = taskDao.readAll();
         taskDao.delete(taskFromBD.getId());
@@ -99,7 +99,7 @@ public class TaskDAOImplTest {
         try {
             result = dateFormat.parse(dueDate);
         } catch (ParseException e) {
-            logger.error(e);
+            LOGGER.error(e);
         }
         return result;
     }

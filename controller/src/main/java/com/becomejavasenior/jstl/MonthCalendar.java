@@ -2,7 +2,8 @@ package com.becomejavasenior.jstl;
 
 import javax.servlet.jsp.JspException;
 import java.io.IOException;
-import java.util.*;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 /**
  * @author Anton Sakhno <sakhno83@gmail.com>
@@ -42,14 +43,14 @@ public class MonthCalendar extends AbstractCalendar {
         initializeTasks(startDay, 45); //инициируем карту со списками задач на отображаемый период
 
         for(int week=0;week<5;week++){
-            output.append("<tr>");
+            output.append(TR);
             for(int dayOfWeek=0;dayOfWeek<7;dayOfWeek++){
-                output.append("<td>"+startDay.get(Calendar.DAY_OF_MONTH));
+                output.append(TD+startDay.get(Calendar.DAY_OF_MONTH));
                 generateCellContent(output, startDay);
-                output.append("</td>");
+                output.append(TD_CLOSE);
                 startDay.add(Calendar.DAY_OF_MONTH, 1);
             }
-            output.append("</tr>");
+            output.append(TR_CLOSE);
         }
         output.append("</table>");
 

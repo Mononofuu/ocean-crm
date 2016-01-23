@@ -22,7 +22,8 @@ public abstract class AbstractJDBCDao<T> implements GenericDao<T>{
         AbstractJDBCDao.daoFactory = daoFactory;
     }
 
-    protected Connection getConnection() throws DataBaseException {
+
+    protected Connection getConnection()throws DataBaseException{
         return daoFactory.getConnection();
     }
 
@@ -92,7 +93,7 @@ public abstract class AbstractJDBCDao<T> implements GenericDao<T>{
             statement.setInt(1, key);
             ResultSet rs = statement.executeQuery();
             List<T> allObjects = parseResultSet(rs);
-            if (allObjects.size() == 0) {
+            if (allObjects.isEmpty()) {
                 return null;
             }
             result = allObjects.get(0);

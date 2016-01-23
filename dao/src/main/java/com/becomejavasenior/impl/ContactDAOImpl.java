@@ -7,10 +7,15 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ContactDAOImpl extends AbstractContactDAO<Contact> implements ContactDAO {
-    private Logger logger = LogManager.getLogger(ContactDAOImpl.class);
+    private static final Logger LOGGER = LogManager.getLogger(ContactDAOImpl.class);
+
+    public ContactDAOImpl(DaoFactory daoFactory) {
+        super(daoFactory);
+    }
 
     @Override
     protected String getConditionStatment() {
@@ -60,10 +65,6 @@ public class ContactDAOImpl extends AbstractContactDAO<Contact> implements Conta
             throw new DataBaseException(e);
         }
         return result;
-    }
-
-    public ContactDAOImpl(DaoFactory daoFactory) {
-        super(daoFactory);
     }
 
     @Override
@@ -152,7 +153,7 @@ public class ContactDAOImpl extends AbstractContactDAO<Contact> implements Conta
             statement.setString(1, name);
             ResultSet rs = statement.executeQuery();
             List<Contact> allObjects = parseResultSetLite(rs);
-            if (allObjects.size() == 0) {
+            if (allObjects.isEmpty()) {
                 return null;
             }
             result = allObjects.get(0);

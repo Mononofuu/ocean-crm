@@ -6,4 +6,7 @@ public class SchemaVersion {
     public static String getDbVersion() {
         return DB_VERSION;
     }
+
+    private SchemaVersion() {
+    }
 }

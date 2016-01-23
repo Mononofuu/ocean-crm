@@ -1,6 +1,5 @@
 package com.becomejavasenior;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,7 +17,7 @@ public class ContactDAOImplTest {
     private Contact contact;
 
     @Before
-    public void SetUp() throws DataBaseException {
+    public void setUp() throws DataBaseException {
         daoFactory = new PostgreSqlDaoFactory();
         contactDao = daoFactory.getDao(Contact.class);
         contact = new Contact();
@@ -58,7 +57,7 @@ public class ContactDAOImplTest {
     }
 
     @Test
-    public void CreateUpdateDeleteTest() throws DataBaseException {
+    public void createUpdateDeleteTest() throws DataBaseException {
         Contact contactFromDB = contactDao.create(contact);
         assertEquals(contact, contactFromDB);
         contact.setName("changename");

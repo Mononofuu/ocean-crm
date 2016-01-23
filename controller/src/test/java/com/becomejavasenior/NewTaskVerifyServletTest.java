@@ -6,7 +6,6 @@ import org.codehaus.jackson.type.TypeReference;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -22,7 +21,7 @@ import static org.junit.Assert.assertEquals;
  */
 public class NewTaskVerifyServletTest extends Mockito {
     @Test
-    public void testServlet() throws IOException, ServletException {
+    public void testServlet() throws IOException{
         HttpServletRequest req = mock(HttpServletRequest.class);
         HttpServletResponse resp = mock(HttpServletResponse.class);
         when(req.getParameter("tasktext")).thenReturn("");

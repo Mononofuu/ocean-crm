@@ -21,7 +21,7 @@ import java.util.List;
  */
 @WebServlet(name = "contactlist", urlPatterns = "/contactlist")
 public class ViewAllContactsServlet extends HttpServlet {
-    private Logger logger = LogManager.getLogger(TaskListServlet.class);
+    private final static Logger LOGGER = LogManager.getLogger(TaskListServlet.class);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -53,11 +53,11 @@ public class ViewAllContactsServlet extends HttpServlet {
             req.setAttribute("contactlist", allContacts);
             req.setAttribute("companylist", allCompanies);
             List<Tag> tags = tagService.getAllTags();
-            Collections.sort(tags, ((o1, o2) -> o1.getName().compareTo(o2.getName())));
+            Collections.sort(tags, (o1, o2) -> o1.getName().compareTo(o2.getName()));
             req.setAttribute("tags", tags);
             req.setAttribute("users", userService.getAllUsers());
         } catch (DataBaseException e) {
-            logger.error(e);
+            LOGGER.error(e);
         }
         getServletContext().getRequestDispatcher("/jsp/viewallcontacts.jsp").forward(req,resp);
     }

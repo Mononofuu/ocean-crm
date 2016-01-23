@@ -22,7 +22,7 @@ import java.util.*;
  */
 @WebServlet("/new_contact_add")
 public class NewContactServlet extends HttpServlet {
-    private static Logger logger = LogManager.getLogger(NewContactServlet.class);
+    private final static Logger LOGGER = LogManager.getLogger(NewContactServlet.class);
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         this.process(request, response);
@@ -58,7 +58,7 @@ public class NewContactServlet extends HttpServlet {
             newContact.setCompany(getCompanyFromRequest(request.getParameter("companyid")));
             contactService.saveContact(newContact);
         } catch (DataBaseException e) {
-            logger.error(e);
+            LOGGER.error(e);
         }
         getServletContext().getRequestDispatcher("/contactlist").forward(request, response);
     }
@@ -117,13 +117,13 @@ public class NewContactServlet extends HttpServlet {
         deal.setName(request.getParameter("newdealname"));
         String dealType = request.getParameter("dealtype");
         if(dealType!=null&&!"".equals(dealType)){
-            logger.info(dealType);
+            LOGGER.info(dealType);
             int dealStatusId = Integer.parseInt(dealType);
             try {
                 DealStatus dealStatus = new DealServiceImpl().findDealStatus(dealStatusId);
                 deal.setStatus(dealStatus);
             } catch (DataBaseException e) {
-                logger.error(e);
+                LOGGER.error(e);
             }
         }
         String budget = request.getParameter("budget");
@@ -138,8 +138,9 @@ public class NewContactServlet extends HttpServlet {
         List<Task> result = new ArrayList<>();
         Task task = new Task();
         task.setUser(getUserFromRequest(request.getParameter("taskresponsible")));
-        if (request.getParameter("tasktype") != null && !"".equals(request.getParameter("tasktype"))) {
-            task.setType(TaskType.valueOf(request.getParameter("tasktype")));
+        String taskType = request.getParameter("tasktype");
+        if (taskType != null && !"".equals(taskType)) {
+            task.setType(TaskType.valueOf(taskType));
         }
         task.setComment(request.getParameter("tasktext"));
         task.setDateCreated(new Date());
@@ -150,7 +151,7 @@ public class NewContactServlet extends HttpServlet {
             try {
                 task.setDueTime(dateFormat.parse(duedate + duetime));
             } catch (ParseException e) {
-                e.printStackTrace();
+                LOGGER.error(e);
             }
         } else {
             String period = request.getParameter("period");

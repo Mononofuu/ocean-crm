@@ -14,7 +14,7 @@ import java.util.List;
 
 @WebServlet(name="new_contact_prepare", urlPatterns = "/new_contact_prepare")
 public class NewContactPrepareServlet extends HttpServlet {
-    private Logger logger = LogManager.getLogger(NewContactPrepareServlet.class);
+    private static final Logger LOGGER = LogManager.getLogger(NewContactPrepareServlet.class);
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -40,7 +40,7 @@ public class NewContactPrepareServlet extends HttpServlet {
             request.setAttribute("dealstatuses", dealStatuses);
             getServletContext().getRequestDispatcher("/jsp/newcontact.jsp").forward(request,response);
         } catch (DataBaseException e) {
-            logger.error("Error when prepearing data for newcontact.jsp",e);
+            LOGGER.error("Error when prepearing data for newcontact.jsp",e);
         }
     }
 }

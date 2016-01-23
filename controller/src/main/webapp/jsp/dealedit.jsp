@@ -7,7 +7,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="com.becomejavasenior.PhoneType" %>
 <style>
     <%@include file='../css/bootstrap.css' %>
     <%@include file='../css/bootstrap-theme.css' %>

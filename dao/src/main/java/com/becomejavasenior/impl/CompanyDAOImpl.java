@@ -8,10 +8,11 @@ import org.apache.logging.log4j.Logger;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CompanyDAOImpl extends AbstractContactDAO<Company> implements CompanyDAO {
-    private Logger logger = LogManager.getLogger(CompanyDAOImpl.class);
+    private static final Logger LOGGER = LogManager.getLogger(CompanyDAOImpl.class);
 
     public CompanyDAOImpl(DaoFactory daoFactory) {
         super(daoFactory);
@@ -45,11 +46,7 @@ public class CompanyDAOImpl extends AbstractContactDAO<Company> implements Compa
                 company.setName(subject.getName());
                 company.setPhoneNumber(rs.getString("phone_number"));
                 company.setEmail(rs.getString("email"));
-                try {
-                    company.setWeb(new URL(rs.getString("web")));
-                } catch (MalformedURLException e) {
-                    /*NOP*/
-                }
+                company.setWeb(getUrl(rs.getString("web")));
                 company.setAdress(rs.getString("address"));
                 result.add(company);
             }
@@ -57,6 +54,18 @@ public class CompanyDAOImpl extends AbstractContactDAO<Company> implements Compa
             throw new DataBaseException(e);
         }
         return result;
+    }
+
+    private URL getUrl(String urlString){
+        URL url = null;
+        if(urlString!=null&&!"".equals(urlString)){
+            try {
+                url = new URL(urlString);
+            } catch (MalformedURLException e) {
+                LOGGER.error(e);
+            }
+        }
+        return url;
     }
 
     @Override
@@ -69,11 +78,7 @@ public class CompanyDAOImpl extends AbstractContactDAO<Company> implements Compa
                 company.setName(rs.getString("name"));
                 company.setPhoneNumber(rs.getString("phone_number"));
                 company.setEmail(rs.getString("email"));
-                try {
-                    company.setWeb(new URL(rs.getString("web")));
-                } catch (MalformedURLException e) {
-                    /*NOP*/
-                }
+                company.setWeb(getUrl(rs.getString("web")));
                 company.setAdress(rs.getString("address"));
                 result.add(company);
             }
@@ -139,7 +144,7 @@ public class CompanyDAOImpl extends AbstractContactDAO<Company> implements Compa
             statement.setString(1, name);
             ResultSet rs = statement.executeQuery();
             List<Company> allObjects = parseResultSetLite(rs);
-            if (allObjects.size() == 0) {
+            if (allObjects.isEmpty()) {
                 return null;
             }
             result = allObjects.get(0);

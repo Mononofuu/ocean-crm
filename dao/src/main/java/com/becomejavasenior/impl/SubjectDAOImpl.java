@@ -97,7 +97,7 @@ public class SubjectDAOImpl extends AbstractJDBCDao<Subject> implements SubjectD
             }
             statement.setInt(3, object.getId());
         } catch (SQLException e) {
-            throw new DataBaseException();
+            throw new DataBaseException(e);
         }
 
     }
