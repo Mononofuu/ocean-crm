@@ -371,5 +371,33 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
         return result;
     }
 
+    @Override
+    public int findTotalDeals() {
+        return 0;
+    }
 
+    @Override
+    public int findTotalDealsBudget() {
+        return 0;
+    }
+
+    @Override
+    public int findTotalDealsWithTasks() {
+        return 0;
+    }
+
+    @Override
+    public int findTotalDealsWithoutTasks() {
+        return 0;
+    }
+
+    @Override
+    public int findTotalSuccessDeals() {
+        return 0;
+    }
+
+    @Override
+    public int findTotalUnsuccessClosedDeals() {
+        return 0;
+    }
 }

@@ -1,19 +1,26 @@
 package com.becomejavasenior.impl;
 
 import com.becomejavasenior.Comment;
+import com.becomejavasenior.DataBaseException;
 import com.becomejavasenior.Language;
 import com.becomejavasenior.User;
 import com.becomejavasenior.interfaceDAO.GenericTemplateDAO;
+import com.becomejavasenior.interfacedao.UserDAO;
 import com.becomejavasenior.mapper.UserRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +29,7 @@ import java.util.Map;
  * @author Lybachevskiy.Vladislav
  */
 
-public class UserTemplateDAOImpl extends JdbcDaoSupport implements GenericTemplateDAO<User> {
+public class UserTemplateDAOImpl extends JdbcDaoSupport implements UserDAO {
 
     @Autowired
     @Qualifier("dataSource")
@@ -33,9 +40,28 @@ public class UserTemplateDAOImpl extends JdbcDaoSupport implements GenericTempla
         setDataSource(myDataSource);
     }
 
-    public void create(User user) {
-        String sql = "INSERT INTO users (name, login, password, photo, email, phone_mob, phone_work, language, comment) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
+    public User create(final User user) {
+        final String sql = "INSERT INTO users (name, login, password, photo, email, phone_mob, phone_work, language, comment) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
         getJdbcTemplate().update(sql, user.getName(), user.getLogin(), user.getPassword(), user.getPhoto(), user.getEmail(), user.getPhoneHome(), user.getPhoneWork(), user.getLanguage(), user.getComments());
+        KeyHolder holder = new GeneratedKeyHolder();
+        getJdbcTemplate().update(new PreparedStatementCreator() {
+            public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
+                PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                statement.setString(1, user.getName());
+                statement.setString(2, user.getLogin());
+                statement.setString(3, user.getPassword());
+                statement.setBytes(4, user.getPhoto());
+                statement.setString(5, user.getEmail());
+                statement.setString(6, user.getPhoneHome());
+                statement.setString(7, user.getPhoneWork());
+                statement.setString(8, user.getLanguage() != null ? user.getLanguage().toString() : null);
+                statement.setString(9, "");
+                return statement;
+            }
+        }, holder);
+        int id = holder.getKey().intValue();
+        user.setId(id);
+        return user;
     }
 
     public User read(int id) {
@@ -94,5 +120,13 @@ public class UserTemplateDAOImpl extends JdbcDaoSupport implements GenericTempla
                 preparedStatement.setInt(1, id);
             }
         });
+    }
+
+    public User readLite(int key) throws DataBaseException {
+        return null;
+    }
+
+    public List<User> readAllLite() throws DataBaseException {
+        return null;
     }
 }

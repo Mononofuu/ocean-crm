@@ -1,4 +1,7 @@
 package com.becomejavasenior.interfacedao;
 
-public interface UserDAO {
+import com.becomejavasenior.GenericDao;
+import com.becomejavasenior.User;
+
+public interface UserDAO extends GenericDao<User>{
 }

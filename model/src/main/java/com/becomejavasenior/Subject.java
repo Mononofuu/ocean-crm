@@ -13,6 +13,15 @@ public abstract class Subject implements Serializable {
     private String name;
     private User user;
     private Set<Tag> tags;
+    private boolean removed;
+
+    public boolean isRemoved() {
+        return removed;
+    }
+
+    public void setRemoved(boolean removed) {
+        this.removed = removed;
+    }
 
     public int getId() {
         return id;

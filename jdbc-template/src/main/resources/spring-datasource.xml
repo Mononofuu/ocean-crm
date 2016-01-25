@@ -1,19 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
-            http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <bean class="java.net.URI" id="dbUrl">
-        <constructor-arg value="#{systemEnvironment['DATABASE_URL']}"/>
-    </bean>
-
-    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="org.postgresql.Driver"/>
-        <property name="url" value="#{ 'jdbc:postgresql://' + @dbUrl.getHost() + ':' + @dbUrl.getPort() + @dbUrl.getPath() }"/>
-        <property name="username" value="#{ @dbUrl.getUserInfo().split(':')[0] }"/>
-        <property name="password" value="#{ @dbUrl.getUserInfo().split(':')[1] }"/>
-    </bean>
+    <context:annotation-config/>
+    <context:component-scan base-package="com.becomejavasenior.config"/>
 
     <bean id="dealDAO" class="com.becomejavasenior.impl.DealTemplateDAOImpl">
         <property name="dataSource" ref="dataSource" />
@@ -21,16 +17,39 @@
     <bean id="taskDAO" class="com.becomejavasenior.impl.TaskTemplateDAOImpl">
         <property name="dataSource" ref="dataSource" />
     </bean>
-    <bean id="companyDAO" class="com.becomejavasenior.impl.CompanyTemplateDAOImpl">
-        <property name="dataSource" ref="dataSource" />
+    <bean id="companyDAO" class="com.becomejavasenior.impl.CompanyDAOImpl">
+        <constructor-arg ref="daoFactory"/>
     </bean>
-    <bean id="contactDAO" class="com.becomejavasenior.impl.ContactTemplateDAOImpl">
-        <property name="dataSource" ref="dataSource" />
+    <bean id="contactDAO" class="com.becomejavasenior.impl.ContactDAOImpl">
+        <constructor-arg ref="daoFactory"/>
     </bean>
     <bean id="eventDAO" class="com.becomejavasenior.impl.EventTemplateDAOImpl">
         <property name="dataSource" ref="dataSource" />
     </bean>
-    <bean id="userDAO" class="com.becomejavasenior.impl.UserTemplateDAOImpl">
-        <property name="dataSource" ref="dataSource" />
+    <bean id="userDAO" class="com.becomejavasenior.impl.UserDAOImpl">
+        <constructor-arg ref="daoFactory"/>
+    </bean>
+    <bean id="subjectDAO" class="com.becomejavasenior.impl.SubjectDAOImpl">
+        <constructor-arg ref="daoFactory"/>
+    </bean>
+    <bean id="tagDAO" class="com.becomejavasenior.impl.TagDAOImpl">
+        <constructor-arg ref="daoFactory"/>
+    </bean>
+    <bean id="subjectTagDAO" class="com.becomejavasenior.impl.SubjectTagDAOImpl">
+        <constructor-arg ref="daoFactory"/>
+    </bean>
+    <bean id="daoFactory" class="com.becomejavasenior.PostgreSqlDaoFactory"/>
+    <bean id="currencyDAO" class="com.becomejavasenior.impl.CurrencyDAOImpl">
+        <constructor-arg ref="daoFactory"/>
+    </bean>
+    <bean id="dealContactDAO" class="com.becomejavasenior.impl.DealContactDAOImpl">
+        <constructor-arg ref="daoFactory"/>
+    </bean>
+    <bean id="dealStatusDAO" class="com.becomejavasenior.impl.DealStatusDAOImpl">
+        <constructor-arg ref="daoFactory"/>
+    </bean>
+    <bean id="dealRowMapper" class="com.becomejavasenior.mapper.DealRowMapper"/>
+    <bean id="namedParameterJdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
+        <constructor-arg ref="dataSource"/>
     </bean>
 </beans>
