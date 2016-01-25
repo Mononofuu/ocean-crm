@@ -3,4 +3,5 @@ ALTER TABLE contact ADD date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   ADD date_updated TIMESTAMP;
 ALTER TABLE company ADD date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   ADD date_updated TIMESTAMP;
+UPDATE db_version SET version = 1.07;
 

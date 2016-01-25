@@ -10,3 +10,4 @@ CREATE TABLE filter (
   tasks      VARCHAR(45),
   tags       VARCHAR(45)
 );
+UPDATE db_version SET version = 1.01;
