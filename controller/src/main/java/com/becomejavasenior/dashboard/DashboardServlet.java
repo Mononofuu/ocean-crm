@@ -2,6 +2,10 @@ package com.becomejavasenior.dashboard;
 
 import com.becomejavasenior.DataBaseException;
 import com.becomejavasenior.impl.*;
+import com.becomejavasenior.interfacedao.CompanyDAO;
+import com.becomejavasenior.interfacedao.ContactDAO;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -17,20 +21,21 @@ import java.io.IOException;
  */
 @WebServlet(name = "dashboardServlet")
 public class DashboardServlet extends HttpServlet {
+    private final static Logger LOGGER = LogManager.getLogger(DashboardServlet.class);
 
     private ApplicationContext context;
     private DealTemplateDAOImpl dealDAO;
     private TaskTemplateDAOImpl taskDAO;
-    private ContactTemplateDAOImpl contactDAO;
-    private CompanyTemplateDAOImpl companyDAO;
+    private ContactDAO contactDAO;
+    private CompanyDAO companyDAO;
     private EventTemplateDAOImpl eventDAO;
 
     public DashboardServlet() throws DataBaseException {
         context = new ClassPathXmlApplicationContext("spring-datasource.xml");
         dealDAO = (DealTemplateDAOImpl) context.getBean("dealDAO");
         taskDAO = (TaskTemplateDAOImpl) context.getBean("taskDAO");
-        contactDAO = (ContactTemplateDAOImpl) context.getBean("contactDAO");
-        companyDAO = (CompanyTemplateDAOImpl) context.getBean("companyDAO");
+        contactDAO = (ContactDAO) context.getBean("contactDAO");
+        companyDAO = (CompanyDAO) context.getBean("companyDAO");
         eventDAO = (EventTemplateDAOImpl) context.getBean("eventDAO");
     }
 
@@ -52,8 +57,12 @@ public class DashboardServlet extends HttpServlet {
         request.setAttribute("tasksInProgress", taskDAO.findTotalTasksInProgress());
         request.setAttribute("finishedTasks", taskDAO.findTotalFinishedTasks());
         request.setAttribute("overdueTasks", taskDAO.findTotalOverdueTasks());
-        request.setAttribute("contacts", contactDAO.findTotalContacts());
-        request.setAttribute("companies", companyDAO.findTotalCompanies());
+        try {
+            request.setAttribute("contacts", contactDAO.findTotalEntryes());
+            request.setAttribute("companies", companyDAO.findTotalEntryes());
+        } catch (DataBaseException e) {
+            LOGGER.error(e);
+        }
         request.setAttribute("events", eventDAO.readLastEvents());
         getServletContext().getRequestDispatcher("/dashboard.jsp").forward(request, response);
     }

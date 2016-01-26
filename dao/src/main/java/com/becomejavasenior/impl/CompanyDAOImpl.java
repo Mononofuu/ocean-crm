@@ -173,4 +173,5 @@ public class CompanyDAOImpl extends AbstractContactDAO<Company> implements Compa
     protected String getTableName() {
         return "company";
     }
+
 }

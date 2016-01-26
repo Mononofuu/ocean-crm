@@ -11,4 +11,5 @@ import java.util.List;
 public interface ContactDAO extends GenericDao<Contact>{
     Contact readContactByName(String name) throws DataBaseException;
     List<Contact> getAllContactsByParameters(List<ContactFilters> parameters, String userId, List<Integer> tagIdList, List<Date> taskDate, List<Date> createUpdateDate, String createUpdateFlag) throws DataBaseException;
+    int findTotalEntryes() throws DataBaseException;
 }

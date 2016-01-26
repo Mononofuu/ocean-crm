@@ -37,7 +37,7 @@ public class ContactTemplateDAOImpl extends JdbcDaoSupport implements ContactDAO
         return null;
     }
 
-    public int findTotalContacts(){
+    public int findTotalEntryes(){
         String sql = "SELECT COUNT(*) FROM contact";
         int total = getJdbcTemplate().queryForObject(
                 sql, Integer.class);

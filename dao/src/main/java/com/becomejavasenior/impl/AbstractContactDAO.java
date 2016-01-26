@@ -5,6 +5,10 @@ import com.becomejavasenior.ContactFilters;
 import com.becomejavasenior.DaoFactory;
 import com.becomejavasenior.DataBaseException;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -176,5 +180,17 @@ public abstract class AbstractContactDAO<T> extends AbstractJDBCDao<T> {
 
     protected abstract String getTableName();
 
-
+    public int findTotalEntryes() throws DataBaseException{
+        String sql = "SELECT COUNT(*) FROM "+getTableName();
+        int result;
+        try(Connection connection = getConnection();
+            Statement statement = connection.createStatement()){
+            ResultSet rs = statement.executeQuery(sql);
+            rs.next();
+            result = rs.getInt("count");
+        }catch (SQLException e){
+            throw new DataBaseException(e);
+        }
+        return result;
+    }
 }
