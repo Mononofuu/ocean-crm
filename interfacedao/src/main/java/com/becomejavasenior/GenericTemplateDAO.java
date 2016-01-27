@@ -1,4 +1,4 @@
-package com.becomejavasenior.interfaceDAO;
+package com.becomejavasenior;
 
 import java.util.List;
 

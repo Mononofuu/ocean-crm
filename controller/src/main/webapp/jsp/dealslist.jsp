@@ -53,31 +53,6 @@
         </div>
 
 
-    <div class="table-responsive col-xs-7">
-        <h3>Список сделок</h3>
-        <table class="table table-striped table-bordered table-hover table-condensed">
-            <thead>
-        <tr>
-            <th>Название сделки</th>
-            <th>Основной контакт</th>
-            <th>Компания</th>
-            <th>Этап сделки</th>
-            <th>Бюджет</th>
-        </tr>
-        </thead>
-            <tbody>
-            <c:forEach items="${deals}" var="deal">
-                <tr>
-                    <td><a href="/dealedit?action=edit&id=${deal.id}">${deal.name}</a></td>
-                    <td>${deal.mainContact.name}</td>
-                    <td>${deal.dealCompany.name}</td>
-                    <td>${deal.status.name}</td>
-                    <td>${deal.budget} ${deal.currency.name}</td>
-                </tr>
-            </c:forEach>
-            </tbody>
-        </table>
-    </div>
 
     <form action="/dealslist" method="post" class="well col-xs-3">
         <h3>Фильтры</h3>
@@ -92,10 +67,6 @@
                 <option value="expired">Сделки c просроченными задачами</option>
                 <option value="deleted">Удаленные</option>
             </select>
-        </div>
-
-        <div class="form-group">
-            <button class="btn btn-default" type="submit" name="action" value="applyfilter">Применить фильтр</button>
         </div>
 
         <div class="form-group">
@@ -145,11 +116,39 @@
         <div class="form-group">
             <input type="text" class="form-control" name="tags" placeholder="Теги">
         </div>
+
         <div class="form-group">
+            <button class="btn btn-default" type="submit" name="action" value="applyfilter">Применить фильтр</button>
             <button class="btn btn-default" type="submit" name="action" value="savefilter">Сохранить фильтр</button>
         </div>
 
     </form>
+
+    <div class="table-responsive col-xs-7">
+        <h3>Список сделок</h3>
+        <table class="table table-striped table-bordered table-hover table-condensed">
+            <thead>
+            <tr>
+                <th>Название сделки</th>
+                <th>Основной контакт</th>
+                <th>Компания</th>
+                <th>Этап сделки</th>
+                <th>Бюджет</th>
+            </tr>
+            </thead>
+            <tbody>
+            <c:forEach items="${deals}" var="deal">
+                <tr>
+                    <td><a href="/dealedit?action=edit&id=${deal.id}">${deal.name}</a></td>
+                    <td>${deal.mainContact.name}</td>
+                    <td>${deal.dealCompany.name}</td>
+                    <td>${deal.status.name}</td>
+                    <td>${deal.budget} ${deal.currency.name}</td>
+                </tr>
+            </c:forEach>
+            </tbody>
+        </table>
+    </div>
 
 </div>
 

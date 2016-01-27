@@ -3,7 +3,7 @@ package com.becomejavasenior.impl;
 import com.becomejavasenior.Grants;
 import com.becomejavasenior.Role;
 import com.becomejavasenior.User;
-import com.becomejavasenior.interfaceDAO.GenericTemplateDAO;
+import com.becomejavasenior.GenericTemplateDAO;
 import com.becomejavasenior.mapper.GrantsRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

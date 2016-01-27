@@ -1,34 +1,39 @@
 package com.becomejavasenior.impl;
 
 import com.becomejavasenior.*;
+import com.becomejavasenior.Currency;
 import com.becomejavasenior.interfacedao.DealDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * created by Alekseichenko Sergey <mononofuu@gmail.com>
  */
 public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
+
+    private final static Logger LOGGER = LogManager.getLogger(DealDAOImpl.class);
     public static final String DEAL_SELECT_TAG = " WHERE deal.id IN(SELECT subject_id FROM subject_tag " +
             "WHERE subject_tag.tag_id IN (SELECT id FROM tag WHERE name IN (";
-    public static final String DEAL_SELECT_STATUS_ID = " where status_id=?";
-    public static final String DEAL_SELECT_USER_ID = " where id in(select subject.id from subject " +
-            "where subject.content_owner_id = ?)";
-    public static final String DEAL_SELECT_OPENED = " WHERE deal.data_close IS null";
-    public static final String DEAL_SELECT_BY_USER = " WHERE responsible_id=?";
-    public static final String DEAL_SELECT_WITHOUT_TASKS = " WHERE NOT deal.id IN (SELECT subject_id FROM task GROUP BY subject_id)";
-    public static final String DEAL_SELECT_WITH_EXPIRED_TASKS = " WHERE deal.id IN (SELECT subject_id FROM task WHERE NOT (due_date IS null) AND due_date < ? GROUP BY subject_id)";
-    public static final String DEAL_SELECT_SUCCESS = " WHERE deal.status_id=5";
-    public static final String DEAL_SELECT_CLOSED_AND_NOT_IMPLEMENTED = " WHERE deal.status_id=6";
-    public static final String DEAL_SELECT_DELETED = " WHERE deal.status_id=7";
-    public static final String DEAL_SELECT_PERIOD_CREATED_DATE = " WHERE DATE(deal.created_date) BETWEEN ? AND ?";
-    public static final String DEAL_SELECT_TASK_DUE_DATE_INTERVAL = "WHERE deal.id IN (SELECT subject_id FROM task WHERE DATE(due_date) BETWEEN ? AND ? GROUP BY subject_id)";
-    private final static Logger LOGGER = LogManager.getLogger(DealDAOImpl.class);
+    public static final String DEAL_SELECT_STATUS_ID = " WHERE (status_id=?)";
+    public static final String DEAL_SELECT_USER_ID = " where (id in(select subject.id from subject " +
+            "where subject.content_owner_id = ?))";
+
+    public static final String DEAL_SELECT_OPENED = " WHERE (deal.data_close IS null)";
+    public static final String DEAL_SELECT_BY_USER = " WHERE (responsible_id=?)";
+    public static final String DEAL_SELECT_WITHOUT_TASKS = " WHERE (NOT deal.id IN (SELECT subject_id FROM task GROUP BY subject_id))";
+    public static final String DEAL_SELECT_WITH_EXPIRED_TASKS = " WHERE (deal.id IN (SELECT subject_id FROM task WHERE NOT (due_date IS null) AND due_date < ? GROUP BY subject_id))";
+    public static final String DEAL_SELECT_SUCCESS = " WHERE (deal.status_id=5)";
+    public static final String DEAL_SELECT_CLOSED_AND_NOT_IMPLEMENTED = " WHERE (deal.status_id=6)";
+    public static final String DEAL_SELECT_DELETED = " WHERE (deal.status_id=7)";
+    public static final String DEAL_SELECT_PERIOD_CREATED_DATE = " WHERE (DATE(deal.created_date) BETWEEN ? AND ?)";
+    public static final String DEAL_SELECT_TASK_DUE_DATE_INTERVAL = "WHERE (deal.id IN (SELECT subject_id FROM task WHERE DATE(due_date) BETWEEN ? AND ? GROUP BY subject_id))";
+
 
     public DealDAOImpl(DaoFactory daoFactory) {
         super(daoFactory);
@@ -114,7 +119,6 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
         }
         return result;
     }
-
 
     @Override
     protected List<Deal> parseResultSetLite(ResultSet rs) throws DataBaseException {
@@ -248,6 +252,7 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
         }
         }
 
+    @Override
     public List<Deal> readStatusFilter(int statusId) throws DataBaseException {
         List<Deal> result;
         try (PreparedStatement statement = getConnection().prepareStatement(getReadAllQuery() + DEAL_SELECT_STATUS_ID)) {
@@ -264,9 +269,11 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
         return result;
     }
 
+    @Override
     public List<Deal> readUserFilter(int userId) throws DataBaseException {
         List<Deal> result;
-        try (PreparedStatement statement = getConnection().prepareStatement(getReadAllQuery() + DEAL_SELECT_BY_USER)) {
+        try {
+            PreparedStatement statement = getConnection().prepareStatement(getReadAllQuery() + DEAL_SELECT_BY_USER);
             statement.setInt(1, userId);
             ResultSet rs = statement.executeQuery();
             result = parseResultSet(rs);
@@ -280,11 +287,11 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
         return result;
     }
 
+    @Override
     public List<Deal> readTagFilter(String tag) throws DataBaseException {
         List<Deal> result;
-        try (PreparedStatement statement = getConnection().prepareStatement(getReadAllQuery() + DEAL_SELECT_TAG + tag)){
-//            statement.setString(1, tag);
-//            statement.setObject(1, tag);
+        try{
+            PreparedStatement statement = getConnection().prepareStatement(getReadAllQuery() + DEAL_SELECT_TAG + tag + "))");
             ResultSet rs = statement.executeQuery();
             result = parseResultSet(rs);
         } catch (SQLException e) {
@@ -295,45 +302,41 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
 
     @Override
     public List<Deal> readAllWithConditions(int condition ) throws DataBaseException {
-        List<Deal> result = new ArrayList<Deal>();
-        String sql = "";
+        List<Deal> result = new ArrayList<>();
+        String sql;
+        switch (condition){
+            // opened deals
+            case 1:
+                sql = getReadAllQuery() + DEAL_SELECT_OPENED;
+                break;
+            // success deals
+            case 2:
+                sql = getReadAllQuery() + DEAL_SELECT_SUCCESS;
+                break;
+            // deals closed and not implemented
+            case 3:
+                sql = getReadAllQuery() + DEAL_SELECT_CLOSED_AND_NOT_IMPLEMENTED;
+                break;
+            // deals without tasks
+            case 4:
+                sql = getReadAllQuery() + DEAL_SELECT_WITHOUT_TASKS;
+                break;
+            // deals with expired tasks
+            case 5:
+                sql = getReadAllQuery() + DEAL_SELECT_WITH_EXPIRED_TASKS;
+                break;
+            // deleted deals
+            case 6:
+                sql = getReadAllQuery() + DEAL_SELECT_DELETED;
+                break;
+            default:
+                return result;
+        }
         try{
-            switch (condition){
-                // opened deals
-                case 1:
-                    sql = getReadAllQuery() + DEAL_SELECT_OPENED;
-                    break;
-                // success deals
-                case 2:
-                    sql = getReadAllQuery() + DEAL_SELECT_SUCCESS;
-                    break;
-                // deals closed and not implemented
-                case 3:
-                    sql = getReadAllQuery() + DEAL_SELECT_CLOSED_AND_NOT_IMPLEMENTED;
-                    break;
-                // deals without tasks
-                case 4:
-                    sql = getReadAllQuery() + DEAL_SELECT_WITHOUT_TASKS;
-                    break;
-                // deals with expired tasks
-                case 5:
-                    sql = getReadAllQuery() + DEAL_SELECT_WITH_EXPIRED_TASKS;
-                    break;
-                // deleted deals
-                case 6:
-                    sql = getReadAllQuery() + DEAL_SELECT_DELETED;
-                    break;
-                default:
-                    return result;
-            }
             PreparedStatement statement = getConnection().prepareStatement(sql);
-            switch (condition) {
-                // deals with expired tasks
-                case 5:
-                    statement.setDate(1, new Date(System.currentTimeMillis()));
-                    break;
-                default:
-                    break;
+            // deals with expired tasks
+            if(condition==5){
+                statement.setDate(1, new Date(System.currentTimeMillis()));
             }
             ResultSet rs = statement.executeQuery();
             result = parseResultSet(rs);
@@ -371,5 +374,121 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
         return result;
     }
 
+    @Override
+    public List<Deal> readAllWithConditions(List<String> conditionsList) throws DataBaseException {
+
+        List<Deal> result;
+        String sql = createSQL(conditionsList);
+
+        try {
+            PreparedStatement statement;
+            statement = getConnection().prepareStatement(sql);
+            int i =1;
+            for(String condition: conditionsList) {
+                if (condition.startsWith("selectedfilter_my")) {
+                    statement.setInt(i++, Integer.parseInt(condition.replace("selectedfilter_my_", "")));
+                } else if ("selectedfilter_expired".equals(condition)) {
+                    statement.setDate(i++, new Date(System.currentTimeMillis()));
+                } else if (condition.startsWith("phase")) {
+                    statement.setInt(i++, Integer.parseInt(condition.replace("phase_", "")));
+                } else if (condition.startsWith("manager")) {
+                    statement.setInt(i++, Integer.parseInt(condition.replace("manager_", "")));
+                } else if (condition.startsWith("when") || condition.startsWith("task")) {
+                    setStatementDateInterval(statement, condition, i);
+                    i=+2;
+                }
+            }
+            ResultSet rs = statement.executeQuery();
+            result = parseResultSetLite(rs);
+        } catch (SQLException e) {
+            throw new DataBaseException(e);
+        }
+        return result;
+    }
+
+    private String changeCondition(String condition){
+        return condition.replaceFirst("WHERE","AND");
+    }
+
+    private String createSQL(List<String> conditionsList){
+
+        StringBuilder whereCondition = new StringBuilder();
+
+        for(String condition: conditionsList){
+            if(condition.startsWith("selectedfilter")){
+                appendSelectedFilterSQL(whereCondition, condition);
+            }else if(condition.startsWith("when")) {
+                whereCondition.append(changeCondition(DEAL_SELECT_PERIOD_CREATED_DATE));
+            }else if(condition.startsWith("phase")) {
+                whereCondition.append(changeCondition(DEAL_SELECT_STATUS_ID));
+            }else if(condition.startsWith("manager")) {
+                whereCondition.append(changeCondition(DEAL_SELECT_BY_USER));
+            }else if(condition.startsWith("tags")) {
+                String tagString = condition.replace("tags_", "");
+                whereCondition.append(changeCondition(DEAL_SELECT_TAG + "'" +
+                        tagString + "')))"));
+            }else if(condition.startsWith("task")) {
+                whereCondition.append(changeCondition(DEAL_SELECT_TASK_DUE_DATE_INTERVAL));
+            }
+        }
+
+        String sql;
+        sql = getReadAllQuery() + whereCondition.toString().replaceFirst("AND", "WHERE");
+
+        return sql;
+    }
+
+    private StringBuilder appendSelectedFilterSQL(StringBuilder whereCondition, String condition) {
+        String cond = condition;
+        if(condition.startsWith("selectedfilter_my")){
+            cond = "selectedfilter_my";
+        }
+        switch (cond){
+            case "selectedfilter_open":
+                whereCondition.append(changeCondition(DEAL_SELECT_OPENED));
+                break;
+            case "selectedfilter_success":
+                whereCondition.append(changeCondition(DEAL_SELECT_SUCCESS));
+                break;
+            case "selectedfilter_fail":
+                whereCondition.append(changeCondition(DEAL_SELECT_CLOSED_AND_NOT_IMPLEMENTED));
+                break;
+            case "selectedfilter_notask":
+                whereCondition.append(changeCondition(DEAL_SELECT_WITHOUT_TASKS));
+                break;
+            case "selectedfilter_expired":
+                whereCondition.append(changeCondition(DEAL_SELECT_WITH_EXPIRED_TASKS));
+                break;
+            case "selectedfilter_deleted":
+                whereCondition.append(changeCondition(DEAL_SELECT_DELETED));
+                break;
+            case "selectedfilter_my":
+                whereCondition.append(changeCondition(DEAL_SELECT_BY_USER));
+                break;
+            default:
+                break;
+        }
+        return whereCondition;
+    }
+
+    private PreparedStatement setStatementDateInterval(PreparedStatement statement, String condition, int i){
+        try{
+            SimpleDateFormat formatter = new SimpleDateFormat();
+            formatter.applyPattern("MM/dd/yyyy");
+            String dateFrom = condition.substring(5, 15);
+            String dateTo = condition.substring(16, 26);
+            if (!"".equals(dateFrom) && !"".equals(dateTo)) {
+                java.util.Date date = formatter.parse(dateFrom);
+                statement.setDate(i++, new java.sql.Date(date.getTime()));
+                date = formatter.parse(dateTo);
+                statement.setDate(i, new java.sql.Date(date.getTime()));
+            }
+        } catch (ParseException e) {
+            LOGGER.error("Bad date in period filter");
+        } catch (SQLException e) {
+            LOGGER.error("SQL error select date interval");
+        }
+        return statement;
+    }
 
 }

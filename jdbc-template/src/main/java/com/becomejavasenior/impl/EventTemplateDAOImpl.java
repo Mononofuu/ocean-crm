@@ -4,7 +4,7 @@ package com.becomejavasenior.impl;
 import com.becomejavasenior.Event;
 import com.becomejavasenior.OperationType;
 import com.becomejavasenior.User;
-import com.becomejavasenior.interfaceDAO.GenericTemplateDAO;
+import com.becomejavasenior.GenericTemplateDAO;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 

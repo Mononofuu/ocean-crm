@@ -2,7 +2,7 @@ package com.becomejavasenior.impl;
 
 
 import com.becomejavasenior.Contact;
-import com.becomejavasenior.interfaceDAO.GenericTemplateDAO;
+import com.becomejavasenior.GenericTemplateDAO;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 
 import java.util.List;

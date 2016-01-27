@@ -31,6 +31,7 @@ public class ContactDAOImplTest {
         for (int i = 0; i < 3; i++) {
             Tag tag = new Tag();
             tag.setName("testtag" + i);
+            tag.setSubjectType(SubjectType.CONTACT_TAG);
             contactTags.add(tag);
         }
         contact.setTags(contactTags);
@@ -43,6 +44,7 @@ public class ContactDAOImplTest {
         for (int i = 3; i < 6; i++) {
             Tag tag = new Tag();
             tag.setName("testtag" + i);
+            tag.setSubjectType(SubjectType.COMPANY_TAG);
             companyTags.add(tag);
         }
         company.setTags(companyTags);

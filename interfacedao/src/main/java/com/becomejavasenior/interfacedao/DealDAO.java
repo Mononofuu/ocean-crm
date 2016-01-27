@@ -20,4 +20,7 @@ public interface DealDAO  extends GenericDao<Deal> {
     public List<Deal> readAllByCreatedDateInterval(Date dateBegin, Date dateEnd) throws DataBaseException;
     public List<Deal> readAllByTasksDueDateInterval(Date dateBegin, Date dateEnd) throws DataBaseException;
 
+    public List<Deal> readAllWithConditions(List<String> conditionsList) throws DataBaseException;
+
+
 }

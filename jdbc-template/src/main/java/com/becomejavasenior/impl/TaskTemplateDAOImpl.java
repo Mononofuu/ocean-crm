@@ -1,7 +1,7 @@
 package com.becomejavasenior.impl;
 
 import com.becomejavasenior.Task;
-import com.becomejavasenior.interfaceDAO.GenericTemplateDAO;
+import com.becomejavasenior.GenericTemplateDAO;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 
 import java.sql.Date;

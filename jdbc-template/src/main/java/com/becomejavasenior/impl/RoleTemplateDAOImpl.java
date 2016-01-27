@@ -1,7 +1,7 @@
 package com.becomejavasenior.impl;
 
 import com.becomejavasenior.Role;
-import com.becomejavasenior.interfaceDAO.GenericTemplateDAO;
+import com.becomejavasenior.GenericTemplateDAO;
 import com.becomejavasenior.mapper.RoleRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
