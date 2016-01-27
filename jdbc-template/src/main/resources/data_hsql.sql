@@ -1,0 +1,4 @@
+DELETE FROM CURRENCY;
+INSERT INTO CURRENCY (code, name) VALUES ('USD', 'Dollar');
+INSERT INTO CURRENCY (code, name) VALUES ('EUR', 'Euro');
+INSERT INTO CURRENCY (code, name) VALUES ('UAH', 'Hryvna');

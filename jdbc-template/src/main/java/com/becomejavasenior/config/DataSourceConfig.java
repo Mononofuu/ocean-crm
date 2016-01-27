@@ -3,8 +3,7 @@ package com.becomejavasenior.config;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
 import java.net.URI;
@@ -15,13 +14,14 @@ import java.util.Properties;
  * @author Anton Sakhno <sakhno83@gmail.com>
  */
 
-@Configuration
+@Repository
 public class DataSourceConfig {
     private final static Logger LOGGER = LogManager.getLogger(DataSourceConfig.class);
     private static final String PROPERTY_FILE_NAME = "postgresql_config.properties";
+    private static final String PROPERTY_FILE_NAME_HSQL = "hsqldb_config.properties";
 
-    @Bean
-    public BasicDataSource dataSource(){
+    //    @Bean
+    public BasicDataSource dataSource() {
         BasicDataSource dataSource = new BasicDataSource();
         try {
             Properties prop = new Properties();
@@ -35,7 +35,7 @@ public class DataSourceConfig {
             dataSource.setMaxIdle(30);
         } catch (IOException e) {
             LOGGER.error(e);
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
             LOGGER.warn("property file not found, trying to connect by getting system variable", e);
             URI dbUri = null;
             try {
@@ -53,4 +53,16 @@ public class DataSourceConfig {
         }
         return dataSource;
     }
+
+
+//    @Bean
+//    public DataSource dataSourceHsql() {
+//        EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
+//        EmbeddedDatabase db = builder
+//                .setType(EmbeddedDatabaseType.HSQL)
+//                .addScript("schema_hsql.sql")
+//                .addScript("data_hsql.sql")
+//                .build();
+//        return db;
+//    }
 }
