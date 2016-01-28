@@ -2,14 +2,21 @@ package com.becomejavasenior;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.List;
 import java.util.Set;
 
+@Repository
 public abstract class AbstractJDBCDao<T> implements GenericDao<T>{
     private final static Logger LOGGER = LogManager.getLogger(AbstractJDBCDao.class);
     private static DaoFactory daoFactory;
+
+    @Autowired
+    public DataSource dataSource;
 
     private AbstractJDBCDao() {
     }
@@ -24,7 +31,13 @@ public abstract class AbstractJDBCDao<T> implements GenericDao<T>{
 
 
     protected Connection getConnection()throws DataBaseException{
-        return daoFactory.getConnection();
+//        return daoFactory.getConnection();
+        try {
+            return dataSource.getConnection();
+        } catch (SQLException e) {
+            LOGGER.catching(e);
+        }
+        return null;
     }
 
     /**

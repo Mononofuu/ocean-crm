@@ -1,34 +1,33 @@
 package com.becomejavasenior.impl;
 
-import com.becomejavasenior.*;
+import com.becomejavasenior.DataBaseException;
+import com.becomejavasenior.User;
+import com.becomejavasenior.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
  * @author Anton Sakhno <sakhno83@gmail.com>
  */
+@Service
 public class UserServiceImpl implements UserService {
 
     private static final Logger LOGGER = LogManager.getLogger(TaskTypeServiceImpl.class);
-    private DaoFactory dao;
-    private GenericDao<User> userDao;
+    @Autowired
+    private UserTemplateDAOImpl userDao;
 
-    public UserServiceImpl(){
-        try {
-            dao = new PostgreSqlDaoFactory();
-            userDao = dao.getDao(User.class);
-        } catch (DataBaseException e) {
-            LOGGER.error(e);
-        }
+    public UserServiceImpl() {
     }
 
     @Override
     public User saveUser(User user) throws DataBaseException {
-        if(user.getId() == 0){
+        if (user.getId() == 0) {
             return userDao.create(user);
-        }else{
+        } else {
             userDao.update(user);
             return userDao.read(user.getId());
         }

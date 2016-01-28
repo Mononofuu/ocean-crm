@@ -3,6 +3,7 @@ package com.becomejavasenior.config;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
@@ -18,9 +19,8 @@ import java.util.Properties;
 public class DataSourceConfig {
     private final static Logger LOGGER = LogManager.getLogger(DataSourceConfig.class);
     private static final String PROPERTY_FILE_NAME = "postgresql_config.properties";
-    private static final String PROPERTY_FILE_NAME_HSQL = "hsqldb_config.properties";
 
-    //    @Bean
+    @Bean(name = "postgresDS")
     public BasicDataSource dataSource() {
         BasicDataSource dataSource = new BasicDataSource();
         try {
