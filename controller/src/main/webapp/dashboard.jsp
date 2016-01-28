@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%--
   Author: Vladislav Lybachevskiy
 --%>
@@ -20,50 +21,50 @@
 <div class="row-fluid">
     <div style="float:left;width: 65%;height: 100%;">
         <fieldset class="scheduler-border">
-            <legend class="scheduler-border">Виджеты</legend>
+            <legend class="scheduler-border"><spring:message code="label.dashboard"/></legend>
             <div class="row-fluid">
                 <div id="widgetsInLeft" style="float:left;width:50%;height: auto;">
                     <div id="widgetDeals">
                         <fieldset class="scheduler-border">
-                            <legend class="scheduler-border">Сделки</legend>
+                            <legend class="scheduler-border"><spring:message code="label.deals"/></legend>
                             <div class="row-fluid" style="width: 100%;">
-                                <div style="float: left;alignment: left;">Всего сделок:</div>
+                                <div style="float: left;alignment: left;"><spring:message code="label.totalamount"/>:</div>
                                 <div style="float: right;alignment: right;">${allDeals}</div>
                             </div>
                             <br>
 
                             <div class="row-fluid" style="width: 100%;">
-                                <div style="float:left; alignment: left;">Бюджет:</div>
+                                <div style="float:left; alignment: left;"><spring:message code="label.budget"/>:</div>
                                 <div style="float: right;alignment: right;">${dealsBudget}</div>
                             </div>
                         </fieldset>
                     </div>
                     <div id="widgetDealsWithoutTasks">
                         <fieldset class="scheduler-border">
-                            <legend class="scheduler-border">Сделки без задач</legend>
+                            <legend class="scheduler-border"><spring:message code="label.dealswotasks"/></legend>
                             <div class="row-fluid" style="width: 100%;">
-                                <div style="float: left;alignment: left;">Сделок без задач:</div>
+                                <div style="float: left;alignment: left;"><spring:message code="label.dealswotasks"/>:</div>
                                 <div style="float: right;alignment: right;">${dealsWithoutTasks}</div>
                             </div>
                             <br>
 
                             <div class="row-fluid" style="width: 100%;">
-                                <div style="float:left; alignment: left;">Сделок с задачами:</div>
+                                <div style="float:left; alignment: left;"><spring:message code="label.dealswithtasks"/>:</div>
                                 <div style="float: right;alignment: right;">${dealWithTasks}</div>
                             </div>
                         </fieldset>
                     </div>
                     <div id="widgetSuccessDeals">
                         <fieldset class="scheduler-border">
-                            <legend class="scheduler-border">Успешные сделки</legend>
+                            <legend class="scheduler-border"><spring:message code="label.dealssuccess"/></legend>
                             <div class="row-fluid" style="width: 100%;">
-                                <div style="float: left;alignment: left;">Успешных сделок:</div>
+                                <div style="float: left;alignment: left;"><spring:message code="label.dealssuccess"/>:</div>
                                 <div style="float: right;alignment: right;">${successDeals}</div>
                             </div>
                             <br>
 
                             <div class="row-fluid" style="width: 100%;">
-                                <div style="float:left; alignment: left;">Нереализовано:</div>
+                                <div style="float:left; alignment: left;"><spring:message code="label.unrealizeddeals"/>:</div>
                                 <div style="float: right;alignment: right;">${unsuccessClosedDeals}</div>
                             </div>
                         </fieldset>
@@ -73,36 +74,36 @@
                 <div id="widgetsIntRight" style="float:left;width:50%;height: auto;">
                     <div id="widgetTasksInProgressAndClosed">
                         <fieldset class="scheduler-border">
-                            <legend class="scheduler-border">Задачи в работе и выполненые</legend>
+                            <legend class="scheduler-border"><spring:message code="label.tasksinpogressandfinished"/></legend>
                             <div class="row-fluid" style="width: 100%;">
-                                <div style="float: left;alignment: left;">Задачи в работе:</div>
+                                <div style="float: left;alignment: left;"><spring:message code="label.tasksinpogress"/>:</div>
                                 <div style="float: right;alignment: right;">${tasksInProgress}</div>
                             </div>
                             <br>
 
                             <div class="row-fluid" style="width: 100%;">
-                                <div style="float:left; alignment: left;">Выполненные:</div>
+                                <div style="float:left; alignment: left;"><spring:message code="label.finished"/>:</div>
                                 <div style="float: right;alignment: right;">${finishedTasks}</div>
                             </div>
                             <br>
 
                             <div class="row-fluid" style="width: 100%;">
-                                <div style="float:left; alignment: left;">Просроченные:</div>
+                                <div style="float:left; alignment: left;"><spring:message code="label.expired"/>:</div>
                                 <div style="float: right;alignment: right;">${overdueTasks}</div>
                             </div>
                         </fieldset>
                     </div>
                     <div id="widgetAllContactsAllCompanies">
                         <fieldset class="scheduler-border">
-                            <legend class="scheduler-border">Всего контактов и Всего компаний</legend>
+                            <legend class="scheduler-border"><spring:message code="label.totalcontactsandcompanies"/></legend>
                             <div class="row-fluid" style="width: 100%;">
-                                <div style="float: left;alignment: left;">Контактов:</div>
+                                <div style="float: left;alignment: left;"><spring:message code="label.contacts"/>:</div>
                                 <div style="float: right;alignment: right;">${contacts}</div>
                             </div>
                             <br>
 
                             <div class="row-fluid" style="width: 100%;">
-                                <div style="float:left; alignment: left;">Компаний:</div>
+                                <div style="float:left; alignment: left;"><spring:message code="label.company"/>:</div>
                                 <div style="float: right;alignment: right;">${companies}</div>
                             </div>
                         </fieldset>
@@ -113,7 +114,7 @@
     </div>
     <div style="float:right;height: 100%;">
         <fieldset class="scheduler-border" style="height: auto;">
-            <legend class="scheduler-border">Последние события</legend>
+            <legend class="scheduler-border"><spring:message code="label.lastevents"/></legend>
             <c:forEach var="event" items="${events}">
                 <fieldset class="scheduler-border">
                     <fmt:formatDate value="${event.getEventDate()}" pattern="dd-MM-yyyy HH:mm" var="theFormattedEventDate"/>
