@@ -4,54 +4,20 @@ import com.becomejavasenior.impl.*;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
+@Component
 public abstract class AbstractJDBCDaoFactory implements DaoFactory {
-    private static BasicDataSource dataSource;
-    private Map<Class, GenericDao> daoClasses = new HashMap<>();
     private final static Logger LOGGER = LogManager.getLogger(AbstractJDBCDaoFactory.class);
-
-    public AbstractJDBCDaoFactory() throws DataBaseException {
-        try {
-            if (dataSource == null) {
-                dataSource = new BasicDataSource();
-                Properties prop = new Properties();
-                prop.load(getClass().getClassLoader().getResourceAsStream(getPropertyFileName()));
-                dataSource.setDriverClassName(prop.getProperty("driver"));
-                dataSource.setUrl(prop.getProperty("url"));
-                dataSource.setUsername(prop.getProperty("user"));
-                dataSource.setPassword(prop.getProperty("password"));
-                dataSource.setInitialSize(10);
-                dataSource.setMaxTotal(100);
-                dataSource.setMaxIdle(30);
-            }
-        } catch (IOException e) {
-            throw new DataBaseException(e);
-        } catch (NullPointerException e){
-            LOGGER.warn("property file not found, trying to connect by getting system variable", e);
-            URI dbUri = null;
-            try {
-                dbUri = new URI(System.getenv("DATABASE_URL"));
-            } catch (URISyntaxException e1) {
-                throw new DataBaseException(e1);
-            }
-            dataSource.setDriverClassName("org.postgresql.Driver");
-            dataSource.setUrl("jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath());
-            dataSource.setUsername(dbUri.getUserInfo().split(":")[0]);
-            dataSource.setPassword(dbUri.getUserInfo().split(":")[1]);
-            dataSource.setInitialSize(10);
-            dataSource.setMaxTotal(100);
-            dataSource.setMaxIdle(30);
-        }
-    }
+    @Autowired
+    private BasicDataSource dataSource;
+    private Map<Class, GenericDao> daoClasses = new HashMap<>();
 
     @Override
     public Connection getConnection() throws DataBaseException {

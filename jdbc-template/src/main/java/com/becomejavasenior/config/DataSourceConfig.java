@@ -62,7 +62,7 @@ public class DataSourceConfig {
 
 
     @Bean
-    public DataSource dataSourceHsql() {
+    public DataSource dataSourceTest() {
         EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
         EmbeddedDatabase db = builder
                 .setType(EmbeddedDatabaseType.HSQL)

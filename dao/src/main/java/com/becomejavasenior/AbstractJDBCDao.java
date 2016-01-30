@@ -3,7 +3,6 @@ package com.becomejavasenior;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -17,7 +16,6 @@ public abstract class AbstractJDBCDao<T> implements GenericDao<T>{
     private static DaoFactory daoFactory;
 
     @Autowired
-    @Qualifier("dataSourceHsql")
     public DataSource dataSource;
 
     protected AbstractJDBCDao() {
