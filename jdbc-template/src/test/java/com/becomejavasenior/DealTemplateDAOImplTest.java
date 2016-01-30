@@ -1,5 +1,6 @@
 package com.becomejavasenior;
 
+import com.becomejavasenior.interfacedao.*;
 import org.junit.Assert;
 import org.junit.Test;
 

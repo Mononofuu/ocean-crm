@@ -3,8 +3,7 @@ package com.becomejavasenior.impl;
 import com.becomejavasenior.DataBaseException;
 import com.becomejavasenior.User;
 import com.becomejavasenior.UserService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.becomejavasenior.interfacedao.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +15,8 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private static final Logger LOGGER = LogManager.getLogger(TaskTypeServiceImpl.class);
     @Autowired
-    private UserTemplateDAOImpl userDao;
+    private UserDAO userDAO;
 
     public UserServiceImpl() {
     }
@@ -26,25 +24,25 @@ public class UserServiceImpl implements UserService {
     @Override
     public User saveUser(User user) throws DataBaseException {
         if (user.getId() == 0) {
-            return userDao.create(user);
+            return userDAO.create(user);
         } else {
-            userDao.update(user);
-            return userDao.read(user.getId());
+            userDAO.update(user);
+            return userDAO.read(user.getId());
         }
     }
 
     @Override
     public void deleteUser(int id) throws DataBaseException {
-        userDao.delete(id);
+        userDAO.delete(id);
     }
 
     @Override
     public User findUserById(int id) throws DataBaseException {
-        return userDao.read(id);
+        return userDAO.read(id);
     }
 
     @Override
     public List<User> getAllUsers() throws DataBaseException {
-        return userDao.readAll();
+        return userDAO.readAll();
     }
 }

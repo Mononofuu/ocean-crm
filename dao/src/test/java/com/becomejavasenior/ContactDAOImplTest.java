@@ -1,7 +1,14 @@
 package com.becomejavasenior;
 
+import com.becomejavasenior.config.DaoConfig;
+import com.becomejavasenior.interfacedao.CompanyDAO;
+import com.becomejavasenior.interfacedao.ContactDAO;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -11,15 +18,17 @@ import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = {DaoConfig.class})
 public class ContactDAOImplTest {
-    private DaoFactory daoFactory;
-    private GenericDao<Contact> contactDao;
+    @Autowired
+    private ContactDAO contactDao;
+    @Autowired
+    private CompanyDAO companyDAO;
     private Contact contact;
 
     @Before
     public void setUp() throws DataBaseException {
-        daoFactory = new PostgreSqlDaoFactory();
-        contactDao = daoFactory.getDao(Contact.class);
         contact = new Contact();
         contact.setName("testname");
         contact.setPost("testpost");
@@ -51,8 +60,7 @@ public class ContactDAOImplTest {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-        GenericDao<Company> companyDao = daoFactory.getDao(Company.class);
-        company = companyDao.create(company);
+        company = companyDAO.create(company);
         contact.setCompany(company);
     }
 
@@ -69,7 +77,6 @@ public class ContactDAOImplTest {
         contactDao.delete(contactFromDB.getId());
         List listAfter = contactDao.readAll();
         assertEquals(listBefore.size(), listAfter.size() + 1);
-        GenericDao<Company> companyDao = daoFactory.getDao(Company.class);
-        companyDao.delete(contactFromDB.getCompany().getId());
+        companyDAO.delete(contactFromDB.getCompany().getId());
     }
 }

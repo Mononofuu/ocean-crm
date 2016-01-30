@@ -1,13 +1,11 @@
 package com.becomejavasenior.impl;
 
 import com.becomejavasenior.*;
-import com.becomejavasenior.interfacedao.DealContactDAO;
-import com.becomejavasenior.interfacedao.DealDAO;
-import com.becomejavasenior.interfacedao.DealStatusDAO;
-import com.becomejavasenior.interfacedao.FilterDAO;
-import com.becomejavasenior.interfacedao.TagDAO;
+import com.becomejavasenior.interfacedao.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.text.ParseException;
@@ -20,93 +18,87 @@ import java.util.List;
 /**
  * Created by Peter on 18.12.2015.
  */
+@Service
 public class DealServiceImpl implements com.becomejavasenior.DealService {
 
     static final Logger logger = LogManager.getRootLogger();
-    DaoFactory daoFactory;
-    DealDAO dealDao;
-    DealStatusDAO dealStatusDao;
+    @Autowired
+    DealDAO dealDAO;
+    @Autowired
+    DealStatusDAO dealStatusDAO;
+    @Autowired
     DealContactDAO dealContactDAO;
+    @Autowired
     FilterDAO filterDAO;
-
-    public DealServiceImpl() {
-        try {
-            daoFactory = new PostgreSqlDaoFactory();
-            dealDao = (DealDAO) daoFactory.getDao(Deal.class);
-            dealStatusDao = (DealStatusDAO) daoFactory.getDao(DealStatus.class);
-            dealContactDAO = (DealContactDAO) daoFactory.getDao(DealContact.class);
-            filterDAO = (FilterDAO) daoFactory.getDao(Filter.class);
-        } catch (DataBaseException e) {
-            logger.catching(e);
-        }
-    }
+    @Autowired
+    TagDAO tagDAO;
 
     @Override
     public Deal saveDeal(Deal deal) throws DataBaseException {
         if(deal.getId() == 0){
-            return dealDao.create(deal);
+            return dealDAO.create(deal);
         }else{
-            dealDao.update(deal);
-            return dealDao.read(deal.getId());
+            dealDAO.update(deal);
+            return dealDAO.read(deal.getId());
         }
     }
 
     @Override
     public void deleteDeal(int id) throws DataBaseException {
-        dealDao.delete(id);
+        dealDAO.delete(id);
     }
 
     @Override
     public Deal findDealById(int id) throws DataBaseException {
-        Deal deal = dealDao.read(id);
+        Deal deal = dealDAO.read(id);
         return deal;
     }
 
     @Override
     public List<Deal> findDeals() throws DataBaseException{
-        List<Deal> dealList = dealDao.readAll();
+        List<Deal> dealList = dealDAO.readAll();
         return dealList;
     }
 
     @Override
     public List<Deal> findDealsLite() throws DataBaseException{
-        List<Deal> dealList = dealDao.readAllLite();
+        List<Deal> dealList = dealDAO.readAllLite();
         return dealList;
     }
 
     @Override
     public List<Deal> findDealsByStatus(int statusId) throws DataBaseException {
-        List<Deal> dealList = dealDao.readStatusFilter(Integer.valueOf(statusId));
+        List<Deal> dealList = dealDAO.readStatusFilter(Integer.valueOf(statusId));
         return dealList;
     }
 
     @Override
     public List<Deal> findDealsByUser(int userId) throws DataBaseException {
-        List<Deal> dealList = dealDao.readUserFilter(Integer.valueOf(userId));
+        List<Deal> dealList = dealDAO.readUserFilter(Integer.valueOf(userId));
         return dealList;
     }
 
     @Override
     public List<Deal> findDealsByTags(String tag) throws DataBaseException {
-        List<Deal> dealList = dealDao.readTagFilter("'" + tag + "')))");
+        List<Deal> dealList = dealDAO.readTagFilter("'" + tag + "')))");
         return dealList;
     }
 
     @Override
     public List<Deal> findDealsByConditions(int condition) throws DataBaseException {
-        List<Deal> dealList = dealDao.readAllWithConditions(condition);
+        List<Deal> dealList = dealDAO.readAllWithConditions(condition);
         return dealList;
     }
 
     @Override
     public List<Deal> findDealsByCreatedDateInterval(Date dateBegin, Date dateEnd) throws DataBaseException {
-        List<Deal> dealList = dealDao.readAllByCreatedDateInterval(dateBegin, dateEnd);
+        List<Deal> dealList = dealDAO.readAllByCreatedDateInterval(dateBegin, dateEnd);
         return dealList;
     }
 
     @Override
     public List<Deal> findDealsByTasksDueDateInterval(Date dateBegin, Date dateEnd) throws DataBaseException {
-        List<Deal> dealList = dealDao.readAllByTasksDueDateInterval(dateBegin, dateEnd);
+        List<Deal> dealList = dealDAO.readAllByTasksDueDateInterval(dateBegin, dateEnd);
         return dealList;
     }
 
@@ -334,26 +326,26 @@ public class DealServiceImpl implements com.becomejavasenior.DealService {
 
     @Override
     public List<DealStatus> getAllDealStatuses() throws DataBaseException {
-        return dealStatusDao.readAll();
+        return dealStatusDAO.readAll();
     }
 
     @Override
     public DealStatus findDealStatus(int id) throws DataBaseException {
-        return dealStatusDao.read(id);
+        return dealStatusDAO.read(id);
     }
 
     @Override
     public void deleteDealStatus(int id) throws DataBaseException {
-        dealStatusDao.delete(id);
+        dealStatusDAO.delete(id);
     }
 
     @Override
     public DealStatus saveDealStatus(DealStatus dealStatus) throws DataBaseException {
         if (dealStatus.getId() == 0) {
-            return dealStatusDao.create(dealStatus);
+            return dealStatusDAO.create(dealStatus);
         } else {
-            dealStatusDao.update(dealStatus);
-            return dealStatusDao.read(dealStatus.getId());
+            dealStatusDAO.update(dealStatus);
+            return dealStatusDAO.read(dealStatus.getId());
         }
     }
 
@@ -391,7 +383,6 @@ public class DealServiceImpl implements com.becomejavasenior.DealService {
     }
 
     public List<Tag> getAllDealTags() throws DataBaseException {
-        TagDAO tagDAO = (TagDAO)daoFactory.getDao(Tag.class);
         return tagDAO.readAll(SubjectType.CONTACT_TAG);
     }
 }

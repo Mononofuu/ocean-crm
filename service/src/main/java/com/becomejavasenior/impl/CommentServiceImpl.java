@@ -1,28 +1,24 @@
 package com.becomejavasenior.impl;
 
-import com.becomejavasenior.*;
+import com.becomejavasenior.Comment;
+import com.becomejavasenior.CommentService;
+import com.becomejavasenior.DataBaseException;
 import com.becomejavasenior.interfacedao.CommentDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
  * created by Alekseichenko Sergey <mononofuu@gmail.com>
  */
+@Service
 public class CommentServiceImpl implements CommentService {
     static final Logger logger = LogManager.getRootLogger();
-    DaoFactory daoFactory;
-    CommentDAO commentDAO;
-
-    public CommentServiceImpl() {
-        try {
-            daoFactory = new PostgreSqlDaoFactory();
-            commentDAO = (CommentDAO) daoFactory.getDao(Comment.class);
-        } catch (DataBaseException e) {
-            logger.catching(e);
-        }
-    }
+    @Autowired
+    private CommentDAO commentDAO;
 
     @Override
     public Comment findCommentById(int id) throws DataBaseException {

@@ -3,6 +3,8 @@ package com.becomejavasenior.impl;
 import com.becomejavasenior.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -13,50 +15,42 @@ import java.util.Map;
 /**
  * @author Lybachevskiy.Vladislav
  */
+@Service
 public class TaskServiceImpl implements TaskService {
     private static Logger logger = LogManager.getLogger(TaskServiceImpl.class);
-    private DaoFactory dao;
-    private TaskDAOImpl taskDao;
-    private TaskTypeDAOImpl taskTypeDao;
-
-    public TaskServiceImpl() {
-        try {
-            dao = new PostgreSqlDaoFactory();
-            taskDao = (TaskDAOImpl) dao.getDao(Task.class);
-            taskTypeDao = (TaskTypeDAOImpl) dao.getDao(TaskType.class);
-        } catch (DataBaseException e) {
-            logger.catching(e);
-        }
-    }
+    @Autowired
+    private TaskDAOImpl taskDAO;
+    @Autowired
+    private TaskTypeDAOImpl taskTypeDAO;
 
     @Override
     public Task saveTask(Task task) throws DataBaseException {
         if (task.getId() == 0) {
-            return taskDao.create(task);
+            return taskDAO.create(task);
         } else {
-            taskDao.update(task);
-            return taskDao.read(task.getId());
+            taskDAO.update(task);
+            return taskDAO.read(task.getId());
         }
     }
 
     @Override
     public void deleteTask(int id) throws DataBaseException {
-        taskDao.delete(id);
+        taskDAO.delete(id);
     }
 
     @Override
     public Task findTaskById(int id) throws DataBaseException {
-        return taskDao.read(id);
+        return taskDAO.read(id);
     }
 
     @Override
     public List<Task> getAllTask() throws DataBaseException {
-        return taskDao.readAll();
+        return taskDAO.readAll();
     }
 
     @Override
     public List<Task> getTasksBySubject(Subject subject) throws DataBaseException {
-        return taskDao.getAllTasksBySubjectId(subject.getId());
+        return taskDAO.getAllTasksBySubjectId(subject.getId());
     }
 
     @Override
@@ -101,16 +95,16 @@ public class TaskServiceImpl implements TaskService {
         if (user!=null&&!"".equals(user)){
             userId = user;
         }
-        return taskDao.getAllTasksByParameters(userId, date, taskTypeId);
+        return taskDAO.getAllTasksByParameters(userId, date, taskTypeId);
     }
 
     @Override
     public List<TaskType> getAllTaskTypes() throws DataBaseException{
-        return taskTypeDao.readAll();
+        return taskTypeDAO.readAll();
     }
 
     @Override
     public Subject getSubject(int id) throws DataBaseException {
-        return taskDao.getSubject(id);
+        return taskDAO.getSubject(id);
     }
 }

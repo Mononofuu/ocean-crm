@@ -1,28 +1,24 @@
 package com.becomejavasenior.impl;
 
-import com.becomejavasenior.*;
+import com.becomejavasenior.Currency;
+import com.becomejavasenior.CurrencyService;
+import com.becomejavasenior.DataBaseException;
 import com.becomejavasenior.interfacedao.CurrencyDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
  * created by Alekseichenko Sergey <mononofuu@gmail.com>
  */
+@Service
 public class CurrencyServiceImpl implements CurrencyService {
     static final Logger logger = LogManager.getRootLogger();
-    DaoFactory daoFactory;
-    CurrencyDAO currencyDAO;
-
-    public CurrencyServiceImpl() {
-        try {
-            daoFactory = new PostgreSqlDaoFactory();
-            currencyDAO = (CurrencyDAO) daoFactory.getDao(Currency.class);
-        } catch (DataBaseException e) {
-            logger.catching(e);
-        }
-    }
+    @Autowired
+    private CurrencyDAO currencyDAO;
 
     @Override
     public Currency findCurrencyById(int id) throws DataBaseException {
