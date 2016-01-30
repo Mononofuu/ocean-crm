@@ -3,10 +3,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 -->
 <html>
 <head>
-	<title>Контакты</title>
+	<title><spring:message code="label.contacts"/></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<jsp:include page="../jsp/menu.jsp" />
 	<link href="../resources/css/tasklist.css" rel="stylesheet" type="text/css"/>
@@ -33,41 +34,41 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-md-3 window">
-				<h4>Фильтры</h4>
+				<h4><spring:message code="label.filters"/></h4>
 				<form class="form-horizontal" action="contactlist" method="post">
 					<div class="form-group">
 						<div class="col-sm-12">
 							<select class="form-control" size="4" name="filtername" id="filtername">
-								<option value="allcontacts" selected>Полный список контактов</option>
-								<option value="tasklesscontacts">Контакты без задач</option>
-								<option value="overduetaskcontacts">Контакты с просроченными задачами</option>
-								<option value="dellitedcontacts">Удаленные</option>
+								<option value="allcontacts" selected><spring:message code="label.fullcontactlist"/></option>
+								<option value="tasklesscontacts"><spring:message code="label.contactwithouttasks"/></option>
+								<option value="overduetaskcontacts"><spring:message code="label.contactswithoverduetasks"/></option>
+								<option value="dellitedcontacts"><spring:message code="label.deleted"/></option>
 							</select>
 						</div>
 					</div>
 					<div class="form-group">
 						<div class="formlable">
-							<label for="datepicker" class="control-label">Когда</label>
+							<label for="datepicker" class="control-label"><spring:message code="label.when"/></label>
 						</div>
 						<div class="col-sm-7">
 							<select class="form-control" name="period" id="period">
-								<option value="all">За все время</option>
-								<option value="today">За сегодня</option>
-								<option value="3days">За 3 дня</option>
-								<option value="week">За неделю</option>
-								<option value="month">За месяц</option>
-								<option value="quarter">За квартал</option>
-								<option value="period">Период</option>
+								<option value="all"><spring:message code="label.duringalltime"/></option>
+								<option value="today"><spring:message code="label.forallday"/></option>
+								<option value="3days"><spring:message code="label.for3days"/></option>
+								<option value="week"><spring:message code="label.forweek"/></option>
+								<option value="month"><spring:message code="label.formonth"/></option>
+								<option value="quarter"><spring:message code="label.forquartal"/></option>
+								<option value="period"><spring:message code="label.period"/></option>
 							</select>
 						</div>
 						<div class="col-sm-5">
-							<input class="form-control" type="text" id="datepicker" name="duedate" placeholder="дата">
+							<input class="form-control" type="text" id="datepicker" name="duedate" placeholder="<spring:message code="label.date"/>">
 						</div>
 					</div>
 					<div class="form-group">
 						<div class="col-sm-12">
-							<label class="radio-inline"><input type="radio" name="periodtype" value="created" checked="checked">созданы</label>
-							<label class="radio-inline"><input type="radio" name="periodtype" value="updated">изменены</label>
+							<label class="radio-inline"><input type="radio" name="periodtype" value="created" checked="checked"><spring:message code="label.created"/></label>
+							<label class="radio-inline"><input type="radio" name="periodtype" value="updated"><spring:message code="label.edited"/></label>
 						</div>
 					</div>
 					<div class="form-group col-sm-12">
@@ -75,21 +76,21 @@
 							<label class="control-label">Этапы</label>
 						</div>
 						<select class="multipleselect col-sm-12" multiple="multiple" name="dealfilters" id="dealfilters">
-							<option value="withoutdeal">Без сделок</option>
-							<option value="withoutopendeal">Без открытых сделок</option>
-							<option value="firstcontact">Первичный контакт</option>
-							<option value="discussion">Переговоры</option>
-							<option value="takingdesision">Принимают решение</option>
-							<option value="agreement">Согласование договора</option>
-							<option value="success">Успешно реализованно</option>
-							<option value="closedandnotrealised">Закрыто и не реализованно</option>
+							<option value="withoutdeal"><spring:message code="label.withoutdeals"/></option>
+							<option value="withoutopendeal"><spring:message code="label.withoutopendeals"/></option>
+							<option value="firstcontact"><spring:message code="label.dealphase.primary"/></option>
+							<option value="discussion"><spring:message code="label.dealphase.conversation"/></option>
+							<option value="takingdesision"><spring:message code="label.dealphase.makedecision"/></option>
+							<option value="agreement"><spring:message code="label.dealphase.approvalcontract"/></option>
+							<option value="success"><spring:message code="label.dealphase.success"/></option>
+							<option value="closedandnotrealised"><spring:message code="label.dealphase.closedandnotimpl"/></option>
 						</select>
 					</div>
 					<div class="form-group">
 						<div class="col-sm-10">
-							<label for="users">Менеджеры</label>
+							<label for="users"><spring:message code="label.managers"/></label>
 							<select class="form-control" name="user" id="users">
-								<option value="">Не учитывать</option>
+								<option value=""><spring:message code="label.notspecified"/></option>
 								<c:forEach var="user" items="${users}">
 									<option value="${user.id}">${user.name}</option>
 								</c:forEach>
@@ -98,24 +99,24 @@
 					</div>
 					<div class="form-group">
 						<div class="formlable">
-							<label for="tasks" class="control-label">Задачи</label>
+							<label for="tasks" class="control-label"><spring:message code="label.tasks"/></label>
 						</div>
 						<div class="col-sm-12">
 							<select class="form-control" name="tasks" id="tasks">
-								<option value="">Не учитывать</option>
-								<option value="today">На сегодня</option>
-								<option value="tomorow">На завтра</option>
-								<option value="thisweek">На  этой неделе</option>
-								<option value="thismonth">В этом месяце</option>
-								<option value="thisquoter">В этом квартале</option>
-								<option value="notasks">Нет задач</option>
-								<option value="overdue">Просроченны</option>
+								<option value=""><spring:message code="label.notspecified"/></option>
+								<option value="today"><spring:message code="label.fortoday"/></option>
+								<option value="tomorow"><spring:message code="label.fortomorow"/></option>
+								<option value="thisweek"><spring:message code="label.thisweek"/></option>
+								<option value="thismonth"><spring:message code="label.thismonth"/></option>
+								<option value="thisquoter"><spring:message code="label.label.thisquartal"/></option>
+								<option value="notasks"><spring:message code="label.notasks"/></option>
+								<option value="overdue"><spring:message code="label.overduetasks"/></option>
 							</select>
 						</div>
 					</div>
 					<div class="form-group">
 						<div class="col-sm-12">
-							<label for="tags">Теги</label>
+							<label for="tags"><spring:message code="label.tags"/></label>
 							<select class="multipleselect col-sm-12" multiple="multiple" name="tags" id="tags">
 								<c:forEach var="tag" items="${tags}">
 									<option value="${tag.id}">${tag.name}</option>
@@ -123,26 +124,26 @@
 							</select>
 						</div>
 					</div>
-					<input class="btn btn-primary" type="submit" value="Применить">
-					<input class="btn resetbutton" type="reset" value="Сбросить">
+					<input class="btn btn-primary" type="submit" value="<spring:message code="label.submit"/>">
+					<input class="btn resetbutton" type="reset" value="<spring:message code="label.reset"/>">
 				</form>
 			</div>
 			<div class="col-md-7">
 				<ul class="nav nav-pills">
-					<li class="active"><a href="#all" data-toggle="tab">Все</a></li>
-					<li><a href="#contacts" data-toggle="tab">Контакты</a></li>
-					<li><a href="#companies" data-toggle="tab">Компании</a></li>
-					<a class="btn btn-success addtask" href="new_contact_prepare">Добавить контакт</a>
+					<li class="active"><a href="#all" data-toggle="tab"><spring:message code="label.all"/></a></li>
+					<li><a href="#contacts" data-toggle="tab"><spring:message code="label.contacts"/></a></li>
+					<li><a href="#companies" data-toggle="tab"><spring:message code="label.companyes"/></a></li>
+					<a class="btn btn-success addtask" href="new_contact_prepare"><spring:message code="label.addcontact"/></a>
 				</ul>
 				<div class="tab-content">
 					<div class="tab-pane active container-fluid" id="all">
 						<table id="tableData1" class="table table-striped">
 							<thead>
 							<tr>
-								<th>Наименование</th>
-								<th>Компания</th>
-								<th>Телефон</th>
-								<th>E-mail</th>
+								<th><spring:message code="label.name"/></th>
+								<th><spring:message code="label.company"/></th>
+								<th><spring:message code="label.phonenumber"/></th>
+								<th><spring:message code="label.email"/></th>
 							</tr>
 							</thead>
 							<tbody>
@@ -169,10 +170,10 @@
 						<table id="tableData2" class="table table-striped">
 							<thead>
 							<tr>
-								<th>Наименование</th>
-								<th>Компания</th>
-								<th>Телефон</th>
-								<th>E-mail</th>
+								<th><spring:message code="label.name"/></th>
+								<th><spring:message code="label.company"/></th>
+								<th><spring:message code="label.phonenumber"/></th>
+								<th><spring:message code="label.email"/></th>
 							</tr>
 							</thead>
 							<tbody>
@@ -191,9 +192,9 @@
 						<table id="tableData3" class="table table-striped">
 							<thead>
 							<tr>
-								<th>Наименование</th>
-								<th>Телефон</th>
-								<th>E-mail</th>
+								<th><spring:message code="label.name"/></th>
+								<th><spring:message code="label.phonenumber"/></th>
+								<th><spring:message code="label.email"/></th>
 							</tr>
 							</thead>
 							<tbody>

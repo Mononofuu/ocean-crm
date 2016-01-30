@@ -1,16 +1,20 @@
 package com.becomejavasenior.jstl;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.util.*;
 
 /**
  * @author Anton Sakhno <sakhno83@gmail.com>
  */
 public class DayCalendar extends AbstractCalendar {
     private static final long serialVersionUID = 1648295728552039943L;
+    private static final Logger LOGGER = LogManager.getLogger(DayCalendar.class);
 
     @Override
     protected String getDateFormatString() {
@@ -19,6 +23,8 @@ public class DayCalendar extends AbstractCalendar {
 
     @Override
     public int doStartTag() throws JspException {
+        Locale locale = getCurrentLocale();
+        ResourceBundle labels = ResourceBundle.getBundle("messages", locale);
         StringBuilder output = new StringBuilder();
         Calendar startDay = GregorianCalendar.getInstance();
         startDay.set(Calendar.HOUR_OF_DAY, 0);
@@ -29,12 +35,12 @@ public class DayCalendar extends AbstractCalendar {
         output.append("<table class=\"table table-bordered table-striped table-condensed align-table\">");
         output.append(TR);
         output.append("<td width=\"100px\"></td>");
-        SimpleDateFormat dayDateFormat = new SimpleDateFormat("EEEE, d MMMM");
+        SimpleDateFormat dayDateFormat = new SimpleDateFormat("EEEE, d MMMM", locale);
         output.append(TD+dayDateFormat.format(startDay.getTime())+TD_CLOSE);
         output.append(TR_CLOSE);
         //задачи на весь день (по времени 23:59)
         output.append(TR);
-        output.append("<td>Весь день</td>");
+        output.append(TD+labels.getString("label.allday")+TD_CLOSE);
         startDay.set(Calendar.HOUR_OF_DAY, 23);
         startDay.set(Calendar.MINUTE, 59);
         output.append(TD);

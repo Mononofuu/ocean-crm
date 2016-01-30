@@ -10,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.jsp.jstl.core.Config;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -76,7 +77,9 @@ public class TaskListServlet extends HttpServlet{
         c.set(Calendar.MINUTE, 0);
         c.set(Calendar.SECOND, 0);
         c.set(Calendar.MILLISECOND, 0);
-        int nextDay = c.get(Calendar.DAY_OF_MONTH)+1;
+        c.add(Calendar.DAY_OF_MONTH, 1);
+        int nextDay = c.get(Calendar.DAY_OF_MONTH);
+        c.add(Calendar.DAY_OF_MONTH, -1);
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
         while(c.get(Calendar.DAY_OF_MONTH)!=nextDay){
             result.add(dateFormat.format(c.getTime()));

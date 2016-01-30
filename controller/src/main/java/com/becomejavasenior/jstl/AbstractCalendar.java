@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.jstl.core.Config;
 import javax.servlet.jsp.tagext.TagSupport;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -32,6 +33,15 @@ public abstract class AbstractCalendar extends TagSupport{
      */
     protected String getCssClassForCellContent(){
         return "";
+    }
+
+    protected Locale getCurrentLocale(){
+        Locale locale = (Locale) Config.get(pageContext.getSession(), Config.FMT_LOCALE);
+        if(locale!=null){
+            return locale;
+        }else {
+            return new Locale("RU");
+        }
     }
 
     public void setTasks(List<Task> tasks) {
@@ -75,6 +85,7 @@ public abstract class AbstractCalendar extends TagSupport{
     }
 
     protected void generateCellContent(StringBuilder output, Calendar startDay){
+        ResourceBundle labels = ResourceBundle.getBundle("messages", getCurrentLocale());
         List<Task> timetasks = actualTasks.get(dateFormat.format(startDay.getTime()));
         if(timetasks!=null){
             for(Task task: timetasks){
@@ -84,7 +95,7 @@ public abstract class AbstractCalendar extends TagSupport{
                 }else{
                     output.append("\">");
                 }
-                output.append("Тип: "+task.getType()+"<br>");
+                output.append(labels.getString("label.type")+": "+labels.getString(task.getType().toString())+"<br>");
                 output.append(task.getComment()+"<br>");
                 if(task.getSubject()!= null){
                     output.append(task.getSubject().getName());
