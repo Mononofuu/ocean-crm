@@ -1,8 +1,12 @@
 package com.becomejavasenior;
 
+import com.becomejavasenior.config.DaoConfig;
+import com.becomejavasenior.config.DataSourceConfig;
+import com.becomejavasenior.config.ServiceConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -13,9 +17,10 @@ import java.util.List;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 //@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@ContextConfiguration(locations = {"classpath:spring-datasource.xml"})
+@ContextConfiguration(classes = {ServiceConfig.class, DataSourceConfig.class, DaoConfig.class})
 public class UserServiceTest {
     @Autowired
+    @Qualifier("userServiceImpl")
     public UserService userService;
 
     @Test
@@ -27,6 +32,7 @@ public class UserServiceTest {
 
         List<User> userList = null;
         try {
+            newUser = userService.saveUser(newUser);
             userList = userService.getAllUsers();
         } catch (DataBaseException e) {
             e.printStackTrace();
@@ -40,12 +46,6 @@ public class UserServiceTest {
             System.out.println(user.getPassword());
         }
         System.out.println("***************************");
-
-        try {
-            userService.saveUser(newUser);
-        } catch (DataBaseException e) {
-            e.printStackTrace();
-        }
 
     }
 }

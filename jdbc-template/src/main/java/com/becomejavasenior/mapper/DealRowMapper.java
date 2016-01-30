@@ -2,18 +2,14 @@ package com.becomejavasenior.mapper;
 
 import com.becomejavasenior.DataBaseException;
 import com.becomejavasenior.Deal;
-import com.becomejavasenior.impl.ContactTemplateDAOImpl;
-import com.becomejavasenior.impl.CurrencyTemplateDAOImpl;
-import com.becomejavasenior.impl.DealStatusTemplateDAOImpl;
-import com.becomejavasenior.impl.UserTemplateDAOImpl;
 import com.becomejavasenior.interfacedao.ContactDAO;
 import com.becomejavasenior.interfacedao.CurrencyDAO;
 import com.becomejavasenior.interfacedao.DealStatusDAO;
 import com.becomejavasenior.interfacedao.UserDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -24,7 +20,7 @@ public class DealRowMapper implements RowMapper<Deal> {
     private DealStatusDAO dealStatus;
     private CurrencyDAO currencyDAO;
 
-    @Autowired
+//    @Autowired
     public void setUp(UserDAO userDAO, ContactDAO contactDAO, DealStatusDAO dealStatus, CurrencyDAO currencyDAO) {
         this.userDAO = userDAO;
         this.contactDAO = contactDAO;

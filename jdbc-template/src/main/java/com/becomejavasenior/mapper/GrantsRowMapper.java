@@ -3,10 +3,7 @@ package com.becomejavasenior.mapper;
 import com.becomejavasenior.Grants;
 import com.becomejavasenior.impl.RoleTemplateDAOImpl;
 import com.becomejavasenior.impl.UserTemplateDAOImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,15 +11,15 @@ import java.sql.SQLException;
 /**
  * @author Lybachevskiy.Vladislav
  */
-@Component
+//@Component
 public class GrantsRowMapper implements RowMapper<Grants> {
 
-    @Autowired
-    @Qualifier("userDao")
+//    @Autowired
+//    @Qualifier("userDao")
     private UserTemplateDAOImpl myUserDao;
 
-    @Autowired
-    @Qualifier("roleDao")
+//    @Autowired
+//    @Qualifier("roleDao")
     private RoleTemplateDAOImpl myRoleDao;
 
     public Grants mapRow(ResultSet resultSet, int i) throws SQLException {

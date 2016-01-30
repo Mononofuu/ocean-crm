@@ -1,5 +1,6 @@
 package com.becomejavasenior;
 
+import com.becomejavasenior.config.DataSourceConfig;
 import com.becomejavasenior.impl.UserTemplateDAOImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,7 +14,7 @@ import java.util.List;
  * created by Alekseichenko Sergey <mononofuu@gmail.com>
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:spring-datasource.xml"})
+@ContextConfiguration(classes = {DataSourceConfig.class})
 public class UserDAOTest {
     @Autowired
     public UserTemplateDAOImpl userTemplateDAO;
@@ -21,7 +22,7 @@ public class UserDAOTest {
     @Test
     public void testReadAll() throws Exception {
         List<User> userList = userTemplateDAO.readAll();
-        for (User user : userList){
+        for (User user : userList) {
             System.out.println(user.getId());
             System.out.println(user.getName());
             System.out.println(user.getPassword());

@@ -17,6 +17,11 @@ import java.util.Set;
 @Repository
 public class UserDAOImpl extends AbstractJDBCDao<User> implements UserDAO {
 
+    public UserDAOImpl() {
+        super();
+
+    }
+
     private final static Logger LOGGER = LogManager.getLogger(UserDAOImpl.class);
 
     public UserDAOImpl(DaoFactory daoFactory) {

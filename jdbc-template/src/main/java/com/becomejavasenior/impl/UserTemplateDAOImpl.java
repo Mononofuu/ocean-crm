@@ -26,7 +26,7 @@ import java.util.Map;
 public class UserTemplateDAOImpl extends JdbcDaoSupport implements UserDAO {
 
     @Autowired
-    @Qualifier("postgresDS")
+    @Qualifier("")
     private DataSource myDataSource;
 
     @PostConstruct
@@ -39,16 +39,16 @@ public class UserTemplateDAOImpl extends JdbcDaoSupport implements UserDAO {
         try (Connection connection = myDataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement("INSERT INTO users (name, login, password, photo, email, phone_mob, phone_work, language, comment) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);", Statement.RETURN_GENERATED_KEYS)) {
 
-                statement.setString(1, user.getName());
-                statement.setString(2, user.getLogin());
-                statement.setString(3, user.getPassword());
-                statement.setBytes(4, user.getPhoto());
-                statement.setString(5, user.getEmail());
-                statement.setString(6, user.getPhoneHome());
-                statement.setString(7, user.getPhoneWork());
-                statement.setString(8, user.getLanguage() != null ? user.getLanguage().toString() : null);
+            statement.setString(1, user.getName());
+            statement.setString(2, user.getLogin());
+            statement.setString(3, user.getPassword());
+            statement.setBytes(4, user.getPhoto());
+            statement.setString(5, user.getEmail());
+            statement.setString(6, user.getPhoneHome());
+            statement.setString(7, user.getPhoneWork());
+            statement.setString(8, user.getLanguage() != null ? user.getLanguage().toString() : null);
 //            statement.setString(9, object.getComments().toString());
-                statement.setString(9, "");
+            statement.setString(9, "");
 
             statement.executeUpdate();
             // получаем обратно новую запись через возвращенный id записи

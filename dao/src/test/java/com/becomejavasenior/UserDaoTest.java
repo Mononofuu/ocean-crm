@@ -1,9 +1,11 @@
 package com.becomejavasenior;
 
+import com.becomejavasenior.config.DaoConfig;
 import com.becomejavasenior.impl.UserDAOImpl;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.List;
@@ -12,12 +14,13 @@ import java.util.List;
  * created by Alekseichenko Sergey <mononofuu@gmail.com>
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ComponentScan
+@ContextConfiguration(classes = {DaoConfig.class})
 public class UserDaoTest {
     @Autowired
     UserDAOImpl userDAO;
 
-    public void readAllTest(){
+    @Test
+    public void readAllTest() {
         try {
             List<User> userList = userDAO.readAll();
             for (User user : userList) {

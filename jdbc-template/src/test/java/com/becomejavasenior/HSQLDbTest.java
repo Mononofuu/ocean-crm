@@ -1,5 +1,7 @@
 package com.becomejavasenior;
 
+import com.becomejavasenior.config.DaoConfig;
+import com.becomejavasenior.config.DataSourceConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +21,7 @@ import java.sql.Statement;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@ContextConfiguration(locations = {"classpath:spring-datasource.xml"})
+@ContextConfiguration(classes = {DataSourceConfig.class, DaoConfig.class})
 public class HSQLDbTest {
     @Autowired
     DataSource dataSource;
