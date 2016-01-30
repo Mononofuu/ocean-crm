@@ -4,6 +4,7 @@ import com.becomejavasenior.*;
 import com.becomejavasenior.interfacedao.FilterDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -12,12 +13,9 @@ import java.util.List;
 /**
  * created by Alekseichenko Sergey <mononofuu@gmail.com>
  */
+@Repository
 public class FilterDAOImpl extends AbstractJDBCDao<Filter> implements FilterDAO {
     private static final Logger LOGGER = LogManager.getLogger(FilterDAO.class);
-    public FilterDAOImpl(DaoFactory daoFactory) {
-        super(daoFactory);
-    }
-
     @Override
     public String getReadAllQuery() {
         return "SELECT * FROM filter";
@@ -43,17 +41,13 @@ public class FilterDAOImpl extends AbstractJDBCDao<Filter> implements FilterDAO 
     protected List<Filter> parseResultSet(ResultSet rs) throws DataBaseException {
         List<Filter> result = new ArrayList<>();
         try {
-            GenericDao statusDao = getDaoFromCurrentFactory(DealStatus.class);
-            GenericDao contactDao = getDaoFromCurrentFactory(Contact.class);
-            GenericDao userDao = getDaoFromCurrentFactory(User.class);
-
             while (rs.next()) {
                 Filter filter = new Filter();
                 filter.setId(rs.getInt("id"));
 
                 filter.setName(rs.getString("name"));
 
-                User user = (User) userDao.read(rs.getInt("user_id"));
+                User user = userDAO.read(rs.getInt("user_id"));
                 filter.setUser(user);
 
                 FilterPeriod type = FilterPeriod.valueOf(rs.getString("type"));
@@ -64,10 +58,10 @@ public class FilterDAOImpl extends AbstractJDBCDao<Filter> implements FilterDAO 
                 Timestamp dateTo = rs.getTimestamp("date_to");
                 filter.setDate_to(dateTo);
 
-                DealStatus status = (DealStatus) statusDao.read(rs.getInt("status_id"));
+                DealStatus status = dealStatusDAO.read(rs.getInt("status_id"));
                 filter.setStatus(status);
 
-                Contact manager = (Contact) contactDao.read(rs.getInt("manager_id"));
+                Contact manager = contactDAO.read(rs.getInt("manager_id"));
                 filter.setManager(manager);
 
                 FilterTaskType taskType = FilterTaskType.valueOf(rs.getString("tasks"));

@@ -2,6 +2,7 @@ package com.becomejavasenior.impl;
 
 import com.becomejavasenior.*;
 import com.becomejavasenior.interfacedao.FileDAO;
+import org.springframework.stereotype.Repository;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -14,11 +15,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class FileDAOImpl extends AbstractJDBCDao<File> implements FileDAO {
-
-    public FileDAOImpl(DaoFactory daoFactory) {
-        super(daoFactory);
-    }
 
     @Override
     public String getReadAllQuery() {
@@ -34,18 +32,16 @@ public class FileDAOImpl extends AbstractJDBCDao<File> implements FileDAO {
     protected List<File> parseResultSet(ResultSet rs) throws DataBaseException {
         List<File> result = new ArrayList<>();
         try {
-            GenericDao subjectDao = getDaoFromCurrentFactory(Subject.class);
-            GenericDao userDao = getDaoFromCurrentFactory(User.class);
             while (rs.next()) {
                 File file = new File();
                 file.setId(rs.getInt("id"));
-                Subject subject = (Subject) subjectDao.read(rs.getInt("subject_id"));
+                Subject subject = subjectDAO.read(rs.getInt("subject_id"));
                 file.setSubject(subject);
                 file.setName(rs.getString("name"));
                 file.setFileLink(new URL(rs.getString("link")));
                 file.setFileFromDB(rs.getBytes("content"));
                 file.setDateCreated(rs.getDate("created_date"));
-                User user = (User) userDao.read(rs.getInt("user_id"));
+                User user = userDAO.read(rs.getInt("user_id"));
                 file.setUser(user);
                 file.setSize(rs.getInt("size"));
                 result.add(file);

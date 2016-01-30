@@ -1,4 +1,7 @@
 package com.becomejavasenior.interfacedao;
 
-public interface PhoneTypeDAO{
+import com.becomejavasenior.GenericDao;
+import com.becomejavasenior.PhoneType;
+
+public interface PhoneTypeDAO extends GenericDao<PhoneType> {
 }

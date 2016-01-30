@@ -1,7 +1,11 @@
 package com.becomejavasenior.impl;
 
-import com.becomejavasenior.*;
+import com.becomejavasenior.AbstractJDBCDao;
+import com.becomejavasenior.DataBaseException;
+import com.becomejavasenior.Subject;
+import com.becomejavasenior.User;
 import com.becomejavasenior.interfacedao.SubjectDAO;
+import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,11 +14,8 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class SubjectDAOImpl extends AbstractJDBCDao<Subject> implements SubjectDAO {
-
-    public SubjectDAOImpl(DaoFactory daoFactory) {
-        super(daoFactory);
-    }
 
     @Override
     public String getDeleteQuery() {
@@ -30,10 +31,9 @@ public class SubjectDAOImpl extends AbstractJDBCDao<Subject> implements SubjectD
     protected List<Subject> parseResultSet(ResultSet rs) throws DataBaseException {
         List<Subject> result = new ArrayList<>();
         try {
-            GenericDao userDao =  getDaoFromCurrentFactory(User.class);
             while (rs.next()) {
                 Subject subject = new Subject() {};
-                User user = (User)userDao.read(rs.getInt("content_owner_id"));
+                User user = userDAO.read(rs.getInt("content_owner_id"));
                 subject.setUser(user);
                 subject.setId(rs.getInt("id"));
                 subject.setName(rs.getString("name"));

@@ -1,9 +1,12 @@
 package com.becomejavasenior.impl;
 
-import com.becomejavasenior.*;
+import com.becomejavasenior.AbstractJDBCDao;
+import com.becomejavasenior.DataBaseException;
+import com.becomejavasenior.Role;
 import com.becomejavasenior.interfacedao.RoleDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,13 +17,10 @@ import java.util.List;
 /**
  * @author Lybachevskiy.Vladislav
  */
+@Repository
 public class RoleDAOImpl extends AbstractJDBCDao<Role> implements RoleDAO {
 
     private final static Logger LOGGER = LogManager.getLogger(GrantsDAOImpl.class);
-
-    public RoleDAOImpl(DaoFactory daoFactory) {
-        super(daoFactory);
-    }
 
     @Override
     public String getReadAllQuery() {
@@ -73,8 +73,7 @@ public class RoleDAOImpl extends AbstractJDBCDao<Role> implements RoleDAO {
     @Override
     protected void prepareStatementForUpdate(PreparedStatement statement, Role object) throws DataBaseException {
         try {
-            GenericDao roleDao = getDaoFromCurrentFactory(Role.class);
-            roleDao.update(object);
+            roleDAO.update(object);
             statement.setString(1, object.getName());
             statement.setString(2, object.getDescription());
         } catch (SQLException e) {

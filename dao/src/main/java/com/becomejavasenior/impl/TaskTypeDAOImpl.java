@@ -1,10 +1,10 @@
 package com.becomejavasenior.impl;
 
 import com.becomejavasenior.AbstractJDBCDao;
-import com.becomejavasenior.DaoFactory;
 import com.becomejavasenior.DataBaseException;
 import com.becomejavasenior.TaskType;
 import com.becomejavasenior.interfacedao.TaskTypeDAO;
+import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,11 +15,8 @@ import java.util.List;
 /**
  * @author Anton Sakhno <sakhno83@gmail.com>
  */
+@Repository
 public class TaskTypeDAOImpl extends AbstractJDBCDao<TaskType> implements TaskTypeDAO {
-
-    public TaskTypeDAOImpl(DaoFactory daoFactory) {
-        super(daoFactory);
-    }
 
     @Override
     public String getReadAllQuery() {

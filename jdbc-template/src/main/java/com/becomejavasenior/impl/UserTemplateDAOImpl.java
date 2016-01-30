@@ -7,10 +7,8 @@ import com.becomejavasenior.User;
 import com.becomejavasenior.interfacedao.UserDAO;
 import com.becomejavasenior.mapper.UserRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
-import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
@@ -22,11 +20,9 @@ import java.util.Map;
 /**
  * @author Lybachevskiy.Vladislav
  */
-@Repository
 public class UserTemplateDAOImpl extends JdbcDaoSupport implements UserDAO {
 
     @Autowired
-    @Qualifier("")
     private DataSource myDataSource;
 
     @PostConstruct

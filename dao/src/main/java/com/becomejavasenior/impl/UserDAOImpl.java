@@ -17,16 +17,7 @@ import java.util.Set;
 @Repository
 public class UserDAOImpl extends AbstractJDBCDao<User> implements UserDAO {
 
-    public UserDAOImpl() {
-        super();
-
-    }
-
     private final static Logger LOGGER = LogManager.getLogger(UserDAOImpl.class);
-
-    public UserDAOImpl(DaoFactory daoFactory) {
-        super(daoFactory);
-    }
 
     @Override
     public String getDeleteQuery() {
@@ -102,8 +93,7 @@ public class UserDAOImpl extends AbstractJDBCDao<User> implements UserDAO {
     @Override
     protected void prepareStatementForUpdate(PreparedStatement statement, User object) throws DataBaseException {
         try {
-            GenericDao userDao = getDaoFromCurrentFactory(User.class);
-            userDao.update(object);
+            update(object);
             statement.setString(1, object.getName());
             statement.setString(2, object.getLogin());
             statement.setString(3, object.getPassword());
