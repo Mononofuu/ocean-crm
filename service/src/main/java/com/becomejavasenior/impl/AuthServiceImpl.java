@@ -28,7 +28,7 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     public UserDAO userDAO;
 
-    public static String getEncryptedPassword(String password, String salt)
+    public String getEncryptedPassword(String password, String salt)
             throws NoSuchAlgorithmException, InvalidKeySpecException {
         String algorithm = "PBKDF2WithHmacSHA1";
         int derivedKeyLength = 45;

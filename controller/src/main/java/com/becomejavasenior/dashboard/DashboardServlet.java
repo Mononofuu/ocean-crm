@@ -1,14 +1,13 @@
 package com.becomejavasenior.dashboard;
 
 import com.becomejavasenior.DataBaseException;
-import com.becomejavasenior.impl.*;
-import com.becomejavasenior.interfacedao.CompanyDAO;
-import com.becomejavasenior.interfacedao.ContactDAO;
+import com.becomejavasenior.interfacedao.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -23,20 +22,21 @@ import java.io.IOException;
 public class DashboardServlet extends HttpServlet {
     private final static Logger LOGGER = LogManager.getLogger(DashboardServlet.class);
 
-    private ApplicationContext context;
-    private DealTemplateDAOImpl dealDAO;
-    private TaskTemplateDAOImpl taskDAO;
-    private ContactDAO contactDAO;
+    @Autowired
     private CompanyDAO companyDAO;
-    private EventTemplateDAOImpl eventDAO;
+    @Autowired
+    private ContactDAO contactDAO;
+    @Autowired
+    private TaskDAO taskDAO;
+    @Autowired
+    private DealDAO dealDAO;
+    @Autowired
+    private EventDAO eventDAO;
 
-    public DashboardServlet() throws DataBaseException {
-        context = new ClassPathXmlApplicationContext("spring-datasource.xml");
-        dealDAO = (DealTemplateDAOImpl) context.getBean("dealDAO");
-        taskDAO = (TaskTemplateDAOImpl) context.getBean("taskDAO");
-        contactDAO = (ContactDAO) context.getBean("contactDAO");
-        companyDAO = (CompanyDAO) context.getBean("companyDAO");
-        eventDAO = (EventTemplateDAOImpl) context.getBean("eventDAO");
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this,
+                config.getServletContext());
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -54,16 +54,16 @@ public class DashboardServlet extends HttpServlet {
         request.setAttribute("dealsWithoutTasks", dealDAO.findTotalDealsWithoutTasks());
         request.setAttribute("successDeals", dealDAO.findTotalSuccessDeals());
         request.setAttribute("unsuccessClosedDeals", dealDAO.findTotalUnsuccessClosedDeals());
-        request.setAttribute("tasksInProgress", taskDAO.findTotalTasksInProgress());
-        request.setAttribute("finishedTasks", taskDAO.findTotalFinishedTasks());
-        request.setAttribute("overdueTasks", taskDAO.findTotalOverdueTasks());
+//        request.setAttribute("tasksInProgress", taskDAO.findTotalTasksInProgress());
+//        request.setAttribute("finishedTasks", taskDAO.findTotalFinishedTasks());
+//        request.setAttribute("overdueTasks", taskDAO.findTotalOverdueTasks());
         try {
             request.setAttribute("contacts", contactDAO.findTotalEntryes());
             request.setAttribute("companies", companyDAO.findTotalEntryes());
         } catch (DataBaseException e) {
             LOGGER.error(e);
         }
-        request.setAttribute("events", eventDAO.readLastEvents());
+//        request.setAttribute("events", eventDAO.readLastEvents());
         getServletContext().getRequestDispatcher("/dashboard.jsp").forward(request, response);
     }
 
