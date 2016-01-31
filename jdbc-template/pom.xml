@@ -7,7 +7,6 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>jdbc-template</artifactId>
-    <packaging>war</packaging>
     <dependencies>
         <dependency>
             <groupId>org.springframework</groupId>
