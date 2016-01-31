@@ -1,11 +1,14 @@
 package com.becomejavasenior;
 
-import com.becomejavasenior.impl.*;
+import com.becomejavasenior.impl.TaskServiceImpl;
 import com.google.gson.Gson;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -22,14 +25,26 @@ import java.util.*;
 public class DealController extends HttpServlet {
     private static final Logger LOGGER = LogManager.getLogger(DealController.class);
     private static final String NEXT_JSP = "/jsp/newdeal.jsp";
-    private static DealService dealService = new DealServiceImpl();
-    private static ContactService contactService = new ContactServiceImpl();
-    private static CompanyService companyService = new CompanyServiceImpl();
-    private static UserService userService = new UserServiceImpl();
-    private static CurrencyService currencyService = new CurrencyServiceImpl();
-    private static TagService tagService = new TagServiceImpl();
-    private static CommentService commentService = new CommentServiceImpl();
+    @Autowired
+    private DealService dealService;
+    @Autowired
+    private ContactService contactService;
+    @Autowired
+    private CompanyService companyService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private CurrencyService currencyService;
+    @Autowired
+    private TagService tagService;
+    @Autowired
+    private CommentService commentService;
 
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this,
+                config.getServletContext());
+    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
