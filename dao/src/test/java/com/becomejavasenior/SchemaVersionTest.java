@@ -72,7 +72,6 @@ public class SchemaVersionTest {
                     }
                 }
             }
-
             for(Map.Entry<Double, String> entry: files.entrySet()){
                 String[] queryes = entry.getValue().split(";");
                 for (String query: queryes){
