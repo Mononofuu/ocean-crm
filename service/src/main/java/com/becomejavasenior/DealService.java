@@ -9,13 +9,6 @@ import java.util.List;
  */
 public interface DealService {
 
-    int CONDITION_DEALS_OPENED = 1;
-    int CONDITION_DEALS_SUCCESS = 2;
-    int CONDITION_DEALS_CLOSED_AND_NOT_IMPLEMENTED = 3;
-    int CONDITION_DEALS_WITHOUT_TASKS = 4;
-    int CONDITION_DEALS_WITH_EXPIRED_TASKS = 5;
-    int CONDITION_DEALS_DELETED = 6;
-
     Deal findDealById(int id) throws DataBaseException;
 
     Deal saveDeal(Deal deal) throws DataBaseException;
@@ -32,7 +25,7 @@ public interface DealService {
 
     List<Deal> findDealsByTags(String tag) throws DataBaseException;
 
-    List<Deal> findDealsByConditions(int condition) throws DataBaseException;
+    List<Deal> findDealsByConditions(DealFilters filter) throws DataBaseException;
 
     List<Deal> findDealsByCreatedDateInterval(Date dateBegin, Date dateEnd) throws DataBaseException;
 

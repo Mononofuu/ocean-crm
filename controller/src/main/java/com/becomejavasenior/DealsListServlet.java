@@ -21,11 +21,11 @@ import java.util.List;
 @WebServlet("/dealslist")
 public class DealsListServlet extends HttpServlet{
     private final static Logger LOGGER = LogManager.getLogger(DealsListServlet.class);
-    private static DaoFactory dao;
+    private static DaoFactory daoFactory;
 
     static {
         try {
-            dao = new PostgreSqlDaoFactory();
+            daoFactory = new PostgreSqlDaoFactory();
         } catch (DataBaseException e) {
             LOGGER.error("Error init DAO for dealslist.jsp", e);
         }
@@ -57,8 +57,8 @@ public class DealsListServlet extends HttpServlet{
 
             List<Deal> dealsList = new ArrayList<>();
 
-            GenericDao<DealStatus> dealStatusDao = dao.getDao(DealStatus.class);
-            GenericDao<User> userDao = dao.getDao(User.class);
+            GenericDao<DealStatus> dealStatusDao = daoFactory.getDao(DealStatus.class);
+            GenericDao<User> userDao = daoFactory.getDao(User.class);
 
             DealService dealService = new DealServiceImpl();
 

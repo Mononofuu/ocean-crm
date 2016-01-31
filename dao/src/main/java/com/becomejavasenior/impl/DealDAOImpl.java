@@ -12,6 +12,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static com.becomejavasenior.DealFilters.*;
+
 /**
  * created by Alekseichenko Sergey <mononofuu@gmail.com>
  */
@@ -300,33 +302,28 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
         return result;
     }
 
+
     @Override
-    public List<Deal> readAllWithConditions(int condition ) throws DataBaseException {
+    public List<Deal> readAllWithConditions(DealFilters condition ) throws DataBaseException {
         List<Deal> result = new ArrayList<>();
         String sql;
         switch (condition){
-            // opened deals
-            case 1:
+            case OPENED:
                 sql = getReadAllQuery() + DEAL_SELECT_OPENED;
                 break;
-            // success deals
-            case 2:
+            case SUCCESS:
                 sql = getReadAllQuery() + DEAL_SELECT_SUCCESS;
                 break;
-            // deals closed and not implemented
-            case 3:
+            case CLOSED:
                 sql = getReadAllQuery() + DEAL_SELECT_CLOSED_AND_NOT_IMPLEMENTED;
                 break;
-            // deals without tasks
-            case 4:
+            case WITHOUT_TASKS:
                 sql = getReadAllQuery() + DEAL_SELECT_WITHOUT_TASKS;
                 break;
-            // deals with expired tasks
-            case 5:
+            case WITH_EXPIRED_TASKS:
                 sql = getReadAllQuery() + DEAL_SELECT_WITH_EXPIRED_TASKS;
                 break;
-            // deleted deals
-            case 6:
+            case DELETED:
                 sql = getReadAllQuery() + DEAL_SELECT_DELETED;
                 break;
             default:
@@ -334,8 +331,7 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
         }
         try{
             PreparedStatement statement = getConnection().prepareStatement(sql);
-            // deals with expired tasks
-            if(condition==5){
+            if(condition == WITH_EXPIRED_TASKS){
                 statement.setDate(1, new Date(System.currentTimeMillis()));
             }
             ResultSet rs = statement.executeQuery();
@@ -345,6 +341,7 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
         }
         return result;
     }
+
 
     @Override
     public List<Deal> readAllByCreatedDateInterval(Date dateBegin, Date dateEnd) throws DataBaseException{

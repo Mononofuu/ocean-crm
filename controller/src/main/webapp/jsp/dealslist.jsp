@@ -6,6 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <style>
@@ -17,7 +18,7 @@
 <!--<link href="../css/dealslist.css" rel="stylesheet" type="text/css">-->
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Список сделок</title>
+    <title><spring:message code="label.dealslist"/></title>
     <jsp:include page="../jsp/menu.jsp" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.17/jquery-ui.min.js"></script>
@@ -48,29 +49,29 @@
 
 
         <div class="form-group">
-            <button class="btn btn-default" onclick="location.href= '/dealspyramid'">Воронка</button>
-            <button class="btn btn-default" onclick="location.href= '/deal'">Добавить сделку</button>
+            <button class="btn btn-default" onclick="location.href= '/dealspyramid'"><spring:message code="label.pyramid"/></button>
+            <button class="btn btn-default" onclick="location.href= '/deal'"><spring:message code="label.adddeal"/></button>
         </div>
 
 
 
     <form action="/dealslist" method="post" class="well col-xs-3">
-        <h3>Фильтры</h3>
+        <h3><spring:message code="label.filters"/></h3>
         <div class="form-group">
-            <select class="form-control" name="selectedfilter" title="Стандартные фильтры" size="8">
-                <option value="" selected>Без стандартных фильтров</option>
-                <option value="open">Открытые сделки</option>
-                <option value="my">Только мои сделки</option>
-                <option value="success">Успешно завершенные</option>
-                <option value="fail">Нереализованные сделки</option>
-                <option value="notask">Сделки без задач</option>
-                <option value="expired">Сделки c просроченными задачами</option>
-                <option value="deleted">Удаленные</option>
+            <select class="form-control" name="selectedfilter" title=<spring:message code="label.filtersstandart"/> size="8">
+                <option value="" selected><spring:message code="label.filterswithoutstandart"/></option>
+                <option value="open"><spring:message code="label.opendeals"/></option>
+                <option value="my"><spring:message code="label.mydeals"/></option>
+                <option value="success"><spring:message code="label.completeddeals"/></option>
+                <option value="fail"><spring:message code="label.unrealizeddeals"/></option>
+                <option value="notask"><spring:message code="label.dealswotasks"/></option>
+                <option value="expired"><spring:message code="label.dealswoverduetasks"/></option>
+                <option value="deleted"><spring:message code="label.deleted"/></option>
             </select>
         </div>
 
         <div class="form-group">
-            <input class="form-control" type="text" name="name" placeholder="Название фильтра"/>
+            <input class="form-control" type="text" name="name" placeholder=<spring:message code="label.filtername"/>/>
             <select class="form-control" id="when" name="when" title="Когда">
                 <c:forEach items="${filterperiod}" var="item">
                     <option value="${item}">${item.toString()}</option>
@@ -114,26 +115,26 @@
         </div>
 
         <div class="form-group">
-            <input type="text" class="form-control" name="tags" placeholder="Теги">
+            <input type="text" class="form-control" name="tags" placeholder=<spring:message code="label.tags"/>>
         </div>
 
         <div class="form-group">
-            <button class="btn btn-default" type="submit" name="action" value="applyfilter">Применить фильтр</button>
-            <button class="btn btn-default" type="submit" name="action" value="savefilter">Сохранить фильтр</button>
+            <button class="btn btn-default" type="submit" name="action" value="applyfilter"><spring:message code="label.applyfilter"/></button>
+            <button class="btn btn-default" type="submit" name="action" value="savefilter"><spring:message code="label.save"/></button>
         </div>
 
     </form>
 
     <div class="table-responsive col-xs-7">
-        <h3>Список сделок</h3>
+        <h3><spring:message code="label.dealslist"/></h3>
         <table class="table table-striped table-bordered table-hover table-condensed">
             <thead>
             <tr>
-                <th>Название сделки</th>
-                <th>Основной контакт</th>
-                <th>Компания</th>
-                <th>Этап сделки</th>
-                <th>Бюджет</th>
+                <th><spring:message code="label.dealname"/></th>
+                <th><spring:message code="label.maincontact"/></th>
+                <th><spring:message code="label.company"/></th>
+                <th><spring:message code="label.dealphasename"/></th>
+                <th><spring:message code="label.budget"/></th>
             </tr>
             </thead>
             <tbody>

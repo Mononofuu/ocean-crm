@@ -6,13 +6,14 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <style>
     <%@include file='../css/bootstrap.css' %>
 </style>
 
 <html>
 <head>
-    <title>Редактирование примечания</title>
+    <title><spring:message code="label.commentedit"/></title>
 </head>
 <body>
 
@@ -29,14 +30,14 @@
     <fieldset>
 
 
-        <legend>Редактирование примечания</legend>
+        <legend><spring:message code="label.commentedit"/></legend>
 
         <input type="hidden" name="id" value="${comment.id}">
         <input type="hidden" name="subjectid" value="${subjectid}">
         <input type="hidden" name="backurl" value="${backurl}">
 
         <div class="form-group">
-            <label class="col-md-2 control-label" for="commenttext">Текст</label>
+            <label class="col-md-2 control-label" for="commenttext"><spring:message code="label.comment"/></label>
             <div class="col-md-4">
                 <input id="commenttext" name="commenttext" type="text" placeholder="" class="form-control input-md" required="" value="${comment.text}">
             </div>
@@ -45,8 +46,8 @@
         <div class="form-group">
             <label class="col-md-2 control-label" for="btn_comment_save"></label>
             <div class="col-md-2">
-                <button id="btn_comment_save" name="btn_comment_save" class="btn btn-default">Записать</button>
-                <button id="btn_comment_cancel" name="btn_comment_cancel" class="btn btn-default" onclick="window.history.back()">Отмена</button>
+                <button id="btn_comment_save" name="btn_comment_save" class="btn btn-default"><spring:message code="label.save"/></button>
+                <button id="btn_comment_cancel" name="btn_comment_cancel" class="btn btn-default" onclick="window.history.back()"><spring:message code="label.cancel"/></button>
             </div>
             <div class="col-md-2">
             </div>

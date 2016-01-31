@@ -6,6 +6,7 @@
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <style>
     <%@include file='../css/bootstrap.css' %>
@@ -13,7 +14,7 @@
 </style>
 <html>
 <head>
-    <title>Редактирование сделки</title>
+    <title><spring:message code="label.dealedit"/></title>
 
     <script src="../resources/js/jquery-1.11.3.min.js" type="text/javascript"></script>
     <script src="../resources/js/bootstrap.min.js" type="text/javascript"></script>
@@ -26,12 +27,12 @@
 </div>
 <div class="col-xs-10">
 
-    <h3>Редактирование сделки</h3>
+    <h3><spring:message code="label.dealedit"/></h3>
     <div class="tabbable tabs-below col-md-10">
         <ul class="nav nav-tabs">
-            <li class="active"><a href="#common" data-toggle="tab">Общая информация</a></li>
-            <li><a href="#contacts" data-toggle="tab">Контакты</a></li>
-            <li><a href="#tasks" data-toggle="tab">Задачи и примечания</a></li>
+            <li class="active"><a href="#common" data-toggle="tab"><spring:message code="label.commoninformation"/></a></li>
+            <li><a href="#contacts" data-toggle="tab"><spring:message code="label.contacts"/></a></li>
+            <li><a href="#tasks" data-toggle="tab"><spring:message code="label.tasksandcomments"/></a></li>
         </ul>
 
         <div class="tab-content">
@@ -42,14 +43,14 @@
                         <input type="hidden" name="id" value="${deal.id}">
 
                         <div class="form-group">
-                            <label class="col-md-2 control-label" for="name">Наименование</label>
+                            <label class="col-md-2 control-label" for="name"><spring:message code="label.tasksandcomments"/></label>
                             <div class="col-md-4">
                                 <input id="name" name="name" type="text" placeholder="" class="form-control input-md" required="" value="${deal.name}" >
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="col-md-2 control-label" for="company">Компания</label>
+                            <label class="col-md-2 control-label" for="company"><spring:message code="label.company"/></label>
                             <div class="col-md-4">
                                 <select id="company" name="company" class="form-control">
                                     <c:forEach items="${companies}" var="company">
@@ -72,7 +73,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-md-2 control-label" for="maincontact">Основной контакт</label>
+                            <label class="col-md-2 control-label" for="maincontact"><spring:message code="label.maincontact"/></label>
                             <div class="col-md-4">
                                 <select id="maincontact" name="maincontact" class="form-control">
                                     <option value="0">Не выбран</option>
@@ -96,14 +97,14 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-md-2 control-label" for="tags">Теги</label>
+                            <label class="col-md-2 control-label" for="tags"><spring:message code="label.tags"/></label>
                             <div class="col-md-4">
                                 <input id="tags" name="tags" type="text" placeholder="" class="form-control input-md" value="${tags}">
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="col-md-2 control-label" for="user">Ответственный</label>
+                            <label class="col-md-2 control-label" for="user"><spring:message code="label.responsible"/></label>
                             <div class="col-md-4">
                                 <select id="user" name="user" class="form-control">
                                     <c:forEach items="${users}" var="user">
@@ -121,7 +122,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-md-2 control-label" for="budget">Бюджет</label>
+                            <label class="col-md-2 control-label" for="budget"><spring:message code="label.budget"/></label>
                             <div class="col-md-4">
                                 <input id="budget" name="budget" type="text" placeholder="" class="form-control input-md" required="" value="${deal.budget}">
                             </div>
@@ -146,7 +147,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-md-2 control-label" for="dealstatus">Этап</label>
+                            <label class="col-md-2 control-label" for="dealstatus"><spring:message code="label.dealstatus"/></label>
                             <div class="col-md-4">
                                 <select id="dealstatus" name="dealstatus" class="form-control">
                                     <c:forEach items="${deal_statuses}" var="status">
@@ -166,7 +167,7 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label" for="btndealsave"></label>
                             <div class="col-md-4">
-                                <button type="submit" class="btn btn-default navbar-btn" value="deal" name="submit" id="btndealsave">Записать</button>
+                                <button type="submit" class="btn btn-default navbar-btn" value="deal" name="submit" id="btndealsave"><spring:message code="label.save"/></button>
                             </div>
                         </div>
 
@@ -196,7 +197,7 @@
                                         <fieldset>
 
                                             <div class="form-group">
-                                                <label class="col-xs-2 control-label" for="contactname${contact.id}">Имя</label>
+                                                <label class="col-xs-2 control-label" for="contactname${contact.id}"><spring:message code="label.name"/></label>
                                                 <div class="col-xs-8">
                                                     <input id="contactname${contact.id}" name="contactname${contact.id}" type="text" placeholder="" class="form-control input-md" value="${contact.name}">
 
@@ -204,7 +205,7 @@
                                             </div>
 
                                             <div class="form-group">
-                                                <label class="col-xs-2 control-label" for="contactcompany${contact.id}">Компания</label>
+                                                <label class="col-xs-2 control-label" for="contactcompany${contact.id}"><spring:message code="label.company"/></label>
                                                 <div class="col-xs-8">
                                                     <select id="contactcompany${contact.id}" name="contactcompany${contact.id}" class="form-control">
                                                         <c:forEach items="${companies}" var="company">
@@ -227,7 +228,7 @@
                                             </div>
 
                                             <div class="form-group">
-                                                <label class="col-xs-2 control-label" for="contactpost${contact.id}">Должность</label>
+                                                <label class="col-xs-2 control-label" for="contactpost${contact.id}"><spring:message code="label.position"/></label>
                                                 <div class="col-xs-8">
                                                     <input id="contactpost${contact.id}" name="contactpost${contact.id}" type="text" placeholder="" class="form-control input-md" value="${contact.post}">
 
@@ -235,7 +236,7 @@
                                             </div>
 
                                             <div class="form-group">
-                                                <label class="col-xs-2 control-label" for="contactphone${contact.id}">Номер телефона</label>
+                                                <label class="col-xs-2 control-label" for="contactphone${contact.id}"><spring:message code="label.phonenumber"/></label>
                                                 <div class="col-xs-8">
                                                     <input id="contactphone${contact.id}" name="contactphone${contact.id}" type="text" placeholder="" class="form-control input-md" required="" value="${contact.phone}">
 
@@ -261,7 +262,7 @@
                                             </div>
 
                                             <div class="form-group">
-                                                <label class="col-xs-2 control-label" for="contactuser${contact.id}">Ответственный</label>
+                                                <label class="col-xs-2 control-label" for="contactuser${contact.id}"><spring:message code="label.responsible"/></label>
                                                 <div class="col-xs-8">
                                                     <select id="contactuser${contact.id}" name="contactuser${contact.id}" class="form-control">
                                                         <c:forEach items="${users}" var="user">
@@ -294,30 +295,22 @@
 
                                             <label class="col-md-2 control-label" for="button_savecontact${contact.id}"></label>
                                             <div class="col-md-2">
-                                                <button id="button_savecontact${contact.id}" name="button_updatecontact${contact.id}" value="save" class="btn btn-default navbar-btn">Записать</button>
+                                                <button id="button_savecontact${contact.id}" name="button_updatecontact${contact.id}" value="save" class="btn btn-default navbar-btn"><spring:message code="label.save"/></button>
                                             </div>
                                             <div class="col-md-2">
-                                                <button id="button_deletecontact${contact.id}" name="button_updatecontact${contact.id}" value="delete" class="btn btn-default navbar-btn">Удалить из сделки</button>
+                                                <button id="button_deletecontact${contact.id}" name="button_updatecontact${contact.id}" value="delete" class="btn btn-default navbar-btn"><spring:message code="label.deletefromdeal"/></button>
                                             </div>
                                         </fieldset>
-
                                     </form>
-
-
-
                                 </div>
-
                             </div>
-
                         </div>
-
                     </c:forEach>
-
                     <div class="panel panel-primary">
                         <div class="panel-heading">
                             <h4 class="panel-title">
                                 <a data-toggle="collapse" data-parent="#accordion" href="#accordionnew">
-                                    Добавить ...
+                                    <spring:message code="label.add"/> ...
                                 </a>
                             </h4>
                         </div>
@@ -332,7 +325,7 @@
                                                     <div class="tab-content col-xs-8">
 
                                                         <div class="form-group">
-                                                            <label class="col-xs-2 control-label" for="newcontact">Имя</label>
+                                                            <label class="col-xs-2 control-label" for="newcontact"><spring:message code="label.name"/></label>
                                                             <div class="col-xs-8">
                                                                 <select id="newcontact" name="newcontact" class="form-control">
                                                                     <c:forEach items="${contacts}" var="contact">
@@ -343,7 +336,7 @@
                                                         </div>
                                                         <label class="col-md-2 control-label" for="button_addcontact"></label>
                                                         <div class="col-md-2">
-                                                            <button type="submit" id="button_addcontact" value="dealcontactadd" name="submit" class="btn btn-default navbar-btn">Добавить контакт</button>
+                                                            <button type="submit" id="button_addcontact" value="dealcontactadd" name="submit" class="btn btn-default navbar-btn"><spring:message code="label.contactadd"/></button>
                                                         </div>
                                                     </div>
                                                 </fieldset>
@@ -360,13 +353,13 @@
             <div class="tab-pane container-fluid" id="tasks">
 
                 <div class="table-responsive col-xs-12">
-                    <h3>Примечания</h3>
+                    <h3><spring:message code="label.comments"/></h3>
                     <table class="table table-striped table-bordered table-hover table-condensed">
                         <thead>
                         <tr>
-                            <th>Дата и время создания</th>
-                            <th>Имя пользователя</th>
-                            <th>Комментарий</th>
+                            <th><spring:message code="label.creationdate"/></th>
+                            <th><spring:message code="label.username"/></th>
+                            <th><spring:message code="label.comment"/></th>
                             <th></th>
                             <th></th>
                         </tr>
@@ -378,25 +371,25 @@
                                 <td>${comment.user.name}</td>
                                 <td>${comment.text}</td>
                                 <td>
-                                    <a href="/commentedit?action=edit&id=${comment.id}&backurl=/dealedit?action=edit&subjectid=${deal.id}">Изменить</a></td>
+                                    <a href="/commentedit?action=edit&id=${comment.id}&backurl=/dealedit?action=edit&subjectid=${deal.id}"><spring:message code="label.edit"/></a></td>
                                 </td>
                                 <td>
-                                    <a href="/commentedit?action=delete&id=${comment.id}&backurl=/dealedit?action=edit&subjectid=${deal.id}">Удалить</a></td>
+                                    <a href="/commentedit?action=delete&id=${comment.id}&backurl=/dealedit?action=edit&subjectid=${deal.id}"><spring:message code="label.delete"/></a></td>
                             </tr>
                         </c:forEach>
                         </tbody>
                     </table>
-                    <a href="/commentedit?action=edit&id=0&backurl=/dealedit?action=edit&subjectid=${deal.id}">Добавить примечание</a></td>
+                    <a href="/commentedit?action=edit&id=0&backurl=/dealedit?action=edit&subjectid=${deal.id}"><spring:message code="label.addcomment"/></a></td>
 
-                    <h3>Задачи</h3>
+                    <h3><spring:message code="label.tasks"/></h3>
                     <table class="table table-striped table-bordered table-hover table-condensed">
                         <thead>
                         <tr>
-                            <th>Дата создания</th>
-                            <th>Дата завершения</th>
-                            <th>Имя пользователя</th>
-                            <th>Тип</th>
-                            <th>Текст задачи</th>
+                            <th><spring:message code="label.creationdate"/></th>
+                            <th><spring:message code="label.dateend"/></th>
+                            <th><spring:message code="label.username"/></th>
+                            <th><spring:message code="label.tasktype"/></th>
+                            <th><spring:message code="label.tasknote"/></th>
                             <th></th>
                             <th></th>
                             <th></th>
@@ -416,18 +409,18 @@
                                         <td></td>
                                     </c:when>
                                     <c:otherwise>
-                                        <td><a href="/taskedit?action=edit&id=${task.id}&backurl=/dealedit?action=edit&subjectid=${deal.id}">Изменить</a></td>
-                                        <td><a href="/taskedit?action=delete&id=${task.id}&backurl=/dealedit?action=edit&subjectid=${deal.id}">Удалить</a></td>
+                                        <td><a href="/taskedit?action=edit&id=${task.id}&backurl=/dealedit?action=edit&subjectid=${deal.id}"><spring:message code="label.edit"/></a></td>
+                                        <td><a href="/taskedit?action=delete&id=${task.id}&backurl=/dealedit?action=edit&subjectid=${deal.id}"><spring:message code="label.delete"/></a></td>
                                     </c:otherwise>
                                 </c:choose>
                                 <c:choose>
                                     <c:when test="${task.isClosed == 1}">
-                                        <td>Закрыта</td>
+                                        <td><spring:message code="label.taskclosed"/></td>
                                     </c:when>
                                     <c:otherwise>
                                         <c:choose>
                                             <c:when test="${task.isDeleted == 1}">
-                                                <td>Удалена</td>
+                                                <td><spring:message code="label.taskdeleted"/></td>
                                             </c:when>
                                             <c:otherwise>
                                                 <td></td>
@@ -439,7 +432,7 @@
                         </c:forEach>
                         </tbody>
                     </table>
-                    <a href="/taskedit?action=edit&id=0&backurl=/dealedit?action=edit&subjectid=${deal.id}">Добавить задачу</a></td>
+                    <a href="/taskedit?action=edit&id=0&backurl=/dealedit?action=edit&subjectid=${deal.id}"><spring:message code="label.taskadd"/></a></td>
                 </div>
 
             </div>

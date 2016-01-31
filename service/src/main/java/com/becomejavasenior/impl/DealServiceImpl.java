@@ -89,7 +89,7 @@ public class DealServiceImpl implements com.becomejavasenior.DealService {
     }
 
     @Override
-    public List<Deal> findDealsByConditions(int condition) throws DataBaseException {
+    public List<Deal> findDealsByConditions(DealFilters condition) throws DataBaseException {
         List<Deal> dealList = dealDao.readAllWithConditions(condition);
         return dealList;
     }

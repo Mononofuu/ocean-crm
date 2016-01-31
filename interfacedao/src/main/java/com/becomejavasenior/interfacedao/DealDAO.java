@@ -2,6 +2,7 @@ package com.becomejavasenior.interfacedao;
 
 import com.becomejavasenior.DataBaseException;
 import com.becomejavasenior.Deal;
+import com.becomejavasenior.DealFilters;
 import com.becomejavasenior.GenericDao;
 
 import java.sql.Date;
@@ -16,7 +17,7 @@ public interface DealDAO  extends GenericDao<Deal> {
     public List<Deal> readStatusFilter(int statusId) throws DataBaseException;
     public List<Deal> readUserFilter(int userId) throws DataBaseException;
     public List<Deal> readTagFilter(String tag) throws DataBaseException;
-    public List<Deal> readAllWithConditions(int condition) throws DataBaseException;
+    public List<Deal> readAllWithConditions(DealFilters condition) throws DataBaseException;
     public List<Deal> readAllByCreatedDateInterval(Date dateBegin, Date dateEnd) throws DataBaseException;
     public List<Deal> readAllByTasksDueDateInterval(Date dateBegin, Date dateEnd) throws DataBaseException;
 

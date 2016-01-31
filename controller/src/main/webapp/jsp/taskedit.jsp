@@ -8,6 +8,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="cal" uri="/WEB-INF/callendarTag" %>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <style>
     <%@include file='../css/bootstrap.css' %>
@@ -15,7 +16,7 @@
 
 <html>
 <head>
-    <title>Редактирование задачи</title>
+    <title><spring:message code="label.taskedit"/></title>
     <link href="../resources/css/tasklist.css" rel="stylesheet" type="text/css"/>
     <script src="../resources/js/jquery-1.11.3.min.js" type="text/javascript"></script>
     <script src="../resources/js/bootstrap.min.js" type="text/javascript"></script>
@@ -44,28 +45,28 @@
     <fieldset>
 
 
-        <legend>Редактирование задачи</legend>
+        <legend><spring:message code="label.taskedit"/></legend>
 
         <input type="hidden" name="id" value="${task.id}">
         <input type="hidden" name="subjectid" value="${subjectid}">
         <input type="hidden" name="backurl" value="${backurl}">
 
         <div class="form-group">
-            <label class="col-sm-2 control-label" for="period">Период</label>
+            <label class="col-sm-2 control-label" for="period"><spring:message code="label.period"/></label>
             <div class="col-sm-4">
                 <select class="form-control" name="period" id="period">
-                    <option value="today">Сегодня</option>
-                    <option value="allday">Весь день</option>
-                    <option value="tomorow">Завтра</option>
-                    <option value="nextweek">Следующая неделя</option>
-                    <option value="nextmonth">Следующий месяц</option>
-                    <option value="nextyear">Следующий год</option>
+                    <option value="today"><spring:message code="label.today"/></option>
+                    <option value="allday"><spring:message code="label.allday"/></option>
+                    <option value="tomorow"><spring:message code="label.tomorow"/></option>
+                    <option value="nextweek"><spring:message code="label.nextweek"/></option>
+                    <option value="nextmonth"><spring:message code="label.nextmonth"/></option>
+                    <option value="nextyear"><spring:message code="label.nextyear"/></option>
                 </select>
             </div>
         </div>
 
         <div class="form-group">
-            <label class="col-xs-2 control-label" for="datepicker">или выбрать</label>
+            <label class="col-xs-2 control-label" for="datepicker"><spring:message code="label.orchoosedate"/></label>
             <div class="col-xs-4">
                 <fmt:formatDate value="${task.dueTime}" pattern="HH:ss" var="theFormattedTimeDueTime"/>
                 <fmt:formatDate value="${task.dueTime}" pattern="MM/dd/yyyy" var="theFormattedDateDueTime"/>
@@ -79,7 +80,7 @@
         </div>
 
         <div class="form-group">
-            <label class="col-xs-2 control-label" for="tasktype">Ответственный</label>
+            <label class="col-xs-2 control-label" for="tasktype"><spring:message code="label.responsible"/></label>
             <div class="col-xs-4">
                 <select id="user" name="user" class="form-control">
                     <c:forEach items="${users}" var="user">
@@ -97,7 +98,7 @@
         </div>
 
         <div class="form-group">
-            <label class="col-xs-2 control-label" for="tasktype">Тип задачи</label>
+            <label class="col-xs-2 control-label" for="tasktype"><spring:message code="label.tasktype"/></label>
             <div class="col-xs-4">
                 <select id="tasktype" name="tasktype" class="form-control">
                     <c:forEach items="${tasktypes}" var="task_type">
@@ -115,7 +116,7 @@
         </div>
 
         <div class="form-group">
-            <label class="col-xs-2 control-label" for="taskcomment">Текст задачи</label>
+            <label class="col-xs-2 control-label" for="taskcomment"><spring:message code="label.tasknote"/></label>
             <div class="col-xs-4">
                 <input id="taskcomment" name="taskcomment" type="text" placeholder="" class="form-control input-md" required="" value="${task.comment}">
             </div>
@@ -124,10 +125,10 @@
         <div class="form-group">
             <label class="col-md-2 control-label" for="btn_task_save"></label>
             <div class="col-md-6">
-                <button id="btn_task_save" name="btn_task_update" value="save" class="btn btn-default">Записать</button>
-                <button id="btn_task_close" name="btn_task_update" value ="close" class="btn btn-default">Закрыть</button>
-                <button id="btn_task_delete" name="btn_task_update" value="delete" class="btn btn-default">Удалить</button>
-                <button id="btn_task_cancel" name="btn_task_cancel" class="btn btn-default" onclick="window.history.back()">Отмена</button>
+                <button id="btn_task_save" name="btn_task_update" value="save" class="btn btn-default"><spring:message code="label.save"/></button>
+                <button id="btn_task_close" name="btn_task_update" value ="close" class="btn btn-default"><spring:message code="label.close"/></button>
+                <button id="btn_task_delete" name="btn_task_update" value="delete" class="btn btn-default"><spring:message code="label.delete"/></button>
+                <button id="btn_task_cancel" name="btn_task_cancel" class="btn btn-default" onclick="window.history.back()"><spring:message code="label.cancel"/></button>
             </div>
             <div class="col-md-2">
             </div>
