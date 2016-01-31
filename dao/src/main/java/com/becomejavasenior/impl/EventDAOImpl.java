@@ -2,6 +2,8 @@ package com.becomejavasenior.impl;
 
 import com.becomejavasenior.*;
 import com.becomejavasenior.interfacedao.EventDAO;
+import com.becomejavasenior.interfacedao.UserDAO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
@@ -16,6 +18,9 @@ import java.util.List;
  */
 @Repository
 public class EventDAOImpl extends AbstractJDBCDao<Event> implements EventDAO {
+    @Autowired
+    public UserDAO userDAO;
+
     @Override
     public String getReadAllQuery() {
         return "SELECT * FROM event";

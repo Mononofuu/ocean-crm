@@ -1,7 +1,7 @@
 package com.becomejavasenior;
 
 import com.becomejavasenior.config.DaoConfig;
-import com.becomejavasenior.impl.UserDAOImpl;
+import com.becomejavasenior.interfacedao.UserDAO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ import java.util.List;
 @ContextConfiguration(classes = {DaoConfig.class})
 public class UserDaoTest {
     @Autowired
-    UserDAOImpl userDAO;
+    UserDAO userDAO;
 
     @Test
     public void readAllTest() {

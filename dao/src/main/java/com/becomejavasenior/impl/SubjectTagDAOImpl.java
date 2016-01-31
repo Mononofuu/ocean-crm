@@ -1,7 +1,10 @@
 package com.becomejavasenior.impl;
 
 import com.becomejavasenior.*;
+import com.becomejavasenior.interfacedao.SubjectDAO;
 import com.becomejavasenior.interfacedao.SubjectTagDAO;
+import com.becomejavasenior.interfacedao.TagDAO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -12,6 +15,10 @@ import java.util.Set;
 
 @Repository
 public class SubjectTagDAOImpl extends AbstractJDBCDao<SubjectTag> implements SubjectTagDAO {
+    @Autowired
+    public SubjectDAO subjectDAO;
+    @Autowired
+    public TagDAO tagDAO;
 
     @Override
     protected String getConditionStatment() {

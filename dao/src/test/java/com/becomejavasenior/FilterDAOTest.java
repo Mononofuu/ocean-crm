@@ -1,10 +1,10 @@
 package com.becomejavasenior;
 
 import com.becomejavasenior.config.DaoConfig;
-import com.becomejavasenior.impl.UserDAOImpl;
 import com.becomejavasenior.interfacedao.ContactDAO;
 import com.becomejavasenior.interfacedao.DealStatusDAO;
 import com.becomejavasenior.interfacedao.FilterDAO;
+import com.becomejavasenior.interfacedao.UserDAO;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,7 +25,7 @@ import static org.junit.Assert.assertNull;
 @ContextConfiguration(classes = {DaoConfig.class})
 public class FilterDAOTest {
     @Autowired
-    private UserDAOImpl userDAO;
+    private UserDAO userDAO;
     @Autowired
     private FilterDAO filterDAO;
     @Autowired

@@ -5,8 +5,11 @@ import com.becomejavasenior.DataBaseException;
 import com.becomejavasenior.Grants;
 import com.becomejavasenior.Role;
 import com.becomejavasenior.interfacedao.GrantsDAO;
+import com.becomejavasenior.interfacedao.RoleDAO;
+import com.becomejavasenior.interfacedao.UserDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
@@ -20,8 +23,11 @@ import java.util.List;
  */
 @Repository
 public class GrantsDAOImpl extends AbstractJDBCDao<Grants> implements GrantsDAO {
-
     private final static Logger LOGGER = LogManager.getLogger(GrantsDAOImpl.class);
+    @Autowired
+    public UserDAO userDAO;
+    @Autowired
+    public RoleDAO roleDAO;
 
     @Override
     public String getReadAllQuery() {
@@ -76,7 +82,7 @@ public class GrantsDAOImpl extends AbstractJDBCDao<Grants> implements GrantsDAO 
     @Override
     protected void prepareStatementForUpdate(PreparedStatement statement, Grants object) throws DataBaseException {
         try {
-            grantsDAO.update(object);
+            update(object);
             statement.setInt(1, object.getRole().getId());
             statement.setInt(2, object.getLevel());
         } catch (SQLException e) {

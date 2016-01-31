@@ -2,6 +2,9 @@ package com.becomejavasenior.impl;
 
 import com.becomejavasenior.*;
 import com.becomejavasenior.interfacedao.CommentDAO;
+import com.becomejavasenior.interfacedao.SubjectDAO;
+import com.becomejavasenior.interfacedao.UserDAO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
@@ -13,6 +16,11 @@ import java.util.List;
 
 @Repository
 public class CommentDAOImpl extends AbstractJDBCDao<Comment> implements CommentDAO {
+
+    @Autowired
+    public SubjectDAO subjectDAO;
+    @Autowired
+    private UserDAO userDAO;
 
     @Override
     public String getReadAllQuery() {

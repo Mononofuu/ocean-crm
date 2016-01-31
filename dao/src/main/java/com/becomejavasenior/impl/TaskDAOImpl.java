@@ -1,9 +1,10 @@
 package com.becomejavasenior.impl;
 
 import com.becomejavasenior.*;
-import com.becomejavasenior.interfacedao.TaskDAO;
+import com.becomejavasenior.interfacedao.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -18,6 +19,14 @@ import java.util.List;
 @Repository
 public class TaskDAOImpl extends AbstractJDBCDao<Task> implements TaskDAO {
     private static final Logger LOGGER = LogManager.getLogger(TaskDAOImpl.class);
+    @Autowired
+    public UserDAO userDAO;
+    @Autowired
+    public CompanyDAO companyDAO;
+    @Autowired
+    public ContactDAO contactDAO;
+    @Autowired
+    public DealDAO dealDAO;
 
     @Override
     public List<Task> getAllTasksByParameters(String userId, Date date, String taskTypeId) throws DataBaseException {

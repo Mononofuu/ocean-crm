@@ -4,8 +4,10 @@ import com.becomejavasenior.Company;
 import com.becomejavasenior.DataBaseException;
 import com.becomejavasenior.Subject;
 import com.becomejavasenior.interfacedao.CompanyDAO;
+import com.becomejavasenior.interfacedao.SubjectDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.net.MalformedURLException;
@@ -17,6 +19,8 @@ import java.util.List;
 @Repository
 public class CompanyDAOImpl extends AbstractContactDAO<Company> implements CompanyDAO {
     private static final Logger LOGGER = LogManager.getLogger(CompanyDAOImpl.class);
+    @Autowired
+    SubjectDAO subjectDAO;
 
     @Override
     protected String getConditionStatment() {
@@ -95,7 +99,7 @@ public class CompanyDAOImpl extends AbstractContactDAO<Company> implements Compa
     @Override
     protected void prepareStatementForInsert(PreparedStatement statement, Company object) throws DataBaseException {
         try {
-            statement.setInt(1, createSubject(object));
+            statement.setInt(1, subjectDAO.create(object).getId());
             statement.setString(2, object.getPhoneNumber());
             statement.setString(3, object.getEmail());
             if(object.getWeb()!=null){

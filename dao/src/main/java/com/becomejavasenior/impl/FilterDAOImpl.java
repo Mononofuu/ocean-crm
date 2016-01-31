@@ -1,9 +1,13 @@
 package com.becomejavasenior.impl;
 
 import com.becomejavasenior.*;
+import com.becomejavasenior.interfacedao.ContactDAO;
+import com.becomejavasenior.interfacedao.DealStatusDAO;
 import com.becomejavasenior.interfacedao.FilterDAO;
+import com.becomejavasenior.interfacedao.UserDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -16,6 +20,13 @@ import java.util.List;
 @Repository
 public class FilterDAOImpl extends AbstractJDBCDao<Filter> implements FilterDAO {
     private static final Logger LOGGER = LogManager.getLogger(FilterDAO.class);
+    @Autowired
+    public UserDAO userDAO;
+    @Autowired
+    public DealStatusDAO dealStatusDAO;
+    @Autowired
+    public ContactDAO contactDAO;
+
     @Override
     public String getReadAllQuery() {
         return "SELECT * FROM filter";

@@ -1,6 +1,5 @@
 package com.becomejavasenior;
 
-import com.becomejavasenior.interfacedao.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +8,6 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.List;
-import java.util.Set;
 
 @Repository
 public abstract class AbstractJDBCDao<T> implements GenericDao<T> {
@@ -17,38 +15,38 @@ public abstract class AbstractJDBCDao<T> implements GenericDao<T> {
 
     @Autowired
     public DataSource dataSource;
-    @Autowired
-    public SubjectDAO subjectDAO;
-    @Autowired
-    public TagDAO tagDAO;
-    @Autowired
-    public SubjectTagDAO subjectTagDAO;
-    @Autowired
-    public UserDAO userDAO;
-    @Autowired
-    public PhoneTypeDAO phoneTypeDAO;
-    @Autowired
-    public CompanyDAO companyDAO;
-    @Autowired
-    public ContactDAO contactDAO;
-    @Autowired
-    public DealDAO dealDAO;
-    @Autowired
-    public DealStatusDAO dealStatusDAO;
-    @Autowired
-    public CurrencyDAO currencyDAO;
-    @Autowired
-    public DealContactDAO dealContactDAO;
-    @Autowired
-    public FileDAO fileDAO;
-    @Autowired
-    public CommentDAO commentDAO;
-    @Autowired
-    public TaskDAO taskDAO;
-    @Autowired
-    public RoleDAO roleDAO;
-    @Autowired
-    public GrantsDAO grantsDAO;
+//    @Autowired
+//    public SubjectDAO subjectDAO;
+//    @Autowired
+//    public TagDAO tagDAO;
+//    @Autowired
+//    public SubjectTagDAO subjectTagDAO;
+//    //@Autowired
+//    public UserDAO userDAO;
+//    //@Autowired
+//    public PhoneTypeDAO phoneTypeDAO;
+//    //@Autowired
+//    public CompanyDAO companyDAO;
+//    //@Autowired
+//    public ContactDAO contactDAO;
+//    //@Autowired
+//    public DealDAO dealDAO;
+//    //@Autowired
+//    public DealStatusDAO dealStatusDAO;
+//    //@Autowired
+//    public CurrencyDAO currencyDAO;
+//    //@Autowired
+//    public DealContactDAO dealContactDAO;
+//    //@Autowired
+//    public FileDAO fileDAO;
+//    //@Autowired
+//    public CommentDAO commentDAO;
+//    //@Autowired
+//    public TaskDAO taskDAO;
+//    //@Autowired
+//    public RoleDAO roleDAO;
+//    //@Autowired
+//    public GrantsDAO grantsDAO;
 
     protected Connection getConnection() throws DataBaseException {
         try {
@@ -232,39 +230,39 @@ public abstract class AbstractJDBCDao<T> implements GenericDao<T> {
         return result;
     }
 
-    /**
-     * Метод для работы с обьектами наследующими Subject
-     */
-    protected <T extends Subject> int createSubject(T object) throws DataBaseException {
-        if (object != null) {
-            Subject subject = subjectDAO.create(object);
-            createTags(object.getTags(), subject);
-            return subject.getId();
-        } else {
-            throw new DataBaseException();
-        }
-    }
+//    /**
+//     * Метод для работы с обьектами наследующими Subject
+//     */
+//    protected <T extends Subject> int createSubject(T object) throws DataBaseException {
+//        if (object != null) {
+//            Subject subject = subjectDAO.create(object);
+//            createTags(object.getTags(), subject);
+//            return subject.getId();
+//        } else {
+//            throw new DataBaseException();
+//        }
+//    }
 
-    private <T extends Subject> void createTags(Set<Tag> tags, T object) throws DataBaseException {
-        if (tags == null) {
-            return;
-        } else {
-            for (Tag tag : tags) {
-                SubjectTag subjectTag = new SubjectTag();
-                if (object instanceof Contact) {
-                    tag.setSubjectType(SubjectType.CONTACT_TAG);
-                } else if (object instanceof Company) {
-                    tag.setSubjectType(SubjectType.COMPANY_TAG);
-                } else if (object instanceof Deal) {
-                    tag.setSubjectType(SubjectType.DEAL_TAG);
-                }
-                tag = tagDAO.create(tag);
-                subjectTag.setTag(tag);
-                subjectTag.setSubject(object);
-                subjectTagDAO.create(subjectTag);
-            }
-        }
-    }
+//    private <T extends Subject> void createTags(Set<Tag> tags, T object) throws DataBaseException {
+//        if (tags == null) {
+//            return;
+//        } else {
+//            for (Tag tag : tags) {
+//                SubjectTag subjectTag = new SubjectTag();
+//                if (object instanceof Contact) {
+//                    tag.setSubjectType(SubjectType.CONTACT_TAG);
+//                } else if (object instanceof Company) {
+//                    tag.setSubjectType(SubjectType.COMPANY_TAG);
+//                } else if (object instanceof Deal) {
+//                    tag.setSubjectType(SubjectType.DEAL_TAG);
+//                }
+//                tag = tagDAO.create(tag);
+//                subjectTag.setTag(tag);
+//                subjectTag.setSubject(object);
+//                subjectTagDAO.create(subjectTag);
+//            }
+//        }
+//    }
 
     protected List<T> realiseQuery(String query) throws DataBaseException {
         List<T> result;

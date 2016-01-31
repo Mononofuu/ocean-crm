@@ -2,7 +2,8 @@ package com.becomejavasenior.impl;
 
 
 import com.becomejavasenior.*;
-import com.becomejavasenior.interfacedao.ContactDAO;
+import com.becomejavasenior.interfacedao.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -11,6 +12,16 @@ import java.util.List;
 
 @Repository
 public class ContactDAOImpl extends AbstractContactDAO<Contact> implements ContactDAO {
+    @Autowired
+    public SubjectDAO subjectDAO;
+    @Autowired
+    public PhoneTypeDAO phoneTypeDAO;
+    @Autowired
+    public CompanyDAO companyDAO;
+    @Autowired
+    public SubjectTagDAO subjectTagDAO;
+
+
     @Override
     protected String getConditionStatment() {
         return "WHERE contact.id = ?";
@@ -87,7 +98,7 @@ public class ContactDAOImpl extends AbstractContactDAO<Contact> implements Conta
     @Override
     protected void prepareStatementForInsert(PreparedStatement statement, Contact object) throws DataBaseException {
         try {
-            statement.setInt(1, createSubject(object));
+            statement.setInt(1, subjectDAO.create(object).getId());
             statement.setString(2, object.getPost());
             if (object.getPhoneType() != null) {
                 statement.setInt(3, object.getPhoneType().ordinal() + 1);

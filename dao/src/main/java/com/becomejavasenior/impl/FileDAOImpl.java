@@ -2,6 +2,9 @@ package com.becomejavasenior.impl;
 
 import com.becomejavasenior.*;
 import com.becomejavasenior.interfacedao.FileDAO;
+import com.becomejavasenior.interfacedao.SubjectDAO;
+import com.becomejavasenior.interfacedao.UserDAO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.io.ByteArrayInputStream;
@@ -17,6 +20,11 @@ import java.util.List;
 
 @Repository
 public class FileDAOImpl extends AbstractJDBCDao<File> implements FileDAO {
+
+    @Autowired
+    public UserDAO userDAO;
+    @Autowired
+    public SubjectDAO subjectDAO;
 
     @Override
     public String getReadAllQuery() {

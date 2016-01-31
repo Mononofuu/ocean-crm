@@ -16,7 +16,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration(classes = {DaoConfig.class})
 public class StatusDAOTest {
     @Autowired
-    private DealStatusDAO dealStatusDAO;
+    DealStatusDAO dealStatusDAO;
 
     @Test
     public void getStatus() throws DataBaseException {

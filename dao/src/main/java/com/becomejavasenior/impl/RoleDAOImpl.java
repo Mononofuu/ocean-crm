@@ -73,7 +73,7 @@ public class RoleDAOImpl extends AbstractJDBCDao<Role> implements RoleDAO {
     @Override
     protected void prepareStatementForUpdate(PreparedStatement statement, Role object) throws DataBaseException {
         try {
-            roleDAO.update(object);
+            update(object);
             statement.setString(1, object.getName());
             statement.setString(2, object.getDescription());
         } catch (SQLException e) {

@@ -5,6 +5,8 @@ import com.becomejavasenior.DataBaseException;
 import com.becomejavasenior.Subject;
 import com.becomejavasenior.User;
 import com.becomejavasenior.interfacedao.SubjectDAO;
+import com.becomejavasenior.interfacedao.UserDAO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
@@ -16,6 +18,8 @@ import java.util.List;
 
 @Repository
 public class SubjectDAOImpl extends AbstractJDBCDao<Subject> implements SubjectDAO {
+    @Autowired
+    public UserDAO userDAO;
 
     @Override
     public String getDeleteQuery() {

@@ -1,7 +1,10 @@
 package com.becomejavasenior.impl;
 
 import com.becomejavasenior.*;
+import com.becomejavasenior.interfacedao.ContactDAO;
 import com.becomejavasenior.interfacedao.DealContactDAO;
+import com.becomejavasenior.interfacedao.DealDAO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
@@ -16,6 +19,11 @@ import java.util.List;
  */
 @Repository
 public class DealContactDAOImpl extends AbstractJDBCDao<DealContact> implements DealContactDAO {
+
+    @Autowired
+    public DealDAO dealDAO;
+    @Autowired
+    public ContactDAO contactDAO;
 
     @Override
     protected String getConditionStatment() {

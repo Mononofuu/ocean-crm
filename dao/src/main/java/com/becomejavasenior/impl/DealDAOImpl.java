@@ -1,9 +1,10 @@
 package com.becomejavasenior.impl;
 
 import com.becomejavasenior.*;
-import com.becomejavasenior.interfacedao.DealDAO;
+import com.becomejavasenior.interfacedao.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -31,6 +32,29 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
     public static final String DEAL_SELECT_PERIOD_CREATED_DATE = " WHERE DATE(deal.created_date) BETWEEN ? AND ?";
     public static final String DEAL_SELECT_TASK_DUE_DATE_INTERVAL = "WHERE deal.id IN (SELECT subject_id FROM task WHERE DATE(due_date) BETWEEN ? AND ? GROUP BY subject_id)";
     private final static Logger LOGGER = LogManager.getLogger(DealDAOImpl.class);
+    @Autowired
+    public CompanyDAO companyDAO;
+    @Autowired
+    public ContactDAO contactDAO;
+    @Autowired
+    public UserDAO userDAO;
+    @Autowired
+    public DealStatusDAO dealStatusDAO;
+    @Autowired
+    public CurrencyDAO currencyDAO;
+    @Autowired
+    public DealContactDAO dealContactDAO;
+    @Autowired
+    public FileDAO fileDAO;
+    @Autowired
+    public CommentDAO commentDAO;
+    @Autowired
+    public TaskDAO taskDAO;
+    @Autowired
+    public SubjectDAO subjectDAO;
+    @Autowired
+    public SubjectTagDAO subjectTagDAO;
+
 
     @Override
     protected String getConditionStatment() {
@@ -137,7 +161,8 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
     @Override
     protected void prepareStatementForInsert(PreparedStatement statement, Deal deal) throws DataBaseException {
         try {
-            statement.setInt(1, createSubject(deal));
+
+            statement.setInt(1, subjectDAO.create(deal).getId());
 
             Optional<DealStatus> dealStatus = Optional.ofNullable(deal.getStatus());
             if (dealStatus.isPresent()){
