@@ -1,11 +1,12 @@
 package com.becomejavasenior;
 
-import com.becomejavasenior.impl.ContactServiceImpl;
-import com.becomejavasenior.impl.DealServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -29,13 +30,21 @@ public class DealsPyramidServlet extends HttpServlet {
     private static final Logger LOGGER = LogManager.getLogger(DealsPyramidServlet.class);
     private static final String NEXT_JSP = "/jsp/dealspyramid.jsp";
 
-    private static DealService dealService = new DealServiceImpl();
-    private static ContactService contactService = new ContactServiceImpl();
+    @Autowired
+    private DealService dealService;
+    @Autowired
+    private ContactService contactService;
 
     public static boolean isBetween(LocalDate created, LocalDate startTime, LocalDate endTime) {
         LOGGER.info("Compare dates");
         LOGGER.info(startTime + " --- " + created + " --- " + endTime);
         return created.compareTo(startTime) > 0 && created.compareTo(endTime) <= 0;
+    }
+
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this,
+                config.getServletContext());
     }
 
     @Override

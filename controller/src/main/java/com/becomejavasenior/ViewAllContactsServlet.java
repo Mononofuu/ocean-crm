@@ -1,11 +1,11 @@
 package com.becomejavasenior;
 
-import com.becomejavasenior.impl.CompanyServiceImpl;
-import com.becomejavasenior.impl.ContactServiceImpl;
-import com.becomejavasenior.impl.UserServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -22,6 +22,18 @@ import java.util.List;
 @WebServlet(name = "contactlist", urlPatterns = "/contactlist")
 public class ViewAllContactsServlet extends HttpServlet {
     private final static Logger LOGGER = LogManager.getLogger(TaskListServlet.class);
+    @Autowired
+    private ContactService contactService;
+    @Autowired
+    private CompanyService companyService;
+    @Autowired
+    private UserService userService;
+
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this,
+                config.getServletContext());
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -33,17 +45,14 @@ public class ViewAllContactsServlet extends HttpServlet {
         process(req, resp);
     }
 
-    private void process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException{
+    private void process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         try {
-            ContactService contactService = new ContactServiceImpl();
-            CompanyService companyService = new CompanyServiceImpl();
-            UserService userService = new UserServiceImpl();
             List<Contact> allContacts;
             List<Company> allCompanies;
-            if(req.getParameter("filtername")!=null){
+            if (req.getParameter("filtername") != null) {
                 allContacts = contactService.getAllContactsByParameters(req.getParameterMap());
                 allCompanies = companyService.getAllCompanyesByParameters(req.getParameterMap());
-            }else {
+            } else {
                 allContacts = contactService.findContacts();
                 allCompanies = companyService.findCompanies();
             }
@@ -60,6 +69,6 @@ public class ViewAllContactsServlet extends HttpServlet {
         } catch (DataBaseException e) {
             LOGGER.error(e);
         }
-        getServletContext().getRequestDispatcher("/jsp/viewallcontacts.jsp").forward(req,resp);
+        getServletContext().getRequestDispatcher("/jsp/viewallcontacts.jsp").forward(req, resp);
     }
 }

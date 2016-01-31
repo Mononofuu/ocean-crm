@@ -1,11 +1,12 @@
 package com.becomejavasenior;
 
-import com.becomejavasenior.interfacedao.CommentDAO;
 import com.becomejavasenior.interfacedao.SubjectDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -22,9 +23,15 @@ import java.util.Objects;
 public class CommentController extends HttpServlet {
     private final static Logger logger = LogManager.getLogger(DealController.class);
     @Autowired
-    private CommentDAO commentDAO;
+    private CommentService commentService;
     @Autowired
     private SubjectDAO subjectDAO;
+
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this,
+                config.getServletContext());
+    }
 
 
     @Override
@@ -53,7 +60,7 @@ public class CommentController extends HttpServlet {
                         comment.setDateCreated(new Date());
                         comment.setUser((User) request.getSession().getAttribute("user"));
                         comment.setText(request.getParameter("commenttext"));
-                        commentDAO.create(comment);
+                        commentService.saveComment(comment);
                         logger.info("Comment created:");
                         logger.info(comment.getId());
                         logger.info(comment.getSubject());
@@ -61,9 +68,9 @@ public class CommentController extends HttpServlet {
                         logger.info(comment.getDateCreated());
                         logger.info(comment.getUser());
                     } else {
-                        comment = commentDAO.read(getId(request));
+                        comment = commentService.findCommentById(getId(request));
                         comment.setText(request.getParameter("commenttext"));
-                        commentDAO.update(comment);
+                        commentService.saveComment(comment);
                         logger.info("Comment updated:");
                         logger.info(comment.getId());
                         logger.info(comment.getText());
@@ -77,7 +84,7 @@ public class CommentController extends HttpServlet {
             case "delete":
                 try {
                     int id = Integer.parseInt(request.getParameter("id"));
-                    commentDAO.delete(id);
+                    commentService.deleteComment(id);
                     logger.info("Comment deleted:");
                     logger.info("id=" + id);
                     request.getRequestDispatcher(request.getParameter("backurl") + "&id=" + request.getParameter("subjectid")).forward(request, response);
@@ -93,7 +100,7 @@ public class CommentController extends HttpServlet {
                         comment = new Comment();
                         request.setAttribute("subjectid", request.getParameter("subjectid"));
                     } else {
-                        comment = commentDAO.read(getId(request));
+                        comment = commentService.findCommentById(getId(request));
                     }
                     request.setAttribute("comment", comment);
                     request.setAttribute("backurl", request.getParameter("backurl") + "&id=" + request.getParameter("subjectid"));

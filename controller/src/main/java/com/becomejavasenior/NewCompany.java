@@ -1,11 +1,14 @@
 package com.becomejavasenior;
 
-import com.becomejavasenior.impl.*;
+import com.becomejavasenior.impl.UserServiceImpl;
 import com.google.gson.Gson;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -30,14 +33,28 @@ import java.util.Optional;
 public class NewCompany extends HttpServlet {
     private static final String nextJSP = "/jsp/newcompany.jsp";
     private static Logger logger = LogManager.getLogger(NewCompanyServlet.class);
-    private static DealService dealService = new DealServiceImpl();
-    private static ContactService contactService = new ContactServiceImpl();
-    private static CompanyService companyService = new CompanyServiceImpl();
-    private static UserService userService = new UserServiceImpl();
-    private static CurrencyService currencyService = new CurrencyServiceImpl();
-    private static TagService tagService = new TagServiceImpl();
-    private static CommentService commentService = new CommentServiceImpl();
-    private static TaskService taskService = new TaskServiceImpl();
+    @Autowired
+    private DealService dealService;
+    @Autowired
+    private ContactService contactService;
+    @Autowired
+    private CompanyService companyService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private CurrencyService currencyService;
+    @Autowired
+    private TagService tagService;
+    @Autowired
+    private CommentService commentService;
+    @Autowired
+    private TaskService taskService;
+
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this,
+                config.getServletContext());
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

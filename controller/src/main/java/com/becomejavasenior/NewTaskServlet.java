@@ -1,10 +1,12 @@
 package com.becomejavasenior;
 
 import com.becomejavasenior.impl.TaskServiceImpl;
-import com.becomejavasenior.impl.UserServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -22,7 +24,17 @@ import java.util.Date;
 @WebServlet(name="newtask", urlPatterns = "/newtask")
 public class NewTaskServlet extends HttpServlet{
     private static final Logger LOGGER = LogManager.getLogger(NewTaskServlet.class);
+    @Autowired
     private TaskService taskService;
+    @Autowired
+    private UserService userService;
+
+
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this,
+                config.getServletContext());
+    }
 
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         this.process(req, resp);
@@ -110,7 +122,7 @@ public class NewTaskServlet extends HttpServlet{
         User result=null;
         if(id!=null){
             int key = Integer.parseInt(id);
-            result =  new UserServiceImpl().findUserById(key);
+            result = userService.findUserById(key);
         }
         return result;
     }

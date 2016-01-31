@@ -1,10 +1,11 @@
 package com.becomejavasenior;
 
-import com.becomejavasenior.impl.TaskServiceImpl;
-import com.becomejavasenior.impl.UserServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -17,9 +18,36 @@ import java.util.*;
 /**
  * @author Anton Sakhno <sakhno83@gmail.com>
  */
-@WebServlet(name="tasklist", urlPatterns = "/tasklist")
-public class TaskListServlet extends HttpServlet{
+@WebServlet(name = "tasklist", urlPatterns = "/tasklist")
+public class TaskListServlet extends HttpServlet {
     private static final Logger LOGGER = LogManager.getLogger(TaskListServlet.class);
+
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private TaskService taskService;
+
+    private static List<String> getTimeList() {
+        List<String> result = new ArrayList<>();
+        Calendar c = GregorianCalendar.getInstance();
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
+        int nextDay = c.get(Calendar.DAY_OF_MONTH) + 1;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+        while (c.get(Calendar.DAY_OF_MONTH) != nextDay) {
+            result.add(dateFormat.format(c.getTime()));
+            c.add(Calendar.MINUTE, 30);
+        }
+        return result;
+    }
+
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this,
+                config.getServletContext());
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -31,20 +59,21 @@ public class TaskListServlet extends HttpServlet{
         process(req, resp);
     }
 
-    private void process(HttpServletRequest request, HttpServletResponse response) throws IOException{
+    private void process(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
-            TaskService taskService = new TaskServiceImpl();
             List<Task> allTasks;
-            if(request.getParameter("filtername")!=null){
+            if (request.getParameter("filtername") != null) {
                 allTasks = taskService.getTasksByParameters(request.getParameterMap());
-            }else {
+            } else {
                 allTasks = taskService.getAllTask();
             }
             Collections.sort(allTasks, (o1, o2) -> {
-                long result = o1.getDueTime().getTime()-o2.getDueTime().getTime();
-                if(result<0){return -1;}
-                else if(result>0){return 1;}
-                else return 0;
+                long result = o1.getDueTime().getTime() - o2.getDueTime().getTime();
+                if (result < 0) {
+                    return -1;
+                } else if (result > 0) {
+                    return 1;
+                } else return 0;
             });
 
             request.setAttribute("tasklist", allTasks);
@@ -55,33 +84,17 @@ public class TaskListServlet extends HttpServlet{
             tomorowDate.set(Calendar.MILLISECOND, 0);
             tomorowDate.add(Calendar.DAY_OF_MONTH, 1);
             request.setAttribute("tomorowdate", tomorowDate);
-            Calendar endOfDay = (Calendar)tomorowDate.clone();
+            Calendar endOfDay = (Calendar) tomorowDate.clone();
             endOfDay.add(Calendar.MINUTE, -1);
             request.setAttribute("endofday", endOfDay);
             request.setAttribute("timelist", getTimeList());
             request.setAttribute("tasktypes", taskService.getAllTaskTypes());
-            request.setAttribute("users", new UserServiceImpl().getAllUsers());
-            getServletContext().getRequestDispatcher("/jsp/tasklist.jsp").forward(request,response);
+            request.setAttribute("users", userService.getAllUsers());
+            getServletContext().getRequestDispatcher("/jsp/tasklist.jsp").forward(request, response);
         } catch (DataBaseException e) {
-            LOGGER.error("Error when prepearing data for tasklist.jsp",e);
+            LOGGER.error("Error when prepearing data for tasklist.jsp", e);
         } catch (ServletException e) {
-            LOGGER.error("Error when prepearing data for tasklist.jsp",e);
+            LOGGER.error("Error when prepearing data for tasklist.jsp", e);
         }
-    }
-
-    private static List<String> getTimeList(){
-        List<String> result = new ArrayList<>();
-        Calendar c = GregorianCalendar.getInstance();
-        c.set(Calendar.HOUR_OF_DAY, 0);
-        c.set(Calendar.MINUTE, 0);
-        c.set(Calendar.SECOND, 0);
-        c.set(Calendar.MILLISECOND, 0);
-        int nextDay = c.get(Calendar.DAY_OF_MONTH)+1;
-        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
-        while(c.get(Calendar.DAY_OF_MONTH)!=nextDay){
-            result.add(dateFormat.format(c.getTime()));
-            c.add(Calendar.MINUTE, 30);
-        }
-        return result;
     }
 }
