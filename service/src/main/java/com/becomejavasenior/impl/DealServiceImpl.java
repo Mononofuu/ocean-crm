@@ -22,6 +22,7 @@ import java.util.List;
 public class DealServiceImpl implements com.becomejavasenior.DealService {
 
     static final Logger logger = LogManager.getRootLogger();
+
     @Autowired
     DealDAO dealDAO;
     @Autowired

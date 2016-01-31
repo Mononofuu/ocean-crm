@@ -133,11 +133,17 @@ public class DealDAOTest {
 
     @Test
     public void readAllTest() throws DataBaseException {
-        long start = System.nanoTime();
-        dealDAO.readAllLite();
-        long time = (System.nanoTime() - start) / 1_000_000;
-        System.out.println(time + " ms");
-        Assert.assertTrue(time < 10_000);
+        List<Deal> dealList = dealDAO.readAllLite();
+        System.out.println(dealList.size());
+    }
+
+    @Test
+    public void readTest() {
+        try {
+            System.out.println(dealDAO.readAllLite().size());
+        } catch (DataBaseException e) {
+            e.printStackTrace();
+        }
     }
 
 

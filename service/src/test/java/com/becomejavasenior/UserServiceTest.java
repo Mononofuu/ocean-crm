@@ -1,12 +1,10 @@
 package com.becomejavasenior;
 
 import com.becomejavasenior.config.DaoConfig;
-import com.becomejavasenior.config.DataSourceConfig;
 import com.becomejavasenior.config.ServiceConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -17,10 +15,9 @@ import java.util.List;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 //@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@ContextConfiguration(classes = {ServiceConfig.class, DataSourceConfig.class, DaoConfig.class})
+@ContextConfiguration(classes = {ServiceConfig.class, DaoConfig.class})
 public class UserServiceTest {
     @Autowired
-    @Qualifier("userServiceImpl")
     public UserService userService;
 
     @Test

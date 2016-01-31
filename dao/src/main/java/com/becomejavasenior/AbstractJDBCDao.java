@@ -3,50 +3,17 @@ package com.becomejavasenior;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.List;
 
-@Repository
+//@Repository
 public abstract class AbstractJDBCDao<T> implements GenericDao<T> {
     private final static Logger LOGGER = LogManager.getLogger(AbstractJDBCDao.class);
 
     @Autowired
     public DataSource dataSource;
-//    @Autowired
-//    public SubjectDAO subjectDAO;
-//    @Autowired
-//    public TagDAO tagDAO;
-//    @Autowired
-//    public SubjectTagDAO subjectTagDAO;
-//    //@Autowired
-//    public UserDAO userDAO;
-//    //@Autowired
-//    public PhoneTypeDAO phoneTypeDAO;
-//    //@Autowired
-//    public CompanyDAO companyDAO;
-//    //@Autowired
-//    public ContactDAO contactDAO;
-//    //@Autowired
-//    public DealDAO dealDAO;
-//    //@Autowired
-//    public DealStatusDAO dealStatusDAO;
-//    //@Autowired
-//    public CurrencyDAO currencyDAO;
-//    //@Autowired
-//    public DealContactDAO dealContactDAO;
-//    //@Autowired
-//    public FileDAO fileDAO;
-//    //@Autowired
-//    public CommentDAO commentDAO;
-//    //@Autowired
-//    public TaskDAO taskDAO;
-//    //@Autowired
-//    public RoleDAO roleDAO;
-//    //@Autowired
-//    public GrantsDAO grantsDAO;
 
     protected Connection getConnection() throws DataBaseException {
         try {

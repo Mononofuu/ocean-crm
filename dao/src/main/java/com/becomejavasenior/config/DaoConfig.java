@@ -31,8 +31,8 @@ public class DaoConfig {
             dataSource.setUrl(prop.getProperty("url"));
             dataSource.setUsername(prop.getProperty("user"));
             dataSource.setPassword(prop.getProperty("password"));
-            dataSource.setInitialSize(10);
-            dataSource.setMaxTotal(100);
+            dataSource.setInitialSize(20);
+            dataSource.setMaxTotal(60);
             dataSource.setMaxIdle(30);
         } catch (IOException e) {
             LOGGER.error(e);
@@ -49,9 +49,15 @@ public class DaoConfig {
             dataSource.setUsername(dbUri.getUserInfo().split(":")[0]);
             dataSource.setPassword(dbUri.getUserInfo().split(":")[1]);
             dataSource.setInitialSize(10);
-            dataSource.setMaxTotal(100);
+            dataSource.setMaxTotal(500);
             dataSource.setMaxIdle(30);
         }
         return dataSource;
     }
+
+
+//    List getDealWithDates(long from, long to){
+//
+//    }
+
 }

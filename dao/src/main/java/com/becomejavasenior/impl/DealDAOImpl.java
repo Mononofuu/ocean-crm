@@ -139,16 +139,20 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
                 deal.setBudget(rs.getInt("budget"));
                 deal.setDateWhenDealClose(rs.getTimestamp("data_close"));
                 deal.setDateCreated(rs.getTimestamp("created_date"));
-                Company company = companyDAO.readLite(rs.getInt("company_id"));
+                Company company = new Company();
+                company.setId(rs.getInt("company_id"));
                 deal.setDealCompany(company);
-                Contact contact = contactDAO.read(rs.getInt("contact_main_id"));
+                Contact contact = new Contact();
+                contact.setId(rs.getInt("contact_main_id"));
                 deal.setMainContact(contact);
-                DealStatus dealStatus = dealStatusDAO.read(rs.getInt("status_id"));
+                DealStatus dealStatus = new DealStatus();
+                dealStatus.setId(rs.getInt("status_id"));
                 deal.setStatus(dealStatus);
-                Currency currency = currencyDAO.read(rs.getInt("currency_id"));
+                Currency currency = new Currency();
+                currency.setId(rs.getInt("currency_id"));
                 deal.setCurrency(currency);
-                deal.setTags(subjectTagDAO.getAllTagsBySubjectId(id));
-                deal.setTasks(taskDAO.getAllTasksBySubject(deal));
+//                deal.setTags(subjectTagDAO.getAllTagsBySubjectId(id));
+//                deal.setTasks(taskDAO.getAllTasksBySubject(deal));
                 result.add(deal);
             }
         } catch (SQLException e) {

@@ -26,7 +26,7 @@ public class DataSourceConfig {
     private final static Logger LOGGER = LogManager.getLogger(DataSourceConfig.class);
     private static final String PROPERTY_FILE_NAME = "postgresql_config.properties";
 
-    @Bean
+    //    @Bean
     public BasicDataSource dataSource() {
         BasicDataSource dataSource = new BasicDataSource();
         try {
