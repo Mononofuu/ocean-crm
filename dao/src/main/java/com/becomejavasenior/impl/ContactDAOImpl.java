@@ -98,7 +98,7 @@ public class ContactDAOImpl extends AbstractContactDAO<Contact> implements Conta
     @Override
     protected void prepareStatementForInsert(PreparedStatement statement, Contact object) throws DataBaseException {
         try {
-            statement.setInt(1, subjectDAO.create(object).getId());
+            statement.setInt(1, subjectDAO.createSubject(object));
             statement.setString(2, object.getPost());
             if (object.getPhoneType() != null) {
                 statement.setInt(3, object.getPhoneType().ordinal() + 1);

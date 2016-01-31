@@ -99,7 +99,7 @@ public class CompanyDAOImpl extends AbstractContactDAO<Company> implements Compa
     @Override
     protected void prepareStatementForInsert(PreparedStatement statement, Company object) throws DataBaseException {
         try {
-            statement.setInt(1, subjectDAO.create(object).getId());
+            statement.setInt(1, subjectDAO.createSubject(object));
             statement.setString(2, object.getPhoneNumber());
             statement.setString(3, object.getEmail());
             if(object.getWeb()!=null){

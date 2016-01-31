@@ -162,7 +162,7 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
     protected void prepareStatementForInsert(PreparedStatement statement, Deal deal) throws DataBaseException {
         try {
 
-            statement.setInt(1, subjectDAO.create(deal).getId());
+            statement.setInt(1, subjectDAO.createSubject(deal));
 
             Optional<DealStatus> dealStatus = Optional.ofNullable(deal.getStatus());
             if (dealStatus.isPresent()){
@@ -300,8 +300,8 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
 
     @Override
     public List<Deal> readAllWithConditions(int condition ) throws DataBaseException {
-        List<Deal> result = new ArrayList<Deal>();
-        String sql = "";
+        List<Deal> result = new ArrayList<>();
+        String sql;
         try{
             switch (condition){
                 // opened deals
