@@ -1,4 +1,4 @@
-﻿CREATE  TABLE users(
+CREATE  TABLE users(
   id SERIAL PRIMARY KEY,
   name varchar(45) ,
   login varchar(45) ,
@@ -13,14 +13,17 @@
 CREATE  TABLE subject (
   id SERIAL PRIMARY KEY,
   content_owner_id integer REFERENCES users(id),
-  name varchar(45));
+  name varchar(45),
+  removed BOOLEAN DEFAULT FALSE);
 
 CREATE  TABLE company (
   id integer REFERENCES subject(id) ON DELETE CASCADE PRIMARY KEY,
   phone_number varchar(45),
   email varchar(45),
   web varchar(45),
-  address varchar(100));
+  address varchar(100),
+  date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  date_updated TIMESTAMP);
 
 CREATE  TABLE phone_type (
   id SERIAL PRIMARY KEY,
@@ -33,11 +36,15 @@ CREATE  TABLE contact (
   phone varchar(45),
   email varchar(45),
   skype varchar(45),
-  company_id integer REFERENCES company(id));
+  company_id integer REFERENCES company(id),
+  date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  date_updated TIMESTAMP);
 
 CREATE  TABLE status_type (
   id SERIAL PRIMARY KEY,
-  name varchar(45));
+  name varchar(45),
+  color VARCHAR(7) NOT NULL DEFAULT '#E0E0E0',
+  systemDefault BOOLEAN DEFAULT FALSE);
 
 CREATE  TABLE currency (
   id SERIAL PRIMARY KEY,
@@ -51,7 +58,9 @@ CREATE  TABLE deal (
   budget integer ,
   contact_main_id integer REFERENCES contact(id),
   company_id integer REFERENCES company(id),
-  data_close timestamp);
+  data_close timestamp,
+  created_date TIMESTAMP WITHOUT TIME ZONE,
+  responsible_id integer REFERENCES users(id));
 
 
 CREATE  TABLE settings (
@@ -92,7 +101,9 @@ CREATE  TABLE task (
   due_date timestamp,
   user_id integer REFERENCES users(id),
   task_type_id integer REFERENCES task_type(id),
-  comment varchar(200));
+  comment varchar(200),
+  is_closed smallint,
+  is_deleted smallint);
 
 
 CREATE  TABLE file(
@@ -123,7 +134,8 @@ CREATE  TABLE grants(
 
 CREATE  TABLE tag(
   id SERIAL PRIMARY KEY,
-  name varchar(45));
+  name varchar(45),
+  subject_type INTEGER);
 
 
 CREATE  TABLE subject_tag(
@@ -131,21 +143,46 @@ CREATE  TABLE subject_tag(
   tag_id integer REFERENCES tag(id),
   PRIMARY KEY(subject_id, tag_id));
 
+CREATE TABLE db_version(
+  version VARCHAR(45) PRIMARY KEY
+);
+
+CREATE TABLE filter (
+  id         SERIAL PRIMARY KEY,
+  name       VARCHAR(45)                         NOT NULL,
+  user_id    INTEGER REFERENCES users (id)       NOT NULL,
+  type       VARCHAR(45)                         NOT NULL,
+  date_from  TIMESTAMP,
+  date_to    TIMESTAMP,
+  status_id  INTEGER REFERENCES status_type (id) NOT NULL,
+  manager_id INTEGER REFERENCES contact (id),
+  tasks      VARCHAR(45),
+  tags       VARCHAR(45)
+);
+
+INSERT INTO db_version (version) VALUES ('2.0');
+
 INSERT INTO phone_type (name) VALUES
-('WORK_PHONE_NUMBER'),
-('WORK_DIRECT_PHONE_NUMBER'),
-('MOBILE_PHONE_NUMBER'),
-('FAX_NUMBER'),
-('HOME_PHONE_NUMBER'),
-('OTHER_PHONE_NUMBER');
+  ('WORK_PHONE_NUMBER'),
+  ('WORK_DIRECT_PHONE_NUMBER'),
+  ('MOBILE_PHONE_NUMBER'),
+  ('FAX_NUMBER'),
+  ('HOME_PHONE_NUMBER'),
+  ('OTHER_PHONE_NUMBER');
 
 INSERT INTO task_type (name) VALUES
   ('FOLLOW_UP'),
   ('MEETING'),
   ('OTHER');
 
-CREATE TABLE db_version(
-  version VARCHAR(45) PRIMARY KEY
-);
+INSERT INTO currency (code, name) VALUES ('USD', 'Dollar');
 
-INSERT INTO db_version (version) VALUES ('1.0');
+INSERT INTO status_type (name, color, systemDefault) VALUES
+  ('PRIMARY CONTACT', '#0040ff', FALSE),
+  ('CONVERSATION', '#7f00ff', FALSE),
+  ('MAKE THE DECISION', '#ffff00', FALSE),
+  ('APPROVAL OF THE CONTRACT', '#80ff00', FALSE),
+  ('SUCCESS', '#00ff00', TRUE),
+  ('CLOSED AND NOT IMPLEMENTED', '#ff0000', TRUE),
+  ('DELETED', '#ff0000', TRUE);
+

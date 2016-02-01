@@ -1,0 +1,4 @@
+ALTER TABLE status_type
+ADD color VARCHAR(7) NOT NULL DEFAULT '#E0E0E0',
+ADD systemDefault BOOLEAN DEFAULT FALSE;
+UPDATE db_version SET version = 1.02;

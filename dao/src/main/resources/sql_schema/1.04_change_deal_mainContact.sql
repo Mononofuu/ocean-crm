@@ -1,0 +1,5 @@
+DELETE FROM deal;
+ALTER TABLE deal
+DROP CONSTRAINT deal_contact_main_id_fkey,
+ADD FOREIGN KEY (contact_main_id) REFERENCES PUBLIC.users (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION;
+UPDATE db_version SET version = 1.04;

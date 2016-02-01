@@ -228,14 +228,6 @@ public class DealEditServlet extends HttpServlet {
                         List<Contact> dealContactList = dealContactDao.getAllContactsBySubjectId(deal.getId());
                         request.setAttribute("dealcontacts", dealContactList);
 
-                        TagDAO tagDAO = (TagDAO) dao.getDao(Tag.class);
-                        List<Tag> tagList = tagDAO.readAllSubjectTags(deal.getId());
-                        StringBuilder sb = new StringBuilder();
-                        for(Tag tag: tagList){
-                            sb.append(tag.getName() + " ");
-                        }
-                        request.setAttribute("tags", sb.toString());
-
                         GenericDao currencyDao = dao.getDao(Currency.class);
                         List<Currency> currencyList = currencyDao.readAll();
                         request.setAttribute("currencies", currencyList);
@@ -247,6 +239,14 @@ public class DealEditServlet extends HttpServlet {
                         TaskDAO taskDao = (TaskDAO) dao.getDao(Task.class);
                         List<Task> taskList = taskDao.getAllTasksBySubjectId(deal.getId());
                         request.setAttribute("tasks", taskList);
+
+                        TagDAO tagDAO = (TagDAO) dao.getDao(Tag.class);
+                        List<Tag> tagList = tagDAO.readAllSubjectTags(deal.getId());
+                        StringBuilder sb = new StringBuilder();
+                        for(Tag tag: tagList){
+                            sb.append(tag.getName() + " ");
+                        }
+                        request.setAttribute("tags", sb.toString());
 
                     } catch (DataBaseException e) {
                         e.printStackTrace();

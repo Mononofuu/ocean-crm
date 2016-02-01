@@ -1,9 +1,7 @@
 package com.becomejavasenior.impl;
 
-import com.becomejavasenior.Grants;
-import com.becomejavasenior.Role;
-import com.becomejavasenior.User;
-import com.becomejavasenior.GenericTemplateDAO;
+import com.becomejavasenior.*;
+import com.becomejavasenior.interfacedao.UserDAO;
 import com.becomejavasenior.mapper.GrantsRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -29,8 +27,8 @@ public class GrantsTemplateDAOImpl extends JdbcDaoSupport implements GenericTemp
     private DataSource myDataSource;
 
     @Autowired
-    @Qualifier("userDao")
-    private GenericTemplateDAO<User> myUserDao;
+    @Qualifier("userDAO")
+    private UserDAO myUserDao;
 
     @Autowired
     @Qualifier("roleDao")
@@ -63,7 +61,11 @@ public class GrantsTemplateDAOImpl extends JdbcDaoSupport implements GenericTemp
         List<Map<String, Object>> rows = getJdbcTemplate().queryForList(sql);
         for (Map<String, Object> row : rows) {
             Grants grants = new Grants();
-            grants.setUser(myUserDao.read((Integer) row.get("user_id")));
+            try {
+                grants.setUser(myUserDao.read((Integer) row.get("user_id")));
+            } catch (DataBaseException e) {
+                logger.equals(e);
+            }
             grants.setRole(myRoleDao.read((Integer) row.get("role_id")));
             grants.setLevel((Integer) row.get("level"));
             grantsList.add(grants);

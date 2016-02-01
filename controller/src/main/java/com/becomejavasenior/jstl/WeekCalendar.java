@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * @author Anton Sakhno <sakhno83@gmail.com>
@@ -24,6 +26,8 @@ public class WeekCalendar extends AbstractCalendar {
 
     @Override
     public int doStartTag() throws JspException {
+        Locale locale = getCurrentLocale();
+        ResourceBundle labels = ResourceBundle.getBundle("messages", locale);
         StringBuilder output = new StringBuilder();
         Calendar startDay = GregorianCalendar.getInstance();
         startDay.set(Calendar.HOUR_OF_DAY, 0);
@@ -37,7 +41,7 @@ public class WeekCalendar extends AbstractCalendar {
         output.append("<table class=\"table table-bordered table-striped table-condensed align-table\">");
         output.append(TR);
         output.append("<td></td>");
-        SimpleDateFormat weekDaysDateFormat = new SimpleDateFormat("E, dd/MM");
+        SimpleDateFormat weekDaysDateFormat = new SimpleDateFormat("E, dd/MM", locale);
         for(int i=0;i<7;i++){
             output.append(TD+weekDaysDateFormat.format(startDay.getTime())+TD_CLOSE);
             startDay.add(Calendar.DAY_OF_MONTH, 1);
@@ -46,7 +50,7 @@ public class WeekCalendar extends AbstractCalendar {
         startDay.add(Calendar.DAY_OF_MONTH, -7);
         //задачи на весь день (по времени 23:59)
         output.append(TR);
-        output.append("<td>Весь день</td>");
+        output.append(TD+labels.getString("label.allday")+TD_CLOSE);
         startDay.set(Calendar.HOUR_OF_DAY, 23);
         startDay.set(Calendar.MINUTE, 59);
         for(int i=1;i<8;i++, startDay.add(Calendar.DAY_OF_MONTH, 1)){

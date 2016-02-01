@@ -6,6 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import com.becomejavasenior.DataBaseException;
+import com.becomejavasenior.Event;
+import com.becomejavasenior.OperationType;
+import com.becomejavasenior.User;
+import com.becomejavasenior.interfacedao.UserDAO;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 
@@ -18,24 +26,10 @@ import java.util.*;
  */
 
 public class EventTemplateDAOImpl extends JdbcDaoSupport implements GenericTemplateDAO<Event> {
-
-    private ApplicationContext context;
-    private GenericTemplateDAO<User> userDAO;
-
-    /*
     @Autowired
-    @Qualifier("dataSource")
-    private DataSource dataSource;
-
-    @Autowired
-    @Qualifier("userDAO")
-    private GenericTemplateDAO<User> userDAO;
-
-    @PostConstruct
-    private void initialize() {
-        setDataSource(dataSource);
-    }
-    */
+    private UserDAO userDAO;
+    private final static Logger LOGGER = LogManager.getLogger(EventTemplateDAOImpl.class);
+    private org.springframework.context.ApplicationContext context;
 
     public void create(Event object) {
 
@@ -53,6 +47,13 @@ public class EventTemplateDAOImpl extends JdbcDaoSupport implements GenericTempl
 
     }
 
+    public int findTotalEvents(){
+        String sql = "SELECT COUNT(*) FROM event";
+        int total = getJdbcTemplate().queryForObject(
+                sql, Integer.class);
+        return total;
+    }
+
     public List<Event> readAll() {
         String sql = "SELECT * FROM event ORDER BY event_date";
         return getEvents(sql);
@@ -65,13 +66,18 @@ public class EventTemplateDAOImpl extends JdbcDaoSupport implements GenericTempl
 
     private List<Event> getEvents(String sql){
         context = new ClassPathXmlApplicationContext("spring-datasource.xml");
-        userDAO = (UserTemplateDAOImpl)context.getBean("userDAO");
+ //       userDAO = (UserTemplateDAOImpl)context.getBean("userDAO");
         List<Event> events = new ArrayList<Event>();
         List<Map<String, Object>> rows = getJdbcTemplate().queryForList(sql);
         for (Map<String, Object> row : rows) {
             Event event = new Event();
             event.setId((Integer) row.get("id"));
-            User user = userDAO.read((Integer) row.get("user_id"));
+            User user = null;
+            try {
+                user = userDAO.read((Integer) row.get("user_id"));
+            } catch (DataBaseException e) {
+                LOGGER.error(e);
+            }
             event.setUser(user);
             event.setEventDate((Date) row.get("event_date"));
             event.setOperationType(OperationType.valueOf((String) row.get("operation_type")));

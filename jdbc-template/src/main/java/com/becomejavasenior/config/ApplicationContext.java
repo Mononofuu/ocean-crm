@@ -1,5 +1,12 @@
 package com.becomejavasenior.config;
 
+import com.becomejavasenior.Grants;
+import com.becomejavasenior.Role;
+import com.becomejavasenior.User;
+import com.becomejavasenior.impl.GrantsTemplateDAOImpl;
+import com.becomejavasenior.impl.RoleTemplateDAOImpl;
+import com.becomejavasenior.impl.UserTemplateDAOImpl;
+import com.becomejavasenior.interfacedao.UserDAO;
 import com.becomejavasenior.*;
 import com.becomejavasenior.impl.*;
 import com.becomejavasenior.interfacedao.DashboardDAO;
@@ -13,11 +20,6 @@ import org.springframework.context.annotation.ImportResource;
 @Configuration
 @ImportResource("classpath:spring-datasource.xml")
 public class ApplicationContext {
-
-    @Bean
-    public GenericTemplateDAO<User> userDao() {
-        return new UserTemplateDAOImpl();
-    }
 
     @Bean
     public GenericTemplateDAO<Role> roleDao() {

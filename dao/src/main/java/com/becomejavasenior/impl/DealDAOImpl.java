@@ -271,7 +271,6 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
         return result;
     }
 
-    @Override
     public List<Deal> readUserFilter(int userId) throws DataBaseException {
         List<Deal> result;
         try {
@@ -301,7 +300,6 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
         }
         return result;
     }
-
 
     @Override
     public List<Deal> readAllWithConditions(DealFilters condition ) throws DataBaseException {
@@ -341,7 +339,6 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
         }
         return result;
     }
-
 
     @Override
     public List<Deal> readAllByCreatedDateInterval(Date dateBegin, Date dateEnd) throws DataBaseException{
@@ -401,6 +398,11 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
             throw new DataBaseException(e);
         }
         return result;
+    }
+
+    @Override
+    public int findTotalDeals() {
+        return 0;
     }
 
     private String changeCondition(String condition){
@@ -488,4 +490,28 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
         return statement;
     }
 
+    @Override
+    public int findTotalDealsBudget() {
+        return 0;
+    }
+
+    @Override
+    public int findTotalDealsWithTasks() {
+        return 0;
+    }
+
+    @Override
+    public int findTotalDealsWithoutTasks() {
+        return 0;
+    }
+
+    @Override
+    public int findTotalSuccessDeals() {
+        return 0;
+    }
+
+    @Override
+    public int findTotalUnsuccessClosedDeals() {
+        return 0;
+    }
 }

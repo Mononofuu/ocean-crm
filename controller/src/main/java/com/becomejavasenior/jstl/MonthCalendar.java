@@ -4,12 +4,15 @@ import javax.servlet.jsp.JspException;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * @author Anton Sakhno <sakhno83@gmail.com>
  */
 public class MonthCalendar extends AbstractCalendar {
     private static final long serialVersionUID = 1648298866902039943L;
+    private static final String TH_CLOSE = "</th>";
 
     @Override
     protected String getDateFormatString() {
@@ -18,16 +21,18 @@ public class MonthCalendar extends AbstractCalendar {
 
     @Override
     public int doStartTag() throws JspException {
+        Locale locale = getCurrentLocale();
+        ResourceBundle labels = ResourceBundle.getBundle("messages", locale);
         StringBuilder output = new StringBuilder();
         output.append("<table class=\"table table-bordered table-striped table-condensed monthtable\">" +
                 "                <tr>" +
-                "                     <th class=\"cellelement\">Пн</th>" +
-                "                     <th class=\"cellelement\">Вт</th>" +
-                "                     <th class=\"cellelement\">Ср</th>" +
-                "                     <th class=\"cellelement\">Чт</th>" +
-                "                     <th class=\"cellelement\">Пт</th>" +
-                "                     <th class=\"cellelement\">Сб</th>" +
-                "                     <th class=\"cellelement\">Вс</th>" +
+                "                     <th class=\"cellelement\">"+labels.getString("label.monday")+TH_CLOSE+
+                "                     <th class=\"cellelement\">"+labels.getString("label.tuesday")+TH_CLOSE+
+                "                     <th class=\"cellelement\">"+labels.getString("label.wednesday")+TH_CLOSE+
+                "                     <th class=\"cellelement\">"+labels.getString("label.thursday")+TH_CLOSE+
+                "                     <th class=\"cellelement\">"+labels.getString("label.friday")+TH_CLOSE+
+                "                     <th class=\"cellelement\">"+labels.getString("label.saturday")+TH_CLOSE+
+                "                     <th class=\"cellelement\">"+labels.getString("label.sunday")+TH_CLOSE+
                 "                </tr>");
         Calendar startDay = GregorianCalendar.getInstance();
         startDay.set(Calendar.HOUR_OF_DAY, 0);
