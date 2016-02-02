@@ -54,7 +54,7 @@ public class DAODataSourceConfig {
             dataSource.setUsername(dbUri.getUserInfo().split(":")[0]);
             dataSource.setPassword(dbUri.getUserInfo().split(":")[1]);
             dataSource.setInitialSize(10);
-            dataSource.setMaxTotal(500);
+            dataSource.setMaxTotal(70);
             dataSource.setMaxIdle(30);
         }
         return dataSource;
