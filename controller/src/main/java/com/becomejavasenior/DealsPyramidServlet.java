@@ -113,7 +113,7 @@ public class DealsPyramidServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String filter = req.getParameter("selectedfilter");
         User user = (User) req.getSession().getAttribute("user");
-//        LOGGER.info(String.format("Selected filter: %s, for user: %s", filter, user.getLogin()));
+        LOGGER.info(String.format("Selected filter: %s, for user: %s", filter, user.getLogin()));
 
         try {
             List<FilterPeriod> filterPeriods = new ArrayList<>(Arrays.asList(FilterPeriod.values()));
