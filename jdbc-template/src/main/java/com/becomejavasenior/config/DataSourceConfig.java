@@ -6,7 +6,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
+import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
@@ -19,15 +19,15 @@ import java.util.Properties;
 /**
  * @author Anton Sakhno <sakhno83@gmail.com>
  */
-
 @Configuration
 @ComponentScan
 public class DataSourceConfig {
-    private final static Logger LOGGER = LogManager.getLogger(DataSourceConfig.class);
+    private final static Logger LOGGER = LogManager.getLogger(DAODataSourceConfig.class);
     private static final String PROPERTY_FILE_NAME = "postgresql_config.properties";
 
-    //    @Bean
-    public BasicDataSource dataSource() {
+    @Bean
+    @Profile("default")
+    public DataSource dataSource() {
         BasicDataSource dataSource = new BasicDataSource();
         try {
             Properties prop = new Properties();
@@ -62,13 +62,13 @@ public class DataSourceConfig {
 
 
     @Bean
+    @Profile("test")
     public DataSource dataSourceTest() {
         EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
-        EmbeddedDatabase db = builder
+        return builder
                 .setType(EmbeddedDatabaseType.HSQL)
                 .addScript("schema_hsql.sql")
                 .addScript("data_hsql.sql")
                 .build();
-        return db;
     }
 }

@@ -8,7 +8,6 @@ import javax.sql.DataSource;
 import java.sql.*;
 import java.util.List;
 
-//@Repository
 public abstract class AbstractJDBCDao<T> implements GenericDao<T> {
     private final static Logger LOGGER = LogManager.getLogger(AbstractJDBCDao.class);
 

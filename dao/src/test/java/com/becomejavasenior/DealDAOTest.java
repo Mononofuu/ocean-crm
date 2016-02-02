@@ -1,7 +1,7 @@
 package com.becomejavasenior;
 
 
-import com.becomejavasenior.config.DaoConfig;
+import com.becomejavasenior.config.DAODataSourceConfig;
 import com.becomejavasenior.interfacedao.*;
 import org.junit.Assert;
 import org.junit.Test;
@@ -21,7 +21,7 @@ import static org.junit.Assert.assertEquals;
  * created by Alekseichenko Sergey <mononofuu@gmail.com>
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {DaoConfig.class})
+@ContextConfiguration(classes = {DAODataSourceConfig.class})
 public class DealDAOTest {
     private final static String DEAL_NAME = "Test Deal";
     private final static String COMPANY_NAME = "Test Company";

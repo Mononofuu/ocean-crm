@@ -40,6 +40,7 @@ public class DealController extends HttpServlet {
     @Autowired
     private CommentService commentService;
 
+    @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this,
@@ -263,11 +264,11 @@ public class DealController extends HttpServlet {
             try {
                 switch (action) {
                     case "getCompanies":
-                        List<Company> companyList = companyService.findCompanies();
+                        List<Company> companyList = companyService.findCompaniesLite();
                         json = new Gson().toJson(companyList);
                         break;
                     case "getContacts":
-                        List<Contact> contactList = contactService.findContacts();
+                        List<Contact> contactList = contactService.findContactsLite();
                         json = new Gson().toJson(contactList);
                         break;
                     case "getDealStatuses":
@@ -281,14 +282,14 @@ public class DealController extends HttpServlet {
                         json = new Gson().toJson(TaskType.values());
                         break;
                     case "getUsers":
-                        List<User> users = userService.getAllUsers();
+                        List<User> users = userService.getAllUsersLite();
                         json = new Gson().toJson(users);
                         break;
                     default:
                         redirectTo(request, response, NEXT_JSP);
                 }
             } catch (DataBaseException e) {
-                LOGGER.error("Error while getting DAO");
+                LOGGER.error("Error while getting json data");
                 LOGGER.catching(e);
             }
             try {

@@ -1,10 +1,12 @@
 package com.becomejavasenior;
 
-import com.becomejavasenior.config.DaoConfig;
+import com.becomejavasenior.config.DAODataSourceConfig;
 import com.becomejavasenior.config.ServiceConfig;
+import junit.framework.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -14,8 +16,8 @@ import java.util.List;
  * created by Alekseichenko Sergey <mononofuu@gmail.com>
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-//@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@ContextConfiguration(classes = {ServiceConfig.class, DaoConfig.class})
+@ContextConfiguration(classes = {ServiceConfig.class, DAODataSourceConfig.class})
+@ActiveProfiles("test")
 public class UserServiceTest {
     @Autowired
     public UserService userService;
@@ -28,21 +30,15 @@ public class UserServiceTest {
         newUser.setPassword("password");
 
         List<User> userList = null;
+        int size = 0;
         try {
-            newUser = userService.saveUser(newUser);
+            userList = userService.getAllUsers();
+            size = userList.size();
+            userService.saveUser(newUser);
             userList = userService.getAllUsers();
         } catch (DataBaseException e) {
             e.printStackTrace();
         }
-        System.out.println(newUser.getId() + "/////////////////////////");
-
-        System.out.println("***************************");
-        for (User user : userList) {
-            System.out.println(user.getId());
-            System.out.println(user.getName());
-            System.out.println(user.getPassword());
-        }
-        System.out.println("***************************");
-
+        Assert.assertTrue(userList.size() == size + 1);
     }
 }

@@ -1,7 +1,6 @@
 package com.becomejavasenior;
 
-import com.becomejavasenior.config.DaoConfig;
-import org.apache.commons.dbcp2.BasicDataSource;
+import com.becomejavasenior.config.DAODataSourceConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Test;
@@ -10,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,12 +18,12 @@ import java.sql.SQLException;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {DaoConfig.class})
+@ContextConfiguration(classes = {DAODataSourceConfig.class})
 public class SchemaVersionTest {
     private static final Logger LOGGER = LogManager.getLogger(TaskDAOImplTest.class);
 
     @Autowired
-    BasicDataSource dataSource;
+    DataSource dataSource;
 
     @Test
     public void schemaVersionTest() throws SQLException {

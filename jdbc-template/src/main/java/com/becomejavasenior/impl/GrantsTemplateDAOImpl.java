@@ -23,7 +23,7 @@ import java.util.Map;
 public class GrantsTemplateDAOImpl extends JdbcDaoSupport implements GenericTemplateDAO<Grants> {
 
 //    @Autowired
-//    @Qualifier("dataSource")
+//    @Qualifier("getEmbededDataSource")
     private DataSource myDataSource;
 
 //    @Autowired

@@ -1,6 +1,5 @@
 package com.becomejavasenior;
 
-import com.becomejavasenior.impl.DealServiceImpl;
 import com.becomejavasenior.interfacedao.DealStatusDAO;
 import com.becomejavasenior.interfacedao.UserDAO;
 import org.apache.logging.log4j.LogManager;
@@ -30,6 +29,8 @@ public class DealsListServlet extends HttpServlet {
     private DealStatusDAO dealStatusDAO;
     @Autowired
     private UserDAO userDAO;
+    @Autowired
+    private DealService dealService;
 
 
     public void init(ServletConfig config) throws ServletException {
@@ -53,8 +54,6 @@ public class DealsListServlet extends HttpServlet {
         try {
 
             List<Deal> dealsList = new ArrayList<>();
-
-            DealService dealService = new DealServiceImpl();
 
             List<DealStatus> dealStatusList = dealStatusDAO.readAllLite();
             List<User> userList = userDAO.readAllLite();

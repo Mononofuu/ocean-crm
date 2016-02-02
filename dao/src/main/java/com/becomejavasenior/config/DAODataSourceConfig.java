@@ -6,7 +6,11 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -17,12 +21,13 @@ import java.util.Properties;
  */
 @Configuration
 @ComponentScan(basePackages = "com.becomejavasenior.impl")
-public class DaoConfig {
-    private final static Logger LOGGER = LogManager.getLogger(DaoConfig.class);
+public class DAODataSourceConfig {
+    private final static Logger LOGGER = LogManager.getLogger(DAODataSourceConfig.class);
     private static final String PROPERTY_FILE_NAME = "postgresql_config.properties";
 
     @Bean
-    public BasicDataSource dataSource() {
+    @Profile("default")
+    public DataSource dataSource() {
         BasicDataSource dataSource = new BasicDataSource();
         try {
             Properties prop = new Properties();
@@ -55,9 +60,14 @@ public class DaoConfig {
         return dataSource;
     }
 
-
-//    List getDealWithDates(long from, long to){
-//
-//    }
-
+    @Bean
+    @Profile("test")
+    public DataSource getEmbeddedDataSource() {
+        EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
+        return builder
+                .setType(EmbeddedDatabaseType.HSQL)
+                .addScript("schema_hsql.sql")
+                .addScript("data_hsql.sql")
+                .build();
+    }
 }

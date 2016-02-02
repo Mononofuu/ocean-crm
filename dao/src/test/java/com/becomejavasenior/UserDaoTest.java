@@ -1,6 +1,6 @@
 package com.becomejavasenior;
 
-import com.becomejavasenior.config.DaoConfig;
+import com.becomejavasenior.config.DAODataSourceConfig;
 import com.becomejavasenior.interfacedao.UserDAO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,7 +14,7 @@ import java.util.List;
  * created by Alekseichenko Sergey <mononofuu@gmail.com>
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {DaoConfig.class})
+@ContextConfiguration(classes = {DAODataSourceConfig.class})
 public class UserDaoTest {
     @Autowired
     UserDAO userDAO;

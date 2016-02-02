@@ -1,6 +1,6 @@
 package com.becomejavasenior;
 
-import com.becomejavasenior.config.DaoConfig;
+import com.becomejavasenior.config.DAODataSourceConfig;
 import com.becomejavasenior.interfacedao.ContactDAO;
 import com.becomejavasenior.interfacedao.DealStatusDAO;
 import com.becomejavasenior.interfacedao.FilterDAO;
@@ -22,7 +22,7 @@ import static org.junit.Assert.assertNull;
  * created by Alekseichenko Sergey <mononofuu@gmail.com>
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {DaoConfig.class})
+@ContextConfiguration(classes = {DAODataSourceConfig.class})
 public class FilterDAOTest {
     @Autowired
     private UserDAO userDAO;

@@ -1,6 +1,6 @@
 package com.becomejavasenior;
 
-import com.becomejavasenior.config.DaoConfig;
+import com.becomejavasenior.config.DAODataSourceConfig;
 import com.becomejavasenior.interfacedao.CompanyDAO;
 import com.becomejavasenior.interfacedao.ContactDAO;
 import org.junit.Before;
@@ -19,7 +19,7 @@ import java.util.Set;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {DaoConfig.class})
+@ContextConfiguration(classes = {DAODataSourceConfig.class})
 public class ContactDAOImplTest {
     @Autowired
     private ContactDAO contactDao;

@@ -69,7 +69,7 @@ public class NewCompany extends HttpServlet {
             try {
                 switch (action) {
                     case "getContacts":
-                        List<Contact> contactList = contactService.findContacts();
+                        List<Contact> contactList = contactService.findContactsLite();
                         json = new Gson().toJson(contactList);
                         break;
                     case "getDealStatuses":
@@ -83,7 +83,7 @@ public class NewCompany extends HttpServlet {
                         json = new Gson().toJson(TaskType.values());
                         break;
                     case "getUsers":
-                        List<User> users = userService.getAllUsers();
+                        List<User> users = userService.getAllUsersLite();
                         json = new Gson().toJson(users);
                         break;
                     default:

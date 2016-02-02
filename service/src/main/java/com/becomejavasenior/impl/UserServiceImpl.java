@@ -45,4 +45,9 @@ public class UserServiceImpl implements UserService {
     public List<User> getAllUsers() throws DataBaseException {
         return userDAO.readAll();
     }
+
+    @Override
+    public List<User> getAllUsersLite() throws DataBaseException {
+        return userDAO.readAllLite();
+    }
 }

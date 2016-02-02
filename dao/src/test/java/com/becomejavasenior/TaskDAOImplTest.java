@@ -1,6 +1,6 @@
 package com.becomejavasenior;
 
-import com.becomejavasenior.config.DaoConfig;
+import com.becomejavasenior.config.DAODataSourceConfig;
 import com.becomejavasenior.impl.UserDAOImpl;
 import com.becomejavasenior.interfacedao.ContactDAO;
 import com.becomejavasenior.interfacedao.TaskDAO;
@@ -27,7 +27,7 @@ import static org.junit.Assert.assertEquals;
  * @author Anton Sakhno <sakhno83@gmail.com>
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {DaoConfig.class})
+@ContextConfiguration(classes = {DAODataSourceConfig.class})
 public class TaskDAOImplTest {
     private static final Logger LOGGER = LogManager.getLogger(TaskDAOImplTest.class);
     private static final String COMMENT_1 = "testcomment";
