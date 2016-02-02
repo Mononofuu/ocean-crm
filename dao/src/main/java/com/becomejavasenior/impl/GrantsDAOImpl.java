@@ -1,9 +1,16 @@
 package com.becomejavasenior.impl;
 
-import com.becomejavasenior.*;
+import com.becomejavasenior.AbstractJDBCDao;
+import com.becomejavasenior.DataBaseException;
+import com.becomejavasenior.Grants;
+import com.becomejavasenior.Role;
 import com.becomejavasenior.interfacedao.GrantsDAO;
+import com.becomejavasenior.interfacedao.RoleDAO;
+import com.becomejavasenior.interfacedao.UserDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,13 +21,13 @@ import java.util.List;
 /**
  * @author Lybachevskiy.Vladislav
  */
+@Repository
 public class GrantsDAOImpl extends AbstractJDBCDao<Grants> implements GrantsDAO {
-
     private final static Logger LOGGER = LogManager.getLogger(GrantsDAOImpl.class);
-
-    public GrantsDAOImpl(DaoFactory daoFactory) {
-        super(daoFactory);
-    }
+    @Autowired
+    public UserDAO userDAO;
+    @Autowired
+    public RoleDAO roleDAO;
 
     @Override
     public String getReadAllQuery() {
@@ -46,12 +53,10 @@ public class GrantsDAOImpl extends AbstractJDBCDao<Grants> implements GrantsDAO 
     protected List<Grants> parseResultSet(ResultSet rs) throws DataBaseException {
         List<Grants> result = new ArrayList<>();
         try {
-            GenericDao userDao = getDaoFromCurrentFactory(User.class);
-            GenericDao roleDao = getDaoFromCurrentFactory(Role.class);
             while (rs.next()) {
                 Grants grants = new Grants();
-                grants.setUser((User) userDao.read(rs.getInt("user_id")));
-                Role role = (Role) roleDao.read(rs.getInt("role_id"));
+                grants.setUser(userDAO.read(rs.getInt("user_id")));
+                Role role = roleDAO.read(rs.getInt("role_id"));
                 grants.setRole(role);
                 grants.setLevel(rs.getInt("level"));
                 result.add(grants);
@@ -77,8 +82,7 @@ public class GrantsDAOImpl extends AbstractJDBCDao<Grants> implements GrantsDAO 
     @Override
     protected void prepareStatementForUpdate(PreparedStatement statement, Grants object) throws DataBaseException {
         try {
-            GenericDao grantsDao = getDaoFromCurrentFactory(Grants.class);
-            grantsDao.update(object);
+            update(object);
             statement.setInt(1, object.getRole().getId());
             statement.setInt(2, object.getLevel());
         } catch (SQLException e) {

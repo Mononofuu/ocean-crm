@@ -1,12 +1,15 @@
 package com.becomejavasenior.impl;
 
-import com.becomejavasenior.*;
+import com.becomejavasenior.DataBaseException;
+import com.becomejavasenior.GenericTemplateDAO;
+import com.becomejavasenior.Grants;
+import com.becomejavasenior.Role;
 import com.becomejavasenior.interfacedao.UserDAO;
 import com.becomejavasenior.mapper.GrantsRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
+import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
@@ -19,19 +22,16 @@ import java.util.Map;
 /**
  * @author Lybachevskiy.Vladislav
  */
-
+@Repository
 public class GrantsTemplateDAOImpl extends JdbcDaoSupport implements GenericTemplateDAO<Grants> {
 
     @Autowired
-    @Qualifier("dataSource")
     private DataSource myDataSource;
 
     @Autowired
-    @Qualifier("userDAO")
     private UserDAO myUserDao;
 
     @Autowired
-    @Qualifier("roleDao")
     private GenericTemplateDAO<Role> myRoleDao;
 
 

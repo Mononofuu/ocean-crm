@@ -1,13 +1,12 @@
 package com.becomejavasenior.access;
 
-import com.becomejavasenior.Comment;
-import com.becomejavasenior.DataBaseException;
-import com.becomejavasenior.Language;
-import com.becomejavasenior.User;
-import com.becomejavasenior.impl.AuthServiceImpl;
+import com.becomejavasenior.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -31,6 +30,14 @@ import java.util.List;
 public class RegistrationServlet extends HttpServlet {
 
     private final static Logger LOGGER = LogManager.getLogger(RegistrationServlet.class);
+    @Autowired
+    private AuthService authService;
+
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this,
+                config.getServletContext());
+    }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         User user = new User();
@@ -50,14 +57,14 @@ public class RegistrationServlet extends HttpServlet {
         user.setComments(comments);
         List<String> errors = new ArrayList<>();
         try {
-            user.setPassword(AuthServiceImpl.getEncryptedPassword(request.getParameter("password"), user.getLogin()));
+            user.setPassword(authService.getEncryptedPassword(request.getParameter("password"), user.getLogin()));
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             LOGGER.error(e.getMessage());
             errors.add(e.getMessage());
             request.getRequestDispatcher("/registration.jsp").forward(request, response);
         }
         try {
-            new AuthServiceImpl().registration(user);
+            authService.registration(user);
         } catch (DataBaseException e) {
             LOGGER.error(e.getMessage());
             errors.add(e.getMessage());

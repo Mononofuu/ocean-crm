@@ -2,8 +2,8 @@ package com.becomejavasenior.impl;
 
 import com.becomejavasenior.AbstractJDBCDao;
 import com.becomejavasenior.ContactFilters;
-import com.becomejavasenior.DaoFactory;
 import com.becomejavasenior.DataBaseException;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -19,10 +19,12 @@ import java.util.Set;
 /**
  * @author Anton Sakhno <sakhno83@gmail.com>
  */
+@Repository
 public abstract class AbstractContactDAO<T> extends AbstractJDBCDao<T> {
 
-    public AbstractContactDAO(DaoFactory daoFactory) {
-        super(daoFactory);
+    private static void fillSets(Set<String> joinQueries, Set<String> whereQueries, String[] queries) {
+        joinQueries.add(queries[0]);
+        whereQueries.add(queries[1]);
     }
 
     protected abstract String getLeftJoinTask();
@@ -99,11 +101,6 @@ public abstract class AbstractContactDAO<T> extends AbstractJDBCDao<T> {
             result.append(where);
         }
         return result.toString();
-    }
-
-    private static void fillSets(Set<String> joinQueries, Set<String> whereQueries, String[] queries){
-        joinQueries.add(queries[0]);
-        whereQueries.add(queries[1]);
     }
 
     private String[] getContactsWithoutTasksQuery(){

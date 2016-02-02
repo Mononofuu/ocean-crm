@@ -1,10 +1,12 @@
 package com.becomejavasenior;
 
-import com.becomejavasenior.impl.CompanyServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -21,6 +23,14 @@ import java.net.URL;
 @WebServlet(name = "newcompany", urlPatterns = "/new_company")
 public class NewCompanyServlet extends HttpServlet {
     private static final Logger LOGGER = LogManager.getLogger(NewCompanyServlet.class);
+    @Autowired
+    private CompanyService companyService;
+
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this,
+                config.getServletContext());
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -58,13 +68,12 @@ public class NewCompanyServlet extends HttpServlet {
             result.setWeb(new URL(url));
         } catch (MalformedURLException e) {
             try {
-                result.setWeb(new URL("http://"+url));
+                result.setWeb(new URL("http://" + url));
             } catch (MalformedURLException e1) {
                 LOGGER.error("Incorrect URL", e);
             }
         }
         result.setAdress(request.getParameter("newcompanyaddress"));
-        CompanyService companyService = new CompanyServiceImpl();
         return companyService.saveCompany(result);
     }
 

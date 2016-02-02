@@ -2,11 +2,9 @@ package com.becomejavasenior.impl;
 
 import com.becomejavasenior.DashboardService;
 import com.becomejavasenior.Event;
-import com.becomejavasenior.GenericTemplateDAO;
 import com.becomejavasenior.interfacedao.DashboardDAO;
-import com.becomejavasenior.interfacedao.EventDAO;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,23 +13,22 @@ import java.util.Map;
 /**
  * Created by kramar on 27.01.16.
  */
-public class DashboardServiceImpl implements DashboardService{
+@Service
+public class DashboardServiceImpl implements DashboardService {
 
-    private ApplicationContext context;
+    @Autowired
     private DashboardDAO dashboardDAO;
+    @Autowired
     private EventTemplateDAOImpl eventDAO;
 
     @Override
-    public Map<String, Object> getDasboardInformation() {
+    public Map<String, Object> getDashboardInformation() {
 
         Map<String, Object> result = new HashMap<>();
-        context = new ClassPathXmlApplicationContext("spring-datasource.xml");
-        dashboardDAO = (DashboardTemplateDAOImpl)context.getBean("dashboardDAO");
-        eventDAO = (EventTemplateDAOImpl)context.getBean("eventDAO");
 
-        List<Map<String,Object>> dashboardInfo = dashboardDAO.readDasboardInformation();
-        for (Map<String,Object> m : dashboardInfo){
-            result.put( (String) m.get("parameter"), m.get("total"));
+        List<Map<String, Object>> dashboardInfo = dashboardDAO.readDasboardInformation();
+        for (Map<String, Object> m : dashboardInfo) {
+            result.put((String) m.get("parameter"), m.get("total"));
         }
 
 

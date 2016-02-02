@@ -1,12 +1,12 @@
 package com.becomejavasenior.impl;
 
-import com.becomejavasenior.Role;
 import com.becomejavasenior.GenericTemplateDAO;
+import com.becomejavasenior.Role;
 import com.becomejavasenior.mapper.RoleRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
+import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
@@ -19,11 +19,10 @@ import java.util.Map;
 /**
  * @author Lybachevskiy.Vladislav
  */
-
+@Repository
 public class RoleTemplateDAOImpl extends JdbcDaoSupport implements GenericTemplateDAO<Role> {
 
     @Autowired
-    @Qualifier("dataSource")
     private DataSource myDataSource;
 
     @PostConstruct

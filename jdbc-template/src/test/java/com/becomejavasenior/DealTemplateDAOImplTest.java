@@ -3,11 +3,6 @@ package com.becomejavasenior;
 import com.becomejavasenior.interfacedao.*;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -20,9 +15,9 @@ import static org.junit.Assert.assertEquals;
  * @author Anton Sakhno <sakhno83@gmail.com>
  */
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@ContextConfiguration(locations = {"classpath:spring-datasource.xml"})
+//@RunWith(SpringJUnit4ClassRunner.class)
+//@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+//@ContextConfiguration(locations = {"classpath:spring-datasource.xml"})
 public class DealTemplateDAOImplTest {
     private final static String DEAL_NAME = "Test Deal";
     private final static String COMPANY_NAME = "Test Company";
@@ -43,7 +38,7 @@ public class DealTemplateDAOImplTest {
     private DealContactDAO dealContactDAO;
     private DealDAO dealDAO;
 
-    @Autowired
+//    @Autowired
     public void setUp (DealDAO dealDAO, CurrencyDAO currencyDAO, CompanyDAO companyDAO, ContactDAO contactDAO, UserDAO userDAO, DealContactDAO dealContactDAO, DealStatusDAO dealStatusDAO) {
         this.dealDAO = dealDAO;
         this.currencyDAO = currencyDAO;

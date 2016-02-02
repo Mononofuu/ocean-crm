@@ -1,9 +1,14 @@
 package com.becomejavasenior.impl;
 
-import com.becomejavasenior.*;
+import com.becomejavasenior.Company;
+import com.becomejavasenior.DataBaseException;
+import com.becomejavasenior.Subject;
 import com.becomejavasenior.interfacedao.CompanyDAO;
+import com.becomejavasenior.interfacedao.SubjectDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -11,12 +16,11 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class CompanyDAOImpl extends AbstractContactDAO<Company> implements CompanyDAO {
     private static final Logger LOGGER = LogManager.getLogger(CompanyDAOImpl.class);
-
-    public CompanyDAOImpl(DaoFactory daoFactory) {
-        super(daoFactory);
-    }
+    @Autowired
+    SubjectDAO subjectDAO;
 
     @Override
     protected String getConditionStatment() {
@@ -37,10 +41,9 @@ public class CompanyDAOImpl extends AbstractContactDAO<Company> implements Compa
     protected List<Company> parseResultSet(ResultSet rs) throws DataBaseException {
         List<Company> result = new ArrayList<>();
         try {
-            GenericDao subjectDao = getDaoFromCurrentFactory(Subject.class);
             while (rs.next()) {
                 Company company = new Company();
-                Subject subject = (Subject) subjectDao.read(rs.getInt("id"));
+                Subject subject = subjectDAO.read(rs.getInt("id"));
                 company.setId(subject.getId());
                 company.setUser(subject.getUser());
                 company.setName(subject.getName());
@@ -96,7 +99,7 @@ public class CompanyDAOImpl extends AbstractContactDAO<Company> implements Compa
     @Override
     protected void prepareStatementForInsert(PreparedStatement statement, Company object) throws DataBaseException {
         try {
-            statement.setInt(1, createSubject(object));
+            statement.setInt(1, subjectDAO.createSubject(object));
             statement.setString(2, object.getPhoneNumber());
             statement.setString(3, object.getEmail());
             if(object.getWeb()!=null){
@@ -118,8 +121,7 @@ public class CompanyDAOImpl extends AbstractContactDAO<Company> implements Compa
     @Override
     protected void prepareStatementForUpdate(PreparedStatement statement, Company object) throws DataBaseException {
         try {
-            GenericDao subjectDao = getDaoFromCurrentFactory(Subject.class);
-            subjectDao.update(object);
+            subjectDAO.update(object);
             statement.setString(1, object.getPhoneNumber());
             statement.setString(2, object.getEmail());
             statement.setString(3, object.getWeb().toString());
@@ -132,8 +134,7 @@ public class CompanyDAOImpl extends AbstractContactDAO<Company> implements Compa
 
     @Override
     public void delete(int id) throws DataBaseException {
-        GenericDao<Subject> subjectDao = getDaoFromCurrentFactory(Subject.class);
-        subjectDao.delete(id);
+        subjectDAO.delete(id);
     }
 
     @Override

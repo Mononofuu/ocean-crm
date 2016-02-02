@@ -1,12 +1,15 @@
 package com.becomejavasenior.access;
 
 
+import com.becomejavasenior.AuthService;
 import com.becomejavasenior.User;
 import com.becomejavasenior.exception.IncorrectDataException;
-import com.becomejavasenior.impl.AuthServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -23,6 +26,14 @@ import java.util.List;
 public class SignInServlet extends HttpServlet {
 
     private final static Logger LOGGER = LogManager.getLogger(SignInServlet.class);
+    @Autowired
+    private AuthService authService;
+
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this,
+                config.getServletContext());
+    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -38,7 +49,7 @@ public class SignInServlet extends HttpServlet {
             return;
         }
         try {
-            User user = new AuthServiceImpl().authenticate(password,login);
+            User user = authService.authenticate(password, login);
             if (user == null) {
                 errors.add("Invalid user name or password.");
                 req.setAttribute("errors", errors);

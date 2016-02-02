@@ -1,11 +1,18 @@
 package com.becomejavasenior.access;
 
 
-import com.becomejavasenior.*;
+import com.becomejavasenior.DataBaseException;
+import com.becomejavasenior.Grants;
+import com.becomejavasenior.Role;
+import com.becomejavasenior.User;
+import com.becomejavasenior.impl.GrantsDAOImpl;
+import com.becomejavasenior.interfacedao.GrantsDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import javax.servlet.Filter;
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
@@ -15,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Component
 @WebFilter(filterName = "UserFilter")
 public class UserFilter implements Filter {
 
@@ -63,8 +71,14 @@ public class UserFilter implements Filter {
 
     }
 
+    @Autowired
+    private GrantsDAO grantsDAO;
+
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
+        grantsDAO = WebApplicationContextUtils.
+                getRequiredWebApplicationContext(filterConfig.getServletContext()).
+                getBean(GrantsDAOImpl.class);
     }
 
     @Override
@@ -74,10 +88,9 @@ public class UserFilter implements Filter {
         if (userObject != null && userObject instanceof User) {
             User loggedUserName = (User) userObject;
             try {
-                GenericDao<Grants> grantsDao = new PostgreSqlDaoFactory().getDao(Grants.class);
-                List<Grants> grants = grantsDao.readAll();
+                List<Grants> grants = grantsDAO.readAll();
                 if (isAllowedToUser(path, loggedUserName, grants)) {
-                    filterChain.doFilter(servletRequest, servletResponse);
+            filterChain.doFilter(servletRequest, servletResponse);
                     return;
                 }
             } catch (DataBaseException e) {

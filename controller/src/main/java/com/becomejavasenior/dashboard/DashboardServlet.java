@@ -1,7 +1,10 @@
 package com.becomejavasenior.dashboard;
 
-import com.becomejavasenior.impl.*;
+import com.becomejavasenior.DashboardService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,6 +19,15 @@ import java.util.Map;
 @WebServlet(name = "dashboardServlet")
 public class DashboardServlet extends HttpServlet {
 
+    @Autowired
+    private DashboardService dashboardService;
+
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this,
+                config.getServletContext());
+    }
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         processServlet(request, response);
     }
@@ -26,8 +38,8 @@ public class DashboardServlet extends HttpServlet {
 
     private void processServlet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
-        Map<String, Object> result = new DashboardServiceImpl().getDasboardInformation();
-        for (Map.Entry entry: result.entrySet()) {
+        Map<String, Object> result = dashboardService.getDashboardInformation();
+        for (Map.Entry entry : result.entrySet()) {
             request.setAttribute((String) entry.getKey(), entry.getValue());
         }
 

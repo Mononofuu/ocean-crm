@@ -2,10 +2,6 @@ package com.becomejavasenior.mapper;
 
 import com.becomejavasenior.DataBaseException;
 import com.becomejavasenior.Deal;
-import com.becomejavasenior.impl.ContactTemplateDAOImpl;
-import com.becomejavasenior.impl.CurrencyTemplateDAOImpl;
-import com.becomejavasenior.impl.DealStatusTemplateDAOImpl;
-import com.becomejavasenior.impl.UserTemplateDAOImpl;
 import com.becomejavasenior.interfacedao.ContactDAO;
 import com.becomejavasenior.interfacedao.CurrencyDAO;
 import com.becomejavasenior.interfacedao.DealStatusDAO;
@@ -14,23 +10,23 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+@Component
 public class DealRowMapper implements RowMapper<Deal> {
     private final static Logger LOGGER = LogManager.getLogger(DealRowMapper.class);
+    @Autowired
     private UserDAO userDAO;
+    @Autowired
     private ContactDAO contactDAO;
+    @Autowired
     private DealStatusDAO dealStatus;
+    @Autowired
     private CurrencyDAO currencyDAO;
 
-    @Autowired
-    public void setUp(UserDAO userDAO, ContactDAO contactDAO, DealStatusDAO dealStatus, CurrencyDAO currencyDAO) {
-        this.userDAO = userDAO;
-        this.contactDAO = contactDAO;
-        this.dealStatus = dealStatus;
-        this.currencyDAO = currencyDAO;
-    }
 
     public Deal mapRow(ResultSet resultSet, int i) throws SQLException {
         Deal deal = new Deal();

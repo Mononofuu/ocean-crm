@@ -2,14 +2,13 @@ package com.becomejavasenior;
 
 import com.becomejavasenior.impl.CompanyServiceImpl;
 import com.becomejavasenior.impl.ContactServiceImpl;
-import com.becomejavasenior.impl.DealServiceImpl;
-import com.becomejavasenior.interfacedao.CommentDAO;
-import com.becomejavasenior.interfacedao.DealContactDAO;
-import com.becomejavasenior.interfacedao.TagDAO;
-import com.becomejavasenior.interfacedao.TaskDAO;
+import com.becomejavasenior.interfacedao.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -25,7 +24,33 @@ import java.util.*;
 public class DealEditServlet extends HttpServlet {
 
     private final static Logger logger = LogManager.getLogger(DealController.class);
-    private DaoFactory dao;
+    @Autowired
+    private DealService dealService;
+    @Autowired
+    private DealContactDAO dealContactDAO;
+    @Autowired
+    private UserDAO userDAO;
+    @Autowired
+    private CurrencyDAO currencyDAO;
+    @Autowired
+    private DealStatusDAO dealStatusDAO;
+    @Autowired
+    private CommentDAO commentDAO;
+    @Autowired
+    private TaskDAO taskDAO;
+    @Autowired
+    private SubjectDAO subjectDAO;
+    @Autowired
+    private TagDAO tagDAO;
+    @Autowired
+    private PhoneTypeDAO phoneTypeDAO;
+
+
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this,
+                config.getServletContext());
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -47,25 +72,24 @@ public class DealEditServlet extends HttpServlet {
                 try {
                     int dealId = Integer.parseInt(request.getParameter("dealid"));
                     int contactId = Integer.parseInt(request.getParameter("contactid"));
-                    String submitname = request.getParameter("button_updatecontact"+contactId);
-                    switch (submitname){
+                    String submitname = request.getParameter("button_updatecontact" + contactId);
+                    switch (submitname) {
                         case "companyedit":
-                            requestString = "/companyedit?action=edit&id="+request.getParameter("contactcompany"+contactId);
-                            request.setAttribute("backurl", "/dealedit?action=edit&id="+dealId);
+                            requestString = "/companyedit?action=edit&id=" + request.getParameter("contactcompany" + contactId);
+                            request.setAttribute("backurl", "/dealedit?action=edit&id=" + dealId);
                             break;
                         case "save":
                             ContactService contactService = new ContactServiceImpl();
                             Contact contact = contactService.findContactById(contactId);
-                            dao = new PostgreSqlDaoFactory();
-                            contact.setName(request.getParameter("contactname"+contactId));
+                            contact.setName(request.getParameter("contactname" + contactId));
                             CompanyService companyService = new CompanyServiceImpl();
-                            Company company = companyService.findCompanyById(Integer.parseInt(request.getParameter("contactcompany"+contactId)));
+                            Company company = companyService.findCompanyById(Integer.parseInt(request.getParameter("contactcompany" + contactId)));
                             contact.setCompany(company);
-                            contact.setPost(request.getParameter("contactpost"+contactId));
-                            contact.setPhoneType(PhoneType.valueOf(request.getParameter("contactphonetype"+contactId)));
-                            contact.setPhone(request.getParameter("contactphone"+contactId));
-                            contact.setEmail(request.getParameter("contactemail"+contactId));
-                            contact.setSkype(request.getParameter("contactskype"+contactId));
+                            contact.setPost(request.getParameter("contactpost" + contactId));
+                            contact.setPhoneType(PhoneType.valueOf(request.getParameter("contactphonetype" + contactId)));
+                            contact.setPhone(request.getParameter("contactphone" + contactId));
+                            contact.setEmail(request.getParameter("contactemail" + contactId));
+                            contact.setSkype(request.getParameter("contactskype" + contactId));
                             contactService.saveContact(contact);
                             logger.info("Contact updated:");
                             logger.info(contact.getId());
@@ -77,21 +101,18 @@ public class DealEditServlet extends HttpServlet {
                             logger.info(contact.getUser());
                             logger.info(contact.getEmail());
                             logger.info(contact.getSkype());
-                            requestString = "/dealedit?action=edit&id="+request.getParameter("dealid");
+                            requestString = "/dealedit?action=edit&id=" + request.getParameter("dealid");
                             break;
                         case "delete":
-                            dao = new PostgreSqlDaoFactory();
-                            DealContactDAO dealContactDAO = (DealContactDAO)dao.getDao(DealContact.class);
                             dealContactDAO.deleteDealContact(dealId, contactId);
                             logger.info("deal contact deleteded:");
                             logger.info("deal " + dealId);
                             logger.info("contact " + contactId);
-                            DealService dealService = new DealServiceImpl();
                             Deal deal = dealService.findDealById(dealId);
                             deal.setMainContact(null);
                             dealService.saveDeal(deal);
                             logger.info("main contact deleted");
-                            requestString = "/dealedit?action=edit&id="+request.getParameter("dealid");
+                            requestString = "/dealedit?action=edit&id=" + request.getParameter("dealid");
                             break;
                     }
                 } catch (DataBaseException e) {
@@ -102,18 +123,16 @@ public class DealEditServlet extends HttpServlet {
                 break;
             case "update":
                 String submitname = request.getParameter("submit");
-                if(submitname != null){
-                    switch (submitname){
+                if (submitname != null) {
+                    switch (submitname) {
                         case "company":
-                            requestString = "/companyedit?action=edit&id="+request.getParameter("company");
+                            requestString = "/companyedit?action=edit&id=" + request.getParameter("company");
                             break;
                         case "contactmain":
-                            requestString = "/contactedit?action=edit&id="+request.getParameter("maincontact");
+                            requestString = "/contactedit?action=edit&id=" + request.getParameter("maincontact");
                             break;
                         case "deal":
                             try {
-                                dao = new PostgreSqlDaoFactory();
-                                DealService dealService = new DealServiceImpl();
                                 int id = Integer.parseInt(request.getParameter("id"));
                                 Deal deal = dealService.findDealById(id);
                                 deal.setName(request.getParameter("name"));
@@ -123,29 +142,26 @@ public class DealEditServlet extends HttpServlet {
                                 ContactService contactService = new ContactServiceImpl();
                                 int mainContactId = Integer.parseInt(request.getParameter("maincontact"));
                                 Contact mainContact = null;
-                                if(mainContactId != 0){
+                                if (mainContactId != 0) {
                                     mainContact = contactService.findContactById(mainContactId);
                                 }
                                 deal.setMainContact(mainContact);
                                 Tag tag;
                                 Set<Tag> set = new HashSet<Tag>();
-                                String tags = request.getParameter("tags").replaceAll(" +"," ").trim();
-                                List<String> tagList= Arrays.asList(tags.split(" "));
-                                for (String tagName: tagList){
+                                String tags = request.getParameter("tags").replaceAll(" +", " ").trim();
+                                List<String> tagList = Arrays.asList(tags.split(" "));
+                                for (String tagName : tagList) {
                                     tag = new Tag();
                                     tag.setName(tagName);
                                     set.add(tag);
                                 }
                                 deal.setTags(set);
-                                GenericDao<User> userDao = dao.getDao(User.class);
-                                User user = userDao.read(Integer.parseInt(request.getParameter("user")));
+                                User user = userDAO.read(Integer.parseInt(request.getParameter("user")));
                                 deal.setResponsible(user);
                                 deal.setBudget(Integer.parseInt(request.getParameter("budget")));
-                                GenericDao<Currency> currencyDao = dao.getDao(Currency.class);
-                                Currency currency = currencyDao.read(Integer.parseInt(request.getParameter("currency")));
+                                Currency currency = currencyDAO.read(Integer.parseInt(request.getParameter("currency")));
                                 deal.setCurrency(currency);
-                                GenericDao<DealStatus> dealStatusDao = dao.getDao(DealStatus.class);
-                                DealStatus dealStatus = dealStatusDao.read(Integer.parseInt(request.getParameter("dealstatus")));
+                                DealStatus dealStatus = dealStatusDAO.read(Integer.parseInt(request.getParameter("dealstatus")));
                                 deal.setStatus(dealStatus);
                                 dealService.saveDeal(deal);
                                 logger.info("deal updated:");
@@ -161,21 +177,17 @@ public class DealEditServlet extends HttpServlet {
                                 logger.error("Error while updating deal");
                                 logger.catching(e);
                             }
-                            request.getRequestDispatcher("/dealedit?action=edit&id="+request.getParameter("id")).forward(request, response);
+                            request.getRequestDispatcher("/dealedit?action=edit&id=" + request.getParameter("id")).forward(request, response);
                             break;
                         case "dealcontactadd":
                             try {
-                                dao = new PostgreSqlDaoFactory();
                                 int id = Integer.parseInt(request.getParameter("id"));
                                 ContactService contactService = new ContactServiceImpl();
                                 Contact contact = contactService.findContactById(Integer.parseInt(request.getParameter("newcontact")));
-                                GenericDao<Subject> subjectDao = dao.getDao(Subject.class);
-                                Subject subject = subjectDao.read(id);
+                                Subject subject = subjectDAO.read(id);
                                 DealContact dealContact = new DealContact();
-//                                dealContact.setDeal((Deal) subject);
-                                dealContact.setDeal(new DealServiceImpl().findDealById(id));
+                                dealContact.setDeal(dealService.findDealById(id));
                                 dealContact.setContact(contact);
-                                GenericDao<DealContact> dealContactDAO = dao.getDao(DealContact.class);
                                 dealContactDAO.create(dealContact);
                                 logger.info("deal updated:");
                                 logger.info(subject.getId());
@@ -187,72 +199,61 @@ public class DealEditServlet extends HttpServlet {
                                 logger.error("Error while updating deal");
                                 logger.catching(e);
                             }
-                            request.getRequestDispatcher("/dealedit?action=edit&id="+request.getParameter("id")).forward(request, response);
+                            request.getRequestDispatcher("/dealedit?action=edit&id=" + request.getParameter("id")).forward(request, response);
                             break;
                     }
                     if (!"".equals(requestString)) {
-                        request.setAttribute("backurl", "/dealedit?action=edit&id="+request.getParameter("id"));
+                        request.setAttribute("backurl", "/dealedit?action=edit&id=" + request.getParameter("id"));
                         request.getRequestDispatcher(requestString).forward(request, response);
                     }
                 }
                 break;
             case "edit":
-                    try {
-                        dao = new PostgreSqlDaoFactory();
+                try {
+                    Deal deal = dealService.findDealById(getId(request));
+                    request.setAttribute("deal", deal);
 
-                        DealService dealService = new DealServiceImpl();
-                        Deal deal = dealService.findDealById(getId(request));
-                        request.setAttribute("deal", deal);
+                    List<DealStatus> dealStatusList = dealStatusDAO.readAll();
+                    request.setAttribute("deal_statuses", dealStatusList);
 
-                        GenericDao dealStatusDao = dao.getDao(DealStatus.class);
-                        List<DealStatus> dealStatusList = dealStatusDao.readAll();
-                        request.setAttribute("deal_statuses", dealStatusList);
+                    List<User> userList = userDAO.readAll();
+                    request.setAttribute("users", userList);
 
-                        GenericDao userDao = dao.getDao(User.class);
-                        List<User> userList = userDao.readAll();
-                        request.setAttribute("users", userList);
+                    CompanyService companyService = new CompanyServiceImpl();
+                    List<Company> companyList = companyService.findCompaniesLite();
+                    request.setAttribute("companies", companyList);
 
-                        CompanyService companyService = new CompanyServiceImpl();
-                        List<Company> companyList = companyService.findCompaniesLite();
-                        request.setAttribute("companies", companyList);
+                    ContactService contactService = new ContactServiceImpl();
+                    List<Contact> contactList = contactService.findContactsLite();
+                    request.setAttribute("contacts", contactList);
 
-                        ContactService contactService = new ContactServiceImpl();
-                        List<Contact> contactList = contactService.findContactsLite();
-                        request.setAttribute("contacts", contactList);
+                    List<PhoneType> phoneTypeList = phoneTypeDAO.readAll();
+                    request.setAttribute("phonetypes", phoneTypeList);
 
-                        GenericDao phoneTypeDao = dao.getDao(PhoneType.class);
-                        List<PhoneType> phoneTypeList = phoneTypeDao.readAll();
-                        request.setAttribute("phonetypes", phoneTypeList);
+                    List<Contact> dealContactList = dealContactDAO.getAllContactsBySubjectId(deal.getId());
+                    request.setAttribute("dealcontacts", dealContactList);
 
-                        DealContactDAO dealContactDao = (DealContactDAO) dao.getDao(DealContact.class);
-                        List<Contact> dealContactList = dealContactDao.getAllContactsBySubjectId(deal.getId());
-                        request.setAttribute("dealcontacts", dealContactList);
-
-                        GenericDao currencyDao = dao.getDao(Currency.class);
-                        List<Currency> currencyList = currencyDao.readAll();
-                        request.setAttribute("currencies", currencyList);
-
-                        CommentDAO commentDao = (CommentDAO) dao.getDao(Comment.class);
-                        List<Comment> commentList = commentDao.getAllCommentsBySubjectId(deal.getId());
-                        request.setAttribute("comments", commentList);
-
-                        TaskDAO taskDao = (TaskDAO) dao.getDao(Task.class);
-                        List<Task> taskList = taskDao.getAllTasksBySubjectId(deal.getId());
-                        request.setAttribute("tasks", taskList);
-
-                        TagDAO tagDAO = (TagDAO) dao.getDao(Tag.class);
-                        List<Tag> tagList = tagDAO.readAllSubjectTags(deal.getId());
-                        StringBuilder sb = new StringBuilder();
-                        for(Tag tag: tagList){
-                            sb.append(tag.getName() + " ");
-                        }
-                        request.setAttribute("tags", sb.toString());
-
-                    } catch (DataBaseException e) {
-                        e.printStackTrace();
+                    List<Tag> tagList = tagDAO.readAllSubjectTags(deal.getId());
+                    StringBuilder sb = new StringBuilder();
+                    for (Tag tag : tagList) {
+                        sb.append(tag.getName() + " ");
                     }
-                    request.getRequestDispatcher("jsp/dealedit.jsp").forward(request, response);
-            break;
+                    request.setAttribute("tags", sb.toString());
+
+                    List<Currency> currencyList = currencyDAO.readAll();
+                    request.setAttribute("currencies", currencyList);
+
+                    List<Comment> commentList = commentDAO.getAllCommentsBySubjectId(deal.getId());
+                    request.setAttribute("comments", commentList);
+
+                    List<Task> taskList = taskDAO.getAllTasksBySubjectId(deal.getId());
+                    request.setAttribute("tasks", taskList);
+
+                } catch (DataBaseException e) {
+                    e.printStackTrace();
+                }
+                request.getRequestDispatcher("jsp/dealedit.jsp").forward(request, response);
+                break;
         }
     }
 

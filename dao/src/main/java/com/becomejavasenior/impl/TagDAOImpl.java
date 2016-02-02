@@ -1,7 +1,11 @@
 package com.becomejavasenior.impl;
 
-import com.becomejavasenior.*;
+import com.becomejavasenior.AbstractJDBCDao;
+import com.becomejavasenior.DataBaseException;
+import com.becomejavasenior.SubjectType;
+import com.becomejavasenior.Tag;
 import com.becomejavasenior.interfacedao.TagDAO;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,13 +14,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class TagDAOImpl extends AbstractJDBCDao<Tag> implements TagDAO {
 
     public static final String SELECT_ALL_SUBJECT_TAGS = " WHERE id IN(SELECT tag_id FROM subject_tag WHERE subject_id = ?)";
-
-    public TagDAOImpl(DaoFactory daoFactory) {
-        super(daoFactory);
-    }
 
     @Override
     public String getReadAllQuery() {

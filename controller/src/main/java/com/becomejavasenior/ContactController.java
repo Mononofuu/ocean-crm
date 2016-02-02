@@ -1,10 +1,12 @@
 package com.becomejavasenior;
 
-import com.becomejavasenior.impl.CompanyServiceImpl;
-import com.becomejavasenior.impl.ContactServiceImpl;
+import com.becomejavasenior.interfacedao.PhoneTypeDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -20,8 +22,20 @@ import java.util.Objects;
 @WebServlet("/contactedit")
 public class ContactController extends HttpServlet {
     private final static Logger logger = LogManager.getLogger(DealController.class);
-    private DaoFactory dao;
-    private Contact contact;
+    @Autowired
+    private CompanyService companyService;
+    @Autowired
+    private ContactService contactService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private PhoneTypeDAO phoneTypeDAO;
+
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this,
+                config.getServletContext());
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -38,21 +52,18 @@ public class ContactController extends HttpServlet {
         String action = request.getParameter("action");
         switch (action) {
             case "create":
+                Contact contact;
                 try {
-                    dao = new PostgreSqlDaoFactory();
-//                    GenericDao<Contact> contactDao = dao.getDao(Contact.class);
-                    ContactService contactService = new ContactServiceImpl();
                     contact = new Contact();
                     contact.setName(request.getParameter("name"));
-                    GenericDao<Company> companyDao = dao.getDao(Company.class);
-                    Company company = companyDao.read(Integer.parseInt(request.getParameter("companyid")));
+                    Company company = companyService.findCompanyById(Integer.parseInt(request.getParameter("companyid")));
                     contact.setCompany(company);
                     contact.setPost(request.getParameter("post"));
                     contact.setPhoneType(PhoneType.valueOf(request.getParameter("contactphonetype")));
                     contact.setPhone(request.getParameter("contactphonenumber"));
                     contact.setEmail(request.getParameter("contactemail"));
                     contact.setSkype(request.getParameter("contactskype"));
-//                    Contact createdContact = contactDao.create(contact);
+                    Contact createdContact = contactService.saveContact(contact);
                     contactService.saveContact(contact);
                     logger.info("Contact created:");
                     logger.info(contact.getId());
@@ -71,16 +82,10 @@ public class ContactController extends HttpServlet {
                 break;
             case "update":
                 try {
-                    dao = new PostgreSqlDaoFactory();
-//                    GenericDao<Contact> contactDao = dao.getDao(Contact.class);
-                    ContactService contactService = new ContactServiceImpl();
                     int id = Integer.parseInt(request.getParameter("id"));
                     contact = new Contact();
                     contact.setId(id);
                     contact.setName(request.getParameter("name"));
-//                    GenericDao<Company> companyDao = dao.getDao(Company.class);
-                    CompanyService companyService = new CompanyServiceImpl();
-//                    Company company = companyDao.read(Integer.parseInt(request.getParameter("companyid")));
                     Company company = companyService.findCompanyById(Integer.parseInt(request.getParameter("companyid")));
                     contact.setCompany(company);
                     contact.setPost(request.getParameter("contactpost"));
@@ -88,7 +93,6 @@ public class ContactController extends HttpServlet {
                     contact.setPhone(request.getParameter("contactphone"));
                     contact.setEmail(request.getParameter("contactemail"));
                     contact.setSkype(request.getParameter("contactskype"));
-//                    contactDao.update(contact);
                     contactService.saveContact(contact);
                     logger.info("Contact updated:");
                     logger.info(contact.getId());
@@ -108,22 +112,14 @@ public class ContactController extends HttpServlet {
                 break;
             case "edit":
                 try {
-                    dao = new PostgreSqlDaoFactory();
-//                    GenericDao<Contact> contactDao = dao.getDao(Contact.class);
-                    ContactService contactService = new ContactServiceImpl();
-//                    contact = (Contact) contactDao.read(getId(request));
                     contact = contactService.findContactById(getId(request));
                     request.setAttribute("contact", contact);
-//                    GenericDao companyDao = dao.getDao(Company.class);
-                    CompanyService companyService = new CompanyServiceImpl();
-//                    List<Company> companyList = companyDao.readAll();
                     List<Company> companyList = companyService.findCompaniesLite();
                     request.setAttribute("companies", companyList);
-                    GenericDao userDao = dao.getDao(User.class);
-                    List<User> userList = userDao.readAll();
+
+                    List<User> userList = userService.getAllUsers();
                     request.setAttribute("users", userList);
-                    GenericDao phoneTypeDao = dao.getDao(PhoneType.class);
-                    List<PhoneType> phoneTypeList = phoneTypeDao.readAll();
+                    List<PhoneType> phoneTypeList = phoneTypeDAO.readAll();
                     request.setAttribute("phonetypes", phoneTypeList);
                     request.getRequestDispatcher("jsp/contactedit.jsp").forward(request, response);
                 } catch (DataBaseException e) {

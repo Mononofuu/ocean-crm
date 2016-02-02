@@ -1,9 +1,13 @@
 package com.becomejavasenior;
 
 import com.becomejavasenior.impl.CompanyServiceImpl;
+import com.becomejavasenior.interfacedao.CompanyDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -17,10 +21,16 @@ import java.util.Objects;
  * Created by Peter on 26.12.2015.
  */
 @WebServlet("/companyedit")
-public class CompanyController extends HttpServlet{
+public class CompanyController extends HttpServlet {
     private final static Logger logger = LogManager.getLogger(DealController.class);
-    private DaoFactory dao;
-    private Company company;
+    @Autowired
+    private CompanyDAO companyDAO;
+
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this,
+                config.getServletContext());
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -38,9 +48,8 @@ public class CompanyController extends HttpServlet{
         String action = request.getParameter("action");
         switch (action) {
             case "create":
+                Company company;
                 try {
-                    dao = new PostgreSqlDaoFactory();
-//                    GenericDao<Company> companyDao = dao.getDao(Company.class);
                     CompanyService companyService = new CompanyServiceImpl();
                     company = new Company();
                     company.setName(request.getParameter("name"));
@@ -48,7 +57,7 @@ public class CompanyController extends HttpServlet{
                     company.setEmail(request.getParameter("email"));
                     company.setWeb(new URL(request.getParameter("web")));
                     company.setAdress(request.getParameter("address"));
-//                    companyDao.create(company);
+                    companyDAO.create(company);
                     companyService.saveCompany(company);
                     logger.info("Company created:");
                     logger.info(company.getId());
@@ -64,18 +73,16 @@ public class CompanyController extends HttpServlet{
                 break;
             case "update":
                 try {
-                    dao = new PostgreSqlDaoFactory();
-//                    GenericDao<Company> companyDao = dao.getDao(Company.class);
                     CompanyService companyService = new CompanyServiceImpl();
                     int id = Integer.parseInt(request.getParameter("id"));
-//                    company = (Company) companyDao.read(getId(request));
+                    company = companyDAO.read(getId(request));
                     company = companyService.findCompanyById(getId(request));
                     company.setName(request.getParameter("name"));
                     company.setPhoneNumber(request.getParameter("phoneNumber"));
                     company.setEmail(request.getParameter("email"));
                     company.setWeb(new URL(request.getParameter("web")));
                     company.setAdress(request.getParameter("address"));
-//                    companyDao.update(company);
+                    companyDAO.update(company);
                     companyService.saveCompany(company);
                     logger.info("Company updated:");
                     logger.info(company.getId());
@@ -92,10 +99,8 @@ public class CompanyController extends HttpServlet{
                 break;
             case "edit":
                 try {
-                    dao = new PostgreSqlDaoFactory();
-//                    GenericDao<Company> companyDao = dao.getDao(Company.class);
                     CompanyService companyService = new CompanyServiceImpl();
-//                    company = (Company) companyDao.read(getId(request));
+                    company = companyDAO.read(getId(request));
                     company = companyService.findCompanyById(getId(request));
                     request.setAttribute("company", company);
                     request.getRequestDispatcher("jsp/companyedit.jsp").forward(request, response);

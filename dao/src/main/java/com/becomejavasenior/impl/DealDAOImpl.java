@@ -1,45 +1,65 @@
 package com.becomejavasenior.impl;
 
 import com.becomejavasenior.*;
-import com.becomejavasenior.Currency;
-import com.becomejavasenior.interfacedao.DealDAO;
+import com.becomejavasenior.interfacedao.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
-import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
-import static com.becomejavasenior.DealFilters.*;
+import static com.becomejavasenior.DealFilters.WITH_EXPIRED_TASKS;
 
 /**
  * created by Alekseichenko Sergey <mononofuu@gmail.com>
  */
+@Repository
 public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
 
-    private final static Logger LOGGER = LogManager.getLogger(DealDAOImpl.class);
     public static final String DEAL_SELECT_TAG = " WHERE deal.id IN(SELECT subject_id FROM subject_tag " +
             "WHERE subject_tag.tag_id IN (SELECT id FROM tag WHERE name IN (";
-    public static final String DEAL_SELECT_STATUS_ID = " WHERE (status_id=?)";
-    public static final String DEAL_SELECT_USER_ID = " where (id in(select subject.id from subject " +
-            "where subject.content_owner_id = ?))";
+    public static final String DEAL_SELECT_STATUS_ID = " where status_id=?";
+    public static final String DEAL_SELECT_USER_ID = " where id in(select subject.id from subject " +
+            "where subject.content_owner_id = ?)";
+    public static final String DEAL_SELECT_OPENED = " WHERE deal.data_close IS null";
+    public static final String DEAL_SELECT_BY_USER = " WHERE responsible_id=?";
+    public static final String DEAL_SELECT_WITHOUT_TASKS = " WHERE NOT deal.id IN (SELECT subject_id FROM task GROUP BY subject_id)";
+    public static final String DEAL_SELECT_WITH_EXPIRED_TASKS = " WHERE deal.id IN (SELECT subject_id FROM task WHERE NOT (due_date IS null) AND due_date < ? GROUP BY subject_id)";
+    public static final String DEAL_SELECT_SUCCESS = " WHERE deal.status_id=5";
+    public static final String DEAL_SELECT_CLOSED_AND_NOT_IMPLEMENTED = " WHERE deal.status_id=6";
+    public static final String DEAL_SELECT_DELETED = " WHERE deal.status_id=7";
+    public static final String DEAL_SELECT_PERIOD_CREATED_DATE = " WHERE DATE(deal.created_date) BETWEEN ? AND ?";
+    public static final String DEAL_SELECT_TASK_DUE_DATE_INTERVAL = "WHERE deal.id IN (SELECT subject_id FROM task WHERE DATE(due_date) BETWEEN ? AND ? GROUP BY subject_id)";
+    private final static Logger LOGGER = LogManager.getLogger(DealDAOImpl.class);
+    @Autowired
+    public CompanyDAO companyDAO;
+    @Autowired
+    public ContactDAO contactDAO;
+    @Autowired
+    public UserDAO userDAO;
+    @Autowired
+    public DealStatusDAO dealStatusDAO;
+    @Autowired
+    public CurrencyDAO currencyDAO;
+    @Autowired
+    public DealContactDAO dealContactDAO;
+    @Autowired
+    public FileDAO fileDAO;
+    @Autowired
+    public CommentDAO commentDAO;
+    @Autowired
+    public TaskDAO taskDAO;
+    @Autowired
+    public SubjectDAO subjectDAO;
+    @Autowired
+    public SubjectTagDAO subjectTagDAO;
 
-    public static final String DEAL_SELECT_OPENED = " WHERE (deal.data_close IS null)";
-    public static final String DEAL_SELECT_BY_USER = " WHERE (responsible_id=?)";
-    public static final String DEAL_SELECT_WITHOUT_TASKS = " WHERE (NOT deal.id IN (SELECT subject_id FROM task GROUP BY subject_id))";
-    public static final String DEAL_SELECT_WITH_EXPIRED_TASKS = " WHERE (deal.id IN (SELECT subject_id FROM task WHERE NOT (due_date IS null) AND due_date < ? GROUP BY subject_id))";
-    public static final String DEAL_SELECT_SUCCESS = " WHERE (deal.status_id=5)";
-    public static final String DEAL_SELECT_CLOSED_AND_NOT_IMPLEMENTED = " WHERE (deal.status_id=6)";
-    public static final String DEAL_SELECT_DELETED = " WHERE (deal.status_id=7)";
-    public static final String DEAL_SELECT_PERIOD_CREATED_DATE = " WHERE (DATE(deal.created_date) BETWEEN ? AND ?)";
-    public static final String DEAL_SELECT_TASK_DUE_DATE_INTERVAL = "WHERE (deal.id IN (SELECT subject_id FROM task WHERE DATE(due_date) BETWEEN ? AND ? GROUP BY subject_id))";
-
-
-    public DealDAOImpl(DaoFactory daoFactory) {
-        super(daoFactory);
-    }
 
     @Override
     protected String getConditionStatment() {
@@ -77,39 +97,28 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
     protected List<Deal> parseResultSet(ResultSet rs) throws DataBaseException {
         List<Deal> result = new ArrayList<>();
         try {
-            GenericDao subjectDao = getDaoFromCurrentFactory(Subject.class);
-            GenericDao companyDao = getDaoFromCurrentFactory(Company.class);
-            GenericDao contactDao = getDaoFromCurrentFactory(Contact.class);
-            GenericDao dealStatusDao = getDaoFromCurrentFactory(DealStatus.class);
-            GenericDao currencyDao = getDaoFromCurrentFactory(Currency.class);
-            GenericDao userDao = getDaoFromCurrentFactory(User.class);
-            SubjectTagDAOImpl subjectTagDAOImpl = (SubjectTagDAOImpl) getDaoFromCurrentFactory(SubjectTag.class);
-            DealContactDAOImpl dealContactDAOImpl = (DealContactDAOImpl) getDaoFromCurrentFactory(DealContact.class);
-            FileDAOImpl fileDao = (FileDAOImpl) getDaoFromCurrentFactory(File.class);
-            CommentDAOImpl commentDAO = (CommentDAOImpl) getDaoFromCurrentFactory(Comment.class);
-            TaskDAOImpl taskDAO = (TaskDAOImpl) getDaoFromCurrentFactory(Task.class);
             while (rs.next()) {
                 Deal deal = new Deal();
                 int id = rs.getInt("id");
-                Subject subject = (Subject) subjectDao.readLite(id);
+                Subject subject = subjectDAO.readLite(id);
                 deal.setId(id);
                 deal.setName(subject.getName());
                 deal.setBudget(rs.getInt("budget"));
                 deal.setDateWhenDealClose(rs.getTimestamp("data_close"));
                 deal.setDateCreated(rs.getTimestamp("created_date"));
-                Company company = (Company) companyDao.readLite(rs.getInt("company_id"));
+                Company company = companyDAO.readLite(rs.getInt("company_id"));
                 deal.setDealCompany(company);
-                Contact contact = (Contact) contactDao.readLite(rs.getInt("contact_main_id"));
+                Contact contact = contactDAO.readLite(rs.getInt("contact_main_id"));
                 deal.setMainContact(contact);
-                User responsible = (User) userDao.readLite(rs.getInt("responsible_id"));
+                User responsible = userDAO.readLite(rs.getInt("responsible_id"));
                 deal.setResponsible(responsible);
-                DealStatus dealStatus = (DealStatus) dealStatusDao.read(rs.getInt("status_id"));
+                DealStatus dealStatus = dealStatusDAO.read(rs.getInt("status_id"));
                 deal.setStatus(dealStatus);
-                Currency currency = (Currency) currencyDao.read(rs.getInt("currency_id"));
+                Currency currency = currencyDAO.read(rs.getInt("currency_id"));
                 deal.setCurrency(currency);
-                deal.setTags(subjectTagDAOImpl.getAllTagsBySubjectId(id));
-                deal.setContacts(dealContactDAOImpl.getAllContactsBySubjectId(id));
-                deal.setFiles(fileDao.getAllFilesBySubjectId(id));
+                deal.setTags(subjectTagDAO.getAllTagsBySubjectId(id));
+                deal.setContacts(dealContactDAO.getAllContactsBySubjectId(id));
+                deal.setFiles(fileDAO.getAllFilesBySubjectId(id));
                 deal.setComments(commentDAO.getAllCommentsBySubjectId(id));
                 deal.setTasks(taskDAO.getAllTasksBySubject(deal));
                 deal.setUser(subject.getUser());
@@ -126,12 +135,6 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
     protected List<Deal> parseResultSetLite(ResultSet rs) throws DataBaseException {
         List<Deal> result = new ArrayList<>();
         try {
-            GenericDao companyDao = getDaoFromCurrentFactory(Company.class);
-            GenericDao contactDao = getDaoFromCurrentFactory(Contact.class);
-            GenericDao dealStatusDao = getDaoFromCurrentFactory(DealStatus.class);
-            GenericDao currencyDao = getDaoFromCurrentFactory(Currency.class);
-            SubjectTagDAOImpl subjectTagDAOImpl = (SubjectTagDAOImpl) getDaoFromCurrentFactory(SubjectTag.class);
-            TaskDAOImpl taskDAO = (TaskDAOImpl) getDaoFromCurrentFactory(Task.class);
             while (rs.next()) {
                 Deal deal = new Deal();
                 int id = rs.getInt("id");
@@ -140,16 +143,20 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
                 deal.setBudget(rs.getInt("budget"));
                 deal.setDateWhenDealClose(rs.getTimestamp("data_close"));
                 deal.setDateCreated(rs.getTimestamp("created_date"));
-                Company company = (Company) companyDao.readLite(rs.getInt("company_id"));
+                Company company = new Company();
+                company.setId(rs.getInt("company_id"));
                 deal.setDealCompany(company);
-                Contact contact = (Contact) contactDao.read(rs.getInt("contact_main_id"));
+                Contact contact = new Contact();
+                contact.setId(rs.getInt("contact_main_id"));
                 deal.setMainContact(contact);
-                DealStatus dealStatus = (DealStatus) dealStatusDao.read(rs.getInt("status_id"));
+                DealStatus dealStatus = new DealStatus();
+                dealStatus.setId(rs.getInt("status_id"));
                 deal.setStatus(dealStatus);
-                Currency currency = (Currency) currencyDao.read(rs.getInt("currency_id"));
+                Currency currency = new Currency();
+                currency.setId(rs.getInt("currency_id"));
                 deal.setCurrency(currency);
-                deal.setTags(subjectTagDAOImpl.getAllTagsBySubjectId(id));
-                deal.setTasks(taskDAO.getAllTasksBySubject(deal));
+//                deal.setTags(subjectTagDAO.getAllTagsBySubjectId(id));
+//                deal.setTasks(taskDAO.getAllTasksBySubject(deal));
                 result.add(deal);
             }
         } catch (SQLException e) {
@@ -162,7 +169,8 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
     @Override
     protected void prepareStatementForInsert(PreparedStatement statement, Deal deal) throws DataBaseException {
         try {
-            statement.setInt(1, createSubject(deal));
+
+            statement.setInt(1, subjectDAO.createSubject(deal));
 
             Optional<DealStatus> dealStatus = Optional.ofNullable(deal.getStatus());
             if (dealStatus.isPresent()){
@@ -229,8 +237,7 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
     @Override
     protected void prepareStatementForUpdate(PreparedStatement statement, Deal object) throws DataBaseException {
         try{
-            GenericDao subjectDao = getDaoFromCurrentFactory(Subject.class);
-            subjectDao.update(object);
+            subjectDAO.update(object);
             statement.setInt(1, object.getStatus().getId());
             statement.setInt(2, object.getCurrency().getId());
             statement.setInt(3, object.getBudget());
@@ -273,8 +280,7 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
 
     public List<Deal> readUserFilter(int userId) throws DataBaseException {
         List<Deal> result;
-        try {
-            PreparedStatement statement = getConnection().prepareStatement(getReadAllQuery() + DEAL_SELECT_BY_USER);
+        try (PreparedStatement statement = getConnection().prepareStatement(getReadAllQuery() + DEAL_SELECT_BY_USER)) {
             statement.setInt(1, userId);
             ResultSet rs = statement.executeQuery();
             result = parseResultSet(rs);

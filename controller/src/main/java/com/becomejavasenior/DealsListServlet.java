@@ -1,9 +1,13 @@
 package com.becomejavasenior;
 
-import com.becomejavasenior.impl.DealServiceImpl;
+import com.becomejavasenior.interfacedao.DealStatusDAO;
+import com.becomejavasenior.interfacedao.UserDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -19,19 +23,22 @@ import java.util.List;
  * Created by kramar on 19.11.15.
  */
 @WebServlet("/dealslist")
-public class DealsListServlet extends HttpServlet{
+public class DealsListServlet extends HttpServlet {
     private final static Logger LOGGER = LogManager.getLogger(DealsListServlet.class);
-    private static DaoFactory daoFactory;
 
-    static {
-        try {
-            daoFactory = new PostgreSqlDaoFactory();
-        } catch (DataBaseException e) {
-            LOGGER.error("Error init DAO for dealslist.jsp", e);
-        }
+    @Autowired
+    private DealStatusDAO dealStatusDAO;
+    @Autowired
+    private UserDAO userDAO;
+    @Autowired
+    private DealService dealService;
+
+
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this,
+                config.getServletContext());
     }
-
-    ;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -57,13 +64,8 @@ public class DealsListServlet extends HttpServlet{
 
             List<Deal> dealsList = new ArrayList<>();
 
-            GenericDao<DealStatus> dealStatusDao = daoFactory.getDao(DealStatus.class);
-            GenericDao<User> userDao = daoFactory.getDao(User.class);
-
-            DealService dealService = new DealServiceImpl();
-
-            List<DealStatus> dealStatusList = dealStatusDao.readAllLite();
-            List<User> userList = userDao.readAllLite();
+            List<DealStatus> dealStatusList = dealStatusDAO.readAllLite();
+            List<User> userList = userDAO.readAllLite();
             List<FilterPeriod> filterPeriods = new ArrayList<>(Arrays.asList(FilterPeriod.values()));
             List<FilterTaskType> filterTaskTypes = new ArrayList<>(Arrays.asList(FilterTaskType.values()));
 

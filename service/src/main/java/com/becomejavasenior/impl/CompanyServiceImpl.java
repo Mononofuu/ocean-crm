@@ -1,9 +1,10 @@
 package com.becomejavasenior.impl;
 
 import com.becomejavasenior.*;
+import com.becomejavasenior.interfacedao.CompanyDAO;
 import com.becomejavasenior.interfacedao.TagDAO;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
@@ -11,21 +12,13 @@ import java.util.Map;
 /**
  * Created by Peter on 18.12.2015.
  */
-
+@Service
 public class CompanyServiceImpl extends AbstractContactService<Company> implements CompanyService {
 
-    private static Logger logger = LogManager.getLogger(CompanyServiceImpl.class);
-    private DaoFactory dao;
-    private CompanyDAOImpl companyDAO;
-
-    public CompanyServiceImpl(){
-        try {
-            dao = new PostgreSqlDaoFactory();
-            companyDAO = (CompanyDAOImpl)dao.getDao(Company.class);
-        } catch (DataBaseException e) {
-            logger.error(e);
-        }
-    }
+    @Autowired
+    private CompanyDAO companyDAO;
+    @Autowired
+    private TagDAO tagDAO;
 
     @Override
     public Company saveCompany(Company company) throws DataBaseException {
@@ -66,18 +59,12 @@ public class CompanyServiceImpl extends AbstractContactService<Company> implemen
     }
 
     @Override
-    protected AbstractContactDAO<Company> getDao() {
-        return companyDAO;
-    }
-
-    @Override
     public List<Company> getAllCompanyesByParameters(Map<String, String[]> parameters) throws DataBaseException {
         return getAllContactsByParameters(parameters);
     }
 
     @Override
     public List<Tag> getAllCompanyTags() throws DataBaseException {
-        TagDAO tagDAO = (TagDAO)dao.getDao(Tag.class);
         return tagDAO.readAll(SubjectType.COMPANY_TAG);
     }
 }

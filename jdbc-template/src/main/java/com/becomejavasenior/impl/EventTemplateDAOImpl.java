@@ -2,34 +2,35 @@ package com.becomejavasenior.impl;
 
 
 import com.becomejavasenior.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import com.becomejavasenior.DataBaseException;
-import com.becomejavasenior.Event;
-import com.becomejavasenior.OperationType;
-import com.becomejavasenior.User;
 import com.becomejavasenior.interfacedao.UserDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
+import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author PeterKramar
  */
-
+@Repository
 public class EventTemplateDAOImpl extends JdbcDaoSupport implements GenericTemplateDAO<Event> {
+    private final static Logger LOGGER = LogManager.getLogger(EventTemplateDAOImpl.class);
     @Autowired
     private UserDAO userDAO;
-    private final static Logger LOGGER = LogManager.getLogger(EventTemplateDAOImpl.class);
-    private org.springframework.context.ApplicationContext context;
+    @Autowired
+    private DataSource myDataSource;
+
+    @PostConstruct
+    private void initialize() {
+        setDataSource(myDataSource);
+    }
 
     public void create(Event object) {
 
@@ -65,8 +66,6 @@ public class EventTemplateDAOImpl extends JdbcDaoSupport implements GenericTempl
     }
 
     private List<Event> getEvents(String sql){
-        context = new ClassPathXmlApplicationContext("spring-datasource.xml");
- //       userDAO = (UserTemplateDAOImpl)context.getBean("userDAO");
         List<Event> events = new ArrayList<Event>();
         List<Map<String, Object>> rows = getJdbcTemplate().queryForList(sql);
         for (Map<String, Object> row : rows) {

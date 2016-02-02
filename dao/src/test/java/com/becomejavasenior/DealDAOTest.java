@@ -1,10 +1,14 @@
 package com.becomejavasenior;
 
 
-import com.becomejavasenior.impl.DealContactDAOImpl;
+import com.becomejavasenior.config.DAODataSourceConfig;
+import com.becomejavasenior.interfacedao.*;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -16,6 +20,8 @@ import static org.junit.Assert.assertEquals;
 /**
  * created by Alekseichenko Sergey <mononofuu@gmail.com>
  */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = {DAODataSourceConfig.class})
 public class DealDAOTest {
     private final static String DEAL_NAME = "Test Deal";
     private final static String COMPANY_NAME = "Test Company";
@@ -27,15 +33,21 @@ public class DealDAOTest {
     private final static String COMPANY_ADDRESS = "Ukraine";
     private final static String COMPANY_WEB = "https://www.company.com.ua";
     private final static String CONTACT_PHONE = "0999999999";
-    private GenericDao<Deal> dealDao;
     private Deal deal;
-    private PostgreSqlDaoFactory daoFactory;
-
-    @Before
-    public void SetUp() throws DataBaseException {
-        daoFactory = new PostgreSqlDaoFactory();
-        dealDao = daoFactory.getDao(Deal.class);
-    }
+    @Autowired
+    private DealStatusDAO dealStatusDAO;
+    @Autowired
+    private CurrencyDAO currencyDAO;
+    @Autowired
+    private DealDAO dealDAO;
+    @Autowired
+    private CompanyDAO companyDAO;
+    @Autowired
+    private ContactDAO contactDAO;
+    @Autowired
+    private UserDAO userDAO;
+    @Autowired
+    private DealContactDAO dealContactDAO;
 
     @Test
     public void CreateUpdateDeleteTest() throws DataBaseException {
@@ -52,15 +64,13 @@ public class DealDAOTest {
         deal.setTags(tags);
 
         DealStatus status;
-        GenericDao<DealStatus> statusDao = daoFactory.getDao(DealStatus.class);
-        status = statusDao.read(1);
+        status = dealStatusDAO.read(1);
         deal.setStatus(status);
 
         Currency currency = new Currency();
         currency.setName(CURRENCY_NAME);
         currency.setCode(CURRENCY_CODE);
-        GenericDao<Currency> currencyDao = daoFactory.getDao(Currency.class);
-        currency = currencyDao.create(currency);
+        currency = currencyDAO.create(currency);
         deal.setCurrency(currency);
 
 
@@ -77,8 +87,7 @@ public class DealDAOTest {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-        GenericDao<Company> companyDao = daoFactory.getDao(Company.class);
-        company = companyDao.create(company);
+        company = companyDAO.create(company);
         deal.setDealCompany(company);
 
         Contact contact = new Contact();
@@ -86,23 +95,20 @@ public class DealDAOTest {
         contact.setPhoneType(PhoneType.WORK_PHONE_NUMBER);
         contact.setPhone(CONTACT_PHONE);
         contact.setCompany(company);
-        GenericDao<Contact> contactDao = daoFactory.getDao(Contact.class);
-        contact = contactDao.create(contact);
+        contact = contactDAO.create(contact);
 
         Contact contact2 = new Contact();
         contact2.setName(COMPANY_NAME);
         contact2.setPhoneType(PhoneType.WORK_PHONE_NUMBER);
         contact2.setPhone(CONTACT_PHONE);
         contact2.setCompany(company);
-        contact2 = contactDao.create(contact2);
+        contact2 = contactDAO.create(contact2);
 
 
-        User user;
-        GenericDao<User> userDao = daoFactory.getDao(User.class);
-        user = userDao.read(1);
+        User user = userDAO.read(1);
         deal.setMainContact(contact);
 
-        Deal dbDeal = dealDao.create(deal);
+        Deal dbDeal = dealDAO.create(deal);
 
         DealContact dealContact = new DealContact();
         dealContact.setDeal(dbDeal);
@@ -116,8 +122,6 @@ public class DealDAOTest {
         dealContactList.add(contact);
         dealContactList.add(contact2);
 
-        DealContactDAOImpl dealContactDAO = new DealContactDAOImpl(daoFactory);
-
         dealContactDAO.create(dealContact);
         dealContactDAO.create(dealContact2);
 
@@ -129,11 +133,17 @@ public class DealDAOTest {
 
     @Test
     public void readAllTest() throws DataBaseException {
-        long start = System.nanoTime();
-        dealDao.readAllLite();
-        long time = (System.nanoTime() - start) / 1_000_000;
-        System.out.println(time + " ms");
-        Assert.assertTrue(time < 10_000);
+        List<Deal> dealList = dealDAO.readAllLite();
+        System.out.println(dealList.size());
+    }
+
+    @Test
+    public void readTest() {
+        try {
+            System.out.println(dealDAO.readAllLite().size());
+        } catch (DataBaseException e) {
+            e.printStackTrace();
+        }
     }
 
 

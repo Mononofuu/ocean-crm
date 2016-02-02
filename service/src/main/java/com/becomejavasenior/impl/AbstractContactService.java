@@ -15,8 +15,6 @@ import java.util.*;
 public abstract class AbstractContactService<T> {
     private static Logger logger = LogManager.getLogger(AbstractContactService.class);
 
-    protected abstract AbstractContactDAO<T> getDao();
-
     public List<T> getAllContactsByParameters(Map<String, String[]> parameters) throws DataBaseException {
         List<ContactFilters> parametersList = new ArrayList<>();
         String userId = null;
@@ -73,7 +71,8 @@ public abstract class AbstractContactService<T> {
             }
             createUpdate = parameters.get("periodtype")[0];
         }
-        return getDao().getAllContactsByParameters(parametersList, userId, tagIdList, taskDate, createUpdateDate, createUpdate);
+//        return getDao().getAllContactsByParameters(parametersList, userId, tagIdList, taskDate, createUpdateDate, createUpdate);
+        return null; //TODO
     }
 
     private List<Date> getPeriodCreateUpdateDates(String strDate){

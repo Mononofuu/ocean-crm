@@ -2,6 +2,9 @@ package com.becomejavasenior.impl;
 
 import com.becomejavasenior.*;
 import com.becomejavasenior.interfacedao.EventDAO;
+import com.becomejavasenior.interfacedao.UserDAO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,10 +16,10 @@ import java.util.List;
 /**
  * @author Lybachevskiy.Vladislav
  */
+@Repository
 public class EventDAOImpl extends AbstractJDBCDao<Event> implements EventDAO {
-    public EventDAOImpl(DaoFactory daoFactory) {
-        super(daoFactory);
-    }
+    @Autowired
+    public UserDAO userDAO;
 
     @Override
     public String getReadAllQuery() {
@@ -42,11 +45,10 @@ public class EventDAOImpl extends AbstractJDBCDao<Event> implements EventDAO {
     protected List<Event> parseResultSet(ResultSet rs) throws DataBaseException {
         List<Event> result = new ArrayList<>();
         try {
-            GenericDao<User> userDao = getDaoFromCurrentFactory(User.class);
             while (rs.next()) {
                 Event event = new Event();
                 event.setId(rs.getInt("id"));
-                User user = userDao.read(rs.getInt("user_id"));
+                User user = userDAO.read(rs.getInt("user_id"));
                 event.setUser(user);
                 event.setEventDate(rs.getTimestamp("event_date"));
                 event.setOperationType(OperationType.valueOf(rs.getString("operation_type")));

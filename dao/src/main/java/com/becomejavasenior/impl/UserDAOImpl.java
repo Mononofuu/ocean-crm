@@ -4,6 +4,7 @@ import com.becomejavasenior.*;
 import com.becomejavasenior.interfacedao.UserDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,13 +14,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Repository
 public class UserDAOImpl extends AbstractJDBCDao<User> implements UserDAO {
 
     private final static Logger LOGGER = LogManager.getLogger(UserDAOImpl.class);
-
-    public UserDAOImpl(DaoFactory daoFactory) {
-        super(daoFactory);
-    }
 
     @Override
     public String getDeleteQuery() {
@@ -95,8 +93,7 @@ public class UserDAOImpl extends AbstractJDBCDao<User> implements UserDAO {
     @Override
     protected void prepareStatementForUpdate(PreparedStatement statement, User object) throws DataBaseException {
         try {
-            GenericDao userDao = getDaoFromCurrentFactory(User.class);
-            userDao.update(object);
+            update(object);
             statement.setString(1, object.getName());
             statement.setString(2, object.getLogin());
             statement.setString(3, object.getPassword());

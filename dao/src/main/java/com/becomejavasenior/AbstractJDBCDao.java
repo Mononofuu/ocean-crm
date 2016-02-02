@@ -2,29 +2,25 @@ package com.becomejavasenior;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.List;
-import java.util.Set;
 
-public abstract class AbstractJDBCDao<T> implements GenericDao<T>{
+public abstract class AbstractJDBCDao<T> implements GenericDao<T> {
     private final static Logger LOGGER = LogManager.getLogger(AbstractJDBCDao.class);
-    private static DaoFactory daoFactory;
 
-    private AbstractJDBCDao() {
-    }
+    @Autowired
+    public DataSource dataSource;
 
-    protected AbstractJDBCDao(DaoFactory daoFactory) {
-        AbstractJDBCDao.daoFactory = daoFactory;
-    }
-
-    public static void setDaoFactory(DaoFactory daoFactory) {
-        AbstractJDBCDao.daoFactory = daoFactory;
-    }
-
-
-    protected Connection getConnection()throws DataBaseException{
-        return daoFactory.getConnection();
+    protected Connection getConnection() throws DataBaseException {
+        try {
+            return dataSource.getConnection();
+        } catch (SQLException e) {
+            LOGGER.catching(e);
+        }
+        return null;
     }
 
     /**
@@ -88,8 +84,7 @@ public abstract class AbstractJDBCDao<T> implements GenericDao<T>{
     @Override
     public T read(int key) throws DataBaseException {
         T result;
-        try (Connection connection = daoFactory.getConnection();
-             PreparedStatement statement = connection.prepareStatement(getReadQuery())) {
+        try (PreparedStatement statement = getConnection().prepareStatement(getReadQuery())) {
             statement.setInt(1, key);
             ResultSet rs = statement.executeQuery();
             List<T> allObjects = parseResultSet(rs);
@@ -107,7 +102,7 @@ public abstract class AbstractJDBCDao<T> implements GenericDao<T>{
     @Override
     public T readLite(int key) throws DataBaseException {
         T result;
-        try (Connection connection = daoFactory.getConnection();
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(getReadQuery())) {
             statement.setInt(1, key);
             ResultSet rs = statement.executeQuery();
@@ -126,8 +121,7 @@ public abstract class AbstractJDBCDao<T> implements GenericDao<T>{
     @Override
     public T create(T object) throws DataBaseException {
         T result;
-        try (Connection connection = daoFactory.getConnection();
-             PreparedStatement statement = connection.prepareStatement(getCreateQuery(), Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement statement = getConnection().prepareStatement(getCreateQuery(), Statement.RETURN_GENERATED_KEYS)) {
             prepareStatementForInsert(statement, object); // помещаем в запрос параметры object
             statement.executeUpdate();
             // получаем обратно новую запись через возвращенный id записи
@@ -146,8 +140,7 @@ public abstract class AbstractJDBCDao<T> implements GenericDao<T>{
 
     @Override
     public void update(T object) throws DataBaseException {
-        try (Connection connection = daoFactory.getConnection();
-             PreparedStatement statement = connection.prepareStatement(getUpdateQuery())) {
+        try (PreparedStatement statement = getConnection().prepareStatement(getUpdateQuery())) {
             prepareStatementForUpdate(statement, object);
             int state = statement.executeUpdate();
             if (state != 1) {
@@ -162,8 +155,7 @@ public abstract class AbstractJDBCDao<T> implements GenericDao<T>{
 
     @Override
     public void delete(int id) throws DataBaseException {
-        try (Connection connection = daoFactory.getConnection();
-             PreparedStatement statement = connection.prepareStatement(getDeleteQuery())) {
+        try (PreparedStatement statement = getConnection().prepareStatement(getDeleteQuery())) {
             statement.setInt(1, id);
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -175,8 +167,7 @@ public abstract class AbstractJDBCDao<T> implements GenericDao<T>{
     @Override
     public List<T> readAll() throws DataBaseException {
         List<T> result;
-        try (Connection connection = daoFactory.getConnection();
-             PreparedStatement statement = connection.prepareStatement(getReadAllQuery())) {
+        try (PreparedStatement statement = getConnection().prepareStatement(getReadAllQuery())) {
             ResultSet rs = statement.executeQuery();
             result = parseResultSet(rs);
         } catch (SQLException e) {
@@ -192,8 +183,7 @@ public abstract class AbstractJDBCDao<T> implements GenericDao<T>{
     @Override
     public List<T> readAllLite() throws DataBaseException {
         List<T> result;
-        try (Connection connection = daoFactory.getConnection();
-             PreparedStatement statement = connection.prepareStatement(getReadAllQuery())) {
+        try (PreparedStatement statement = getConnection().prepareStatement(getReadAllQuery())) {
             ResultSet rs = statement.executeQuery();
             result = parseResultSetLite(rs);
         } catch (SQLException e) {
@@ -206,55 +196,11 @@ public abstract class AbstractJDBCDao<T> implements GenericDao<T>{
         return result;
     }
 
-    /**
-     * Возвращает dao для переданного класса с текущим connection и daoFactory
-     */
-    protected GenericDao getDaoFromCurrentFactory(Class clazz) throws DataBaseException {
-        return daoFactory.getDao(clazz);
-    }
-
-    /**
-     * Метод для работы с обьектами наследующими Subject
-     */
-    protected <T extends Subject> int createSubject(T object) throws DataBaseException {
-        if (object instanceof Subject) {
-            GenericDao<Subject> subjectDao = getDaoFromCurrentFactory(Subject.class);
-            Subject subject = subjectDao.create(object);
-            createTags(object.getTags(), subject);
-            return subject.getId();
-        } else {
-            throw new DataBaseException();
-        }
-    }
-
-    private  <T extends Subject> void createTags(Set<Tag> tags, T object) throws DataBaseException {
-        if (tags == null) {
-            return;
-        } else {
-            GenericDao<Tag> tagDao = getDaoFromCurrentFactory(Tag.class);
-            GenericDao<SubjectTag> subjectTagDao = getDaoFromCurrentFactory(SubjectTag.class);
-            for (Tag tag : tags) {
-                SubjectTag subjectTag = new SubjectTag();
-                if(object instanceof Contact){
-                    tag.setSubjectType(SubjectType.CONTACT_TAG);
-                }else if(object instanceof Company){
-                    tag.setSubjectType(SubjectType.COMPANY_TAG);
-                }else if(object instanceof Deal){
-                    tag.setSubjectType(SubjectType.DEAL_TAG);
-                }
-                tag = tagDao.create(tag);
-                subjectTag.setTag(tag);
-                subjectTag.setSubject(object);
-                subjectTagDao.create(subjectTag);
-            }
-        }
-    }
-
-    protected List<T> realiseQuery(String query)throws DataBaseException{
+    protected List<T> realiseQuery(String query) throws DataBaseException {
         List<T> result;
         try (Connection connection = getConnection();
              Statement statement = connection.createStatement()
-        ){
+        ) {
             ResultSet rs = statement.executeQuery(query);
             result = parseResultSet(rs);
         } catch (SQLException e) {

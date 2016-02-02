@@ -1,8 +1,12 @@
 package com.becomejavasenior;
 
+import com.becomejavasenior.interfacedao.SubjectDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,10 +20,19 @@ import java.util.Objects;
  * Created by Peter on 26.12.2015.
  */
 @WebServlet("/commentedit")
-public class CommentController extends HttpServlet{
+public class CommentController extends HttpServlet {
     private final static Logger logger = LogManager.getLogger(DealController.class);
-    private DaoFactory dao;
-    private Comment comment;
+    @Autowired
+    private CommentService commentService;
+    @Autowired
+    private SubjectDAO subjectDAO;
+
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this,
+                config.getServletContext());
+    }
+
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -37,29 +50,27 @@ public class CommentController extends HttpServlet{
         String action = request.getParameter("action");
         switch (action) {
             case "update":
+                Comment comment;
                 try {
-                    dao = new PostgreSqlDaoFactory();
-                    GenericDao<Comment> commentDao = dao.getDao(Comment.class);
                     int id = getId(request);
-                    if(id==0){
+                    if (id == 0) {
                         comment = new Comment();
-                        GenericDao<Subject> subjectDao = dao.getDao(Subject.class);
-                        Subject subject = subjectDao.read(Integer.parseInt(request.getParameter("subjectid")));
+                        Subject subject = subjectDAO.read(Integer.parseInt(request.getParameter("subjectid")));
                         comment.setSubject(subject);
                         comment.setDateCreated(new Date());
                         comment.setUser((User) request.getSession().getAttribute("user"));
                         comment.setText(request.getParameter("commenttext"));
-                        commentDao.create(comment);
+                        commentService.saveComment(comment);
                         logger.info("Comment created:");
                         logger.info(comment.getId());
                         logger.info(comment.getSubject());
                         logger.info(comment.getText());
                         logger.info(comment.getDateCreated());
                         logger.info(comment.getUser());
-                    }else{
-                        comment = (Comment) commentDao.read(getId(request));
+                    } else {
+                        comment = commentService.findCommentById(getId(request));
                         comment.setText(request.getParameter("commenttext"));
-                        commentDao.update(comment);
+                        commentService.saveComment(comment);
                         logger.info("Comment updated:");
                         logger.info(comment.getId());
                         logger.info(comment.getText());
@@ -72,13 +83,11 @@ public class CommentController extends HttpServlet{
                 break;
             case "delete":
                 try {
-                    dao = new PostgreSqlDaoFactory();
-                    GenericDao<Comment> commentDao = dao.getDao(Comment.class);
                     int id = Integer.parseInt(request.getParameter("id"));
-                    commentDao.delete(id);
+                    commentService.deleteComment(id);
                     logger.info("Comment deleted:");
-                    logger.info("id="+id);
-                    request.getRequestDispatcher(request.getParameter("backurl")+"&id="+request.getParameter("subjectid")).forward(request, response);
+                    logger.info("id=" + id);
+                    request.getRequestDispatcher(request.getParameter("backurl") + "&id=" + request.getParameter("subjectid")).forward(request, response);
                 } catch (DataBaseException e) {
                     logger.error("Error while deleting comment");
                     logger.catching(e);
@@ -86,17 +95,15 @@ public class CommentController extends HttpServlet{
                 break;
             case "edit":
                 try {
-                    dao = new PostgreSqlDaoFactory();
                     int id = getId(request);
-                    if(id==0) {
+                    if (id == 0) {
                         comment = new Comment();
                         request.setAttribute("subjectid", request.getParameter("subjectid"));
-                    }else{
-                        GenericDao<Comment> commentDao = dao.getDao(Comment.class);
-                        comment = (Comment) commentDao.read(getId(request));
+                    } else {
+                        comment = commentService.findCommentById(getId(request));
                     }
                     request.setAttribute("comment", comment);
-                    request.setAttribute("backurl",request.getParameter("backurl")+"&id="+request.getParameter("subjectid"));
+                    request.setAttribute("backurl", request.getParameter("backurl") + "&id=" + request.getParameter("subjectid"));
                     request.getRequestDispatcher("jsp/commentedit.jsp").forward(request, response);
                 } catch (DataBaseException e) {
                     logger.error("Error while editing comment");

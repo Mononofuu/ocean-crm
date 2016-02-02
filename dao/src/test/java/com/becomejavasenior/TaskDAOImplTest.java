@@ -1,10 +1,18 @@
 package com.becomejavasenior;
 
+import com.becomejavasenior.config.DAODataSourceConfig;
+import com.becomejavasenior.impl.UserDAOImpl;
+import com.becomejavasenior.interfacedao.ContactDAO;
+import com.becomejavasenior.interfacedao.TaskDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -18,11 +26,10 @@ import static org.junit.Assert.assertEquals;
 /**
  * @author Anton Sakhno <sakhno83@gmail.com>
  */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = {DAODataSourceConfig.class})
 public class TaskDAOImplTest {
     private static final Logger LOGGER = LogManager.getLogger(TaskDAOImplTest.class);
-    private DaoFactory daoFactory;
-    private GenericDao<Task> taskDao;
-    private Task task;
     private static final String COMMENT_1 = "testcomment";
     private static final String COMMENT_2 = "changed comment";
     private static final String CONTACT_NAME = "test_contact_name";
@@ -31,12 +38,17 @@ public class TaskDAOImplTest {
     private static final String DATE_FORMAT = "MM/dd/yyyy";
     private static final String DUE_DATE_1 = "04/20/2020";
     private static final String DUE_DATE_2 = "10/20/2020";
+    @Autowired
+    private UserDAOImpl userDAO;
+    @Autowired
+    private TaskDAO taskDao;
+    @Autowired
+    private ContactDAO contactDao;
+    private Task task;
     private List<Object> objectsToDeleteFromDB = new ArrayList<>();
 
     @Before
-    public void setUp() throws DataBaseException{
-        daoFactory = new PostgreSqlDaoFactory();
-        taskDao = daoFactory.getDao(Task.class);
+    public void setUp() throws DataBaseException {
         task = new Task();
         task.setComment(COMMENT_1);
         task.setSubject(createContact());
@@ -71,21 +83,17 @@ public class TaskDAOImplTest {
     }
 
     @After
-    public void removeDBEntries() throws DataBaseException{
-        GenericDao<Contact> contactDao = daoFactory.getDao(Contact.class);
-        GenericDao<User> userDao = daoFactory.getDao(User.class);
-        for(Object object: objectsToDeleteFromDB){
-            if(object instanceof User){
-                userDao.delete(((User) object).getId());
-            }
-            else if(object instanceof Contact){
+    public void removeDBEntries() throws DataBaseException {
+        for (Object object : objectsToDeleteFromDB) {
+            if (object instanceof User) {
+                userDAO.delete(((User) object).getId());
+            } else if (object instanceof Contact) {
                 contactDao.delete(((Contact) object).getId());
             }
         }
     }
 
-    private Contact createContact()throws DataBaseException{
-        GenericDao<Contact> contactDao = daoFactory.getDao(Contact.class);
+    private Contact createContact() throws DataBaseException {
         Contact contact = new Contact();
         contact.setName(CONTACT_NAME);
         contact = contactDao.create(contact);
@@ -93,7 +101,7 @@ public class TaskDAOImplTest {
         return contact;
     }
 
-    private Date getDueDate(String dueDate){
+    private Date getDueDate(String dueDate) {
         DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
         Date result = new Date();
         try {
@@ -104,11 +112,10 @@ public class TaskDAOImplTest {
         return result;
     }
 
-    private User createUser(String name) throws DataBaseException{
-        GenericDao<User> userDao = daoFactory.getDao(User.class);
+    private User createUser(String name) throws DataBaseException {
         User user = new User();
         user.setName(name);
-        user = userDao.create(user);
+        user = userDAO.create(user);
         objectsToDeleteFromDB.add(user);
         return user;
     }

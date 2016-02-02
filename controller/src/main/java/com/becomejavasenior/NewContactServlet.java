@@ -1,12 +1,11 @@
 package com.becomejavasenior;
 
-import com.becomejavasenior.impl.CompanyServiceImpl;
-import com.becomejavasenior.impl.ContactServiceImpl;
-import com.becomejavasenior.impl.DealServiceImpl;
-import com.becomejavasenior.impl.UserServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -23,6 +22,20 @@ import java.util.*;
 @WebServlet("/new_contact_add")
 public class NewContactServlet extends HttpServlet {
     private final static Logger LOGGER = LogManager.getLogger(NewContactServlet.class);
+    @Autowired
+    private DealService dealService;
+    @Autowired
+    private ContactService contactService;
+    @Autowired
+    private CompanyService companyService;
+    @Autowired
+    private UserService userService;
+
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this,
+                config.getServletContext());
+    }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         this.process(request, response);
@@ -33,7 +46,6 @@ public class NewContactServlet extends HttpServlet {
     }
 
     private void process(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        ContactService contactService = new ContactServiceImpl();
         Contact newContact = new Contact();
         try {
             newContact.setName(request.getParameter("name"));
@@ -67,7 +79,6 @@ public class NewContactServlet extends HttpServlet {
         User result = null;
         if (id != null) {
             int key = Integer.parseInt(id);
-            UserService userService = new UserServiceImpl();
             result = userService.findUserById(key);
         }
         return result;
@@ -90,7 +101,6 @@ public class NewContactServlet extends HttpServlet {
         Company result = null;
         if (id != null) {
             int key = Integer.parseInt(id);
-            CompanyService companyService = new CompanyServiceImpl();
             result = companyService.findCompanyById(key);
         }
         return result;
@@ -120,7 +130,7 @@ public class NewContactServlet extends HttpServlet {
             LOGGER.info(dealType);
             int dealStatusId = Integer.parseInt(dealType);
             try {
-                DealStatus dealStatus = new DealServiceImpl().findDealStatus(dealStatusId);
+                DealStatus dealStatus = dealService.findDealStatus(dealStatusId);
                 deal.setStatus(dealStatus);
             } catch (DataBaseException e) {
                 LOGGER.error(e);

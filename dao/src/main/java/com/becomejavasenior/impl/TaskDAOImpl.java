@@ -1,9 +1,11 @@
 package com.becomejavasenior.impl;
 
 import com.becomejavasenior.*;
-import com.becomejavasenior.interfacedao.TaskDAO;
+import com.becomejavasenior.interfacedao.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.text.SimpleDateFormat;
@@ -14,12 +16,17 @@ import java.util.List;
 /**
  * created by Alekseichenko Sergey <mononofuu@gmail.com>
  */
+@Repository
 public class TaskDAOImpl extends AbstractJDBCDao<Task> implements TaskDAO {
     private static final Logger LOGGER = LogManager.getLogger(TaskDAOImpl.class);
-
-    public TaskDAOImpl(DaoFactory daoFactory) {
-        super(daoFactory);
-    }
+    @Autowired
+    public UserDAO userDAO;
+    @Autowired
+    public CompanyDAO companyDAO;
+    @Autowired
+    public ContactDAO contactDAO;
+    @Autowired
+    public DealDAO dealDAO;
 
     @Override
     public List<Task> getAllTasksByParameters(String userId, Date date, String taskTypeId) throws DataBaseException {
@@ -79,13 +86,12 @@ public class TaskDAOImpl extends AbstractJDBCDao<Task> implements TaskDAO {
     protected List<Task> parseResultSet(ResultSet rs) throws DataBaseException {
         List<Task> result = new ArrayList<>();
         try {
-            GenericDao userDao = getDaoFromCurrentFactory(User.class);
             while (rs.next()) {
                 Task task = new Task();
                 task.setId(rs.getInt("id"));
                 Subject subject = getSubject(rs.getInt("subject_id"));
                 task.setSubject(subject);
-                User user = (User) userDao.read(rs.getInt("user_id"));
+                User user = userDAO.read(rs.getInt("user_id"));
                 task.setUser(user);
                 task.setDateCreated(rs.getTimestamp("created_date"));
                 task.setDueTime(rs.getTimestamp("due_date"));
@@ -160,18 +166,15 @@ public class TaskDAOImpl extends AbstractJDBCDao<Task> implements TaskDAO {
     }
 
     public Subject getSubject(int id)throws DataBaseException{
-        GenericDao<Contact> contactDao = getDaoFromCurrentFactory(Contact.class);
-        GenericDao<Company> companyDao = getDaoFromCurrentFactory(Company.class);
-        GenericDao<Deal> dealDao = getDaoFromCurrentFactory(Deal.class);
-        Contact contact = contactDao.read(id);
+        Contact contact = contactDAO.read(id);
         if(contact!=null){
             return contact;
         }
-        Company company = companyDao.read(id);
+        Company company = companyDAO.read(id);
         if(company!=null){
             return company;
         }
-        Deal deal = dealDao.read(id);
+        Deal deal = dealDAO.read(id);
         if(deal!=null){
             return deal;
         }
@@ -195,12 +198,11 @@ public class TaskDAOImpl extends AbstractJDBCDao<Task> implements TaskDAO {
     private List<Task> parseResultSet(ResultSet rs, Subject subject) throws DataBaseException {
         List<Task> result = new ArrayList<>();
         try {
-            GenericDao userDao = getDaoFromCurrentFactory(User.class);
             while (rs.next()) {
                 Task task = new Task();
                 task.setId(rs.getInt("id"));
                 task.setSubject(subject);
-                User user = (User) userDao.read(rs.getInt("user_id"));
+                User user = userDAO.read(rs.getInt("user_id"));
                 task.setUser(user);
                 task.setDateCreated(rs.getTimestamp("created_date"));
                 task.setDueTime(rs.getTimestamp("due_date"));

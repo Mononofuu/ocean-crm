@@ -1,7 +1,11 @@
 package com.becomejavasenior.impl;
 
 import com.becomejavasenior.*;
+import com.becomejavasenior.interfacedao.SubjectDAO;
 import com.becomejavasenior.interfacedao.SubjectTagDAO;
+import com.becomejavasenior.interfacedao.TagDAO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -9,11 +13,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Repository
 public class SubjectTagDAOImpl extends AbstractJDBCDao<SubjectTag> implements SubjectTagDAO {
-
-    public SubjectTagDAOImpl(DaoFactory daoFactory) {
-        super(daoFactory);
-    }
+    @Autowired
+    public SubjectDAO subjectDAO;
+    @Autowired
+    public TagDAO tagDAO;
 
     @Override
     protected String getConditionStatment() {
@@ -50,13 +55,11 @@ public class SubjectTagDAOImpl extends AbstractJDBCDao<SubjectTag> implements Su
     protected List<SubjectTag> parseResultSet(ResultSet rs) throws DataBaseException {
         List<SubjectTag> result = new ArrayList<>();
         try {
-            GenericDao subjectDao = getDaoFromCurrentFactory(Subject.class);
-            GenericDao tagDao = getDaoFromCurrentFactory(Tag.class);
             while (rs.next()) {
                 SubjectTag subjectTag = new SubjectTag();
-                Subject subject = (Subject) subjectDao.read(rs.getInt("subject_id"));
+                Subject subject = subjectDAO.read(rs.getInt("subject_id"));
                 subjectTag.setSubject(subject);
-                Tag tag = (Tag) tagDao.read(rs.getInt("tag_id"));
+                Tag tag = tagDAO.read(rs.getInt("tag_id"));
                 subjectTag.setTag(tag);
                 result.add(subjectTag);
             }

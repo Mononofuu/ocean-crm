@@ -1,35 +1,45 @@
 package com.becomejavasenior;
 
+import com.becomejavasenior.config.DAODataSourceConfig;
+import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-import org.apache.commons.io.IOUtils;
-import java.io.*;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import javax.sql.DataSource;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Map;
+import java.util.TreeMap;
 
 import static org.junit.Assert.assertEquals;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = {DAODataSourceConfig.class})
 public class SchemaVersionTest {
-    private DaoFactory daoFactory;
     private static final Logger LOGGER = LogManager.getLogger(SchemaVersionTest.class);
     private static final String GET_DB_VERSION_QUERY = "SELECT version FROM db_version";
     private static final String CHANGE_DB_VERSION = "UPDATE db_version SET version = ";
 
-    @Before
-    public void setUp() throws DataBaseException {
-        daoFactory = new PostgreSqlDaoFactory();
-    }
+    @Autowired
+    DataSource dataSource;
 
     @Test
     public void schemaVersionTest() throws IOException{
-        try(Connection connection = daoFactory.getConnection();
-            Statement statement = connection.createStatement()){
+        try (Connection connection = dataSource.getConnection();
+             Statement statement = connection.createStatement()){
             connection.setAutoCommit(false);
             String version=getDBVersion(statement);
             Double schemaVersion = Double.parseDouble(version);
@@ -39,8 +49,6 @@ public class SchemaVersionTest {
             }else {
                 assertEquals(codeVersion,schemaVersion);
             }
-        }catch (DataBaseException e){
-            LOGGER.error(e);
         } catch (SQLException e) {
            LOGGER.error(e);
         }
@@ -48,12 +56,10 @@ public class SchemaVersionTest {
 
     @After
     public void infoMessage(){
-        try(Connection connection = daoFactory.getConnection();
-            Statement statement = connection.createStatement()){
+        try (Connection connection = dataSource.getConnection();
+             Statement statement = connection.createStatement()){
             LOGGER.info("DB version is "+getDBVersion(statement)+", code version is "+SchemaVersion.getDbVersion());
         } catch (SQLException e) {
-            LOGGER.error(e);
-        } catch (DataBaseException e) {
             LOGGER.error(e);
         }
     }

@@ -2,6 +2,10 @@ package com.becomejavasenior.impl;
 
 import com.becomejavasenior.*;
 import com.becomejavasenior.interfacedao.CommentDAO;
+import com.becomejavasenior.interfacedao.SubjectDAO;
+import com.becomejavasenior.interfacedao.UserDAO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,11 +14,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class CommentDAOImpl extends AbstractJDBCDao<Comment> implements CommentDAO {
 
-    public CommentDAOImpl(DaoFactory daoFactory) {
-        super(daoFactory);
-    }
+    @Autowired
+    public SubjectDAO subjectDAO;
+    @Autowired
+    private UserDAO userDAO;
 
     @Override
     public String getReadAllQuery() {
@@ -30,14 +36,12 @@ public class CommentDAOImpl extends AbstractJDBCDao<Comment> implements CommentD
     protected List<Comment> parseResultSet(ResultSet rs) throws DataBaseException {
         List<Comment> result = new ArrayList<>();
         try {
-            GenericDao subjectDao = getDaoFromCurrentFactory(Subject.class);
-            GenericDao userDao = getDaoFromCurrentFactory(User.class);
             while (rs.next()) {
                 Comment comment = new Comment();
                 comment.setId(rs.getInt("id"));
-                Subject subject = (Subject) subjectDao.read(rs.getInt("subject_id"));
+                Subject subject = subjectDAO.read(rs.getInt("subject_id"));
                 comment.setSubject(subject);
-                User user = (User) userDao.read(rs.getInt("user_id"));
+                User user = userDAO.read(rs.getInt("user_id"));
                 comment.setUser(user);
                 comment.setText(rs.getString("comment"));
                 comment.setDateCreated(rs.getTimestamp("created_date"));

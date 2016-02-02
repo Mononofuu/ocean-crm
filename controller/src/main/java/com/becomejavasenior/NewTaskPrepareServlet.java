@@ -1,9 +1,11 @@
 package com.becomejavasenior;
 
-import com.becomejavasenior.impl.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -18,6 +20,23 @@ import java.util.List;
 @WebServlet(name="new_task_prepare", urlPatterns = "/new_task_prepare")
 public class NewTaskPrepareServlet extends HttpServlet {
     private static final Logger LOGGER = LogManager.getLogger(NewTaskPrepareServlet.class);
+    @Autowired
+    private DealService dealService;
+    @Autowired
+    private ContactService contactService;
+    @Autowired
+    private CompanyService companyService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private TaskService taskService;
+
+
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this,
+                config.getServletContext());
+    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -31,11 +50,6 @@ public class NewTaskPrepareServlet extends HttpServlet {
 
     private void process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException{
         try {
-            TaskService taskService = new TaskServiceImpl();
-            UserService userService = new UserServiceImpl();
-            DealService dealService = new DealServiceImpl();
-            ContactService contactService = new ContactServiceImpl();
-            CompanyService companyService = new CompanyServiceImpl();
             List<User> usersList = userService.getAllUsers();
             req.setAttribute("userslist", usersList);
             List<TaskType> taskTypeList = taskService.getAllTaskTypes();

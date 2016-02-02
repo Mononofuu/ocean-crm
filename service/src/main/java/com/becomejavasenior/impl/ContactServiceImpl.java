@@ -1,28 +1,24 @@
 package com.becomejavasenior.impl;
 
 import com.becomejavasenior.*;
+import com.becomejavasenior.interfacedao.PhoneTypeDAO;
 import com.becomejavasenior.interfacedao.TagDAO;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
  * Created by Peter on 18.12.2015.
  */
+@Service
 public class ContactServiceImpl extends AbstractContactService<Contact> implements ContactService{
-    private static Logger logger = LogManager.getLogger(ContactServiceImpl.class);
-    private DaoFactory dao;
+    @Autowired
     private ContactDAOImpl contactDAO;
-
-    public ContactServiceImpl(){
-        try {
-            dao = new PostgreSqlDaoFactory();
-            contactDAO = (ContactDAOImpl) dao.getDao(Contact.class);
-        } catch (DataBaseException e) {
-            logger.error(e);
-        }
-    }
+    @Autowired
+    private PhoneTypeDAO phoneTypeDAO;
+    @Autowired
+    private TagDAO tagDAO;
 
     @Override
     public Contact saveContact(Contact contact) throws DataBaseException {
@@ -77,7 +73,6 @@ public class ContactServiceImpl extends AbstractContactService<Contact> implemen
 
     @Override
     public List<PhoneType> getAllPhoneTypes() throws DataBaseException {
-        GenericDao<PhoneType> phoneTypeDAO = dao.getDao(PhoneType.class);
         return phoneTypeDAO.readAll();
     }
 
@@ -96,13 +91,7 @@ public class ContactServiceImpl extends AbstractContactService<Contact> implemen
     }
 
     @Override
-    protected AbstractContactDAO<Contact> getDao() {
-        return contactDAO;
-    }
-
-    @Override
     public List<Tag> getAllContactTags() throws DataBaseException {
-        TagDAO tagDAO = (TagDAO)dao.getDao(Tag.class);
         return tagDAO.readAll(SubjectType.CONTACT_TAG);
     }
 }
