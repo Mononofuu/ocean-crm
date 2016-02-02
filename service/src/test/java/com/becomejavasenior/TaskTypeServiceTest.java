@@ -10,7 +10,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.util.List;
+import static com.becomejavasenior.TaskType.FOLLOW_UP;
 
 /**
  * created by Alekseichenko Sergey <mononofuu@gmail.com>
@@ -18,27 +18,15 @@ import java.util.List;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {ServiceConfig.class, DAODataSourceConfig.class})
 @ActiveProfiles("test")
-public class UserServiceTest {
+public class TaskTypeServiceTest {
     @Autowired
-    public UserService userService;
+    public TaskTypeService taskTypeService;
 
     @Test
-    public void readAllTest() {
-        User newUser = new User();
-        newUser.setName("SERG");
-        newUser.setLogin("login");
-        newUser.setPassword("password");
+    public void readTest() throws DataBaseException {
+        TaskType taskType = taskTypeService.findTaskTypeById(1);
 
-        List<User> userList = null;
-        int size = 0;
-        try {
-            userList = userService.getAllUsers();
-            size = userList.size();
-            userService.saveUser(newUser);
-            userList = userService.getAllUsers();
-        } catch (DataBaseException e) {
-            e.printStackTrace();
-        }
-        Assert.assertTrue(userList.size() == size + 1);
+        Assert.assertEquals(taskType, FOLLOW_UP);
     }
+
 }
