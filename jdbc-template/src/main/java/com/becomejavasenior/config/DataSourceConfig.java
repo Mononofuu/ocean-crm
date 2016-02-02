@@ -22,7 +22,7 @@ import java.util.Properties;
 @Configuration
 @ComponentScan
 public class DataSourceConfig {
-    private final static Logger LOGGER = LogManager.getLogger(DAODataSourceConfig.class);
+    private final static Logger LOGGER = LogManager.getLogger(DataSourceConfig.class);
     private static final String PROPERTY_FILE_NAME = "postgresql_config.properties";
 
     @Bean
