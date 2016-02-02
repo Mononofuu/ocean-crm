@@ -1,14 +1,17 @@
 package com.becomejavasenior.access;
 
 
+import com.becomejavasenior.DataBaseException;
 import com.becomejavasenior.Grants;
 import com.becomejavasenior.Role;
 import com.becomejavasenior.User;
+import com.becomejavasenior.impl.GrantsDAOImpl;
 import com.becomejavasenior.interfacedao.GrantsDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -73,6 +76,9 @@ public class UserFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
+        grantsDAO = WebApplicationContextUtils.
+                getRequiredWebApplicationContext(filterConfig.getServletContext()).
+                getBean(GrantsDAOImpl.class);
     }
 
     @Override
@@ -81,15 +87,15 @@ public class UserFilter implements Filter {
         Object userObject = ((HttpServletRequest) servletRequest).getSession().getAttribute("user");
         if (userObject != null && userObject instanceof User) {
             User loggedUserName = (User) userObject;
-//            try {
-//                List<Grants> grants = grantsDAO.readAll();
-//                if (isAllowedToUser(path, loggedUserName, grants)) {
+            try {
+                List<Grants> grants = grantsDAO.readAll();
+                if (isAllowedToUser(path, loggedUserName, grants)) {
             filterChain.doFilter(servletRequest, servletResponse);
-//                    return;
-//                }
-//            } catch (DataBaseException e) {
-//                LOGGER.error(e.getMessage());
-//            }
+                    return;
+                }
+            } catch (DataBaseException e) {
+                LOGGER.error(e.getMessage());
+            }
         }
         servletRequest.getRequestDispatcher("/").forward(servletRequest, servletResponse);
     }

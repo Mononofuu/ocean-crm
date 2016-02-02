@@ -113,7 +113,7 @@ public class DealsPyramidServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String filter = req.getParameter("selectedfilter");
         User user = (User) req.getSession().getAttribute("user");
-//        LOGGER.info(String.format("Selected filter: %s, for user: %s", filter, user.getLogin()));
+        LOGGER.info(String.format("Selected filter: %s, for user: %s", filter, user.getLogin()));
 
         try {
             List<FilterPeriod> filterPeriods = new ArrayList<>(Arrays.asList(FilterPeriod.values()));
@@ -127,8 +127,13 @@ public class DealsPyramidServlet extends HttpServlet {
 
             SortedMap<DealStatus, List<Deal>> dealsToStatus = new TreeMap<>();
             for (DealStatus status : statuses) {
+                LOGGER.debug("STATUS: " + status);
+                LOGGER.debug("STATUS: " + status.getName());
+                LOGGER.debug(deals.size());
+                LOGGER.debug("DEAL: " + deals.get(0).getStatus());
+                LOGGER.debug("DEAL: " + deals.get(0).getStatus().getName());
                 dealsToStatus.put(status, new ArrayList<>());
-                deals.stream().filter(deal -> deal.getStatus().equals(status)).forEach(deal1 -> dealsToStatus.get(status).add(deal1));
+                deals.stream().filter(deal -> deal.getStatus().getName().equals(status.getName())).forEach(deal1 -> dealsToStatus.get(status).add(deal1));
             }
 
             req.setAttribute("filterperiod", filterPeriods);
@@ -148,7 +153,7 @@ public class DealsPyramidServlet extends HttpServlet {
 
     private List<Deal> applyFilter(HttpServletRequest req) throws DataBaseException {
         String filterName = req.getParameter("selectedfilter");
-        List<Deal> deals = dealService.findDealsLite();
+        List<Deal> deals = dealService.findDeals();
 
         if (filterName == null || "null".equals(filterName) || deals.isEmpty()) {
             return deals;
