@@ -145,7 +145,7 @@
                                             <fmt:formatDate type="both" value="${task.dueTime}" pattern="dd.MM.yyyy HH:mm"/><br>
                                             <div class="comment">${task.comment}</div>
                                             ${task.user.name}<br>
-                                            <spring:message code="label.type"/>: ${task.type.toString()}<br>
+                                            <spring:message code="label.type"/>: <spring:message code="${task.type.toString()}"/><br>
                                             ${task.subject.name}<br>
                                         </div>
                                     </c:if>
@@ -161,7 +161,7 @@
                                             <fmt:formatDate type="both" value="${task.dueTime}" pattern="dd.MM.yyyy HH:mm"/><br>
                                             <div class="comment">${task.comment}</div>
                                             ${task.user.name}<br>
-                                            <spring:message code="label.type"/>: ${task.type.toString()}<br>
+                                            <spring:message code="label.type"/>: <spring:message code="${task.type.toString()}"/><br>
                                             ${task.subject.name}<br>
                                         </div>
                                     </c:if>
