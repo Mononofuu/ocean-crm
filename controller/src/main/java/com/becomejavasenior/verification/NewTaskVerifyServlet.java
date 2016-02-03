@@ -23,7 +23,7 @@ public class NewTaskVerifyServlet extends AbstractVerifyServlet {
             result.put("taskresponsible", "Укажите ответственного");
         }
         String subject = req.getParameter("subject");
-        if(subject==null||"".equals(subject)){
+        if(subject==null||"".equals(subject)||!"newcontactform".equals(subject)){
             result.put("subject", "Укажите к кому относится задача");
         }
         return result;

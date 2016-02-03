@@ -177,6 +177,7 @@
                                       rows="2"></textarea>
                         </div>
                     </div>
+                    <input type="hidden" name="subject" value="newcontactform">
                     <input class="btn btn-primary" type="submit" value='<spring:message code="label.add"/>' id="addtask">
             </div>
         </div>

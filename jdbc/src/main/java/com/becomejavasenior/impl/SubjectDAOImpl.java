@@ -114,7 +114,8 @@ public class SubjectDAOImpl extends AbstractJDBCDao<Subject> implements SubjectD
     public <T extends Subject> int createSubject(T object) throws DataBaseException {
         if (object != null) {
             Subject subject = create(object);
-            createTags(object.getTags(), subject);
+            object.setId(subject.getId());
+            createTags(object.getTags(), object);
             return subject.getId();
         } else {
             throw new DataBaseException();
@@ -131,6 +132,8 @@ public class SubjectDAOImpl extends AbstractJDBCDao<Subject> implements SubjectD
                     tag.setSubjectType(SubjectType.COMPANY_TAG);
                 } else if (object instanceof Deal) {
                     tag.setSubjectType(SubjectType.DEAL_TAG);
+                } else {
+                    throw new DataBaseException("error creating tag "+object.getClass());
                 }
                 tag = tagDAO.create(tag);
                 subjectTag.setTag(tag);
