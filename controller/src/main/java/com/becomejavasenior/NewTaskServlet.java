@@ -48,7 +48,6 @@ public class NewTaskServlet extends HttpServlet{
     private void process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException{
         req.setCharacterEncoding("UTF-8");
         try {
-            taskService = new TaskServiceImpl();
             taskService.saveTask(getTaskFromRequest(req));
             getServletContext().getRequestDispatcher("/tasklist").forward(req,resp);
         } catch (DataBaseException e) {

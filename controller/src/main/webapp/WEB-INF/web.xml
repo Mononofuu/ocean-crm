@@ -17,8 +17,8 @@
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>
-            /WEB-INF/spring-localization-servlet.xml
-            classpath:/service-config.xml
+            /WEB-INF/spring/spring-localization-servlet.xml
+            /WEB-INF/spring/root_context.xml
         </param-value>
     </context-param>
 

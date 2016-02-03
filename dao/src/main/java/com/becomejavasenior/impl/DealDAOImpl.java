@@ -19,7 +19,7 @@ import static com.becomejavasenior.DealFilters.WITH_EXPIRED_TASKS;
 /**
  * created by Alekseichenko Sergey <mononofuu@gmail.com>
  */
-@Repository
+
 public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
 
     public static final String DEAL_SELECT_TAG = " WHERE deal.id IN(SELECT subject_id FROM subject_tag " +

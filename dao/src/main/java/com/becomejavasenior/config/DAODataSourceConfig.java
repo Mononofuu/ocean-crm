@@ -20,7 +20,6 @@ import java.util.Properties;
  * created by Alekseichenko Sergey <mononofuu@gmail.com>
  */
 @Configuration
-@ComponentScan(basePackages = "com.becomejavasenior.impl")
 public class DAODataSourceConfig {
     private final static Logger LOGGER = LogManager.getLogger(DAODataSourceConfig.class);
     private static final String PROPERTY_FILE_NAME = "postgresql_config.properties";

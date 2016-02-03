@@ -1,6 +1,8 @@
 package com.becomejavasenior.impl;
 
 import com.becomejavasenior.*;
+import com.becomejavasenior.interfacedao.TaskDAO;
+import com.becomejavasenior.interfacedao.TaskTypeDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +21,9 @@ import java.util.Map;
 public class TaskServiceImpl implements TaskService {
     private static Logger logger = LogManager.getLogger(TaskServiceImpl.class);
     @Autowired
-    private TaskDAOImpl taskDAO;
+    private TaskDAO taskDAO;
     @Autowired
-    private TaskTypeDAOImpl taskTypeDAO;
+    private TaskTypeDAO taskTypeDAO;
 
     @Override
     public Task saveTask(Task task) throws DataBaseException {

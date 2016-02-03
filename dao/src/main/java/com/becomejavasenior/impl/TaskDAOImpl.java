@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * created by Alekseichenko Sergey <mononofuu@gmail.com>
  */
-@Repository
+
 public class TaskDAOImpl extends AbstractJDBCDao<Task> implements TaskDAO {
     private static final Logger LOGGER = LogManager.getLogger(TaskDAOImpl.class);
     @Autowired

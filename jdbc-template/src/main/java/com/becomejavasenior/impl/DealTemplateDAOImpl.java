@@ -15,7 +15,10 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
 
+import javax.annotation.PostConstruct;
+import javax.sql.DataSource;
 import java.sql.*;
 import java.sql.Date;
 import java.util.*;
@@ -23,12 +26,14 @@ import java.util.*;
 /**
  * @author Anton Sakhno <sakhno83@gmail.com>
  */
-
+@Repository
 public class DealTemplateDAOImpl extends SubjectTemplateDAOImpl<Deal> implements DealDAO {
     @Autowired
     private RowMapper<Deal> dealRowMapper;
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    @Autowired
+    private DataSource dataSource;
     private final static Logger LOGGER = LogManager.getLogger(DealTemplateDAOImpl.class);
     private static final String DEAL_SELECT_TAG = " WHERE deal.id IN(SELECT subject_id FROM subject_tag " +
             "WHERE subject_tag.tag_id IN (SELECT id FROM tag WHERE name IN (";
@@ -48,6 +53,11 @@ public class DealTemplateDAOImpl extends SubjectTemplateDAOImpl<Deal> implements
     private static final String UPDATE_QUERY = "UPDATE deal SET status_id = ?, currency_id = ?, budget = ?, contact_main_id = ?," +
             "company_id = ?, data_close = ?, created_date = ?, responsible_id = ? WHERE id = ?";
     private static final String DELETE_QUERY = "DELETE FROM deal WHERE id = ?";
+
+    @PostConstruct
+    private void initialize() {
+        setDataSource(dataSource);
+    }
 
     public List<Deal> readAllLite() throws DataBaseException {
         return null;
