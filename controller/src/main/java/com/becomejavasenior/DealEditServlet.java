@@ -23,7 +23,7 @@ import java.util.*;
 @WebServlet("/dealedit")
 public class DealEditServlet extends HttpServlet {
 
-    private final static Logger logger = LogManager.getLogger(DealController.class);
+    private final static Logger LOGGER = LogManager.getLogger(DealController.class);
     @Autowired
     private DealService dealService;
     @Autowired
@@ -91,33 +91,33 @@ public class DealEditServlet extends HttpServlet {
                             contact.setEmail(request.getParameter("contactemail" + contactId));
                             contact.setSkype(request.getParameter("contactskype" + contactId));
                             contactService.saveContact(contact);
-                            logger.info("Contact updated:");
-                            logger.info(contact.getId());
-                            logger.info(contact.getName());
-                            logger.info(contact.getCompany().toString());
-                            logger.info(contact.getPost());
-                            logger.info(contact.getPhone());
-                            logger.info(contact.getPhoneType());
-                            logger.info(contact.getUser());
-                            logger.info(contact.getEmail());
-                            logger.info(contact.getSkype());
+                            LOGGER.info("Contact updated:");
+                            LOGGER.info(contact.getId());
+                            LOGGER.info(contact.getName());
+                            LOGGER.info(contact.getCompany().toString());
+                            LOGGER.info(contact.getPost());
+                            LOGGER.info(contact.getPhone());
+                            LOGGER.info(contact.getPhoneType());
+                            LOGGER.info(contact.getUser());
+                            LOGGER.info(contact.getEmail());
+                            LOGGER.info(contact.getSkype());
                             requestString = "/dealedit?action=edit&id=" + request.getParameter("dealid");
                             break;
                         case "delete":
                             dealContactDAO.deleteDealContact(dealId, contactId);
-                            logger.info("deal contact deleteded:");
-                            logger.info("deal " + dealId);
-                            logger.info("contact " + contactId);
+                            LOGGER.info("deal contact deleteded:");
+                            LOGGER.info("deal " + dealId);
+                            LOGGER.info("contact " + contactId);
                             Deal deal = dealService.findDealById(dealId);
                             deal.setMainContact(null);
                             dealService.saveDeal(deal);
-                            logger.info("main contact deleted");
+                            LOGGER.info("main contact deleted");
                             requestString = "/dealedit?action=edit&id=" + request.getParameter("dealid");
                             break;
                     }
                 } catch (DataBaseException e) {
-                    logger.error("Error while updating contact");
-                    logger.catching(e);
+                    LOGGER.error("Error while updating contact");
+                    LOGGER.catching(e);
                 }
                 request.getRequestDispatcher(requestString).forward(request, response);
                 break;
@@ -164,18 +164,18 @@ public class DealEditServlet extends HttpServlet {
                                 DealStatus dealStatus = dealStatusDAO.read(Integer.parseInt(request.getParameter("dealstatus")));
                                 deal.setStatus(dealStatus);
                                 dealService.saveDeal(deal);
-                                logger.info("deal updated:");
-                                logger.info(deal.getName());
-                                logger.info(deal.getDealCompany());
-                                logger.info(deal.getMainContact());
-                                logger.info(deal.getTags());
-                                logger.info(deal.getUser());
-                                logger.info(deal.getBudget());
-                                logger.info(deal.getCurrency());
-                                logger.info(deal.getStatus());
+                                LOGGER.info("deal updated:");
+                                LOGGER.info(deal.getName());
+                                LOGGER.info(deal.getDealCompany());
+                                LOGGER.info(deal.getMainContact());
+                                LOGGER.info(deal.getTags());
+                                LOGGER.info(deal.getUser());
+                                LOGGER.info(deal.getBudget());
+                                LOGGER.info(deal.getCurrency());
+                                LOGGER.info(deal.getStatus());
                             } catch (DataBaseException e) {
-                                logger.error("Error while updating deal");
-                                logger.catching(e);
+                                LOGGER.error("Error while updating deal");
+                                LOGGER.catching(e);
                             }
                             request.getRequestDispatcher("/dealedit?action=edit&id=" + request.getParameter("id")).forward(request, response);
                             break;
@@ -189,15 +189,15 @@ public class DealEditServlet extends HttpServlet {
                                 dealContact.setDeal(dealService.findDealById(id));
                                 dealContact.setContact(contact);
                                 dealContactDAO.create(dealContact);
-                                logger.info("deal updated:");
-                                logger.info(subject.getId());
-                                logger.info(subject.getName());
-                                logger.info("add contact:");
-                                logger.info(contact.getId());
-                                logger.info(contact.getName());
+                                LOGGER.info("deal updated:");
+                                LOGGER.info(subject.getId());
+                                LOGGER.info(subject.getName());
+                                LOGGER.info("add contact:");
+                                LOGGER.info(contact.getId());
+                                LOGGER.info(contact.getName());
                             } catch (DataBaseException e) {
-                                logger.error("Error while updating deal");
-                                logger.catching(e);
+                                LOGGER.error("Error while updating deal");
+                                LOGGER.catching(e);
                             }
                             request.getRequestDispatcher("/dealedit?action=edit&id=" + request.getParameter("id")).forward(request, response);
                             break;
@@ -250,8 +250,7 @@ public class DealEditServlet extends HttpServlet {
                     request.setAttribute("tasks", taskList);
 
                 } catch (DataBaseException e) {
-                    e.printStackTrace();
-                }
+                    LOGGER.error(e);                }
                 request.getRequestDispatcher("jsp/dealedit.jsp").forward(request, response);
                 break;
         }
