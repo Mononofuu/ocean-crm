@@ -13,4 +13,9 @@ public interface CommentService {
     void deleteComment(int id) throws DataBaseException;
 
     List<Comment> findComments() throws DataBaseException;
+
+    List<Comment> findCommentsBySubjectId(int id) throws DataBaseException;
+
+    Subject getSubject(int id) throws DataBaseException;
+
 }

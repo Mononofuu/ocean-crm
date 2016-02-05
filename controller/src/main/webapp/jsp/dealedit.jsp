@@ -401,7 +401,7 @@
                                 <td><fmt:formatDate pattern="dd.MM.yyyy HH:mm" value="${task.dateCreated}"/></td>
                                 <td><fmt:formatDate pattern="dd.MM.yyyy HH:mm" value="${task.dueTime}"/></td>
                                 <td>${task.user.name}</td>
-                                <td>${task.type.toString()}</td>
+                                <td><spring:message code="${task.type.toString()}"/></td>
                                 <td>${task.comment}</td>
                                 <c:choose>
                                     <c:when test="${(task.isClosed == 1) || (task.isDeleted == 1)}">

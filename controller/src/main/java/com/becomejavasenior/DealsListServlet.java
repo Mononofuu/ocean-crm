@@ -1,7 +1,5 @@
 package com.becomejavasenior;
 
-import com.becomejavasenior.interfacedao.DealStatusDAO;
-import com.becomejavasenior.interfacedao.UserDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +25,9 @@ public class DealsListServlet extends HttpServlet {
     private final static Logger LOGGER = LogManager.getLogger(DealsListServlet.class);
 
     @Autowired
-    private DealStatusDAO dealStatusDAO;
-    @Autowired
-    private UserDAO userDAO;
-    @Autowired
     private DealService dealService;
+    @Autowired
+    private UserService userService;
 
 
     public void init(ServletConfig config) throws ServletException {
@@ -64,8 +60,8 @@ public class DealsListServlet extends HttpServlet {
 
             List<Deal> dealsList = new ArrayList<>();
 
-            List<DealStatus> dealStatusList = dealStatusDAO.readAllLite();
-            List<User> userList = userDAO.readAllLite();
+            List<DealStatus> dealStatusList = dealService.getAllDealStatuses();
+            List<User> userList = userService.getAllUsersLite();
             List<FilterPeriod> filterPeriods = new ArrayList<>(Arrays.asList(FilterPeriod.values()));
             List<FilterTaskType> filterTaskTypes = new ArrayList<>(Arrays.asList(FilterTaskType.values()));
 

@@ -126,6 +126,11 @@ public class DealServiceImpl implements com.becomejavasenior.DealService {
     }
 
     @Override
+    public void deleteContactFromDeal(int dealId, int contactId) throws DataBaseException {
+        dealContactDAO.deleteDealContact(dealId, contactId);
+    }
+
+    @Override
     public Filter saveDealFilter(Filter filter) throws DataBaseException {
         if (filter.getId() == 0) {
             return filterDAO.create(filter);

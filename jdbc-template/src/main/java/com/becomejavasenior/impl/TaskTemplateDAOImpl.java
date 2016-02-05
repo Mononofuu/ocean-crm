@@ -133,7 +133,7 @@ public class TaskTemplateDAOImpl extends JdbcDaoSupport implements TaskDAO {
 
     @Override
     public List<Task> getAllTasksBySubjectId(int id) throws DataBaseException {
-        return getJdbcTemplate().query(READ_ALL+" WHERE subject_id = ?", taskRowMapper);
+        return getJdbcTemplate().query(READ_ALL+" WHERE subject_id = " + id, taskRowMapper);
     }
 
     @Override

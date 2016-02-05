@@ -45,11 +45,9 @@
 
         <div class="form-group">
             <label class="col-md-2 control-label" for="btn_comment_save"></label>
-            <div class="col-md-2">
+            <div class="col-md-4">
                 <button id="btn_comment_save" name="btn_comment_save" class="btn btn-default"><spring:message code="label.save"/></button>
                 <button id="btn_comment_cancel" name="btn_comment_cancel" class="btn btn-default" onclick="window.history.back()"><spring:message code="label.cancel"/></button>
-            </div>
-            <div class="col-md-2">
             </div>
         </div>
 

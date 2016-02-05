@@ -17,5 +17,6 @@ public interface ContactService {
         Contact findContactByName(String name) throws DataBaseException;
         List<PhoneType> getAllPhoneTypes() throws DataBaseException;
         List<Contact> getAllContactsByParameters(Map<String, String[]> parameters) throws DataBaseException;
+        List<Contact> getAllContactsBySubjectId(int id) throws DataBaseException;
         List<Tag> getAllContactTags() throws DataBaseException;
 }

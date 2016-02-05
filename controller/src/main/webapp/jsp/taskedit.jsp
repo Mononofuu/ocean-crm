@@ -104,10 +104,10 @@
                     <c:forEach items="${tasktypes}" var="task_type">
                         <c:choose>
                             <c:when test="${task_type == task.type}">
-                                <option selected value=${task_type}>${task_type.toString()}</option>
+                                <option selected value=${task_type}><spring:message code="${task_type.toString()}"/></option>
                             </c:when>
                             <c:otherwise>
-                                <option value=${task_type}>${task_type.toString()}</option>
+                                <option value=${task_type}><spring:message code="${task_type.toString()}"/></option>
                             </c:otherwise>
                         </c:choose>
                     </c:forEach>

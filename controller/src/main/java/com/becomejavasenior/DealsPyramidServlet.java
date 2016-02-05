@@ -143,7 +143,7 @@ public class DealsPyramidServlet extends HttpServlet {
             req.setAttribute("filters", filters);
 
         } catch (DataBaseException e) {
-            LOGGER.error("Error while getting DAO");
+            LOGGER.error("Error while getting Service");
             LOGGER.catching(e);
         }
         RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(NEXT_JSP);

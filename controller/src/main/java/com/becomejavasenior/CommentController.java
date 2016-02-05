@@ -1,6 +1,5 @@
 package com.becomejavasenior;
 
-import com.becomejavasenior.interfacedao.SubjectDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +23,6 @@ public class CommentController extends HttpServlet {
     private final static Logger logger = LogManager.getLogger(DealController.class);
     @Autowired
     private CommentService commentService;
-    @Autowired
-    private SubjectDAO subjectDAO;
 
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
@@ -55,7 +52,7 @@ public class CommentController extends HttpServlet {
                     int id = getId(request);
                     if (id == 0) {
                         comment = new Comment();
-                        Subject subject = subjectDAO.read(Integer.parseInt(request.getParameter("subjectid")));
+                        Subject subject = commentService.getSubject(Integer.parseInt(request.getParameter("subjectid")));
                         comment.setSubject(subject);
                         comment.setDateCreated(new Date());
                         comment.setUser((User) request.getSession().getAttribute("user"));

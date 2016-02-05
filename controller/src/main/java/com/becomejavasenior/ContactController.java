@@ -1,6 +1,5 @@
 package com.becomejavasenior;
 
-import com.becomejavasenior.interfacedao.PhoneTypeDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +27,6 @@ public class ContactController extends HttpServlet {
     private ContactService contactService;
     @Autowired
     private UserService userService;
-    @Autowired
-    private PhoneTypeDAO phoneTypeDAO;
 
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
@@ -63,7 +60,6 @@ public class ContactController extends HttpServlet {
                     contact.setPhone(request.getParameter("contactphonenumber"));
                     contact.setEmail(request.getParameter("contactemail"));
                     contact.setSkype(request.getParameter("contactskype"));
-                    Contact createdContact = contactService.saveContact(contact);
                     contactService.saveContact(contact);
                     logger.info("Contact created:");
                     logger.info(contact.getId());
@@ -119,7 +115,7 @@ public class ContactController extends HttpServlet {
 
                     List<User> userList = userService.getAllUsers();
                     request.setAttribute("users", userList);
-                    List<PhoneType> phoneTypeList = phoneTypeDAO.readAll();
+                    List<PhoneType> phoneTypeList = contactService.getAllPhoneTypes();
                     request.setAttribute("phonetypes", phoneTypeList);
                     request.getRequestDispatcher("jsp/contactedit.jsp").forward(request, response);
                 } catch (DataBaseException e) {

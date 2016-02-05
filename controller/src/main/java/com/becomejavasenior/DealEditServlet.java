@@ -1,8 +1,5 @@
 package com.becomejavasenior;
 
-import com.becomejavasenior.impl.CompanyServiceImpl;
-import com.becomejavasenior.impl.ContactServiceImpl;
-import com.becomejavasenior.interfacedao.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,27 +21,23 @@ import java.util.*;
 public class DealEditServlet extends HttpServlet {
 
     private final static Logger LOGGER = LogManager.getLogger(DealController.class);
+
     @Autowired
     private DealService dealService;
     @Autowired
-    private DealContactDAO dealContactDAO;
+    private CompanyService companyService;
     @Autowired
-    private UserDAO userDAO;
+    private ContactService contactService;
     @Autowired
-    private CurrencyDAO currencyDAO;
+    private UserService userService;
     @Autowired
-    private DealStatusDAO dealStatusDAO;
+    private CurrencyService currencyService;
     @Autowired
-    private CommentDAO commentDAO;
+    private TagService tagService;
     @Autowired
-    private TaskDAO taskDAO;
+    private CommentService commentService;
     @Autowired
-    private SubjectDAO subjectDAO;
-    @Autowired
-    private TagDAO tagDAO;
-    @Autowired
-    private PhoneTypeDAO phoneTypeDAO;
-
+    private TaskService taskService;
 
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
@@ -79,10 +72,8 @@ public class DealEditServlet extends HttpServlet {
                             request.setAttribute("backurl", "/dealedit?action=edit&id=" + dealId);
                             break;
                         case "save":
-                            ContactService contactService = new ContactServiceImpl();
                             Contact contact = contactService.findContactById(contactId);
                             contact.setName(request.getParameter("contactname" + contactId));
-                            CompanyService companyService = new CompanyServiceImpl();
                             Company company = companyService.findCompanyById(Integer.parseInt(request.getParameter("contactcompany" + contactId)));
                             contact.setCompany(company);
                             contact.setPost(request.getParameter("contactpost" + contactId));
@@ -104,7 +95,7 @@ public class DealEditServlet extends HttpServlet {
                             requestString = "/dealedit?action=edit&id=" + request.getParameter("dealid");
                             break;
                         case "delete":
-                            dealContactDAO.deleteDealContact(dealId, contactId);
+                            dealService.deleteContactFromDeal(dealId, contactId);
                             LOGGER.info("deal contact deleteded:");
                             LOGGER.info("deal " + dealId);
                             LOGGER.info("contact " + contactId);
@@ -136,10 +127,8 @@ public class DealEditServlet extends HttpServlet {
                                 int id = Integer.parseInt(request.getParameter("id"));
                                 Deal deal = dealService.findDealById(id);
                                 deal.setName(request.getParameter("name"));
-                                CompanyService companyService = new CompanyServiceImpl();
                                 Company company = companyService.findCompanyById(Integer.parseInt(request.getParameter("company")));
                                 deal.setDealCompany(company);
-                                ContactService contactService = new ContactServiceImpl();
                                 int mainContactId = Integer.parseInt(request.getParameter("maincontact"));
                                 Contact mainContact = null;
                                 if (mainContactId != 0) {
@@ -156,12 +145,12 @@ public class DealEditServlet extends HttpServlet {
                                     set.add(tag);
                                 }
                                 deal.setTags(set);
-                                User user = userDAO.read(Integer.parseInt(request.getParameter("user")));
+                                User user = userService.findUserById(Integer.parseInt(request.getParameter("user")));
                                 deal.setResponsible(user);
                                 deal.setBudget(Integer.parseInt(request.getParameter("budget")));
-                                Currency currency = currencyDAO.read(Integer.parseInt(request.getParameter("currency")));
+                                Currency currency = currencyService.findCurrencyById(Integer.parseInt(request.getParameter("currency")));
                                 deal.setCurrency(currency);
-                                DealStatus dealStatus = dealStatusDAO.read(Integer.parseInt(request.getParameter("dealstatus")));
+                                DealStatus dealStatus = dealService.findDealStatus(Integer.parseInt(request.getParameter("dealstatus")));
                                 deal.setStatus(dealStatus);
                                 dealService.saveDeal(deal);
                                 LOGGER.info("deal updated:");
@@ -181,17 +170,12 @@ public class DealEditServlet extends HttpServlet {
                             break;
                         case "dealcontactadd":
                             try {
-                                int id = Integer.parseInt(request.getParameter("id"));
-                                ContactService contactService = new ContactServiceImpl();
+                                Deal deal = dealService.findDealById(Integer.parseInt(request.getParameter("id")));
                                 Contact contact = contactService.findContactById(Integer.parseInt(request.getParameter("newcontact")));
-                                Subject subject = subjectDAO.read(id);
-                                DealContact dealContact = new DealContact();
-                                dealContact.setDeal(dealService.findDealById(id));
-                                dealContact.setContact(contact);
-                                dealContactDAO.create(dealContact);
+                                dealService.addContactToDeal(deal, contact);
                                 LOGGER.info("deal updated:");
-                                LOGGER.info(subject.getId());
-                                LOGGER.info(subject.getName());
+                                LOGGER.info(deal.getId());
+                                LOGGER.info(deal.getName());
                                 LOGGER.info("add contact:");
                                 LOGGER.info(contact.getId());
                                 LOGGER.info(contact.getName());
@@ -210,44 +194,45 @@ public class DealEditServlet extends HttpServlet {
                 break;
             case "edit":
                 try {
-                    Deal deal = dealService.findDealById(getId(request));
+                    int id = getId(request);
+
+                    Deal deal = dealService.findDealById(id);
                     request.setAttribute("deal", deal);
 
-                    List<DealStatus> dealStatusList = dealStatusDAO.readAll();
+                    List<DealStatus> dealStatusList = dealService.getAllDealStatuses();
                     request.setAttribute("deal_statuses", dealStatusList);
 
-                    List<User> userList = userDAO.readAll();
+                    List<User> userList = userService.getAllUsers();
                     request.setAttribute("users", userList);
 
-                    CompanyService companyService = new CompanyServiceImpl();
                     List<Company> companyList = companyService.findCompaniesLite();
                     request.setAttribute("companies", companyList);
 
-                    ContactService contactService = new ContactServiceImpl();
                     List<Contact> contactList = contactService.findContactsLite();
                     request.setAttribute("contacts", contactList);
 
-                    List<PhoneType> phoneTypeList = phoneTypeDAO.readAll();
+                    List<PhoneType> phoneTypeList = contactService.getAllPhoneTypes();
                     request.setAttribute("phonetypes", phoneTypeList);
 
-                    List<Contact> dealContactList = dealContactDAO.getAllContactsBySubjectId(deal.getId());
+                    List<Contact> dealContactList = contactService.getAllContactsBySubjectId(deal.getId());
                     request.setAttribute("dealcontacts", dealContactList);
 
-                    List<Tag> tagList = tagDAO.readAllSubjectTags(deal.getId());
+                    List<Currency> currencyList = currencyService.findCurrencies();
+                    request.setAttribute("currencies", currencyList);
+
+                    List<Comment> commentList = commentService.findCommentsBySubjectId(deal.getId());
+
+                    request.setAttribute("comments", commentList);
+
+                    List<Task> taskList = taskService.getTasksBySubject(taskService.getSubject(id));
+                    request.setAttribute("tasks", taskList);
+
+                    List<Tag> tagList = tagService.getAllTagsBySubjectId(deal.getId());
                     StringBuilder sb = new StringBuilder();
                     for (Tag tag : tagList) {
                         sb.append(tag.getName() + " ");
                     }
                     request.setAttribute("tags", sb.toString());
-
-                    List<Currency> currencyList = currencyDAO.readAll();
-                    request.setAttribute("currencies", currencyList);
-
-                    List<Comment> commentList = commentDAO.getAllCommentsBySubjectId(deal.getId());
-                    request.setAttribute("comments", commentList);
-
-                    List<Task> taskList = taskDAO.getAllTasksBySubjectId(deal.getId());
-                    request.setAttribute("tasks", taskList);
 
                 } catch (DataBaseException e) {
                     LOGGER.error(e);                }

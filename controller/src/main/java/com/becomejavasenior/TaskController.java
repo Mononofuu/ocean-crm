@@ -1,10 +1,5 @@
 package com.becomejavasenior;
 
-import com.becomejavasenior.impl.UserServiceImpl;
-import com.becomejavasenior.interfacedao.SubjectDAO;
-import com.becomejavasenior.interfacedao.TaskDAO;
-import com.becomejavasenior.interfacedao.TaskTypeDAO;
-import com.becomejavasenior.interfacedao.UserDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,14 +26,9 @@ import java.util.Objects;
 public class TaskController extends HttpServlet {
     private final static Logger logger = LogManager.getLogger(DealController.class);
     @Autowired
-    private TaskDAO taskDAO;
+    private TaskService taskService;
     @Autowired
-    private TaskTypeDAO taskTypeDAO;
-    @Autowired
-    private UserDAO userDAO;
-    @Autowired
-    private SubjectDAO subjectDAO;
-
+    private UserService userService;
 
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
@@ -67,9 +57,9 @@ public class TaskController extends HttpServlet {
                     int id = getId(request);
                     if (id == 0) {
                         task = new Task();
-                        Subject subject = subjectDAO.read(Integer.parseInt(request.getParameter("subjectid")));
+                        Subject subject = taskService.getSubject(Integer.parseInt(request.getParameter("subjectid")));
                         task.setSubject(subject);
-                        User user = new UserServiceImpl().findUserById(Integer.parseInt(request.getParameter("user")));
+                        User user = userService.findUserById(Integer.parseInt(request.getParameter("user")));
                         task.setUser(user);
                         task.setDateCreated(new Date());
                         String duedate = request.getParameter("duedate");
@@ -81,10 +71,9 @@ public class TaskController extends HttpServlet {
                             String period = request.getParameter("period");
                             task.setDueTime(getCalendarDate(period));
                         }
-//                        task.setUser((User) request.getSession().getAttribute("user"));
                         task.setComment(request.getParameter("taskcomment"));
                         task.setType(TaskType.valueOf(request.getParameter("tasktype")));
-                        taskDAO.create(task);
+                        task = taskService.saveTask(task);
                         logger.info("task created:");
                         logger.info(task.getId());
                         logger.info(task.getSubject());
@@ -94,7 +83,7 @@ public class TaskController extends HttpServlet {
                         logger.info(task.getComment());
                         logger.info(task.getType());
                     } else {
-                        task = taskDAO.read(getId(request));
+                        task = taskService.findTaskById(getId(request));
                         task.setComment(request.getParameter("taskcomment"));
                         task.setType(TaskType.valueOf(request.getParameter("tasktype")));
                         String duedate = request.getParameter("duedate");
@@ -106,7 +95,7 @@ public class TaskController extends HttpServlet {
                             String period = request.getParameter("period");
                             task.setDueTime(getCalendarDate(period));
                         }
-                        User user = new UserServiceImpl().findUserById(Integer.parseInt(request.getParameter("user")));
+                        User user = userService.findUserById(Integer.parseInt(request.getParameter("user")));
                         task.setUser(user);
                         String submitname = request.getParameter("btn_task_update");
                         switch (submitname) {
@@ -119,7 +108,7 @@ public class TaskController extends HttpServlet {
                             default:
                                 break;
                         }
-                        taskDAO.update(task);
+                        taskService.saveTask(task);
                         logger.info("task updated:");
                         logger.info(task.getId());
                         logger.info(task.getDueTime());
@@ -139,7 +128,7 @@ public class TaskController extends HttpServlet {
             case "delete":
                 try {
                     int id = Integer.parseInt(request.getParameter("id"));
-                    taskDAO.delete(id);
+                    taskService.deleteTask(id);
                     logger.info("task deleted:");
                     logger.info("id=" + id);
                     request.getRequestDispatcher(request.getParameter("backurl") + "&id=" + request.getParameter("subjectid")).forward(request, response);
@@ -151,16 +140,16 @@ public class TaskController extends HttpServlet {
             case "edit":
                 try {
                     int id = getId(request);
-                    List<User> userList = userDAO.readAll();
+                    List<User> userList = userService.getAllUsersLite();
                     request.setAttribute("users", userList);
-                    List<TaskType> taskTypeList = taskTypeDAO.readAll();
+                    List<TaskType> taskTypeList = taskService.getAllTaskTypes();
                     request.setAttribute("tasktypes", taskTypeList);
                     if (id == 0) {
                         task = new Task();
                         task.setType(TaskType.MEETING);
                         request.setAttribute("subjectid", request.getParameter("subjectid"));
                     } else {
-                        task = taskDAO.read(getId(request));
+                        task = taskService.findTaskById(getId(request));
                     }
                     request.setAttribute("task", task);
                     request.setAttribute("backurl", request.getParameter("backurl") + "&id=" + request.getParameter("subjectid"));

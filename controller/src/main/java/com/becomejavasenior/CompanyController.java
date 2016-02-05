@@ -1,7 +1,6 @@
 package com.becomejavasenior;
 
 import com.becomejavasenior.impl.CompanyServiceImpl;
-import com.becomejavasenior.interfacedao.CompanyDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,7 @@ import java.util.Objects;
 public class CompanyController extends HttpServlet {
     private final static Logger logger = LogManager.getLogger(DealController.class);
     @Autowired
-    private CompanyDAO companyDAO;
+    private CompanyService companyService;
 
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
@@ -50,14 +49,13 @@ public class CompanyController extends HttpServlet {
             case "create":
                 Company company;
                 try {
-                    CompanyService companyService = new CompanyServiceImpl();
+//                    CompanyService companyService = new CompanyServiceImpl();
                     company = new Company();
                     company.setName(request.getParameter("name"));
                     company.setPhoneNumber(request.getParameter("phoneNumber"));
                     company.setEmail(request.getParameter("email"));
                     company.setWeb(new URL(request.getParameter("web")));
                     company.setAdress(request.getParameter("address"));
-                    companyDAO.create(company);
                     companyService.saveCompany(company);
                     logger.info("Company created:");
                     logger.info(company.getId());
@@ -73,16 +71,13 @@ public class CompanyController extends HttpServlet {
                 break;
             case "update":
                 try {
-                    CompanyService companyService = new CompanyServiceImpl();
-                    int id = Integer.parseInt(request.getParameter("id"));
-                    company = companyDAO.read(getId(request));
+//                    CompanyService companyService = new CompanyServiceImpl();
                     company = companyService.findCompanyById(getId(request));
                     company.setName(request.getParameter("name"));
                     company.setPhoneNumber(request.getParameter("phoneNumber"));
                     company.setEmail(request.getParameter("email"));
                     company.setWeb(new URL(request.getParameter("web")));
                     company.setAdress(request.getParameter("address"));
-                    companyDAO.update(company);
                     companyService.saveCompany(company);
                     logger.info("Company updated:");
                     logger.info(company.getId());
@@ -99,8 +94,6 @@ public class CompanyController extends HttpServlet {
                 break;
             case "edit":
                 try {
-                    CompanyService companyService = new CompanyServiceImpl();
-                    company = companyDAO.read(getId(request));
                     company = companyService.findCompanyById(getId(request));
                     request.setAttribute("company", company);
                     request.getRequestDispatcher("jsp/companyedit.jsp").forward(request, response);

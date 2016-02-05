@@ -105,7 +105,7 @@ public class StatusServlet extends HttpServlet {
             }
 
         } catch (DataBaseException e) {
-            LOGGER.error("Error while getting DAO");
+            LOGGER.error("Error while getting Service");
             LOGGER.catching(e);
         }
     }

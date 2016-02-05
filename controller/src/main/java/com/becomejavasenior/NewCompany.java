@@ -1,6 +1,5 @@
 package com.becomejavasenior;
 
-import com.becomejavasenior.impl.UserServiceImpl;
 import com.google.gson.Gson;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -89,7 +88,7 @@ public class NewCompany extends HttpServlet {
                     default:
                 }
             } catch (DataBaseException e) {
-                logger.error("Error while getting DAO");
+                logger.error("Error while getting Service");
                 logger.catching(e);
             }
             resp.setContentType("application/json");
@@ -263,7 +262,6 @@ public class NewCompany extends HttpServlet {
         Task task = new Task();
         Optional<String> taskUser = Optional.ofNullable(request.getParameter("taskuser"));
         if (taskUser.isPresent()) {
-            UserService userService = new UserServiceImpl();
             User user = userService.findUserById(Integer.parseInt(taskUser.get()));
             task.setUser(user);
         }

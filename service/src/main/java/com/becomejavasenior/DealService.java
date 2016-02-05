@@ -43,6 +43,8 @@ public interface DealService {
 
     void addContactToDeal(Deal deal, Contact contact) throws DataBaseException;
 
+    void deleteContactFromDeal(int dealId, int contactId) throws DataBaseException;
+
     Filter saveDealFilter(Filter filter) throws DataBaseException;
 
     List<Filter> findDealFilters() throws DataBaseException;

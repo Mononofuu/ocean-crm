@@ -1,6 +1,7 @@
 package com.becomejavasenior.impl;
 
 import com.becomejavasenior.*;
+import com.becomejavasenior.interfacedao.DealContactDAO;
 import com.becomejavasenior.interfacedao.PhoneTypeDAO;
 import com.becomejavasenior.interfacedao.TagDAO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,8 @@ public class ContactServiceImpl extends AbstractContactService<Contact> implemen
     private PhoneTypeDAO phoneTypeDAO;
     @Autowired
     private TagDAO tagDAO;
+    @Autowired
+    private DealContactDAO dealContactDAO;
 
     @Override
     public Contact saveContact(Contact contact) throws DataBaseException {
@@ -74,6 +77,11 @@ public class ContactServiceImpl extends AbstractContactService<Contact> implemen
     @Override
     public List<PhoneType> getAllPhoneTypes() throws DataBaseException {
         return phoneTypeDAO.readAll();
+    }
+
+    @Override
+    public List<Contact> getAllContactsBySubjectId(int id) throws DataBaseException {
+        return dealContactDAO.getAllContactsBySubjectId(id);
     }
 
     private void saveTasks(List<Task> tasks) throws DataBaseException{

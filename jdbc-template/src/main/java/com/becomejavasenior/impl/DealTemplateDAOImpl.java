@@ -151,7 +151,7 @@ public class DealTemplateDAOImpl extends SubjectTemplateDAOImpl<Deal> implements
         params.put("currency_id", deal.getCurrency().getId());
         params.put("budget", deal.getBudget());
         params.put("contact_main_id", deal.getMainContact().getId());
-        params.put("company_id", deal.getDealCompany());
+        params.put("company_id", deal.getDealCompany().getId());
         params.put("data_close", deal.getDateWhenDealClose());
         params.put("created_date", deal.getDateCreated());
         params.put("responsible_id", deal.getResponsible().getId());

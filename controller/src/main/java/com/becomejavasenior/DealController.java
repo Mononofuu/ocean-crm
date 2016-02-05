@@ -1,6 +1,5 @@
 package com.becomejavasenior;
 
-import com.becomejavasenior.impl.TaskServiceImpl;
 import com.google.gson.Gson;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -39,6 +38,8 @@ public class DealController extends HttpServlet {
     private TagService tagService;
     @Autowired
     private CommentService commentService;
+    @Autowired
+    private TaskService taskService;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -237,7 +238,6 @@ public class DealController extends HttpServlet {
             if (addTask.isPresent() && "true".equals(addTask.get())) {
                 LOGGER.debug("Adding task");
                 Task task = getTaskFromRequest(request, createdDeal);
-                TaskService taskService = new TaskServiceImpl();
                 taskService.saveTask(task);
             }
 
