@@ -1,22 +1,32 @@
 package com.becomejavasenior;
 
+import javax.persistence.*;
 import java.util.List;
-
+@Entity
+@Table(name = "contact")
+@PrimaryKeyJoinColumn(name="id")
 public class Contact extends Subject {
 
     private static final long serialVersionUID = -5553010181244222836L;
-
+//    @ManyToOne
+//    @JoinColumn(name="company_id")
+    @Transient
     private Company company;
     private String post;
+//    @ManyToOne
+//    @JoinColumn(name = "phone_type_id")
+    @Transient
     private PhoneType phoneType;
     private String phone;
     private String email;
     private String skype;
-
+    @Transient
     private List<Comment> comments;
+    @Transient
     private List<File> files;
+    @Transient
     private List<Task> tasks;
-
+    @Transient
     private List<Deal> deals;
 
     public Contact() {
