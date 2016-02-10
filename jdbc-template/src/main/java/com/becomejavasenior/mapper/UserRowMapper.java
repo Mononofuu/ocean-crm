@@ -4,6 +4,7 @@ import com.becomejavasenior.Comment;
 import com.becomejavasenior.Language;
 import com.becomejavasenior.User;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,6 +14,7 @@ import java.util.List;
 /**
  * @author Lybachevskiy.Vladislav
  */
+@Component
 public class UserRowMapper implements RowMapper<User> {
 
     public User mapRow(ResultSet resultSet, int i) throws SQLException {

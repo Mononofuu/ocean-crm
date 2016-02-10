@@ -27,9 +27,6 @@
     background-color:cadetblue;
 }
 
-body{
-    background-color: aliceblue;
-}
 .sub-menu, .profile{
     display: none;
     position:absolute;

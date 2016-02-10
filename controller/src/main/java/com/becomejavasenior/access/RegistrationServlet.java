@@ -4,6 +4,7 @@ import com.becomejavasenior.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import javax.servlet.ServletConfig;
@@ -32,6 +33,8 @@ public class RegistrationServlet extends HttpServlet {
     private final static Logger LOGGER = LogManager.getLogger(RegistrationServlet.class);
     @Autowired
     private AuthService authService;
+    @Autowired
+    private ShaPasswordEncoder shaPasswordEncoder;
 
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
@@ -56,13 +59,7 @@ public class RegistrationServlet extends HttpServlet {
         comments.add(comment);
         user.setComments(comments);
         List<String> errors = new ArrayList<>();
-        try {
-            user.setPassword(authService.getEncryptedPassword(request.getParameter("password"), user.getLogin()));
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            LOGGER.error(e.getMessage());
-            errors.add(e.getMessage());
-            request.getRequestDispatcher("/registration.jsp").forward(request, response);
-        }
+        user.setPassword(shaPasswordEncoder.encodePassword(request.getParameter("password"), null));
         try {
             authService.registration(user);
         } catch (DataBaseException e) {

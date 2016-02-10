@@ -35,6 +35,11 @@ public class GrantsDAOImpl extends AbstractJDBCDao<Grants> implements GrantsDAO 
     }
 
     @Override
+    protected String getConditionStatment() {
+        return " WHERE user_id = ?";
+    }
+
+    @Override
     public String getCreateQuery() {
         return "INSERT INTO grants (user_id, role_id, level) VALUES (?, ?, ?)";
     }

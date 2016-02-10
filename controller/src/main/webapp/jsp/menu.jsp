@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page isELIgnored="false" %>
 <style>
@@ -25,19 +26,11 @@
         <li>
             <a class="logo" href="#1">CRM-OCEAN</a>
             <div class="profile">
-                <c:choose>
-                    <c:when test="${not empty user}">
-                        <div class="username">${user.name}</div>
-                        <div>
-                            <a href="#"><spring:message code="label.profile"/></a>
-                            <a href="/logout"><spring:message code="label.logout"/></a>
-                        </div>
-                    </c:when>
-                    <c:otherwise>
-                        <div class="username"><spring:message code="label.notloggedin"/></div>
-                        <a href="/signin"><spring:message code="label.login"/></a>
-                    </c:otherwise>
-                </c:choose>
+                <div class="username"><sec:authentication property="principal.username" /></div>
+                <div>
+                    <a href="#"><spring:message code="label.profile"/></a>
+                    <a href="/logout"><spring:message code="label.logout"/></a>
+                </div>
             </div>
         </li>
         <li>
