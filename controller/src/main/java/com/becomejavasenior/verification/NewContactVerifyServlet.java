@@ -5,7 +5,11 @@ import com.becomejavasenior.DataBaseException;
 import com.becomejavasenior.impl.ContactServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -17,7 +21,15 @@ import java.util.Map;
 @WebServlet(name="new_contact_verify", urlPatterns = "/new_contact_verify")
 public class NewContactVerifyServlet extends AbstractVerifyServlet{
     private static final Logger LOGGER = LogManager.getLogger(NewCompanyVerifyServlet.class);
-    private static ContactService contactService = new ContactServiceImpl();
+    @Autowired
+    private ContactService contactService;
+
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this,
+                config.getServletContext());
+    }
 
     @Override
     protected Map<String, String> verifyData(HttpServletRequest req){
@@ -49,20 +61,20 @@ public class NewContactVerifyServlet extends AbstractVerifyServlet{
             result.put("skype", "Некоректный skype логин");
         }
         if(checkTaskFieldContent(req)){
-            result.putAll(new NewDealVerifyServlet().verifyData(req));
+            result.putAll(new NewTaskVerifyServlet().verifyData(req));
         }
         if(checkDealFieldContent(req)){
-            result.putAll(new NewTaskVerifyServlet().verifyData(req));
+            result.putAll(new NewDealVerifyServlet().verifyData(req));
         }
 
         return result;
     }
 
     private boolean checkTaskFieldContent(HttpServletRequest req){
-        return !"".equals(req.getParameter("dealtype"))&&!"".equals(req.getParameter("budget"));
+        return !"".equals(req.getParameter("taskresponsible"))||!"".equals(req.getParameter("tasktype"))||!"".equals(req.getParameter("tasktext"));
     }
 
     private boolean checkDealFieldContent(HttpServletRequest req){
-        return !"".equals(req.getParameter("taskresponsible"))&&!"".equals(req.getParameter("tasktype"));
+        return !"".equals(req.getParameter("dealtype"))||!"".equals(req.getParameter("budget"))||!"".equals(req.getParameter("newdealname"));
     }
 }

@@ -1,17 +1,25 @@
 package com.becomejavasenior;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
 
 //Class that represent owner for comments, files and tasks.
-
+@Entity
+@Table(name = "subject")
+@Inheritance(strategy=InheritanceType.JOINED)
 public abstract class Subject implements Serializable {
 
     private static final long serialVersionUID = 8010763598123200304L;
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
+//    @ManyToOne
+//    @JoinColumn(name="content_owner_id")
+    @Transient
     private User user;
+    @Transient
     private Set<Tag> tags;
     private boolean removed;
 

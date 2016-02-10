@@ -10,7 +10,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Repository
+//@Repository
 public class ContactDAOImpl extends AbstractContactDAO<Contact> implements ContactDAO {
     @Autowired
     public SubjectDAO subjectDAO;

@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.Connection;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -30,7 +31,10 @@ public class NewContactServlet extends HttpServlet {
     private CompanyService companyService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private TaskService taskService;
 
+    @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this,
@@ -61,14 +65,14 @@ public class NewContactServlet extends HttpServlet {
 
             newContact.setComments(getCommentListFromRequest(request));
             newContact.setFiles(getFileListFromRequest(request)); //not realized
+            newContact.setCompany(getCompanyFromRequest(request.getParameter("companyid")));
+            newContact = contactService.saveContact(newContact);
             if(!"".equals(request.getParameter("newdealname"))){
-                newContact.setDeals(getDealListFromRequest(request));
+                saveDealFromRequest(request, newContact);
             }
             if(!"".equals(request.getParameter("tasktext"))){
-                newContact.setTasks(getTaskListFromRequest(request));
+                saveTaskFromRequest(request, newContact);
             }
-            newContact.setCompany(getCompanyFromRequest(request.getParameter("companyid")));
-            contactService.saveContact(newContact);
         } catch (DataBaseException e) {
             LOGGER.error(e);
         }
@@ -121,9 +125,9 @@ public class NewContactServlet extends HttpServlet {
         return result;
     }
 
-    private List<Deal> getDealListFromRequest(HttpServletRequest request) {
-        List<Deal> result = new ArrayList<>();
+    private void saveDealFromRequest(HttpServletRequest request, Contact contact) throws DataBaseException{
         Deal deal = new Deal();
+        deal.setMainContact(contact);
         deal.setName(request.getParameter("newdealname"));
         String dealType = request.getParameter("dealtype");
         if(dealType!=null&&!"".equals(dealType)){
@@ -140,17 +144,18 @@ public class NewContactServlet extends HttpServlet {
         if(budget!=null&&!"".equals(budget)){
             deal.setBudget(Integer.parseInt(budget));
         }
-        result.add(deal);
-        return result;
+        dealService.saveDeal(deal);
     }
 
-    private List<Task> getTaskListFromRequest(HttpServletRequest request) throws DataBaseException {
-        List<Task> result = new ArrayList<>();
+    private void saveTaskFromRequest(HttpServletRequest request, Contact contact) throws DataBaseException {
         Task task = new Task();
+        task.setSubject(contact);
         task.setUser(getUserFromRequest(request.getParameter("taskresponsible")));
         String taskType = request.getParameter("tasktype");
         if (taskType != null && !"".equals(taskType)) {
             task.setType(TaskType.valueOf(taskType));
+        }else{
+            task.setType(TaskType.OTHER);
         }
         task.setComment(request.getParameter("tasktext"));
         task.setDateCreated(new Date());
@@ -202,7 +207,6 @@ public class NewContactServlet extends HttpServlet {
             }
             task.setDueTime(c.getTime());
         }
-        result.add(task);
-        return result;
+        taskService.saveTask(task);
     }
 }

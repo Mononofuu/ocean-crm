@@ -7,6 +7,8 @@ import com.becomejavasenior.interfacedao.PhoneTypeDAO;
 import com.becomejavasenior.interfacedao.TagDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -14,9 +16,9 @@ import java.util.List;
  * Created by Peter on 18.12.2015.
  */
 @Service
+@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class ContactServiceImpl extends AbstractContactService<Contact> implements ContactService{
     @Autowired
-//    private ContactDAOImpl contactDAO;
     private ContactDAO contactDAO;
     @Autowired
     private PhoneTypeDAO phoneTypeDAO;
@@ -26,29 +28,19 @@ public class ContactServiceImpl extends AbstractContactService<Contact> implemen
     private DealContactDAO dealContactDAO;
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = DataBaseException.class, readOnly = false)
     public Contact saveContact(Contact contact) throws DataBaseException {
         if (contact.getId() == 0) {
             contact = contactDAO.create(contact);
-            if(contact.getTasks()!=null&&contact.getTasks().size()>0){
-                saveTasks(contact.getTasks());
-            }
-            if(contact.getDeals()!=null&&contact.getDeals().size()>0){
-                saveDeals(contact.getDeals());
-            }
             return contact;
         } else {
             contactDAO.update(contact);
-            if(contact.getTasks().size()>0){
-                saveTasks(contact.getTasks());
-            }
-            if(contact.getDeals().size()>0){
-                saveDeals(contact.getDeals());
-            }
             return contactDAO.read(contact.getId());
         }
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = DataBaseException.class, readOnly = false)
     public void deleteContact(int id) throws DataBaseException {
         contactDAO.delete(id);
     }
@@ -84,20 +76,6 @@ public class ContactServiceImpl extends AbstractContactService<Contact> implemen
     @Override
     public List<Contact> getAllContactsBySubjectId(int id) throws DataBaseException {
         return dealContactDAO.getAllContactsBySubjectId(id);
-    }
-
-    private void saveTasks(List<Task> tasks) throws DataBaseException{
-        TaskService taskService = new TaskServiceImpl();
-        for(Task task: tasks){
-            taskService.saveTask(task);
-        }
-    }
-
-    private void saveDeals(List<Deal> deals) throws DataBaseException{
-        DealService dealService = new DealServiceImpl();
-        for(Deal deal: deals){
-            dealService.saveDeal(deal);
-        }
     }
 
     @Override

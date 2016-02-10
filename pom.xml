@@ -12,6 +12,7 @@
     <module>service</module>
     <module>jdbc-template</module>
     <module>interfacedao</module>
+    <module>hibernate</module>
   </modules>
 
   <name>CRM Maven Webapp</name>
@@ -58,6 +59,7 @@
   </build>
   <properties>
     <spring.version>4.2.4.RELEASE</spring.version>
+    <hibernate.version>4.3.11.Final</hibernate.version>
   </properties>
   <dependencies>
     <dependency>
