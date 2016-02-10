@@ -6,6 +6,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
@@ -16,6 +18,7 @@ import java.util.List;
  * Created by Peter on 18.12.2015.
  */
 @Service
+@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class DealServiceImpl implements com.becomejavasenior.DealService {
 
     static final Logger logger = LogManager.getRootLogger();
@@ -32,6 +35,7 @@ public class DealServiceImpl implements com.becomejavasenior.DealService {
     TagDAO tagDAO;
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = DataBaseException.class, readOnly = false)
     public Deal saveDeal(Deal deal) throws DataBaseException {
         if(deal.getId() == 0){
             return dealDAO.create(deal);
@@ -42,6 +46,7 @@ public class DealServiceImpl implements com.becomejavasenior.DealService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = DataBaseException.class, readOnly = false)
     public void deleteDeal(int id) throws DataBaseException {
         dealDAO.delete(id);
     }
@@ -103,11 +108,13 @@ public class DealServiceImpl implements com.becomejavasenior.DealService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = DataBaseException.class, readOnly = false)
     public void deleteDealStatus(int id) throws DataBaseException {
         dealStatusDAO.delete(id);
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = DataBaseException.class, readOnly = false)
     public DealStatus saveDealStatus(DealStatus dealStatus) throws DataBaseException {
         if (dealStatus.getId() == 0) {
             return dealStatusDAO.create(dealStatus);
@@ -118,6 +125,7 @@ public class DealServiceImpl implements com.becomejavasenior.DealService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = DataBaseException.class, readOnly = false)
     public void addContactToDeal(Deal createdDeal, Contact contact) throws DataBaseException {
         DealContact dealContact = new DealContact();
         dealContact.setDeal(createdDeal);
@@ -126,11 +134,13 @@ public class DealServiceImpl implements com.becomejavasenior.DealService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = DataBaseException.class, readOnly = false)
     public void deleteContactFromDeal(int dealId, int contactId) throws DataBaseException {
         dealContactDAO.deleteDealContact(dealId, contactId);
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = DataBaseException.class, readOnly = false)
     public Filter saveDealFilter(Filter filter) throws DataBaseException {
         if (filter.getId() == 0) {
             return filterDAO.create(filter);
@@ -151,6 +161,7 @@ public class DealServiceImpl implements com.becomejavasenior.DealService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = DataBaseException.class, readOnly = false)
     public void deleteDealFilter(int id) throws DataBaseException {
         filterDAO.delete(id);
     }
@@ -226,25 +237,6 @@ public class DealServiceImpl implements com.becomejavasenior.DealService {
                 filter = "task";
                 break;
             case "task_THIS_WEEK":
-                /*
-                int day = cal.get(Calendar.DAY_OF_WEEK);
-                int correction = 0;
-                switch(day){
-                    case 1:
-                        correction = 6;
-                        break;
-                    case 3:
-                    case 4:
-                    case 5:
-                    case 6:
-                    case 7:
-                        correction = day-2;
-                        break;
-                    default:
-                        break;
-                }
-                cal.add(Calendar.DATE,-correction);
-                */
                 cal.set(Calendar.DAY_OF_WEEK,2);
                 dateBegin = new java.sql.Date(cal.getTime().getTime());
                 cal.add(Calendar.DATE,6);

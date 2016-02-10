@@ -1,6 +1,7 @@
 package com.becomejavasenior.impl;
 
 import com.becomejavasenior.*;
+import com.becomejavasenior.interfacedao.ContactDAO;
 import com.becomejavasenior.interfacedao.DealContactDAO;
 import com.becomejavasenior.interfacedao.PhoneTypeDAO;
 import com.becomejavasenior.interfacedao.TagDAO;
@@ -15,7 +16,8 @@ import java.util.List;
 @Service
 public class ContactServiceImpl extends AbstractContactService<Contact> implements ContactService{
     @Autowired
-    private ContactDAOImpl contactDAO;
+//    private ContactDAOImpl contactDAO;
+    private ContactDAO contactDAO;
     @Autowired
     private PhoneTypeDAO phoneTypeDAO;
     @Autowired
