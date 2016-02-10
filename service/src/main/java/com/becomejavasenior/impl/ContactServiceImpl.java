@@ -16,7 +16,7 @@ import java.util.List;
  * Created by Peter on 18.12.2015.
  */
 @Service
-@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+//@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class ContactServiceImpl extends AbstractContactService<Contact> implements ContactService{
     @Autowired
     private ContactDAO contactDAO;
@@ -28,7 +28,7 @@ public class ContactServiceImpl extends AbstractContactService<Contact> implemen
     private DealContactDAO dealContactDAO;
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = DataBaseException.class, readOnly = false)
+    //@Transactional(propagation = Propagation.REQUIRED, rollbackFor = DataBaseException.class, readOnly = false)
     public Contact saveContact(Contact contact) throws DataBaseException {
         if (contact.getId() == 0) {
             contact = contactDAO.create(contact);
@@ -40,7 +40,7 @@ public class ContactServiceImpl extends AbstractContactService<Contact> implemen
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = DataBaseException.class, readOnly = false)
+    //@Transactional(propagation = Propagation.REQUIRED, rollbackFor = DataBaseException.class, readOnly = false)
     public void deleteContact(int id) throws DataBaseException {
         contactDAO.delete(id);
     }

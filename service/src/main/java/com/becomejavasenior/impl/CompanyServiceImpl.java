@@ -15,7 +15,7 @@ import java.util.Map;
  * Created by Peter on 18.12.2015.
  */
 @Service
-@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+//@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class CompanyServiceImpl extends AbstractContactService<Company> implements CompanyService {
 
     @Autowired
@@ -24,7 +24,7 @@ public class CompanyServiceImpl extends AbstractContactService<Company> implemen
     private TagDAO tagDAO;
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = DataBaseException.class, readOnly = false)
+    //@Transactional(propagation = Propagation.REQUIRED, rollbackFor = DataBaseException.class, readOnly = false)
     public Company saveCompany(Company company) throws DataBaseException {
         if (company.getId() == 0) {
             return companyDAO.create(company);
@@ -35,7 +35,7 @@ public class CompanyServiceImpl extends AbstractContactService<Company> implemen
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = DataBaseException.class, readOnly = false)
+    //@Transactional(propagation = Propagation.REQUIRED, rollbackFor = DataBaseException.class, readOnly = false)
     public void deleteCompany(int id) throws DataBaseException {
         companyDAO.delete(id);
     }

@@ -1,6 +1,8 @@
 package com.becomejavasenior;
 
 import com.becomejavasenior.interfacedao.ContactDAO;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -13,12 +15,14 @@ import java.util.List;
  * @author Anton Sakhno <sakhno83@gmail.com>
  */
 @Repository
-public class ContactHibernateDAOImpl extends AbstractHibernateDAO implements ContactDAO{
+public class ContactHibernateDAOImpl extends AbstractHibernateDAO<Contact> implements ContactDAO{
+    private static final Logger LOGGER = LogManager.getLogger(ContactHibernateDAOImpl.class);
+
     @Override
     public Contact readContactByName(String name) throws DataBaseException {
         Criteria criteria = getCurrentSession().createCriteria(Contact.class);
         criteria.add(Restrictions.eq("name", name));
-        return null;
+        return (Contact)criteria.uniqueResult();
     }
 
     @Override
@@ -34,42 +38,14 @@ public class ContactHibernateDAOImpl extends AbstractHibernateDAO implements Con
     }
 
     @Override
-    public Contact create(Contact object) throws DataBaseException {
-        getCurrentSession().save(object);
-        return object;
-    }
-
-    @Override
-    public Contact read(int key) throws DataBaseException {
-        return (Contact)getCurrentSession().get(Contact.class, key);
-    }
-
-    @Override
-    public Contact readLite(int key) throws DataBaseException {
-        return (Contact)getCurrentSession().get(Contact.class, key);
-    }
-
-    @Override
-    public void update(Contact object) throws DataBaseException {
-        getCurrentSession().update(object);
-    }
-
-    @Override
     public void delete(int id) throws DataBaseException {
         Contact contact = new Contact();
         contact.setId(id);
-        getCurrentSession().delete(contact);
+        delete(contact);
     }
 
     @Override
-    public List<Contact> readAll() throws DataBaseException {
-        Criteria criteria = getCurrentSession().createCriteria(Contact.class);
-        return (List<Contact>)criteria.list();
-    }
-
-    @Override
-    public List<Contact> readAllLite() throws DataBaseException {
-        Criteria criteria = getCurrentSession().createCriteria(Contact.class);
-        return (List<Contact>)criteria.list();
+    public Class getObjectСlass() {
+        return Contact.class;
     }
 }
