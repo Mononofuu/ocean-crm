@@ -55,7 +55,7 @@ public abstract class AbstractHibernateDAO<T> implements GenericDao<T>{
         return (List<T>)criteria.list();
     }
 
-    public void delete(Object object) throws DataBaseException {
+    protected void delete(Object object) throws DataBaseException {
         getCurrentSession().delete(object);
     }
 
