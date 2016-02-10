@@ -7,6 +7,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -18,6 +20,7 @@ import java.util.Map;
  * @author Lybachevskiy.Vladislav
  */
 @Service
+@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class TaskServiceImpl implements TaskService {
     private static Logger logger = LogManager.getLogger(TaskServiceImpl.class);
     @Autowired
@@ -26,6 +29,7 @@ public class TaskServiceImpl implements TaskService {
     private TaskTypeDAO taskTypeDAO;
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = DataBaseException.class, readOnly = false)
     public Task saveTask(Task task) throws DataBaseException {
         if (task.getId() == 0) {
             return taskDAO.create(task);
@@ -36,6 +40,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = DataBaseException.class, readOnly = false)
     public void deleteTask(int id) throws DataBaseException {
         taskDAO.delete(id);
     }
@@ -70,8 +75,8 @@ public class TaskServiceImpl implements TaskService {
                 userId = parameters.get("currentuser")[0];
                 break;
         }
-        // добавление фильтра по дате
-        if(date==null){ //если дата уже определенна как "сейчас" пропускаем
+
+        if(date==null){
             SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
             try {
                 String dateFromRequest = parameters.get("duedate")[0];
@@ -87,12 +92,11 @@ public class TaskServiceImpl implements TaskService {
             }
         }
 
-        // добавление фильтра по типу задачи
         String taskType = parameters.get("tasktype")[0];
         if(!"".equals(taskType)){
             taskTypeId = taskType;
         }
-        // добавление филтра по пользователю
+
         String user = parameters.get("user")[0];
         if (user!=null&&!"".equals(user)){
             userId = user;
