@@ -7,7 +7,6 @@ import javax.persistence.*;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
-
 @Entity
 @Table(name = "company")
 @PrimaryKeyJoinColumn(name="id")
@@ -15,23 +14,18 @@ public class Company extends Subject {
 
     private static final long serialVersionUID = 6412485489253693564L;
     private final static Logger LOGGER = LogManager.getLogger(Contact.class);
-
     @Column(name = "phone_number")
     private String phoneNumber;
     private String email;
     private URL web;
-//    @JoinColumn(name = "address")
-    @Column(name = "address")
-    private String adress;
-
+    private String address;
     @Transient
     private List<Comment> comments;
     @Transient
     private List<File> files;
     @Transient
     private List<Task> tasks;
-
-    @Transient
+    @OneToMany
     private List<Contact> contacts;
     @Transient
     private List<Deal> deals;
@@ -63,12 +57,12 @@ public class Company extends Subject {
         this.web = web;
     }
 
-    public String getAdress() {
-        return adress;
+    public String getAddress() {
+        return address;
     }
 
-    public void setAdress(String adress) {
-        this.adress = adress;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public List<Comment> getComments() {
@@ -126,7 +120,7 @@ public class Company extends Subject {
         } catch (URISyntaxException e) {
             LOGGER.error(e);
         }
-        if (adress != null ? !adress.equals(company.adress) : company.adress != null) return false;
+        if (address != null ? !address.equals(company.address) : company.address != null) return false;
         if (comments != null ? !comments.equals(company.comments) : company.comments != null) return false;
         if (files != null ? !files.equals(company.files) : company.files != null) return false;
         if (tasks != null ? !tasks.equals(company.tasks) : company.tasks != null) return false;
@@ -145,7 +139,7 @@ public class Company extends Subject {
         } catch (URISyntaxException e) {
             LOGGER.error(e);
         }
-        result = 31 * result + (adress != null ? adress.hashCode() : 0);
+        result = 31 * result + (address != null ? address.hashCode() : 0);
         result = 31 * result + (comments != null ? comments.hashCode() : 0);
         result = 31 * result + (files != null ? files.hashCode() : 0);
         result = 31 * result + (tasks != null ? tasks.hashCode() : 0);

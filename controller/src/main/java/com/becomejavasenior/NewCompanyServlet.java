@@ -73,7 +73,7 @@ public class NewCompanyServlet extends HttpServlet {
                 LOGGER.error("Incorrect URL", e);
             }
         }
-        result.setAdress(request.getParameter("newcompanyaddress"));
+        result.setAddress(request.getParameter("newcompanyaddress"));
         return companyService.saveCompany(result);
     }
 

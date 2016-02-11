@@ -49,7 +49,7 @@ public class CompanyDAOImpl extends AbstractContactDAO<Company> implements Compa
                 company.setPhoneNumber(rs.getString("phone_number"));
                 company.setEmail(rs.getString("email"));
                 company.setWeb(getUrl(rs.getString("web")));
-                company.setAdress(rs.getString("address"));
+                company.setAddress(rs.getString("address"));
                 result.add(company);
             }
         } catch (SQLException e) {
@@ -81,7 +81,7 @@ public class CompanyDAOImpl extends AbstractContactDAO<Company> implements Compa
                 company.setPhoneNumber(rs.getString("phone_number"));
                 company.setEmail(rs.getString("email"));
                 company.setWeb(getUrl(rs.getString("web")));
-                company.setAdress(rs.getString("address"));
+                company.setAddress(rs.getString("address"));
                 result.add(company);
             }
         } catch (SQLException e) {
@@ -106,7 +106,7 @@ public class CompanyDAOImpl extends AbstractContactDAO<Company> implements Compa
             }else{
                 statement.setNull(4, Types.CHAR);
             }
-            statement.setString(5, object.getAdress());
+            statement.setString(5, object.getAddress());
         } catch (SQLException e) {
             throw new DataBaseException(e);
         }
@@ -124,7 +124,7 @@ public class CompanyDAOImpl extends AbstractContactDAO<Company> implements Compa
             statement.setString(1, object.getPhoneNumber());
             statement.setString(2, object.getEmail());
             statement.setString(3, object.getWeb().toString());
-            statement.setString(4, object.getAdress());
+            statement.setString(4, object.getAddress());
             statement.setInt(5, object.getId());
         } catch (SQLException e) {
             throw new DataBaseException(e);

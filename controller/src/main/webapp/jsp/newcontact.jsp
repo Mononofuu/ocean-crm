@@ -69,6 +69,7 @@
                     </div>
                     <div class="col-sm-5">
                         <select class="form-control" name="phonetype" id="phonetype">
+                            <option value=""><spring:message code="label.type"/></option>
                             <c:forEach var="phonetype" items="${phonetypelist}">
                                 <option value="${phonetype}"><spring:message code="${phonetype.toString()}"/></option>
                             </c:forEach>

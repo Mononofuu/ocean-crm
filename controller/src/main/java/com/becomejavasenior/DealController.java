@@ -133,7 +133,7 @@ public class DealController extends HttpServlet {
             });
 
             Optional<String> companyAddress = Optional.ofNullable(request.getParameter("companyaddress"));
-            companyAddress.ifPresent(company::setAdress);
+            companyAddress.ifPresent(company::setAddress);
 
             Company createdCompany = companyService.saveCompany(company);
 

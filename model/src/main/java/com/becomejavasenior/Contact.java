@@ -8,16 +8,12 @@ import java.util.List;
 public class Contact extends Subject {
 
     private static final long serialVersionUID = -5553010181244222836L;
-//    @ManyToOne
-//    @JoinColumn(name="company_id")
-    @Transient
+    @ManyToOne
+    @JoinColumn(name="company_id")
     private Company company;
     private String post;
-//    @ManyToOne
-//    @JoinColumn(name = "phone_type_id")
-    @Transient
-//    @Enumerated(EnumType.STRING)
     @Enumerated(EnumType.ORDINAL)
+    @Column(name = "phone_type_id")
     private PhoneType phoneType;
     private String phone;
     private String email;

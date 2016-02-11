@@ -1,5 +1,9 @@
-package com.becomejavasenior;
+package com.becomejavasenior.impl;
 
+import com.becomejavasenior.AbstractHibernateDAO;
+import com.becomejavasenior.Contact;
+import com.becomejavasenior.ContactFilters;
+import com.becomejavasenior.DataBaseException;
 import com.becomejavasenior.interfacedao.ContactDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

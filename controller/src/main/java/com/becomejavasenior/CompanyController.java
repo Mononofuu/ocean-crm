@@ -1,6 +1,5 @@
 package com.becomejavasenior;
 
-import com.becomejavasenior.impl.CompanyServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +54,7 @@ public class CompanyController extends HttpServlet {
                     company.setPhoneNumber(request.getParameter("phoneNumber"));
                     company.setEmail(request.getParameter("email"));
                     company.setWeb(new URL(request.getParameter("web")));
-                    company.setAdress(request.getParameter("address"));
+                    company.setAddress(request.getParameter("address"));
                     companyService.saveCompany(company);
                     logger.info("Company created:");
                     logger.info(company.getId());
@@ -63,7 +62,7 @@ public class CompanyController extends HttpServlet {
                     logger.info(company.getPhoneNumber());
                     logger.info(company.getEmail());
                     logger.info(company.getWeb());
-                    logger.info(company.getAdress());
+                    logger.info(company.getAddress());
                 } catch (DataBaseException e) {
                     logger.error("Error while creating company");
                     logger.catching(e);
@@ -77,7 +76,7 @@ public class CompanyController extends HttpServlet {
                     company.setPhoneNumber(request.getParameter("phoneNumber"));
                     company.setEmail(request.getParameter("email"));
                     company.setWeb(new URL(request.getParameter("web")));
-                    company.setAdress(request.getParameter("address"));
+                    company.setAddress(request.getParameter("address"));
                     companyService.saveCompany(company);
                     logger.info("Company updated:");
                     logger.info(company.getId());
@@ -85,7 +84,7 @@ public class CompanyController extends HttpServlet {
                     logger.info(company.getPhoneNumber());
                     logger.info(company.getEmail());
                     logger.info(company.getWeb());
-                    logger.info(company.getAdress());
+                    logger.info(company.getAddress());
                     request.getRequestDispatcher(request.getParameter("backurl")).forward(request, response);
                 } catch (DataBaseException e) {
                     logger.error("Error while updating company");
