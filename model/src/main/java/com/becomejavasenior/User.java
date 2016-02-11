@@ -1,10 +1,13 @@
 package com.becomejavasenior;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
+//@Entity
+//@Table(name = "users")
 public class User implements Serializable {
 
     private static final long serialVersionUID = 2976681857111953842L;
@@ -14,21 +17,31 @@ public class User implements Serializable {
     private String login;
     private String password;
 
+//    @Transient
     private byte[] photo;
     private String email;
     private String phoneWork;
     private String phoneHome;
+//    @Transient
     private Set<Grants> grantsSet;
+//    @Transient
     private Language language;
+//    @Transient
     private List<Event> events;
 
+//    @Transient
+//    @Column(name = "comment")
     private List<Comment> comments;
+//    @Transient
     private List<File> files;
+//    @Transient
     private List<Task> tasks;
 
     public User() {
     }
 
+//    @Id
+//    @GeneratedValue
     public int getId() {
         return id;
     }

@@ -26,6 +26,11 @@ public class ContactHibernateDAOImpl extends AbstractHibernateDAO<Contact> imple
     }
 
     @Override
+    public Class getObjectСlass() {
+        return Contact.class;
+    }
+
+    @Override
     public List<Contact> getAllContactsByParameters(List<ContactFilters> parameters, String userId, List<Integer> tagIdList, List<Date> taskDate, List<Date> createUpdateDate, String createUpdateFlag) throws DataBaseException {
         return null;
     }
@@ -42,10 +47,5 @@ public class ContactHibernateDAOImpl extends AbstractHibernateDAO<Contact> imple
         Contact contact = new Contact();
         contact.setId(id);
         delete(contact);
-    }
-
-    @Override
-    public Class getObjectСlass() {
-        return Contact.class;
     }
 }

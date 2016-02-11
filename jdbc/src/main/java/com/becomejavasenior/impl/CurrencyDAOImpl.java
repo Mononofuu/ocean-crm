@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * created by Alekseichenko Sergey <mononofuu@gmail.com>
  */
-@Repository
+
 public class CurrencyDAOImpl extends AbstractJDBCDao<Currency> implements CurrencyDAO {
 
     @Override

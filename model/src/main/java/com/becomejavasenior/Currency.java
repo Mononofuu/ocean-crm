@@ -1,8 +1,14 @@
 package com.becomejavasenior;
 
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 
+@Entity
+@Table(name = "currency")
 public class Currency implements Serializable {
 
     private static final long serialVersionUID = 8065618450514247270L;
@@ -14,6 +20,8 @@ public class Currency implements Serializable {
     public Currency() {
     }
 
+    @Id
+    @GeneratedValue
     public int getId() {
         return id;
     }

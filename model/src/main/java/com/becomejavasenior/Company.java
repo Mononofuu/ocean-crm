@@ -3,25 +3,37 @@ package com.becomejavasenior;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.persistence.*;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
 
+@Entity
+@Table(name = "company")
+@PrimaryKeyJoinColumn(name="id")
 public class Company extends Subject {
 
     private static final long serialVersionUID = 6412485489253693564L;
     private final static Logger LOGGER = LogManager.getLogger(Contact.class);
 
+    @Column(name = "phone_number")
     private String phoneNumber;
     private String email;
     private URL web;
+//    @JoinColumn(name = "address")
+    @Column(name = "address")
     private String adress;
 
+    @Transient
     private List<Comment> comments;
+    @Transient
     private List<File> files;
+    @Transient
     private List<Task> tasks;
 
+    @Transient
     private List<Contact> contacts;
+    @Transient
     private List<Deal> deals;
 
     public Company() {
