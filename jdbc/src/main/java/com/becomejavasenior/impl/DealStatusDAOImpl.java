@@ -16,7 +16,6 @@ import java.util.List;
 /**
  * created by Alekseichenko Sergey <mononofuu@gmail.com>
  */
-@Repository
 public class DealStatusDAOImpl extends AbstractJDBCDao<DealStatus> implements DealStatusDAO {
 
     @Override

@@ -26,7 +26,7 @@ import java.util.*;
 /**
  * @author Anton Sakhno <sakhno83@gmail.com>
  */
-@Repository
+
 public class DealTemplateDAOImpl extends SubjectTemplateDAOImpl<Deal> implements DealDAO {
     @Autowired
     private RowMapper<Deal> dealRowMapper;

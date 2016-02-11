@@ -16,6 +16,8 @@ public class Contact extends Subject {
 //    @ManyToOne
 //    @JoinColumn(name = "phone_type_id")
     @Transient
+//    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     private PhoneType phoneType;
     private String phone;
     private String email;
@@ -26,7 +28,8 @@ public class Contact extends Subject {
     private List<File> files;
     @Transient
     private List<Task> tasks;
-    @Transient
+    @ManyToMany
+    @JoinTable(name="deal_contact")
     private List<Deal> deals;
 
     public Contact() {

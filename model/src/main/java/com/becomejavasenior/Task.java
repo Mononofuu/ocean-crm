@@ -1,18 +1,30 @@
 package com.becomejavasenior;
 
 
+import javax.persistence.Entity;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.Date;
 
+//@Entity
+//@Table(name = "task")
+//@PrimaryKeyJoinColumn(name="id")
 public class Task implements Serializable {
 
     private static final long serialVersionUID = 5383049602322141163L;
 
     private int id;
+//    @Transient
     private Subject subject;
+//    @Transient
     private User user;
+//    @Transient
     private Date dateCreated;
+//    @Transient
     private Date dueTime;
+//    @Transient
     private TaskType type;
     private String comment;
     private byte isClosed;

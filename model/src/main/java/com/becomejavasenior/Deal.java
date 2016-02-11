@@ -1,25 +1,44 @@
 package com.becomejavasenior;
 
+import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
+@Entity
+@Table(name = "deal")
+@PrimaryKeyJoinColumn(name="id")
 public class Deal extends Subject {
 
     private static final long serialVersionUID = -5045712962652077587L;
 
+    @ManyToOne
+    @JoinColumn(name = "contact_main_id")
     private Contact mainContact;
+    @Transient
     private User responsible;
+    @ManyToOne
+    @JoinColumn(name = "status_id")
     private DealStatus status;
     private int budget;
+    @ManyToOne
+    @JoinColumn(name = "currency_id")
     private Currency currency;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="data_close")
     private Date dateWhenDealClose;
-
+   @ManyToMany(mappedBy = "deals")
     private List<Contact> contacts;
+    @ManyToOne
+    @JoinColumn(name = "company_id")
     private Company dealCompany;
-
+    @Transient
     private List<Comment> comments;
+    @Transient
     private List<File> files;
+    @Transient
     private List<Task> tasks;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="created_date")
     private Date dateCreated;
 
     public Deal() {

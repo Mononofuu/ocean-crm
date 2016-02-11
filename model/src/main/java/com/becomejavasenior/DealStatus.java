@@ -1,8 +1,14 @@
 package com.becomejavasenior;
 
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 
+@Entity
+@Table(name = "status_type")
 public class DealStatus implements Serializable, Comparable {
 
     private static final long serialVersionUID = -7849041242260513488L;
@@ -31,6 +37,8 @@ public class DealStatus implements Serializable, Comparable {
         this.color = color;
     }
 
+    @Id
+    @GeneratedValue
     public int getId() {
         return id;
     }
