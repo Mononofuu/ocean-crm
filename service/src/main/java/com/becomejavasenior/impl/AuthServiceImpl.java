@@ -1,9 +1,9 @@
 package com.becomejavasenior.impl;
 
-import com.becomejavasenior.AuthService;
-import com.becomejavasenior.DataBaseException;
-import com.becomejavasenior.User;
+import com.becomejavasenior.*;
 import com.becomejavasenior.exception.IncorrectDataException;
+import com.becomejavasenior.interfacedao.GrantsDAO;
+import com.becomejavasenior.interfacedao.RoleDAO;
 import com.becomejavasenior.interfacedao.UserDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,6 +27,8 @@ public class AuthServiceImpl implements AuthService {
     private static final Logger LOGGER = LogManager.getLogger(UserServiceImpl.class);
     @Autowired
     public UserDAO userDAO;
+    @Autowired
+    private GrantsDAO grantsDAO;
 
     public String getEncryptedPassword(String password, String salt)
             throws NoSuchAlgorithmException, InvalidKeySpecException {
@@ -72,7 +74,13 @@ public class AuthServiceImpl implements AuthService {
             LOGGER.error("User [" + user.getLogin() + "] already registered.");
             throw new DataBaseException("User [" + user.getLogin() + "] already registered.");
         }
-        userDAO.create(user);
+        ;
+        Grants grants = new Grants();
+        grants.setUser(userDAO.create(user));
+        Role role = new Role();
+        role.setId(2);
+        grants.setRole(role);
+        grantsDAO.create(grants);
     }
 
     private boolean alreadyRegistered(User user) throws DataBaseException {
