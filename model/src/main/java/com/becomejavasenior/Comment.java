@@ -1,16 +1,26 @@
 package com.becomejavasenior;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
+@Entity
+@Table(name = "comment")
 public class Comment implements Serializable {
 
     private static final long serialVersionUID = 5409233407264547377L;
 
+    @Id
+    @GeneratedValue
     private int id;
+    @ManyToOne
+    @JoinColumn(name = "subject_id")
     private Subject subject;
+    @Transient
     private User user;
     private String text;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="created_date")
     private Date dateCreated;
 
     public Comment() {

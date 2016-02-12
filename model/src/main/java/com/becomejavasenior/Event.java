@@ -1,17 +1,26 @@
 package com.becomejavasenior;
 
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
+@Entity
+@Table(name = "event")
 public class Event implements Serializable {
 
     private static final long serialVersionUID = 388198834697983732L;
 
+    @Id
+    @GeneratedValue
     private int id;
+    @Transient
     private User user;
+    @Transient
     private OperationType operationType;
     private String eventContent;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="event_date")
     private Date eventDate;
 
     public Event() {

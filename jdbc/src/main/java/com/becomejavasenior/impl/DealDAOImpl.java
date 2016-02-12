@@ -22,6 +22,7 @@ import static com.becomejavasenior.DealFilters.WITH_EXPIRED_TASKS;
 
 public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
 
+    private final static Logger LOGGER = LogManager.getLogger(DealDAOImpl.class);
     public static final String DEAL_SELECT_TAG = " WHERE deal.id IN(SELECT subject_id FROM subject_tag " +
             "WHERE subject_tag.tag_id IN (SELECT id FROM tag WHERE name IN (";
     public static final String DEAL_SELECT_STATUS_ID = " where status_id=?";
@@ -36,7 +37,6 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
     public static final String DEAL_SELECT_DELETED = " WHERE deal.status_id=7";
     public static final String DEAL_SELECT_PERIOD_CREATED_DATE = " WHERE DATE(deal.created_date) BETWEEN ? AND ?";
     public static final String DEAL_SELECT_TASK_DUE_DATE_INTERVAL = "WHERE deal.id IN (SELECT subject_id FROM task WHERE DATE(due_date) BETWEEN ? AND ? GROUP BY subject_id)";
-    private final static Logger LOGGER = LogManager.getLogger(DealDAOImpl.class);
     @Autowired
     public CompanyDAO companyDAO;
     @Autowired

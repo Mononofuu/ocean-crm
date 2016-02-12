@@ -14,7 +14,8 @@ public class Deal extends Subject {
     @ManyToOne
     @JoinColumn(name = "contact_main_id")
     private Contact mainContact;
-    @Transient
+    @ManyToOne
+    @JoinColumn(name = "responsible_id")
     private User responsible;
     @ManyToOne
     @JoinColumn(name = "status_id")
@@ -26,16 +27,16 @@ public class Deal extends Subject {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name="data_close")
     private Date dateWhenDealClose;
-   @ManyToMany(mappedBy = "deals")
+    @ManyToMany(mappedBy = "deals")
     private List<Contact> contacts;
     @ManyToOne
     @JoinColumn(name = "company_id")
     private Company dealCompany;
-    @Transient
+    @OneToMany(mappedBy = "subject")
     private List<Comment> comments;
-    @Transient
+    @OneToMany(mappedBy = "subject")
     private List<File> files;
-    @Transient
+    @OneToMany(mappedBy = "subject")
     private List<Task> tasks;
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name="created_date")

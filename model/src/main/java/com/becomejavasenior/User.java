@@ -6,42 +6,44 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-//@Entity
-//@Table(name = "users")
+@Entity
+@Table(name = "users")
 public class User implements Serializable {
 
     private static final long serialVersionUID = 2976681857111953842L;
 
+    @Id
+    @GeneratedValue
     private int id;
     private String name;
     private String login;
     private String password;
 
-//    @Transient
+    @Transient
     private byte[] photo;
     private String email;
+    @Column(name = "phone_work")
     private String phoneWork;
+    @Column(name = "phone_mob")
     private String phoneHome;
-//    @Transient
+    @Transient
     private Set<Grants> grantsSet;
-//    @Transient
+    @Transient
     private Language language;
-//    @Transient
+    @Transient
     private List<Event> events;
 
-//    @Transient
+    @Transient
 //    @Column(name = "comment")
     private List<Comment> comments;
-//    @Transient
+    @Transient
     private List<File> files;
-//    @Transient
+    @Transient
     private List<Task> tasks;
 
     public User() {
     }
 
-//    @Id
-//    @GeneratedValue
     public int getId() {
         return id;
     }

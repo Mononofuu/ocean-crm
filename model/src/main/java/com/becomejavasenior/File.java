@@ -1,20 +1,32 @@
 package com.becomejavasenior;
 
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.net.URL;
 import java.util.Date;
 
+@Entity
+@Table(name = "file")
 public class File implements Serializable {
 
     private static final long serialVersionUID = -2959672203378534217L;
 
+    @Id
+    @GeneratedValue
     private int id;
+    @ManyToOne
+    @JoinColumn(name = "subject_id")
     private Subject subject;
     private String name;
+    @Transient
     private User user;
+    @Transient
     private byte[] fileFromDB;
+    @Column(name="link")
     private URL fileLink;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="created_date")
     private Date dateCreated;
     private int size;
 
