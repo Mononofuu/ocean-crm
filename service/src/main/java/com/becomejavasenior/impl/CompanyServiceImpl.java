@@ -2,6 +2,7 @@ package com.becomejavasenior.impl;
 
 import com.becomejavasenior.*;
 import com.becomejavasenior.interfacedao.CompanyDAO;
+import com.becomejavasenior.interfacedao.GeneralContactDAO;
 import com.becomejavasenior.interfacedao.TagDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,11 @@ public class CompanyServiceImpl extends AbstractContactService<Company> implemen
     private CompanyDAO companyDAO;
     @Autowired
     private TagDAO tagDAO;
+
+    @Override
+    protected GeneralContactDAO<Company> getDao() {
+        return companyDAO;
+    }
 
     @Override
     //@Transactional(propagation = Propagation.REQUIRED, rollbackFor = DataBaseException.class, readOnly = false)

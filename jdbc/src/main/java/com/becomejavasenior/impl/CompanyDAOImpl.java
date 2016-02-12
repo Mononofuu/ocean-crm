@@ -16,10 +16,16 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CompanyDAOImpl extends AbstractContactDAO<Company> implements CompanyDAO {
+//@Repository
+public class CompanyDAOImpl extends GeneralContactDAOImpl<Company> implements CompanyDAO {
     private static final Logger LOGGER = LogManager.getLogger(CompanyDAOImpl.class);
     @Autowired
     SubjectDAO subjectDAO;
+
+    @Override
+    public Company readCompanyByName(String name) throws DataBaseException {
+        return readContactByName(name);
+    }
 
     @Override
     protected String getConditionStatment() {
@@ -134,24 +140,6 @@ public class CompanyDAOImpl extends AbstractContactDAO<Company> implements Compa
     @Override
     public void delete(int id) throws DataBaseException {
         subjectDAO.delete(id);
-    }
-
-    @Override
-    public Company readCompanyByName(String name) throws DataBaseException {
-        Company result;
-        try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(getReadAllQuery()+" WHERE name = ?")) {
-            statement.setString(1, name);
-            ResultSet rs = statement.executeQuery();
-            List<Company> allObjects = parseResultSetLite(rs);
-            if (allObjects.isEmpty()) {
-                return null;
-            }
-            result = allObjects.get(0);
-        } catch (SQLException e) {
-            throw new DataBaseException(e);
-        }
-        return result;
     }
 
     @Override

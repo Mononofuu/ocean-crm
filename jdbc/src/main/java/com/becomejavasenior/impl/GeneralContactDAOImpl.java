@@ -3,12 +3,10 @@ package com.becomejavasenior.impl;
 import com.becomejavasenior.AbstractJDBCDao;
 import com.becomejavasenior.ContactFilters;
 import com.becomejavasenior.DataBaseException;
+import com.becomejavasenior.interfacedao.GeneralContactDAO;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -19,8 +17,7 @@ import java.util.Set;
 /**
  * @author Anton Sakhno <sakhno83@gmail.com>
  */
-@Repository
-public abstract class AbstractContactDAO<T> extends AbstractJDBCDao<T> {
+public abstract class GeneralContactDAOImpl<T> extends AbstractJDBCDao<T> implements GeneralContactDAO<T>{
 
     private static void fillSets(Set<String> joinQueries, Set<String> whereQueries, String[] queries) {
         joinQueries.add(queries[0]);
@@ -33,7 +30,26 @@ public abstract class AbstractContactDAO<T> extends AbstractJDBCDao<T> {
 
     protected abstract String getLeftJoinSubjectTag();
 
+    @Override
+    public T readContactByName(String name) throws DataBaseException {
+        T result;
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(getReadAllQuery() + " WHERE name = ?")) {
+            statement.setString(1, name);
+            ResultSet rs = statement.executeQuery();
+            List<T> allObjects = parseResultSetLite(rs);
+            if (allObjects.isEmpty()) {
+                return null;
+            }
+            result = allObjects.get(0);
+        } catch (SQLException e) {
+            throw new DataBaseException(e);
+        }
+        return result;
+    }
+
     public List<T> getAllContactsByParameters(List<ContactFilters> parameters, String userId, List<Integer> tagIdList, List<Date> taskDate, List<Date> createUpdateDate, String createUpdateFlag) throws DataBaseException {
+        System.out.println(getParametrisedReadQuery(parameters, userId, tagIdList, taskDate, createUpdateDate, createUpdateFlag));
         return realiseQuery(getParametrisedReadQuery(parameters, userId, tagIdList, taskDate, createUpdateDate, createUpdateFlag));
     }
 

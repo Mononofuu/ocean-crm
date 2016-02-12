@@ -56,8 +56,12 @@ public class ViewAllContactsServlet extends HttpServlet {
                 allContacts = contactService.findContacts();
                 allCompanies = companyService.findCompanies();
             }
-            Collections.sort(allContacts, (o1, o2) -> o1.getName().compareTo(o2.getName()));
-            Collections.sort(allCompanies, (o1, o2) -> o1.getName().compareTo(o2.getName()));
+            if(allContacts!=null){
+                Collections.sort(allContacts, (o1, o2) -> o1.getName().compareTo(o2.getName()));
+            }
+            if(allCompanies!=null){
+                Collections.sort(allCompanies, (o1, o2) -> o1.getName().compareTo(o2.getName()));
+            }
             req.setAttribute("contactlist", allContacts);
             req.setAttribute("companylist", allCompanies);
             List<Tag> tags = new ArrayList<>();

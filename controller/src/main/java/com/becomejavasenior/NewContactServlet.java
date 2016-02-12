@@ -95,6 +95,7 @@ public class NewContactServlet extends HttpServlet {
             for (String stringTag : temp) {
                 Tag tag = new Tag();
                 tag.setName(stringTag);
+                tag.setSubjectType(SubjectType.CONTACT_TAG);
                 result.add(tag);
             }
         }

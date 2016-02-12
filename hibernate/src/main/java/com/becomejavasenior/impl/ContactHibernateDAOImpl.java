@@ -1,6 +1,5 @@
 package com.becomejavasenior.impl;
 
-import com.becomejavasenior.AbstractHibernateDAO;
 import com.becomejavasenior.Contact;
 import com.becomejavasenior.ContactFilters;
 import com.becomejavasenior.DataBaseException;
@@ -19,7 +18,7 @@ import java.util.List;
  * @author Anton Sakhno <sakhno83@gmail.com>
  */
 @Repository
-public class ContactHibernateDAOImpl extends AbstractHibernateDAO<Contact> implements ContactDAO{
+public class ContactHibernateDAOImpl extends GeneralHibernateContactDAO<Contact> implements ContactDAO{
     private static final Logger LOGGER = LogManager.getLogger(ContactHibernateDAOImpl.class);
 
     @Override

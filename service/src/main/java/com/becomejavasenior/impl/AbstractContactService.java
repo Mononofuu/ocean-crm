@@ -2,6 +2,8 @@ package com.becomejavasenior.impl;
 
 import com.becomejavasenior.ContactFilters;
 import com.becomejavasenior.DataBaseException;
+import com.becomejavasenior.GenericDao;
+import com.becomejavasenior.interfacedao.GeneralContactDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -13,7 +15,7 @@ import java.util.*;
  * @author Anton Sakhno <sakhno83@gmail.com>
  */
 public abstract class AbstractContactService<T> {
-    private static Logger logger = LogManager.getLogger(AbstractContactService.class);
+    private static final Logger LOGGER = LogManager.getLogger(AbstractContactService.class);
 
     public List<T> getAllContactsByParameters(Map<String, String[]> parameters) throws DataBaseException {
         List<ContactFilters> parametersList = new ArrayList<>();
@@ -71,8 +73,7 @@ public abstract class AbstractContactService<T> {
             }
             createUpdate = parameters.get("periodtype")[0];
         }
-//        return getDao().getAllContactsByParameters(parametersList, userId, tagIdList, taskDate, createUpdateDate, createUpdate);
-        return null; //TODO
+        return getDao().getAllContactsByParameters(parametersList, userId, tagIdList, taskDate, createUpdateDate, createUpdate);
     }
 
     private List<Date> getPeriodCreateUpdateDates(String strDate){
@@ -90,7 +91,7 @@ public abstract class AbstractContactService<T> {
             date.add(Calendar.MINUTE, -1);
             result.add(date.getTime());
         } catch (ParseException e) {
-            logger.error(e);
+            LOGGER.error(e);
         }
         return result;
     }
@@ -246,4 +247,6 @@ public abstract class AbstractContactService<T> {
         }
         return date;
     }
+
+    protected abstract GeneralContactDAO<T> getDao();
 }

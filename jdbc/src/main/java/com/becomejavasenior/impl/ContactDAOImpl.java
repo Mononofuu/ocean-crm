@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 //@Repository
-public class ContactDAOImpl extends AbstractContactDAO<Contact> implements ContactDAO {
+public class ContactDAOImpl extends GeneralContactDAOImpl<Contact> implements ContactDAO {
     @Autowired
     public SubjectDAO subjectDAO;
     @Autowired
@@ -142,24 +142,6 @@ public class ContactDAOImpl extends AbstractContactDAO<Contact> implements Conta
     @Override
     public void delete(int id) throws DataBaseException {
         subjectDAO.delete(id);
-    }
-
-    @Override
-    public Contact readContactByName(String name) throws DataBaseException {
-        Contact result;
-        try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(getReadAllQuery() + " WHERE name = ?")) {
-            statement.setString(1, name);
-            ResultSet rs = statement.executeQuery();
-            List<Contact> allObjects = parseResultSetLite(rs);
-            if (allObjects.isEmpty()) {
-                return null;
-            }
-            result = allObjects.get(0);
-        } catch (SQLException e) {
-            throw new DataBaseException(e);
-        }
-        return result;
     }
 
     @Override

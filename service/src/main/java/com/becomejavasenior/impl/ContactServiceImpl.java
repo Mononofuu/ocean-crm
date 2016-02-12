@@ -1,10 +1,7 @@
 package com.becomejavasenior.impl;
 
 import com.becomejavasenior.*;
-import com.becomejavasenior.interfacedao.ContactDAO;
-import com.becomejavasenior.interfacedao.DealContactDAO;
-import com.becomejavasenior.interfacedao.PhoneTypeDAO;
-import com.becomejavasenior.interfacedao.TagDAO;
+import com.becomejavasenior.interfacedao.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -26,6 +23,11 @@ public class ContactServiceImpl extends AbstractContactService<Contact> implemen
     private TagDAO tagDAO;
     @Autowired
     private DealContactDAO dealContactDAO;
+
+    @Override
+    protected GeneralContactDAO<Contact> getDao() {
+        return contactDAO;
+    }
 
     @Override
     //@Transactional(propagation = Propagation.REQUIRED, rollbackFor = DataBaseException.class, readOnly = false)
