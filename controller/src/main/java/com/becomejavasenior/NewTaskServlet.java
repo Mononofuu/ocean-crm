@@ -68,6 +68,9 @@ public class NewTaskServlet extends HttpServlet{
         if(!"".equals(request.getParameter("duedate"))){
             String duedate = request.getParameter("duedate");
             String duetime = request.getParameter("duetime");
+            if("".equals(duetime)){
+                duetime = "23:59";
+            }
             SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyyHH:mm");
             try {
                 task.setDueTime(dateFormat.parse(duedate+duetime));
