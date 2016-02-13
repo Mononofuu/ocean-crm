@@ -2,7 +2,11 @@ package com.becomejavasenior.impl;
 
 import com.becomejavasenior.*;
 import com.becomejavasenior.interfacedao.CompanyDAO;
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * @author Anton Sakhno <sakhno83@gmail.com>
@@ -24,5 +28,12 @@ public class CompanyHibernateDAOImpl extends GeneralHibernateContactDAO<Company>
         Company company = new Company();
         company.setId(id);
         delete(company);
+    }
+
+    @Override
+    public List<Tag> readAllCompanyesTags() throws DataBaseException {
+        Criteria criteria = getCurrentSession().createCriteria(Tag.class);
+        criteria.add(Restrictions.eq("subjectType", SubjectType.COMPANY_TAG));
+        return criteria.list();
     }
 }

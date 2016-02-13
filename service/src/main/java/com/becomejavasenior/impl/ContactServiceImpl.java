@@ -20,8 +20,6 @@ public class ContactServiceImpl extends AbstractContactService<Contact> implemen
     @Autowired
     private PhoneTypeDAO phoneTypeDAO;
     @Autowired
-    private TagDAO tagDAO;
-    @Autowired
     private DealContactDAO dealContactDAO;
 
     @Override
@@ -82,6 +80,6 @@ public class ContactServiceImpl extends AbstractContactService<Contact> implemen
 
     @Override
     public List<Tag> getAllContactTags() throws DataBaseException {
-        return tagDAO.readAll(SubjectType.CONTACT_TAG);
+        return contactDAO.readAllContactsTags();
     }
 }

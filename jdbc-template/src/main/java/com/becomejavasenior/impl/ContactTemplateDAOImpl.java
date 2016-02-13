@@ -3,6 +3,7 @@ package com.becomejavasenior.impl;
 
 import com.becomejavasenior.*;
 import com.becomejavasenior.interfacedao.ContactDAO;
+import com.becomejavasenior.interfacedao.TagDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,8 @@ public class ContactTemplateDAOImpl extends SubjectTemplateDAOImpl<Contact> impl
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     @Autowired
     private DataSource dataSource;
+    @Autowired
+    private TagDAO tagDAO;
 
     private final static Logger LOGGER = LogManager.getLogger(ContactTemplateDAOImpl.class);
 
@@ -135,5 +138,10 @@ public class ContactTemplateDAOImpl extends SubjectTemplateDAOImpl<Contact> impl
 
     public List<Contact> readAllLite() throws DataBaseException {
         return getJdbcTemplate().query(READ_ALL_QUERY, contactRowMapper);
+    }
+
+    @Override
+    public List<Tag> readAllContactsTags() throws DataBaseException {
+        return tagDAO.readAll(SubjectType.CONTACT_TAG);
     }
 }

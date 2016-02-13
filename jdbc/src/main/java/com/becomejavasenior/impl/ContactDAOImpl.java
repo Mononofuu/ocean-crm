@@ -20,6 +20,8 @@ public class ContactDAOImpl extends GeneralContactDAOImpl<Contact> implements Co
     public CompanyDAO companyDAO;
     @Autowired
     public SubjectTagDAO subjectTagDAO;
+    @Autowired
+    private TagDAO tagDAO;
 
 
     @Override
@@ -162,5 +164,10 @@ public class ContactDAOImpl extends GeneralContactDAOImpl<Contact> implements Co
     @Override
     protected String getTableName() {
         return "contact";
+    }
+
+    @Override
+    public List<Tag> readAllContactsTags() throws DataBaseException {
+        return tagDAO.readAll(SubjectType.CONTACT_TAG);
     }
 }

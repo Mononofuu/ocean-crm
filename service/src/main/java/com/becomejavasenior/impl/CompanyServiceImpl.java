@@ -21,8 +21,6 @@ public class CompanyServiceImpl extends AbstractContactService<Company> implemen
 
     @Autowired
     private CompanyDAO companyDAO;
-    @Autowired
-    private TagDAO tagDAO;
 
     @Override
     protected GeneralContactDAO<Company> getDao() {
@@ -76,7 +74,7 @@ public class CompanyServiceImpl extends AbstractContactService<Company> implemen
 
     @Override
     public List<Tag> getAllCompanyTags() throws DataBaseException {
-        return tagDAO.readAll(SubjectType.COMPANY_TAG);
+        return companyDAO.readAllCompanyesTags();
     }
 }
 

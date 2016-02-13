@@ -1,8 +1,6 @@
 package com.becomejavasenior.impl;
 
-import com.becomejavasenior.AbstractJDBCDao;
-import com.becomejavasenior.ContactFilters;
-import com.becomejavasenior.DataBaseException;
+import com.becomejavasenior.*;
 import com.becomejavasenior.interfacedao.GeneralContactDAO;
 import org.springframework.stereotype.Repository;
 

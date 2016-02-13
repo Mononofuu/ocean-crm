@@ -86,6 +86,11 @@ public class DealHibernateDAOImpl extends AbstractHibernateDAO<Deal> implements 
     }
 
     @Override
+    public List<Tag> readAllDealsTags() throws DataBaseException {
+        return null;
+    }
+
+    @Override
     public void delete(int id) throws DataBaseException {
         Deal deal = new Deal();
         deal.setId(id);

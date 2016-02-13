@@ -3,6 +3,8 @@ package com.becomejavasenior.impl;
 import com.becomejavasenior.Contact;
 import com.becomejavasenior.ContactFilters;
 import com.becomejavasenior.DataBaseException;
+import com.becomejavasenior.SubjectType;
+import com.becomejavasenior.Tag;
 import com.becomejavasenior.interfacedao.ContactDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -10,7 +12,6 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
-
 import java.util.Date;
 import java.util.List;
 
@@ -50,5 +51,12 @@ public class ContactHibernateDAOImpl extends GeneralHibernateContactDAO<Contact>
         Contact contact = new Contact();
         contact.setId(id);
         delete(contact);
+    }
+
+    @Override
+    public List<Tag> readAllContactsTags() throws DataBaseException {
+        Criteria criteria = getCurrentSession().createCriteria(Tag.class);
+        criteria.add(Restrictions.eq("subjectType", SubjectType.CONTACT_TAG));
+        return criteria.list();
     }
 }

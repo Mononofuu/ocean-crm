@@ -1,10 +1,9 @@
 package com.becomejavasenior.impl;
 
-import com.becomejavasenior.Company;
-import com.becomejavasenior.DataBaseException;
-import com.becomejavasenior.Subject;
+import com.becomejavasenior.*;
 import com.becomejavasenior.interfacedao.CompanyDAO;
 import com.becomejavasenior.interfacedao.SubjectDAO;
+import com.becomejavasenior.interfacedao.TagDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,9 @@ import java.util.List;
 public class CompanyDAOImpl extends GeneralContactDAOImpl<Company> implements CompanyDAO {
     private static final Logger LOGGER = LogManager.getLogger(CompanyDAOImpl.class);
     @Autowired
-    SubjectDAO subjectDAO;
+    private SubjectDAO subjectDAO;
+    @Autowired
+    private TagDAO tagDAO;
 
     @Override
     public Company readCompanyByName(String name) throws DataBaseException {
@@ -162,4 +163,8 @@ public class CompanyDAOImpl extends GeneralContactDAOImpl<Company> implements Co
         return "company";
     }
 
+    @Override
+    public List<Tag> readAllCompanyesTags() throws DataBaseException {
+        return tagDAO.readAll(SubjectType.COMPANY_TAG);
+    }
 }

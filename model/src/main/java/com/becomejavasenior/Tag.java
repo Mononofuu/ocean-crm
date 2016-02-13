@@ -16,20 +16,8 @@ public class Tag implements Serializable {
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "subject_type")
     private SubjectType subjectType;
-    @ManyToMany(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
-    @JoinTable(name = "subject_tag", joinColumns = @JoinColumn(name = "tag_id"), inverseJoinColumns = @JoinColumn(name = "subject_id"))
-    private Set<Subject> subjects;
 
     public Tag() {
-    }
-
-    public Set<Subject> getSubjects() {
-        return subjects;
-    }
-
-    public Tag setSubjects(Set<Subject> subjects) {
-        this.subjects = subjects;
-        return this;
     }
 
     public Tag(String name) {
