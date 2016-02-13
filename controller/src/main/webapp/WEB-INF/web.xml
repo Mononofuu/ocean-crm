@@ -30,17 +30,6 @@
         <url-pattern>/deal</url-pattern>
     </servlet-mapping>
 
-
-    <servlet>
-        <servlet-name>dashboardServlet</servlet-name>
-        <servlet-class>com.becomejavasenior.dashboard.DashboardServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>dashboardServlet</servlet-name>
-        <url-pattern>/dashboard</url-pattern>
-    </servlet-mapping>
-
     <servlet>
         <servlet-name>registrationServlet</servlet-name>
         <servlet-class>com.becomejavasenior.access.RegistrationServlet</servlet-class>

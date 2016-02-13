@@ -66,7 +66,7 @@ public class RegistrationServlet extends HttpServlet {
             LOGGER.error(e.getMessage());
             errors.add(e.getMessage());
             request.setAttribute("error", errors);
-            request.getRequestDispatcher("/registration.jsp").forward(request, response);
+            request.getRequestDispatcher("/jsp/registration.jsp").forward(request, response);
             return;
         }
         if (request.getSession().getAttribute("user") == null) {
@@ -83,7 +83,7 @@ public class RegistrationServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if (request.getParameter("userName") == null) {
-            request.getRequestDispatcher("/registration.jsp").forward(request, response);
+            request.getRequestDispatcher("/jsp/registration.jsp").forward(request, response);
         }
     }
 }

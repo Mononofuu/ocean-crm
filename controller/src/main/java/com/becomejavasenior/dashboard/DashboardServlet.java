@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * @author Lybachevskiy.Vladislav
  */
-@WebServlet(name = "dashboardServlet")
+@WebServlet(name = "dashboardServlet", urlPatterns = "/dashboard")
 public class DashboardServlet extends HttpServlet {
 
     @Autowired
@@ -43,7 +43,7 @@ public class DashboardServlet extends HttpServlet {
             request.setAttribute((String) entry.getKey(), entry.getValue());
         }
 
-        getServletContext().getRequestDispatcher("/dashboard.jsp").forward(request, response);
+        getServletContext().getRequestDispatcher("/jsp/dashboard.jsp").forward(request, response);
     }
 
 }
