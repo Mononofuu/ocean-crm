@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import javax.persistence.*;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Date;
 import java.util.List;
 @Entity
 @Table(name = "company")
@@ -19,18 +20,40 @@ public class Company extends Subject {
     private String email;
     private URL web;
     private String address;
+    @Column(name = "date_created")
+    private Date createdDate;
+    @Column(name = "date_updated")
+    private Date updatedDate;
     @Transient
     private List<Comment> comments;
     @Transient
     private List<File> files;
     @Transient
     private List<Task> tasks;
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY)
     private List<Contact> contacts;
-    @Transient
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "dealCompany")
     private List<Deal> deals;
 
     public Company() {
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public Company setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+        return this;
+    }
+
+    public Date getUpdatedDate() {
+        return updatedDate;
+    }
+
+    public Company setUpdatedDate(Date updatedDate) {
+        this.updatedDate = updatedDate;
+        return this;
     }
 
     public String getPhoneNumber() {

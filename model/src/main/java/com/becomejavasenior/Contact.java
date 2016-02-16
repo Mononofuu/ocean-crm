@@ -1,6 +1,7 @@
 package com.becomejavasenior;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 @Entity
 @Table(name = "contact")
@@ -18,14 +19,17 @@ public class Contact extends Subject {
     private String phone;
     private String email;
     private String skype;
+    @Column(name = "date_created")
+    private Date createdDate;
+    @Column(name = "date_updated")
+    private Date updatedDate;
     @Transient
     private List<Comment> comments;
     @Transient
     private List<File> files;
     @Transient
     private List<Task> tasks;
-    @ManyToMany
-    @JoinTable(name="deal_contact")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "mainContact")
     private List<Deal> deals;
 
     public Contact() {
@@ -109,6 +113,24 @@ public class Contact extends Subject {
 
     public void setDeals(List<Deal> deals) {
         this.deals = deals;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public Contact setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+        return this;
+    }
+
+    public Date getUpdatedDate() {
+        return updatedDate;
+    }
+
+    public Contact setUpdatedDate(Date updatedDate) {
+        this.updatedDate = updatedDate;
+        return this;
     }
 
     @Override
