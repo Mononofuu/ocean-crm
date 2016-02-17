@@ -2,10 +2,12 @@ package com.becomejavasenior;
 
 import javax.persistence.*;
 import java.util.Date;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 @Entity
 @Table(name = "contact")
 @PrimaryKeyJoinColumn(name="id")
+@XmlRootElement
 public class Contact extends Subject {
 
     private static final long serialVersionUID = -5553010181244222836L;

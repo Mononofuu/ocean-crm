@@ -10,17 +10,6 @@
         <welcome-file>dashboard</welcome-file>
     </welcome-file-list>
 
-    <listener>
-        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-    </listener>
-    <context-param>
-        <param-name>contextConfigLocation</param-name>
-        <param-value>
-            /WEB-INF/spring/spring-localization-servlet.xml
-            /WEB-INF/spring/root-context.xml
-        </param-value>
-    </context-param>
-
     <servlet>
         <servlet-name>dealServlet</servlet-name>
         <servlet-class>com.becomejavasenior.DealController</servlet-class>
