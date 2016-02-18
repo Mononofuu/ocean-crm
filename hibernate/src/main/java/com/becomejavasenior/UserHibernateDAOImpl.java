@@ -19,7 +19,10 @@ public class UserHibernateDAOImpl extends AbstractHibernateDAO<User> implements 
 
     @Override
     public void delete(int id) throws DataBaseException {
-
     }
 
+    @Override
+    public User getUserByLogin(String login) throws DataBaseException {
+        return null;
+    }
 }

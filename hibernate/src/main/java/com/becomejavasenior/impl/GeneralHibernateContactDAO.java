@@ -35,7 +35,7 @@ public abstract class GeneralHibernateContactDAO<T> extends AbstractHibernateDAO
     public List<T> getAllContactsByParameters(List<ContactFilters> parameters, String userId, List<Integer> tagIdList, List<Date> taskDate, List<Date> createUpdateDate, String createUpdateFlag) throws DataBaseException {
         Criteria criteria = getCurrentSession().createCriteria(getObjectСlass());
         if(userId!=null){
-            //TODO
+            //TODO filtering by user id
         }
         if(parameters!=null&&!parameters.isEmpty()){
             createRestrictionsByParameters(criteria, parameters);
@@ -45,7 +45,7 @@ public abstract class GeneralHibernateContactDAO<T> extends AbstractHibernateDAO
                     .add(Restrictions.in("id", tagIdList));
         }
         if(taskDate!=null&&taskDate.size()==2){
-            createRestrictionsByTaskDate(criteria, taskDate);//TODO
+            createRestrictionsByTaskDate(criteria, taskDate);//TODO filtering by task date
         }
         if(createUpdateDate!=null&&createUpdateFlag!=null&&createUpdateDate.size()==2){
             criteria.add(Restrictions.between(createUpdateFlag+"Date", createUpdateDate.get(0), createUpdateDate.get(1)));

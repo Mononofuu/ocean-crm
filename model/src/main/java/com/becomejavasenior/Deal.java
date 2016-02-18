@@ -38,7 +38,7 @@ public class Deal extends Subject {
     @Transient
     private List<Task> tasks;
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="created_date")
+    @Column(name="created_date", insertable = false)
     private Date dateCreated;
 
     public Deal() {

@@ -167,7 +167,7 @@
                             <select class="form-control" name="tasktype" id="tasktype">
                                 <option value="" disabled selected><spring:message code="label.tasktype"/></option>
                                 <c:forEach var="tasktype" items="${tasktypes}">
-                                    <option value="${tasktype.ordinal()}"><spring:message code="${tasktype.toString()}"/></option>
+                                    <option value="${tasktype.name()}"><spring:message code="${tasktype.toString()}"/></option>
                                 </c:forEach>
                             </select>
                         </div>

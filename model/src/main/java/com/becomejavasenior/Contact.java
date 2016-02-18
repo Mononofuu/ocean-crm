@@ -19,7 +19,7 @@ public class Contact extends Subject {
     private String phone;
     private String email;
     private String skype;
-    @Column(name = "date_created")
+    @Column(name = "date_created", insertable=false)
     private Date createdDate;
     @Column(name = "date_updated")
     private Date updatedDate;

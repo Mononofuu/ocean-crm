@@ -47,4 +47,25 @@ public class Tag implements Serializable {
     public void setSubjectType(SubjectType subjectType) {
         this.subjectType = subjectType;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Tag tag = (Tag) o;
+
+        if (id != tag.id) return false;
+        if (name != null ? !name.equals(tag.name) : tag.name != null) return false;
+        return subjectType == tag.subjectType;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (subjectType != null ? subjectType.hashCode() : 0);
+        return result;
+    }
 }

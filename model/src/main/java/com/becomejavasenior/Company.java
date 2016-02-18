@@ -20,7 +20,7 @@ public class Company extends Subject {
     private String email;
     private URL web;
     private String address;
-    @Column(name = "date_created")
+    @Column(name = "date_created", insertable=false)
     private Date createdDate;
     @Column(name = "date_updated")
     private Date updatedDate;
