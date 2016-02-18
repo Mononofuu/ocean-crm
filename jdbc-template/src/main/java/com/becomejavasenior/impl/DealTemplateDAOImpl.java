@@ -188,6 +188,8 @@ public class DealTemplateDAOImpl extends SubjectTemplateDAOImpl<Deal> implements
     }
 
     public List<Deal> readAllWithConditions(int condition) throws DataBaseException {
+
+
         List<Deal> result = new ArrayList<Deal>();
         String sql;
         switch (condition){

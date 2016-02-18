@@ -1,13 +1,19 @@
 package com.becomejavasenior;
 
+import javax.persistence.*;
 import java.io.Serializable;
 
+@Entity
+@Table(name = "tag")
 public class Tag implements Serializable {
 
     private static final long serialVersionUID = 2760079646947188984L;
 
+    @Id
+    @GeneratedValue
     private int id;
     private String name;
+    @Transient
     private SubjectType subjectType;
 
     public Tag() {

@@ -3,7 +3,9 @@ package com.becomejavasenior;
 import com.becomejavasenior.interfacedao.DealDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.Criteria;
 import org.hibernate.Query;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import java.text.ParseException;
@@ -15,6 +17,7 @@ import java.util.List;
 /**
  * Created by kramar on 10.2.16.
  */
+
 @Repository
 public class DealHibernateDAOImpl extends AbstractHibernateDAO<Deal> implements DealDAO{
 
@@ -40,20 +43,20 @@ public class DealHibernateDAOImpl extends AbstractHibernateDAO<Deal> implements 
 
     @Override
     public List<Deal> readStatusFilter(int statusId) throws DataBaseException {
-        Query query = getCurrentSession().createSQLQuery(
-                READ_ALL_QUERY+DEAL_SELECT_STATUS_ID)
-                .addEntity(Deal.class)
-                .setParameter("statusId", statusId);
-        return query.list();
+
+        Criteria criteria = getCurrentSession().createCriteria(getObjectСlass());
+        criteria.add(Restrictions.eq("status.id", statusId));
+        return criteria.list();
+
     }
 
     @Override
     public List<Deal> readUserFilter(int userId) throws DataBaseException {
-        Query query = getCurrentSession().createSQLQuery(
-                READ_ALL_QUERY+DEAL_SELECT_BY_USER)
-                .addEntity(Deal.class)
-                .setParameter("responsibleId", userId);
-        return query.list();
+
+        Criteria criteria = getCurrentSession().createCriteria(getObjectСlass());
+        criteria.add(Restrictions.eq("responsible.id", userId));
+        return criteria.list();
+
     }
 
     @Override
@@ -101,64 +104,31 @@ public class DealHibernateDAOImpl extends AbstractHibernateDAO<Deal> implements 
 
     @Override
     public List<Deal> readAllByCreatedDateInterval(java.sql.Date dateBegin, java.sql.Date dateEnd) throws DataBaseException {
-        Query query = getCurrentSession().createSQLQuery(
-                READ_ALL_QUERY + DEAL_SELECT_PERIOD_CREATED_DATE)
-                .addEntity(Deal.class)
-                .setParameter("dateBegin", dateBegin)
-                .setParameter("dateEnd", dateEnd);
-        return query.list();
+
+        Criteria criteria = getCurrentSession().createCriteria(getObjectСlass());
+        criteria.add(Restrictions.between("dateCreated", dateBegin, dateEnd));
+        return criteria.list();
+
     }
 
     @Override
     public List<Deal> readAllByTasksDueDateInterval(java.sql.Date dateBegin, java.sql.Date dateEnd) throws DataBaseException {
-        Query query = getCurrentSession().createSQLQuery(
-                READ_ALL_QUERY + DEAL_SELECT_TASK_DUE_DATE_INTERVAL)
-                .addEntity(Deal.class)
-                .setParameter("dateBegin", dateBegin)
-                .setParameter("dateEnd", dateEnd);
-        return query.list();
+
+        Criteria criteria = getCurrentSession().createCriteria(getObjectСlass());
+        criteria.createCriteria("tasks")
+                .createCriteria("dueTime")
+                .add(Restrictions.between("dueTime", dateBegin, dateEnd));
+        return criteria.list();
+
     }
 
-    @Override
-    public List<Deal> readAllWithConditions(List<String> conditionsList) throws DataBaseException {
-
-        String sql = createSQL(conditionsList);
-        Query query = getCurrentSession().createSQLQuery(sql)
-            .addEntity(Deal.class);
-
-            for(String condition: conditionsList) {
-                if (condition.startsWith("selectedfilter_my")) {
-                    query.setParameter("responsibleId", Integer.parseInt(condition.replace("selectedfilter_my_", "")));
-                } else if ("selectedfilter_expired".equals(condition)) {
-                    query.setParameter("dueDate", new Date(System.currentTimeMillis()));
-                } else if (condition.startsWith("phase")) {
-                    query.setParameter("statusId", Integer.parseInt(condition.replace("phase_", "")));
-                } else if (condition.startsWith("manager")) {
-                    query.setParameter("responsibleId", Integer.parseInt(condition.replace("manager_", "")));
-                } else if (condition.startsWith("when") || condition.startsWith("task")) {
-                    SimpleDateFormat formatter = new SimpleDateFormat();
-                    formatter.applyPattern("MM/dd/yyyy");
-                    String dateFrom = condition.substring(5, 15);
-                    String dateTo = condition.substring(16, 26);
-                    try {
-                        Date date = formatter.parse(dateFrom);
-                        query.setParameter("dateBegin", date);
-                        date = formatter.parse(dateTo);
-                        query.setParameter("dateBegin", date);
-                    }
-                    catch (ParseException e) {
-                        LOGGER.error(e);
-                    }
-                }
-            }
-        return query.list();
-    }
 
     @Override
     public int findTotalDeals() {
-        return (Integer) getCurrentSession().createSQLQuery(
-                "SELECT COUNT(*) FROM deal").
-                uniqueResult();
+
+        Criteria criteria = getCurrentSession().createCriteria(getObjectСlass());
+        return criteria.list().size();
+
     }
 
     @Override
@@ -170,9 +140,11 @@ public class DealHibernateDAOImpl extends AbstractHibernateDAO<Deal> implements 
 
     @Override
     public int findTotalDealsWithTasks() {
+
         return (Integer) getCurrentSession().createSQLQuery(
                 "SELECT COUNT(*) FROM deal WHERE id IN (SELECT subject_id FROM task GROUP BY subject_id)").
                 uniqueResult();
+
     }
 
     @Override
@@ -184,16 +156,20 @@ public class DealHibernateDAOImpl extends AbstractHibernateDAO<Deal> implements 
 
     @Override
     public int findTotalSuccessDeals() {
-        return (Integer) getCurrentSession().createSQLQuery(
-                "SELECT COUNT(*) FROM deal WHERE status_id=5").
-                uniqueResult();
+
+        Criteria criteria = getCurrentSession().createCriteria(getObjectСlass());
+        criteria.add(Restrictions.eq("status.id", 5));
+        return criteria.list().size();
+
     }
 
     @Override
     public int findTotalUnsuccessClosedDeals() {
-        return (Integer) getCurrentSession().createSQLQuery(
-                "SELECT COUNT(*) FROM deal WHERE status_id=6").
-                uniqueResult();
+
+        Criteria criteria = getCurrentSession().createCriteria(getObjectСlass());
+        criteria.add(Restrictions.eq("status.id", 6));
+        return criteria.list().size();
+
     }
 
     @Override
@@ -203,69 +179,86 @@ public class DealHibernateDAOImpl extends AbstractHibernateDAO<Deal> implements 
         delete(deal);
     }
 
-    private String createSQL(List<String> conditionsList){
+    @Override
+    public List<Deal> readAllWithConditions(List<String> conditionsList) throws DataBaseException {
 
-        StringBuilder whereCondition = new StringBuilder();
+        Criteria criteria = getCurrentSession().createCriteria(getObjectСlass(),"c");
 
         for(String condition: conditionsList){
             if(condition.startsWith("selectedfilter")){
-                appendSelectedFilterSQL(whereCondition, condition);
+                createFilter(criteria, condition);
             }else if(condition.startsWith("when")) {
-                whereCondition.append(changeCondition(DEAL_SELECT_PERIOD_CREATED_DATE));
+                SimpleDateFormat formatter = new SimpleDateFormat();
+                formatter.applyPattern("MM/dd/yyyy");
+                String dateFrom = condition.substring(5, 15);
+                String dateTo = condition.substring(16, 26);
+                try {
+                    Date date = formatter.parse(dateFrom);
+                    criteria.add(Restrictions.ge("dateCreated", date));
+                    date = formatter.parse(dateTo);
+                    criteria.add(Restrictions.le("dateCreated", date));
+                }
+                catch (ParseException e) {
+                    LOGGER.error(e);
+                }
             }else if(condition.startsWith("phase")) {
-                whereCondition.append(changeCondition(DEAL_SELECT_STATUS_ID));
+                criteria.add(Restrictions.eq("status.id", Integer.parseInt(condition.replace("phase_", ""))));
             }else if(condition.startsWith("manager")) {
-                whereCondition.append(changeCondition(DEAL_SELECT_BY_USER));
+                criteria.add(Restrictions.eq("responsible.id", Integer.parseInt(condition.replace("manager_", ""))));
             }else if(condition.startsWith("tags")) {
-                String tagString = condition.replace("tags_", "");
-                whereCondition.append(changeCondition(DEAL_SELECT_TAG + "'" +
-                        tagString + "')))"));
+                //TODO
+//                String tagString = condition.replace("tags_", "");
+//                whereCondition.append(changeCondition(DEAL_SELECT_TAG + "'" +
+//                        tagString + "')))"));
             }else if(condition.startsWith("task")) {
-                whereCondition.append(changeCondition(DEAL_SELECT_TASK_DUE_DATE_INTERVAL));
+                //TODO
+//                whereCondition.append(changeCondition(DEAL_SELECT_TASK_DUE_DATE_INTERVAL));
             }
         }
+        return criteria.list();
 
-        String sql;
-        sql = READ_ALL_QUERY + whereCondition.toString().replaceFirst("AND", "WHERE");
-
-        return sql;
     }
 
-    private StringBuilder appendSelectedFilterSQL(StringBuilder whereCondition, String condition) {
+    private Criteria createFilter(Criteria criteria, String condition) {
+
         String cond = condition;
         if(condition.startsWith("selectedfilter_my")){
             cond = "selectedfilter_my";
         }
         switch (cond){
             case "selectedfilter_open":
-                whereCondition.append(changeCondition(DEAL_SELECT_OPENED));
+                criteria.add(Restrictions.eq("dateWhenDealClose", null));
                 break;
             case "selectedfilter_success":
-                whereCondition.append(changeCondition(DEAL_SELECT_SUCCESS));
+                criteria.add(Restrictions.eq("status.id", 5));
                 break;
             case "selectedfilter_fail":
-                whereCondition.append(changeCondition(DEAL_SELECT_CLOSED_AND_NOT_IMPLEMENTED));
+                criteria.add(Restrictions.eq("status.id", 6));
                 break;
             case "selectedfilter_notask":
-                whereCondition.append(changeCondition(DEAL_SELECT_WITHOUT_TASKS));
+                //TODO
+                criteria.add(Restrictions.eq("tasks", null));
                 break;
             case "selectedfilter_expired":
-                whereCondition.append(changeCondition(DEAL_SELECT_WITH_EXPIRED_TASKS));
+                criteria.createCriteria("tasks");
+                criteria.createCriteria("dueTime");
+                criteria.add(Restrictions.ne("dueTime", null));
+                criteria.add(Restrictions.le("dueTime", new Date(System.currentTimeMillis())));
+//                criteria.createAlias("c.tasks","task");
+//                criteria.add(Restrictions.ne("task.dueTime", null));
+//                criteria.add(Restrictions.le("task.dueTime", new Date(System.currentTimeMillis())));
                 break;
             case "selectedfilter_deleted":
-                whereCondition.append(changeCondition(DEAL_SELECT_DELETED));
+                criteria.add(Restrictions.eq("status.id", 7));
                 break;
             case "selectedfilter_my":
-                whereCondition.append(changeCondition(DEAL_SELECT_BY_USER));
+                criteria.add(Restrictions.eq("responsible.id", Integer.parseInt(condition.replace("selectedfilter_my_", ""))));
                 break;
             default:
                 break;
         }
-        return whereCondition;
+        return criteria;
     }
 
-    private String changeCondition(String condition){
-        return condition.replaceFirst("WHERE","AND");
-    }
 
 }

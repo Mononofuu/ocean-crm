@@ -19,7 +19,10 @@ public abstract class Subject implements Serializable {
 //    @JoinColumn(name="content_owner_id")
     @Transient
     private User user;
-    @Transient
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "subject_tag",
+            joinColumns = { @JoinColumn(name = "subject_id") },
+            inverseJoinColumns = { @JoinColumn(name = "tag_id") })
     private Set<Tag> tags;
     private boolean removed;
 

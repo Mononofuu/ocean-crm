@@ -167,7 +167,7 @@ public class DealServiceImpl implements com.becomejavasenior.DealService {
     }
 
     public List<Tag> getAllDealTags() throws DataBaseException {
-        return tagDAO.readAll(SubjectType.CONTACT_TAG);
+        return tagDAO.readAll(SubjectType.DEAL_TAG);
     }
 
     @Override
