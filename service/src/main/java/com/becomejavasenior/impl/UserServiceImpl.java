@@ -1,12 +1,16 @@
 package com.becomejavasenior.impl;
 
 import com.becomejavasenior.DataBaseException;
+import com.becomejavasenior.Role;
 import com.becomejavasenior.User;
 import com.becomejavasenior.UserService;
+import com.becomejavasenior.interfacedao.GrantsDAO;
+import com.becomejavasenior.interfacedao.RoleDAO;
 import com.becomejavasenior.interfacedao.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,6 +21,8 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserDAO userDAO;
+    @Autowired
+    private GrantsDAO grantsDAO;
 
     public UserServiceImpl() {
     }
@@ -49,5 +55,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> getAllUsersLite() throws DataBaseException {
         return userDAO.readAllLite();
+    }
+
+    @Override
+    public User getUserByLogin(String login) throws DataBaseException {
+        return userDAO.getUserByLogin(login);
+    }
+
+    @Override
+    public Role getUserRole(User user) throws DataBaseException {
+        return grantsDAO.read(user.getId()).getRole();
     }
 }

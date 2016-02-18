@@ -6,9 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -106,6 +104,16 @@ public class UserDAOImpl extends AbstractJDBCDao<User> implements UserDAO {
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
             throw new DataBaseException(e);
+        }
+    }
+
+    @Override
+    public User getUserByLogin(String login) throws DataBaseException {
+        List<User> list = realiseQuery(getReadAllQuery()+" WHERE login = '"+login+"'");
+        if(!list.isEmpty()){
+            return list.get(0);
+        }else {
+            return null;
         }
     }
 }

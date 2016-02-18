@@ -38,6 +38,9 @@ public class UserFilter implements Filter {
         List<Role> dealslistRoles = new ArrayList<>();
         dealslistRoles.add(admin);
         dealslistRoles.add(user);
+        List<Role> dealsPyramidRoles = new ArrayList<>();
+        dealsPyramidRoles.add(admin);
+        dealsPyramidRoles.add(user);
         List<Role> dealeditRoles = new ArrayList<>();
         dealeditRoles.add(admin);
         dealeditRoles.add(user);
@@ -59,6 +62,7 @@ public class UserFilter implements Filter {
         List<Role> settingsRoles = new ArrayList<>();
         settingsRoles.add(admin);
         URL2ROLES.put("/dealslist", dealslistRoles);
+        URL2ROLES.put("/dealspyramid", dealslistRoles);
         URL2ROLES.put("/dealedit", dealeditRoles);
         URL2ROLES.put("/companyedit", companyRoles);
         URL2ROLES.put("/contactedit", contactsRoles);

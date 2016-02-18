@@ -1,6 +1,6 @@
 package com.becomejavasenior;
 
-import com.becomejavasenior.config.DataSourceConfig;
+import com.becomejavasenior.config.DAODataSourceConfig;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -18,7 +18,7 @@ import java.util.Properties;
  */
 @Configuration
 @EnableTransactionManagement
-@Import(DataSourceConfig.class)
+@Import(DAODataSourceConfig.class)
 public class HibernateConfig {
     @Autowired
     private DataSource dataSource;

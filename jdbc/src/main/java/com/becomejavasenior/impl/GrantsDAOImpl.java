@@ -35,6 +35,11 @@ public class GrantsDAOImpl extends AbstractJDBCDao<Grants> implements GrantsDAO 
     }
 
     @Override
+    protected String getConditionStatment() {
+        return " WHERE user_id = ?";
+    }
+
+    @Override
     public String getCreateQuery() {
         return "INSERT INTO grants (user_id, role_id, level) VALUES (?, ?, ?)";
     }
@@ -71,8 +76,9 @@ public class GrantsDAOImpl extends AbstractJDBCDao<Grants> implements GrantsDAO 
     @Override
     protected void prepareStatementForInsert(PreparedStatement statement, Grants object) throws DataBaseException {
         try {
-            statement.setInt(1, object.getRole().getId());
-            statement.setInt(2, object.getLevel());
+            statement.setInt(1, object.getUser().getId());
+            statement.setInt(2, object.getRole().getId());
+            statement.setInt(3, object.getLevel());
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
             throw new DataBaseException(e);

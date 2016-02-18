@@ -127,4 +127,9 @@ public class UserTemplateDAOImpl extends JdbcDaoSupport implements UserDAO {
     public List<User> readAllLite() throws DataBaseException {
         return null;
     }
+
+    @Override
+    public User getUserByLogin(String login) throws DataBaseException {
+        return null;
+    }
 }

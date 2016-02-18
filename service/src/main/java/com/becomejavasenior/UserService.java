@@ -10,6 +10,7 @@ public interface UserService {
     void deleteUser(int id) throws DataBaseException;
     User findUserById(int id) throws DataBaseException;
     List<User> getAllUsers() throws DataBaseException;
-
     List<User> getAllUsersLite() throws DataBaseException;
+    User getUserByLogin(String login) throws DataBaseException;
+    Role getUserRole(User user) throws DataBaseException;
 }

@@ -3,6 +3,7 @@ package com.becomejavasenior;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import javax.servlet.RequestDispatcher;
@@ -112,8 +113,8 @@ public class DealsPyramidServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String filter = req.getParameter("selectedfilter");
-        User user = (User) req.getSession().getAttribute("user");
-        LOGGER.info(String.format("Selected filter: %s, for user: %s", filter, user.getLogin()));
+        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+        LOGGER.info(String.format("Selected filter: %s, for user: %s", filter, userName));
 
         try {
             List<FilterPeriod> filterPeriods = new ArrayList<>(Arrays.asList(FilterPeriod.values()));
@@ -130,8 +131,8 @@ public class DealsPyramidServlet extends HttpServlet {
                 LOGGER.debug("STATUS: " + status);
                 LOGGER.debug("STATUS: " + status.getName());
                 LOGGER.debug(deals.size());
-                LOGGER.debug("DEAL: " + deals.get(0).getStatus());
-                LOGGER.debug("DEAL: " + deals.get(0).getStatus().getName());
+//                LOGGER.debug("DEAL: " + deals.get(0).getStatus());
+//                LOGGER.debug("DEAL: " + deals.get(0).getStatus().getName());
                 dealsToStatus.put(status, new ArrayList<>());
                 deals.stream().filter(deal -> deal.getStatus().getName().equals(status.getName())).forEach(deal1 -> dealsToStatus.get(status).add(deal1));
             }
@@ -160,13 +161,16 @@ public class DealsPyramidServlet extends HttpServlet {
         }
 
         LOGGER.info("Applying filter: " + filterName);
-        User user = (User) req.getSession().getAttribute("user");
+        LOGGER.info("Deals size: " + deals.size());
+
+        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
         switch (filterName) {
             case "open":
                 return deals.stream().filter(deal -> deal.getDateWhenDealClose() == null)
                         .collect(Collectors.toList());
             case "my":
-                return deals.stream().filter(deal -> deal.getUser().getId() == user.getId()).collect(Collectors.toList());
+                return deals;
+//                return deals.stream().filter(deal -> Objects.equals(userName, deal.getUser().getLogin())).collect(Collectors.toList()); TODO: Get deal user to compare with current user
             case "success":
                 return deals.stream()
                         .filter(deal -> (deal.getDateWhenDealClose() != null) & "SUCCESS".equals(deal.getStatus().getName()))
@@ -176,15 +180,17 @@ public class DealsPyramidServlet extends HttpServlet {
                         .filter(deal -> (deal.getDateWhenDealClose() != null) & "CLOSED AND NOT IMPLEMENTED".equals(deal.getStatus().getName()))
                         .collect(Collectors.toList());
             case "notask":
-                return deals.stream()
-                        .filter(deal -> deal.getTasks().isEmpty())
-                        .collect(Collectors.toList());
+                return deals; //TODO: Make it work
+//                return deals.stream()
+//                        .filter(deal -> deal.getTasks().isEmpty())
+//                        .collect(Collectors.toList());
             case "expired":
-                return deals.stream()
-                        .filter(deal -> (deal.getTasks()
-                                .stream().filter(task -> task.getDueTime().before(new Date()))
-                                .collect(Collectors.toList())) != null)
-                        .collect(Collectors.toList());
+                return deals; //TODO: Make it work
+//                return deals.stream()
+//                        .filter(deal -> (deal.getTasks()
+//                                .stream().filter(task -> task.getDueTime().before(new Date()))
+//                                .collect(Collectors.toList())) != null)
+//                        .collect(Collectors.toList());
             case "deleted":
                 return deals.stream()
                         .filter(deal -> (deal.getDateWhenDealClose() != null) & "DELETED".equals(deal.getStatus().getName()))

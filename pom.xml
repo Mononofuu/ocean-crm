@@ -13,6 +13,7 @@
     <module>jdbc-template</module>
     <module>interfacedao</module>
     <module>hibernate</module>
+    <module>security</module>
   </modules>
 
   <name>CRM Maven Webapp</name>
@@ -60,6 +61,7 @@
   <properties>
     <spring.version>4.2.4.RELEASE</spring.version>
     <hibernate.version>4.3.11.Final</hibernate.version>
+    <springsecurity.version>4.0.3.RELEASE</springsecurity.version>
   </properties>
   <dependencies>
     <dependency>
