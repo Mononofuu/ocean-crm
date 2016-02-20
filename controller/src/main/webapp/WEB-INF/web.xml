@@ -10,34 +10,6 @@
         <welcome-file>dashboard</welcome-file>
     </welcome-file-list>
 
-    <listener>
-        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-    </listener>
-
-    <context-param>
-        <param-name>contextConfigLocation</param-name>
-        <param-value>
-            /WEB-INF/spring/spring-localization-servlet.xml
-            /WEB-INF/spring/root-context.xml
-        </param-value>
-    </context-param>
-
-    <servlet>
-        <servlet-name>rest</servlet-name>
-        <servlet-class>
-            org.springframework.web.servlet.DispatcherServlet
-        </servlet-class>
-        <init-param>
-            <param-name>contextConfigLocation</param-name>
-            <param-value>/WEB-INF/spring/root-context.xml</param-value>
-        </init-param>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>rest</servlet-name>
-        <url-pattern>/rest/deal</url-pattern>
-    </servlet-mapping>
-
     <servlet>
         <servlet-name>dealServlet</servlet-name>
         <servlet-class>com.becomejavasenior.DealController</servlet-class>

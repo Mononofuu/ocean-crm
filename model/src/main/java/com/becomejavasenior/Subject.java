@@ -15,14 +15,14 @@ public abstract class Subject implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
-//    @ManyToOne
-//    @JoinColumn(name="content_owner_id")
-    @Transient
+    @ManyToOne
+    @JoinColumn(name="content_owner_id")
     private User user;
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "subject_tag",
-            joinColumns = { @JoinColumn(name = "subject_id") },
-            inverseJoinColumns = { @JoinColumn(name = "tag_id") })
+//    @ManyToMany(cascade = CascadeType.ALL)
+//    @JoinTable(name = "subject_tag",
+//            joinColumns = { @JoinColumn(name = "subject_id") },
+//            inverseJoinColumns = { @JoinColumn(name = "tag_id") })
+    @Transient
     private Set<Tag> tags;
     private boolean removed;
 

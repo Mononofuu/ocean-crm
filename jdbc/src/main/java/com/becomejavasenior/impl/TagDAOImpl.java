@@ -14,7 +14,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-@Repository
+
 public class TagDAOImpl extends AbstractJDBCDao<Tag> implements TagDAO {
 
     public static final String SELECT_ALL_SUBJECT_TAGS = " WHERE id IN(SELECT tag_id FROM subject_tag WHERE subject_id = ";

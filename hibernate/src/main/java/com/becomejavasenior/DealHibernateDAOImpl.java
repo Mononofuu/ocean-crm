@@ -24,16 +24,16 @@ public class DealHibernateDAOImpl extends AbstractHibernateDAO<Deal> implements 
     private final static Logger LOGGER = LogManager.getLogger(DealHibernateDAOImpl.class);
     private static final String DEAL_SELECT_TAG = " WHERE deal.id IN(SELECT subject_id FROM subject_tag " +
             "WHERE subject_tag.tag_id IN (SELECT id FROM tag WHERE name IN (";
-    private static final String DEAL_SELECT_STATUS_ID = " where status_id = :statusId";
-    private static final String DEAL_SELECT_OPENED = " WHERE deal.data_close IS null";
-    private static final String DEAL_SELECT_BY_USER = " WHERE responsible_id = :responsibleId";
-    private static final String DEAL_SELECT_WITHOUT_TASKS = " WHERE NOT deal.id IN (SELECT subject_id FROM task GROUP BY subject_id)";
-    private static final String DEAL_SELECT_WITH_EXPIRED_TASKS = " WHERE deal.id IN (SELECT subject_id FROM task WHERE NOT (due_date IS null) AND due_date < :dueDate GROUP BY subject_id)";
-    private static final String DEAL_SELECT_SUCCESS = " WHERE deal.status_id=5";
-    private static final String DEAL_SELECT_CLOSED_AND_NOT_IMPLEMENTED = " WHERE deal.status_id=6";
-    private static final String DEAL_SELECT_DELETED = " WHERE deal.status_id=7";
-    private static final String DEAL_SELECT_PERIOD_CREATED_DATE = " WHERE DATE(deal.created_date) BETWEEN :dateBegin AND :dateEnd";
-    private static final String DEAL_SELECT_TASK_DUE_DATE_INTERVAL = "WHERE deal.id IN (SELECT subject_id FROM task WHERE DATE(due_date) BETWEEN :dateBegin AND :dateEnd GROUP BY subject_id)";
+//    private static final String DEAL_SELECT_STATUS_ID = " where status_id = :statusId";
+//    private static final String DEAL_SELECT_OPENED = " WHERE deal.data_close IS null";
+//    private static final String DEAL_SELECT_BY_USER = " WHERE responsible_id = :responsibleId";
+//    private static final String DEAL_SELECT_WITHOUT_TASKS = " WHERE NOT deal.id IN (SELECT subject_id FROM task GROUP BY subject_id)";
+//    private static final String DEAL_SELECT_WITH_EXPIRED_TASKS = " WHERE deal.id IN (SELECT subject_id FROM task WHERE NOT (due_date IS null) AND due_date < :dueDate GROUP BY subject_id)";
+//    private static final String DEAL_SELECT_SUCCESS = " WHERE deal.status_id=5";
+//    private static final String DEAL_SELECT_CLOSED_AND_NOT_IMPLEMENTED = " WHERE deal.status_id=6";
+//    private static final String DEAL_SELECT_DELETED = " WHERE deal.status_id=7";
+//    private static final String DEAL_SELECT_PERIOD_CREATED_DATE = " WHERE DATE(deal.created_date) BETWEEN :dateBegin AND :dateEnd";
+//    private static final String DEAL_SELECT_TASK_DUE_DATE_INTERVAL = "WHERE deal.id IN (SELECT subject_id FROM task WHERE DATE(due_date) BETWEEN :dateBegin AND :dateEnd GROUP BY subject_id)";
     private static final String READ_ALL_QUERY = "SELECT deal.id, status_id, currency_id, budget, contact_main_id, company_id, data_close, deal.created_date, name, responsible_id, content_owner_id, removed FROM deal JOIN subject ON subject.id=deal.id ";
 
     @Override
@@ -69,37 +69,32 @@ public class DealHibernateDAOImpl extends AbstractHibernateDAO<Deal> implements 
 
     @Override
     public List<Deal> readAllWithConditions(DealFilters condition) throws DataBaseException {
-        List<Deal> result = new ArrayList<>();
-        String sql;
+        Criteria criteria = getCurrentSession().createCriteria(getObjectСlass());
         switch (condition){
             case OPENED:
-                sql = READ_ALL_QUERY + DEAL_SELECT_OPENED;
+                criteria.add(Restrictions.eq("dateWhenDealClose", null));
                 break;
             case SUCCESS:
-                sql = READ_ALL_QUERY + DEAL_SELECT_SUCCESS;
+                criteria.add(Restrictions.eq("status.id", 5));
                 break;
             case CLOSED:
-                sql = READ_ALL_QUERY + DEAL_SELECT_CLOSED_AND_NOT_IMPLEMENTED;
+                criteria.add(Restrictions.eq("status.id", 6));
                 break;
             case WITHOUT_TASKS:
-                sql = READ_ALL_QUERY + DEAL_SELECT_WITHOUT_TASKS;
+                //TODO
+//                sql = READ_ALL_QUERY + DEAL_SELECT_WITHOUT_TASKS;
                 break;
             case WITH_EXPIRED_TASKS:
-                sql = READ_ALL_QUERY + DEAL_SELECT_WITH_EXPIRED_TASKS;
+                //TODO
+//                sql = READ_ALL_QUERY + DEAL_SELECT_WITH_EXPIRED_TASKS;
                 break;
             case DELETED:
-                sql = READ_ALL_QUERY + DEAL_SELECT_DELETED;
+                criteria.add(Restrictions.eq("status.id", 7));
                 break;
             default:
-                return result;
+                return new ArrayList<>();
         }
-        Query query = getCurrentSession().createSQLQuery(
-                sql)
-                .addEntity(Deal.class);
-        if(condition == DealFilters.WITH_EXPIRED_TASKS){
-            query.setParameter("dueDate", new Date(System.currentTimeMillis()));
-        }
-        return query.list();
+        return criteria.list();
     }
 
     @Override
@@ -182,7 +177,7 @@ public class DealHibernateDAOImpl extends AbstractHibernateDAO<Deal> implements 
     @Override
     public List<Deal> readAllWithConditions(List<String> conditionsList) throws DataBaseException {
 
-        Criteria criteria = getCurrentSession().createCriteria(getObjectСlass(),"c");
+        Criteria criteria = getCurrentSession().createCriteria(getObjectСlass());
 
         for(String condition: conditionsList){
             if(condition.startsWith("selectedfilter")){
@@ -240,10 +235,11 @@ public class DealHibernateDAOImpl extends AbstractHibernateDAO<Deal> implements 
                 criteria.add(Restrictions.eq("tasks", null));
                 break;
             case "selectedfilter_expired":
-                criteria.createCriteria("tasks");
-                criteria.createCriteria("dueTime");
-                criteria.add(Restrictions.ne("dueTime", null));
-                criteria.add(Restrictions.le("dueTime", new Date(System.currentTimeMillis())));
+                //TODO
+//                criteria.createCriteria("tasks");
+//                criteria.createCriteria("dueTime");
+//                criteria.add(Restrictions.ne("dueTime", null));
+//                criteria.add(Restrictions.le("dueTime", new Date(System.currentTimeMillis())));
 //                criteria.createAlias("c.tasks","task");
 //                criteria.add(Restrictions.ne("task.dueTime", null));
 //                criteria.add(Restrictions.le("task.dueTime", new Date(System.currentTimeMillis())));
