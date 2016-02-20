@@ -63,6 +63,7 @@
     <spring.version>4.2.4.RELEASE</spring.version>
     <hibernate.version>4.3.11.Final</hibernate.version>
     <springsecurity.version>4.0.3.RELEASE</springsecurity.version>
+    <jackson.version>2.6.5</jackson.version>
   </properties>
   <dependencies>
     <dependency>
