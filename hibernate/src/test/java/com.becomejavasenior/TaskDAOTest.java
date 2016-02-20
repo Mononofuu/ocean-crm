@@ -27,7 +27,13 @@ public class TaskDAOTest {
 
     @Test
     public void getSubjectDyIdTest() throws DataBaseException {
-//        Subject subject = taskDAO.getSubject(1);
-//        System.out.println(subject.getName());
+        Subject subject = taskDAO.getSubject(1);
+        System.out.println(subject.getName());
+    }
+
+    @Test
+    public void getTasksByParameters() throws DataBaseException {
+        List<Task> list = taskDAO.getAllTasksByParameters("1", null, "2");
+        System.out.println(list);
     }
 }

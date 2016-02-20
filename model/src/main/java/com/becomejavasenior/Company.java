@@ -29,7 +29,10 @@ public class Company extends Subject {
     private List<Comment> comments;
     @Transient
     private List<File> files;
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "subject")
+//    @OneToMany(fetch = FetchType.EAGER, mappedBy = "subject")
+//    @Transient
+@OneToMany
+@JoinColumn(name = "subject_id")
     private List<Task> tasks;
     @OneToMany(fetch = FetchType.LAZY)
     private List<Contact> contacts;

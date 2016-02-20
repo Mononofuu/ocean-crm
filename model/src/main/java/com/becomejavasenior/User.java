@@ -24,7 +24,7 @@ public class User implements Serializable {
     private String phoneWork;
     @Column(name = "phone_mob")
     private String phoneHome;
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "grants",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -33,16 +33,16 @@ public class User implements Serializable {
     private Set<Role> roles;
     @Enumerated(EnumType.ORDINAL)
     private Language language;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private List<Event> events;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private List<Comment> comments;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private List<File> files;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private List<Task> tasks;
 
