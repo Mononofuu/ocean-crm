@@ -1,9 +1,9 @@
 package com.becomejavasenior.config;
 
-import com.becomejavasenior.config.DAODataSourceConfig;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
@@ -18,6 +18,7 @@ import java.util.Properties;
  */
 @Configuration
 @EnableTransactionManagement
+@ComponentScan(basePackages = "com.becomejavasenior")
 @Import(DAODataSourceConfig.class)
 public class HibernateConfig {
     @Autowired
@@ -45,6 +46,8 @@ public class HibernateConfig {
             {
                 setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
                 setProperty("show_sql", "true");
+                setProperty("hibernate.format_sql", "true");
+                setProperty("hibernate.use_sql_comments", "true");
             }
         };
     }

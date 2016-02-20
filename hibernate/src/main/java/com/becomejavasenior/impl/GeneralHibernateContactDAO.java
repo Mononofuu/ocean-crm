@@ -1,26 +1,22 @@
 package com.becomejavasenior.impl;
 
-import com.becomejavasenior.*;
+import com.becomejavasenior.AbstractHibernateDAO;
+import com.becomejavasenior.ContactFilters;
+import com.becomejavasenior.DataBaseException;
 import com.becomejavasenior.interfacedao.GeneralContactDAO;
 import org.hibernate.Criteria;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.LogicalExpression;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.sql.JoinType;
-import org.hsqldb.Expression;
 
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author Anton Sakhno <sakhno83@gmail.com>
  */
 public abstract class GeneralHibernateContactDAO<T> extends AbstractHibernateDAO<T> implements GeneralContactDAO<T>{
 
-    public T readContactByName(String name) throws DataBaseException {
+    public T readContactByName(String name) {
         Criteria criteria = getCurrentSession().createCriteria(getObjectСlass());
         criteria.add(Restrictions.eq("name", name));
         return (T)criteria.uniqueResult();

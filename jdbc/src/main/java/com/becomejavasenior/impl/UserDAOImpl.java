@@ -4,15 +4,14 @@ import com.becomejavasenior.*;
 import com.becomejavasenior.interfacedao.UserDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.stereotype.Repository;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-@Repository
+//@Repository
 public class UserDAOImpl extends AbstractJDBCDao<User> implements UserDAO {
 
     private final static Logger LOGGER = LogManager.getLogger(UserDAOImpl.class);
@@ -43,8 +42,6 @@ public class UserDAOImpl extends AbstractJDBCDao<User> implements UserDAO {
                 List<Comment> comments = new ArrayList<>();
                 comments.add(comment);
                 user.setComments(comments);
-                Set<Grants> userGrants = new HashSet<>();
-                user.setGrantsSet(userGrants);
                 result.add(user);
             }
         } catch (SQLException e) {
