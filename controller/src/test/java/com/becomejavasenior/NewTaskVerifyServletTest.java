@@ -1,8 +1,8 @@
 package com.becomejavasenior;
 
 import com.becomejavasenior.verification.NewTaskVerifyServlet;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.type.TypeReference;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.mockito.Mockito;
 
