@@ -24,7 +24,7 @@ public class TaskHibernateDAOImpl extends AbstractHibernateDAO<Task> implements 
     @Override
     public List<Task> getAllTasksBySubjectId(int id) throws DataBaseException {
         Criteria criteria = getCurrentSession().createCriteria(Task.class);
-        criteria.add(Restrictions.eq("subject", getSubject(id)));
+        criteria.add(Restrictions.eq("subject.id", id));
         return criteria.list();
     }
 
