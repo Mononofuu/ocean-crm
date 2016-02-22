@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
@@ -27,7 +28,7 @@ import java.util.Map;
 /**
  * @author Anton Sakhno <sakhno83@gmail.com>
  */
-//@Repository
+@Repository
 public class TaskTemplateDAOImpl extends JdbcDaoSupport implements TaskDAO {
     private final static Logger LOGGER = LogManager.getLogger(TaskTemplateDAOImpl.class);
     private static final String INSERT_QUERY="INSERT INTO task (subject_id, created_date, due_date, user_id, task_type_id," +

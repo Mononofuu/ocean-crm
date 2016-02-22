@@ -20,7 +20,8 @@ import java.util.List;
 @Service
 public class CommentServiceImpl implements CommentService {
     static final Logger logger = LogManager.getRootLogger();
-    @Autowired @Qualifier(value = "HibernateCommentDAO")
+    @Autowired
+    @Qualifier(value = "HibernateCommentDAO")
     private CommentDAO commentDAO;
     @Autowired
     private SubjectDAO subjectDAO;
