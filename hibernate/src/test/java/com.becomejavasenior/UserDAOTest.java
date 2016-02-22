@@ -2,7 +2,6 @@ package com.becomejavasenior;
 
 import com.becomejavasenior.config.HibernateConfig;
 import com.becomejavasenior.interfacedao.UserDAO;
-import org.hibernate.SessionFactory;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

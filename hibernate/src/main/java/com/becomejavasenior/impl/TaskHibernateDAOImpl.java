@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * created by Alekseichenko Sergey <mononofuu@gmail.com>
  */
-@Repository
+@Repository("HibernateTaskDAO")
 @Scope(value = "prototype")
 public class TaskHibernateDAOImpl extends AbstractHibernateDAO<Task> implements TaskDAO {
     @Override

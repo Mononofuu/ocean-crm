@@ -217,6 +217,8 @@ CREATE TABLE task (
   user_id INTEGER,
   task_type_id INTEGER,
   comment CHARACTER VARYING(200),
+  is_closed smallint,
+  is_deleted smallint,
   FOREIGN KEY (subject_id) REFERENCES subject (id)
     MATCH SIMPLE ON UPDATE NO ACTION ON DELETE CASCADE,
   FOREIGN KEY (task_type_id) REFERENCES task_type (id)
