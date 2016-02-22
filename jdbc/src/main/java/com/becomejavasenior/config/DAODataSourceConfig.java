@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.springframework.jdbc.datasource.lookup.JndiDataSourceLookup;
 
 import javax.sql.DataSource;
 import java.io.IOException;
@@ -68,5 +69,13 @@ public class DAODataSourceConfig {
                 .addScript("schema_hsql.sql")
                 .addScript("data_hsql.sql")
                 .build();
+    }
+
+    @Bean
+    @Profile("jndi")
+    public DataSource getJNDIDataSource() {
+        final JndiDataSourceLookup dsLookup = new JndiDataSourceLookup();
+        dsLookup.setResourceRef(true);
+        return dsLookup.getDataSource("jdbc/datasource");
     }
 }
