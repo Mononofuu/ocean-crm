@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Date;
@@ -11,6 +12,7 @@ import java.util.List;
 @Entity
 @Table(name = "company")
 @PrimaryKeyJoinColumn(name="id")
+@XmlRootElement
 public class Company extends Subject {
 
     private static final long serialVersionUID = 6412485489253693564L;
@@ -24,7 +26,7 @@ public class Company extends Subject {
     private Date createdDate;
     @Column(name = "date_updated")
     private Date updatedDate;
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "subject_id")
     private List<Comment> comments;
     @Transient
