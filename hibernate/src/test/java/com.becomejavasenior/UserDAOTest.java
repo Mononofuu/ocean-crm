@@ -7,38 +7,44 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * created by Alekseichenko Sergey <mononofuu@gmail.com>
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = HibernateConfig.class)
+@Transactional
+@ActiveProfiles(profiles = "test")
 public class UserDAOTest {
-    @Autowired
-    SessionFactory sessionFactory;
+    private final static int ADDED_USERS_IN_DB = 2;
 
     @Autowired
+    @Qualifier(value = "HibernateUserDAO")
     UserDAO userDAO;
 
     @Test
-    public void readUserTest() throws DataBaseException {
-        User user = (User) sessionFactory.openSession().get(User.class, 1);
-        System.out.println(user);
-        sessionFactory.close();
+    public void readAllUsersTest() throws DataBaseException {
+        List<User> userList = userDAO.readAll();
+        Assert.assertEquals(ADDED_USERS_IN_DB, userList.size());
     }
 
     @Test
     public void getUserByIdTest() throws DataBaseException {
         User user = userDAO.read(1);
-        System.out.println(user.getName());
+        Assert.assertEquals("user1", user.getLogin());
     }
 
     @Test
     public void getUserByLoginTest() throws DataBaseException {
-        User user = userDAO.getUserByLogin("mononofuu@gmail.com");
-        System.out.println(user.getId());
+        User user = userDAO.getUserByLogin("user2");
+        Assert.assertEquals(2, user.getId());
     }
 
     @Test

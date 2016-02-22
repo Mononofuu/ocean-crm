@@ -5,12 +5,11 @@ import com.becomejavasenior.Role;
 import com.becomejavasenior.User;
 import com.becomejavasenior.UserService;
 import com.becomejavasenior.interfacedao.GrantsDAO;
-import com.becomejavasenior.interfacedao.RoleDAO;
 import com.becomejavasenior.interfacedao.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,6 +19,7 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     @Autowired
+    @Qualifier(value = "HibernateUserDAO")
     private UserDAO userDAO;
     @Autowired
     private GrantsDAO grantsDAO;

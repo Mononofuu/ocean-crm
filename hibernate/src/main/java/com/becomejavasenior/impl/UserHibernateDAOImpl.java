@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
  * created by Alekseichenko Sergey <mononofuu@gmail.com>
  */
 
-@Repository
+@Repository("HibernateUserDAO")
 @Scope(value = "prototype")
 public class UserHibernateDAOImpl extends AbstractHibernateDAO<User> implements UserDAO {
     @Override
