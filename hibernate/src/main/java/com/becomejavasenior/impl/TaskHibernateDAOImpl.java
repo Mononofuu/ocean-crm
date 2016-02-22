@@ -23,14 +23,14 @@ public class TaskHibernateDAOImpl extends AbstractHibernateDAO<Task> implements 
 
     @Override
     public List<Task> getAllTasksBySubjectId(int id) throws DataBaseException {
-        Criteria criteria = getCurrentSession().createCriteria(Task.class);
+        Criteria criteria = getCurrentSession().createCriteria(getObjectСlass());
         criteria.add(Restrictions.eq("subject.id", id));
         return criteria.list();
     }
 
     @Override
     public List<Task> getAllTasksByParameters(String userId, Date date, String taskTypeId) throws DataBaseException {
-        Criteria criteria = getCurrentSession().createCriteria(Task.class);
+        Criteria criteria = getCurrentSession().createCriteria(getObjectСlass());
         if (userId != null) {
             criteria.add(Restrictions.eq("user", getCurrentSession().get(User.class, Integer.parseInt(userId))));
         }
@@ -45,7 +45,7 @@ public class TaskHibernateDAOImpl extends AbstractHibernateDAO<Task> implements 
 
     @Override
     public List<Task> getAllTasksBySubject(Subject subject) throws DataBaseException {
-        Criteria criteria = getCurrentSession().createCriteria(Task.class);
+        Criteria criteria = getCurrentSession().createCriteria(getObjectСlass());
         criteria.add(Restrictions.eq("subject", subject));
         return criteria.list();
     }
