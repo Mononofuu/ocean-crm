@@ -24,11 +24,15 @@ public class Company extends Subject {
     private Date createdDate;
     @Column(name = "date_updated")
     private Date updatedDate;
-    @Transient
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "subject_id")
     private List<Comment> comments;
     @Transient
     private List<File> files;
-    @Transient
+//    @OneToMany(fetch = FetchType.EAGER, mappedBy = "subject")
+//    @Transient
+@OneToMany
+@JoinColumn(name = "subject_id")
     private List<Task> tasks;
     @OneToMany(fetch = FetchType.LAZY)
     private List<Contact> contacts;
@@ -169,5 +173,19 @@ public class Company extends Subject {
         result = 31 * result + (contacts != null ? contacts.hashCode() : 0);
         result = 31 * result + (deals != null ? deals.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Company{" +
+                "tasks=" + tasks +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", email='" + email + '\'' +
+                ", web=" + web +
+                ", address='" + address + '\'' +
+                ", createdDate=" + createdDate +
+                ", updatedDate=" + updatedDate +
+                ", comments=" + comments +
+                '}';
     }
 }

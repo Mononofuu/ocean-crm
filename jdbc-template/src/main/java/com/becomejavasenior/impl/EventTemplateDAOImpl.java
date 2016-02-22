@@ -79,7 +79,8 @@ public class EventTemplateDAOImpl extends JdbcDaoSupport implements GenericTempl
             }
             event.setUser(user);
             event.setEventDate((Date) row.get("event_date"));
-            event.setOperationType(OperationType.valueOf((String) row.get("operation_type")));
+//            event.setOperationType(OperationType.valueOf((String) row.get("operation_type")));
+            event.setOperationType(OperationType.values()[Integer.parseInt((String) row.get("operation_type"))]);
             event.setEventContent((String) row.get("content"));
             events.add(event);
         }

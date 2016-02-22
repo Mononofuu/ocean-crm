@@ -5,7 +5,6 @@ import com.becomejavasenior.interfacedao.CompanyDAO;
 import com.becomejavasenior.interfacedao.ContactDAO;
 import com.becomejavasenior.interfacedao.DealDAO;
 import com.becomejavasenior.interfacedao.TaskDAO;
-import com.becomejavasenior.mapper.TaskRowMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +20,25 @@ import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.text.SimpleDateFormat;
-import java.util.*;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Anton Sakhno <sakhno83@gmail.com>
  */
 @Repository
 public class TaskTemplateDAOImpl extends JdbcDaoSupport implements TaskDAO {
+    private final static Logger LOGGER = LogManager.getLogger(TaskTemplateDAOImpl.class);
+    private static final String INSERT_QUERY="INSERT INTO task (subject_id, created_date, due_date, user_id, task_type_id," +
+            " comment, is_closed, is_deleted) " +
+            "VALUES (?,?,?,?,?,?,?,?)";
+    private static final String READ_ALL = "SELECT * FROM task";
+    private static final String UPDATE_QUERY = "UPDATE task SET subject_id = :subject_id, created_date = :created_date, " +
+            "due_date = :due_date, user_id = :user_id, task_type_id = :task_type_id, comment = :comment, " +
+            "is_closed = :is_closed, is_deleted = :is_deleted WHERE id = :id";
+    private static final String DELETE_QUERY = "DELETE FROM task WHERE id = ";
     @Autowired
     private RowMapper<Task> taskRowMapper;
     @Autowired
@@ -41,15 +51,6 @@ public class TaskTemplateDAOImpl extends JdbcDaoSupport implements TaskDAO {
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     @Autowired
     private DataSource dataSource;
-    private final static Logger LOGGER = LogManager.getLogger(TaskTemplateDAOImpl.class);
-    private static final String INSERT_QUERY="INSERT INTO task (subject_id, created_date, due_date, user_id, task_type_id," +
-            " comment, is_closed, is_deleted) " +
-            "VALUES (?,?,?,?,?,?,?,?)";
-    private static final String READ_ALL = "SELECT * FROM task";
-    private static final String UPDATE_QUERY = "UPDATE task SET subject_id = :subject_id, created_date = :created_date, " +
-            "due_date = :due_date, user_id = :user_id, task_type_id = :task_type_id, comment = :comment, " +
-            "is_closed = :is_closed, is_deleted = :is_deleted WHERE id = :id";
-    private static final String DELETE_QUERY = "DELETE FROM task WHERE id = ";
 
     @PostConstruct
     private void initialize() {

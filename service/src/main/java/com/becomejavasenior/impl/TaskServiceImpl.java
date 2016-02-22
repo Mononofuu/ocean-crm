@@ -6,6 +6,7 @@ import com.becomejavasenior.interfacedao.TaskTypeDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +25,7 @@ import java.util.Map;
 public class TaskServiceImpl implements TaskService {
     private static Logger logger = LogManager.getLogger(TaskServiceImpl.class);
     @Autowired
+    @Qualifier(value = "HibernateTaskDAO")
     private TaskDAO taskDAO;
     @Autowired
     private TaskTypeDAO taskTypeDAO;
