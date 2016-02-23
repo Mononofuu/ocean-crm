@@ -1,5 +1,8 @@
-package com.becomejavasenior;
+package com.becomejavasenior.impl;
 
+import com.becomejavasenior.AbstractHibernateDAO;
+import com.becomejavasenior.DataBaseException;
+import com.becomejavasenior.User;
 import com.becomejavasenior.interfacedao.UserDAO;
 import org.hibernate.Criteria;
 import org.springframework.stereotype.Repository;

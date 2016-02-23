@@ -1,5 +1,9 @@
-package com.becomejavasenior;
+package com.becomejavasenior.impl;
 
+import com.becomejavasenior.AbstractHibernateDAO;
+import com.becomejavasenior.Company;
+import com.becomejavasenior.ContactFilters;
+import com.becomejavasenior.DataBaseException;
 import com.becomejavasenior.interfacedao.CompanyDAO;
 import com.becomejavasenior.interfacedao.DealDAO;
 import org.hibernate.Criteria;

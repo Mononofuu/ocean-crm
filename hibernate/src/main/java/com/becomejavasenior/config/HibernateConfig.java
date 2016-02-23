@@ -1,4 +1,4 @@
-package com.becomejavasenior;
+package com.becomejavasenior.config;
 
 import com.becomejavasenior.config.DAODataSourceConfig;
 import org.hibernate.SessionFactory;

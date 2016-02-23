@@ -1,5 +1,9 @@
-package com.becomejavasenior;
+package com.becomejavasenior.impl;
 
+import com.becomejavasenior.AbstractHibernateDAO;
+import com.becomejavasenior.DataBaseException;
+import com.becomejavasenior.Subject;
+import com.becomejavasenior.Task;
 import com.becomejavasenior.interfacedao.DealDAO;
 import com.becomejavasenior.interfacedao.TaskDAO;
 import org.springframework.stereotype.Repository;

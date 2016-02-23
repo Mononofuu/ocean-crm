@@ -1,5 +1,8 @@
-package com.becomejavasenior;
+package com.becomejavasenior.impl;
 
+import com.becomejavasenior.AbstractHibernateDAO;
+import com.becomejavasenior.Currency;
+import com.becomejavasenior.DataBaseException;
 import com.becomejavasenior.interfacedao.CurrencyDAO;
 import org.springframework.stereotype.Repository;
 
