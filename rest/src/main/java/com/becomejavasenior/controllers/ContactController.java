@@ -14,7 +14,7 @@ import java.util.List;
  * @author Anton Sakhno <sakhno83@gmail.com>
  */
 @Controller
-@RequestMapping("/contacts")
+@RequestMapping("rest/contacts")
 public class ContactController {
     @Autowired
     private ContactService contactService;

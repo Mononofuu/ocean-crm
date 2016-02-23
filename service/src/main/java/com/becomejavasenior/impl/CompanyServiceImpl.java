@@ -2,6 +2,7 @@ package com.becomejavasenior.impl;
 
 import com.becomejavasenior.*;
 import com.becomejavasenior.interfacedao.CompanyDAO;
+import com.becomejavasenior.interfacedao.GeneralContactDAO;
 import com.becomejavasenior.interfacedao.TagDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,16 +16,19 @@ import java.util.Map;
  * Created by Peter on 18.12.2015.
  */
 @Service
-@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+//@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class CompanyServiceImpl extends AbstractContactService<Company> implements CompanyService {
 
     @Autowired
     private CompanyDAO companyDAO;
-    @Autowired
-    private TagDAO tagDAO;
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = DataBaseException.class, readOnly = false)
+    protected GeneralContactDAO<Company> getDao() {
+        return companyDAO;
+    }
+
+    @Override
+    //@Transactional(propagation = Propagation.REQUIRED, rollbackFor = DataBaseException.class, readOnly = false)
     public Company saveCompany(Company company) throws DataBaseException {
         if (company.getId() == 0) {
             return companyDAO.create(company);
@@ -35,7 +39,7 @@ public class CompanyServiceImpl extends AbstractContactService<Company> implemen
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = DataBaseException.class, readOnly = false)
+    //@Transactional(propagation = Propagation.REQUIRED, rollbackFor = DataBaseException.class, readOnly = false)
     public void deleteCompany(int id) throws DataBaseException {
         companyDAO.delete(id);
     }
@@ -70,7 +74,7 @@ public class CompanyServiceImpl extends AbstractContactService<Company> implemen
 
     @Override
     public List<Tag> getAllCompanyTags() throws DataBaseException {
-        return tagDAO.readAll(SubjectType.COMPANY_TAG);
+        return companyDAO.readAllCompanyesTags();
     }
 }
 

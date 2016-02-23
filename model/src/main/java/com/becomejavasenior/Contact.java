@@ -1,35 +1,37 @@
 package com.becomejavasenior;
 
 import javax.persistence.*;
+import java.util.Date;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 @Entity
 @Table(name = "contact")
 @PrimaryKeyJoinColumn(name="id")
+@XmlRootElement
 public class Contact extends Subject {
 
     private static final long serialVersionUID = -5553010181244222836L;
-//    @ManyToOne
-//    @JoinColumn(name="company_id")
-    @Transient
+    @ManyToOne
+    @JoinColumn(name="company_id")
     private Company company;
     private String post;
-//    @ManyToOne
-//    @JoinColumn(name = "phone_type_id")
-    @Transient
-//    @Enumerated(EnumType.STRING)
     @Enumerated(EnumType.ORDINAL)
+    @Column(name = "phone_type_id")
     private PhoneType phoneType;
     private String phone;
     private String email;
     private String skype;
+    @Column(name = "date_created", insertable=false)
+    private Date createdDate;
+    @Column(name = "date_updated")
+    private Date updatedDate;
     @Transient
     private List<Comment> comments;
     @Transient
     private List<File> files;
     @Transient
     private List<Task> tasks;
-    @ManyToMany
-    @JoinTable(name="deal_contact")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "mainContact")
     private List<Deal> deals;
 
     public Contact() {
@@ -113,6 +115,24 @@ public class Contact extends Subject {
 
     public void setDeals(List<Deal> deals) {
         this.deals = deals;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public Contact setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+        return this;
+    }
+
+    public Date getUpdatedDate() {
+        return updatedDate;
+    }
+
+    public Contact setUpdatedDate(Date updatedDate) {
+        this.updatedDate = updatedDate;
+        return this;
     }
 
     @Override

@@ -31,8 +31,6 @@ public class DealServiceImpl implements com.becomejavasenior.DealService {
     DealContactDAO dealContactDAO;
     @Autowired
     FilterDAO filterDAO;
-    @Autowired
-    TagDAO tagDAO;
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = DataBaseException.class, readOnly = false)
@@ -167,7 +165,7 @@ public class DealServiceImpl implements com.becomejavasenior.DealService {
     }
 
     public List<Tag> getAllDealTags() throws DataBaseException {
-        return tagDAO.readAll(SubjectType.DEAL_TAG);
+        return dealDAO.readAllDealsTags();
     }
 
     @Override

@@ -27,7 +27,7 @@ public class Deal extends Subject {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name="data_close")
     private Date dateWhenDealClose;
-    @ManyToMany(mappedBy = "deals")
+   @ManyToMany(mappedBy = "deals")
     private List<Contact> contacts;
     @ManyToOne
     @JoinColumn(name = "company_id")
@@ -39,7 +39,7 @@ public class Deal extends Subject {
     @OneToMany(mappedBy = "subject")
     private List<Task> tasks;
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="created_date")
+    @Column(name="created_date", insertable = false)
     private Date dateCreated;
 
     public Deal() {

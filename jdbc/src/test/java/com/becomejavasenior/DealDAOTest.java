@@ -81,7 +81,7 @@ public class DealDAOTest {
         company.setName(COMPANY_NAME);
         company.setPhoneNumber(COMPANY_PHONE);
         company.setEmail(COMPANY_EMAIL);
-        company.setAdress(COMPANY_ADDRESS);
+        company.setAddress(COMPANY_ADDRESS);
         try {
             company.setWeb(new URL(COMPANY_WEB));
         } catch (MalformedURLException e) {

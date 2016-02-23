@@ -1,9 +1,6 @@
 package com.becomejavasenior.interfacedao;
 
-import com.becomejavasenior.DataBaseException;
-import com.becomejavasenior.Deal;
-import com.becomejavasenior.DealFilters;
-import com.becomejavasenior.GenericDao;
+import com.becomejavasenior.*;
 
 import java.sql.Date;
 import java.util.List;
@@ -27,5 +24,6 @@ public interface DealDAO  extends GenericDao<Deal> {
     public int findTotalDealsWithoutTasks();
     public int findTotalSuccessDeals();
     public int findTotalUnsuccessClosedDeals();
+    List<Tag> readAllDealsTags() throws DataBaseException;
 
 }

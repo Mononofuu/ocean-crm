@@ -56,7 +56,7 @@ public class NewContactServlet extends HttpServlet {
             newContact.setTags(getTagsFromRequest(request.getParameter("tags")));
             newContact.setUser(getUserFromRequest(request.getParameter("responsible")));
             newContact.setPost(request.getParameter("position"));
-            if (request.getParameter("phonetype") != null) {
+            if (!"".equals(request.getParameter("phonetype"))) {
                 newContact.setPhoneType(PhoneType.valueOf(request.getParameter("phonetype")));
             }
             newContact.setPhone(request.getParameter("phonenumber"));
@@ -95,6 +95,7 @@ public class NewContactServlet extends HttpServlet {
             for (String stringTag : temp) {
                 Tag tag = new Tag();
                 tag.setName(stringTag);
+                tag.setSubjectType(SubjectType.CONTACT_TAG);
                 result.add(tag);
             }
         }

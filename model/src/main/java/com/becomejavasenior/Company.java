@@ -6,8 +6,8 @@ import org.apache.logging.log4j.Logger;
 import javax.persistence.*;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Date;
 import java.util.List;
-
 @Entity
 @Table(name = "company")
 @PrimaryKeyJoinColumn(name="id")
@@ -15,28 +15,49 @@ public class Company extends Subject {
 
     private static final long serialVersionUID = 6412485489253693564L;
     private final static Logger LOGGER = LogManager.getLogger(Contact.class);
-
     @Column(name = "phone_number")
     private String phoneNumber;
     private String email;
     private URL web;
-//    @JoinColumn(name = "address")
-    @Column(name = "address")
-    private String adress;
-
-    @Transient
+    private String address;
+    @Column(name = "date_created", insertable=false)
+    private Date createdDate;
+    @Column(name = "date_updated")
+    private Date updatedDate;
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "subject_id")
     private List<Comment> comments;
     @Transient
     private List<File> files;
-    @Transient
+//    @OneToMany(fetch = FetchType.EAGER, mappedBy = "subject")
+//    @Transient
+@OneToMany
+@JoinColumn(name = "subject_id")
     private List<Task> tasks;
-
-    @Transient
+    @OneToMany(fetch = FetchType.LAZY)
     private List<Contact> contacts;
-    @Transient
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "dealCompany")
     private List<Deal> deals;
 
     public Company() {
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public Company setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+        return this;
+    }
+
+    public Date getUpdatedDate() {
+        return updatedDate;
+    }
+
+    public Company setUpdatedDate(Date updatedDate) {
+        this.updatedDate = updatedDate;
+        return this;
     }
 
     public String getPhoneNumber() {
@@ -63,12 +84,12 @@ public class Company extends Subject {
         this.web = web;
     }
 
-    public String getAdress() {
-        return adress;
+    public String getAddress() {
+        return address;
     }
 
-    public void setAdress(String adress) {
-        this.adress = adress;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public List<Comment> getComments() {
@@ -126,7 +147,7 @@ public class Company extends Subject {
         } catch (URISyntaxException e) {
             LOGGER.error(e);
         }
-        if (adress != null ? !adress.equals(company.adress) : company.adress != null) return false;
+        if (address != null ? !address.equals(company.address) : company.address != null) return false;
         if (comments != null ? !comments.equals(company.comments) : company.comments != null) return false;
         if (files != null ? !files.equals(company.files) : company.files != null) return false;
         if (tasks != null ? !tasks.equals(company.tasks) : company.tasks != null) return false;
@@ -145,12 +166,26 @@ public class Company extends Subject {
         } catch (URISyntaxException e) {
             LOGGER.error(e);
         }
-        result = 31 * result + (adress != null ? adress.hashCode() : 0);
+        result = 31 * result + (address != null ? address.hashCode() : 0);
         result = 31 * result + (comments != null ? comments.hashCode() : 0);
         result = 31 * result + (files != null ? files.hashCode() : 0);
         result = 31 * result + (tasks != null ? tasks.hashCode() : 0);
         result = 31 * result + (contacts != null ? contacts.hashCode() : 0);
         result = 31 * result + (deals != null ? deals.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Company{" +
+                "tasks=" + tasks +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", email='" + email + '\'' +
+                ", web=" + web +
+                ", address='" + address + '\'' +
+                ", createdDate=" + createdDate +
+                ", updatedDate=" + updatedDate +
+                ", comments=" + comments +
+                '}';
     }
 }

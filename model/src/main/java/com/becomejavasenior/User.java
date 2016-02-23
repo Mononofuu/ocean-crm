@@ -13,32 +13,37 @@ public class User implements Serializable {
     private static final long serialVersionUID = 2976681857111953842L;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
     private String login;
     private String password;
-
-    @Transient
     private byte[] photo;
     private String email;
     @Column(name = "phone_work")
     private String phoneWork;
     @Column(name = "phone_mob")
     private String phoneHome;
-    @Transient
-    private Set<Grants> grantsSet;
-    @Transient
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "grants",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles;
+    @Enumerated(EnumType.ORDINAL)
     private Language language;
-    @Transient
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
     private List<Event> events;
-
-    @Transient
-//    @Column(name = "comment")
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
     private List<Comment> comments;
-    @Transient
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
     private List<File> files;
-    @Transient
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
     private List<Task> tasks;
 
     public User() {
@@ -108,14 +113,6 @@ public class User implements Serializable {
         this.phoneHome = phoneHome;
     }
 
-    public Set<Grants> getGrantsSet() {
-        return grantsSet;
-    }
-
-    public void setGrantsSet(Set<Grants> GrantsSet) {
-        this.grantsSet = GrantsSet;
-    }
-
     public Language getLanguage() {
         return language;
     }
@@ -156,6 +153,14 @@ public class User implements Serializable {
         this.tasks = tasks;
     }
 
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -170,7 +175,6 @@ public class User implements Serializable {
         if (email != null ? !email.equals(user.email) : user.email != null) return false;
         if (phoneWork != null ? !phoneWork.equals(user.phoneWork) : user.phoneWork != null) return false;
         if (phoneHome != null ? !phoneHome.equals(user.phoneHome) : user.phoneHome != null) return false;
-        if (grantsSet != null ? !grantsSet.equals(user.grantsSet) : user.grantsSet != null) return false;
         if (language != user.language) return false;
         if (events != null ? !events.equals(user.events) : user.events != null) return false;
         if (comments != null ? !comments.equals(user.comments) : user.comments != null) return false;
@@ -188,12 +192,30 @@ public class User implements Serializable {
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (phoneWork != null ? phoneWork.hashCode() : 0);
         result = 31 * result + (phoneHome != null ? phoneHome.hashCode() : 0);
-        result = 31 * result + (grantsSet != null ? grantsSet.hashCode() : 0);
         result = 31 * result + (language != null ? language.hashCode() : 0);
         result = 31 * result + (events != null ? events.hashCode() : 0);
         result = 31 * result + (comments != null ? comments.hashCode() : 0);
         result = 31 * result + (files != null ? files.hashCode() : 0);
         result = 31 * result + (tasks != null ? tasks.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", login='" + login + '\'' +
+                ", password='" + password + '\'' +
+                ", photo=" + Arrays.toString(photo) +
+                ", email='" + email + '\'' +
+                ", phoneWork='" + phoneWork + '\'' +
+                ", phoneHome='" + phoneHome + '\'' +
+                ", roles=" + roles +
+                ", language=" + language +
+                ", events=" + events +
+                ", files=" + files +
+                ", tasks=" + tasks +
+                '}';
     }
 }

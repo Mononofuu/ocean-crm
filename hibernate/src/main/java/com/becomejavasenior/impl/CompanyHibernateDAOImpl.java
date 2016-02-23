@@ -1,24 +1,18 @@
 package com.becomejavasenior.impl;
 
-import com.becomejavasenior.AbstractHibernateDAO;
-import com.becomejavasenior.Company;
-import com.becomejavasenior.ContactFilters;
-import com.becomejavasenior.DataBaseException;
+import com.becomejavasenior.*;
 import com.becomejavasenior.interfacedao.CompanyDAO;
-import com.becomejavasenior.interfacedao.DealDAO;
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
 import java.util.List;
 
 /**
- * Created by kramar on 10.2.16.
+ * @author Anton Sakhno <sakhno83@gmail.com>
  */
 @Repository
-public class CompanyHibernateDAOImpl extends AbstractHibernateDAO<Company> implements CompanyDAO{
-
-
+public class CompanyHibernateDAOImpl extends GeneralHibernateContactDAO<Company> implements CompanyDAO {
     @Override
     public Class getObjectСlass() {
         return Company.class;
@@ -26,17 +20,7 @@ public class CompanyHibernateDAOImpl extends AbstractHibernateDAO<Company> imple
 
     @Override
     public Company readCompanyByName(String name) throws DataBaseException {
-        return null;
-    }
-
-    @Override
-    public List<Company> getAllContactsByParameters(List<ContactFilters> parameters, String userId, List<Integer> tagIdList, List<Date> taskDate, List<Date> createUpdateDate, String createUpdateFlag) throws DataBaseException {
-        return null;
-    }
-
-    @Override
-    public int findTotalEntryes() throws DataBaseException {
-        return 0;
+        return readContactByName(name);
     }
 
     @Override
@@ -46,5 +30,10 @@ public class CompanyHibernateDAOImpl extends AbstractHibernateDAO<Company> imple
         delete(company);
     }
 
+    @Override
+    public List<Tag> readAllCompanyesTags() throws DataBaseException {
+        Criteria criteria = getCurrentSession().createCriteria(Tag.class);
+        criteria.add(Restrictions.eq("subjectType", SubjectType.COMPANY_TAG));
+        return criteria.list();
+    }
 }
-

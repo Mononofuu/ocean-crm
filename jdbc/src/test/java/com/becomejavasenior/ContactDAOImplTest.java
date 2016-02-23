@@ -48,7 +48,7 @@ public class ContactDAOImplTest {
         company.setName("testcompanyname");
         company.setPhoneNumber("testcompanuphone");
         company.setEmail("testcompanyemail");
-        company.setAdress("setcompanyaddress");
+        company.setAddress("setcompanyaddress");
         Set<Tag> companyTags = new HashSet<>();
         for (int i = 3; i < 6; i++) {
             Tag tag = new Tag();

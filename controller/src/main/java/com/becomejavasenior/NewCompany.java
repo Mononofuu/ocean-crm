@@ -169,7 +169,7 @@ public class NewCompany extends HttpServlet {
             });
 
             Optional<String> address = Optional.ofNullable(request.getParameter("companyaddress"));
-            address.ifPresent(company::setAdress);
+            address.ifPresent(company::setAddress);
 
             Optional<String> responsible = Optional.ofNullable(request.getParameter("companyresp"));
             if (responsible.isPresent()) {

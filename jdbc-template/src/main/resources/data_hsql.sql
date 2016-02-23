@@ -23,5 +23,5 @@ INSERT INTO task_type(id, name) VALUES (2, 'MEETING');
 INSERT INTO task_type(id, name) VALUES (3, 'OTHER');
 
 INSERT INTO users (name, login, password) VALUES
-  ('user', 'user', 'user01'),
-  ('user2', 'user', 'user');
+  ('user 1', 'user1', 'user01'),
+  ('user 2', 'user2', 'user02');

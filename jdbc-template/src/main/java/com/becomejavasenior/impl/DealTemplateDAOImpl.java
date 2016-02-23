@@ -2,6 +2,7 @@ package com.becomejavasenior.impl;
 
 import com.becomejavasenior.Deal;
 import com.becomejavasenior.GenericTemplateDAO;
+import com.becomejavasenior.interfacedao.TagDAO;
 import com.becomejavasenior.mapper.DealRowMapper;
 import com.becomejavasenior.*;
 import com.becomejavasenior.Currency;
@@ -34,6 +35,8 @@ public class DealTemplateDAOImpl extends SubjectTemplateDAOImpl<Deal> implements
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     @Autowired
     private DataSource dataSource;
+    @Autowired
+    private TagDAO tagDAO;
     private final static Logger LOGGER = LogManager.getLogger(DealTemplateDAOImpl.class);
     private static final String DEAL_SELECT_TAG = " WHERE deal.id IN(SELECT subject_id FROM subject_tag " +
             "WHERE subject_tag.tag_id IN (SELECT id FROM tag WHERE name IN (";
@@ -282,5 +285,8 @@ public class DealTemplateDAOImpl extends SubjectTemplateDAOImpl<Deal> implements
         return total;
     }
 
-
+    @Override
+    public List<Tag> readAllDealsTags() throws DataBaseException {
+        return tagDAO.readAll(SubjectType.DEAL_TAG);
+    }
 }

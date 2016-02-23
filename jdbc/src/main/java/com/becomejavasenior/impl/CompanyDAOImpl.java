@@ -1,10 +1,9 @@
 package com.becomejavasenior.impl;
 
-import com.becomejavasenior.Company;
-import com.becomejavasenior.DataBaseException;
-import com.becomejavasenior.Subject;
+import com.becomejavasenior.*;
 import com.becomejavasenior.interfacedao.CompanyDAO;
 import com.becomejavasenior.interfacedao.SubjectDAO;
+import com.becomejavasenior.interfacedao.TagDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +15,18 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CompanyDAOImpl extends AbstractContactDAO<Company> implements CompanyDAO {
+//@Repository
+public class CompanyDAOImpl extends GeneralContactDAOImpl<Company> implements CompanyDAO {
     private static final Logger LOGGER = LogManager.getLogger(CompanyDAOImpl.class);
     @Autowired
-    SubjectDAO subjectDAO;
+    private SubjectDAO subjectDAO;
+    @Autowired
+    private TagDAO tagDAO;
+
+    @Override
+    public Company readCompanyByName(String name) throws DataBaseException {
+        return readContactByName(name);
+    }
 
     @Override
     protected String getConditionStatment() {
@@ -49,7 +56,7 @@ public class CompanyDAOImpl extends AbstractContactDAO<Company> implements Compa
                 company.setPhoneNumber(rs.getString("phone_number"));
                 company.setEmail(rs.getString("email"));
                 company.setWeb(getUrl(rs.getString("web")));
-                company.setAdress(rs.getString("address"));
+                company.setAddress(rs.getString("address"));
                 result.add(company);
             }
         } catch (SQLException e) {
@@ -81,7 +88,7 @@ public class CompanyDAOImpl extends AbstractContactDAO<Company> implements Compa
                 company.setPhoneNumber(rs.getString("phone_number"));
                 company.setEmail(rs.getString("email"));
                 company.setWeb(getUrl(rs.getString("web")));
-                company.setAdress(rs.getString("address"));
+                company.setAddress(rs.getString("address"));
                 result.add(company);
             }
         } catch (SQLException e) {
@@ -106,7 +113,7 @@ public class CompanyDAOImpl extends AbstractContactDAO<Company> implements Compa
             }else{
                 statement.setNull(4, Types.CHAR);
             }
-            statement.setString(5, object.getAdress());
+            statement.setString(5, object.getAddress());
         } catch (SQLException e) {
             throw new DataBaseException(e);
         }
@@ -124,7 +131,7 @@ public class CompanyDAOImpl extends AbstractContactDAO<Company> implements Compa
             statement.setString(1, object.getPhoneNumber());
             statement.setString(2, object.getEmail());
             statement.setString(3, object.getWeb().toString());
-            statement.setString(4, object.getAdress());
+            statement.setString(4, object.getAddress());
             statement.setInt(5, object.getId());
         } catch (SQLException e) {
             throw new DataBaseException(e);
@@ -134,24 +141,6 @@ public class CompanyDAOImpl extends AbstractContactDAO<Company> implements Compa
     @Override
     public void delete(int id) throws DataBaseException {
         subjectDAO.delete(id);
-    }
-
-    @Override
-    public Company readCompanyByName(String name) throws DataBaseException {
-        Company result;
-        try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(getReadAllQuery()+" WHERE name = ?")) {
-            statement.setString(1, name);
-            ResultSet rs = statement.executeQuery();
-            List<Company> allObjects = parseResultSetLite(rs);
-            if (allObjects.isEmpty()) {
-                return null;
-            }
-            result = allObjects.get(0);
-        } catch (SQLException e) {
-            throw new DataBaseException(e);
-        }
-        return result;
     }
 
     @Override
@@ -174,4 +163,8 @@ public class CompanyDAOImpl extends AbstractContactDAO<Company> implements Compa
         return "company";
     }
 
+    @Override
+    public List<Tag> readAllCompanyesTags() throws DataBaseException {
+        return tagDAO.readAll(SubjectType.COMPANY_TAG);
+    }
 }

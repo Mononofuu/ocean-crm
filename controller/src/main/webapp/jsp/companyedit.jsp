@@ -69,7 +69,7 @@
         <div class="form-group">
             <label class="col-md-2 control-label" for="address"><spring:message code="label.address"/></label>
             <div class="col-md-4">
-                <input id="address" name="address" type="text" placeholder="" class="form-control input-md" value ="${company.adress}">
+                <input id="address" name="address" type="text" placeholder="" class="form-control input-md" value ="${company.address}">
             </div>
         </div>
 

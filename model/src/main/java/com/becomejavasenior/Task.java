@@ -12,12 +12,12 @@ public class Task implements Serializable {
     private static final long serialVersionUID = 5383049602322141163L;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @ManyToOne
     @JoinColumn(name = "subject_id")
     private Subject subject;
-    @Transient
+    @ManyToOne
     private User user;
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name="created_date")
@@ -25,10 +25,13 @@ public class Task implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name="due_date")
     private Date dueTime;
-    @Transient
+    @Column(name = "task_type_id")
+    @Enumerated(EnumType.ORDINAL)
     private TaskType type;
     private String comment;
+    @Column(name = "is_closed")
     private byte isClosed;
+    @Column(name = "is_deleted")
     private byte isDeleted;
 
     public Task() {
@@ -131,5 +134,20 @@ public class Task implements Serializable {
         result = 31 * result + (type != null ? type.hashCode() : 0);
         result = 31 * result + (comment != null ? comment.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Task{" +
+                "id=" + id +
+                ", subject=" + subject.getName() +
+                ", user=" + user.getName() +
+                ", dateCreated=" + dateCreated +
+                ", dueTime=" + dueTime +
+                ", comment='" + comment + '\'' +
+                ", isClosed=" + isClosed +
+                ", isDeleted=" + isDeleted +
+                ", taskType=" + type +
+                '}';
     }
 }

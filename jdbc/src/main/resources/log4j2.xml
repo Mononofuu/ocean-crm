@@ -25,5 +25,8 @@
             <AppenderRef ref="fileWriter"/>
             <AppenderRef ref="console"/>
         </Root>
+        <Logger name="org.hibernate" level="error" />
+        <Logger name="org.hibernate.SQL" level="debug"/>
+        <!--<Logger name="org.hibernate.type" level="trace"/>-->
     </Loggers>
 </Configuration>

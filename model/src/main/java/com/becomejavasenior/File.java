@@ -13,20 +13,20 @@ public class File implements Serializable {
     private static final long serialVersionUID = -2959672203378534217L;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subject_id")
     private Subject subject;
     private String name;
-    @Transient
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
-    @Transient
+    @Column(name = "content")
     private byte[] fileFromDB;
-    @Column(name="link")
+    @Column(name = "link")
     private URL fileLink;
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="created_date")
+    @Column(name = "created_date")
     private Date dateCreated;
     private int size;
 
@@ -61,6 +61,10 @@ public class File implements Serializable {
         return user;
     }
 
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     public byte[] getFileFromDB() {
         return fileFromDB;
     }
@@ -77,10 +81,6 @@ public class File implements Serializable {
         this.fileLink = fileLink;
     }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public Date getDateCreated() {
         return dateCreated;
     }
@@ -95,5 +95,17 @@ public class File implements Serializable {
 
     public void setSize(int size) {
         this.size = size;
+    }
+
+    @Override
+    public String toString() {
+        return "File{" +
+                "id=" + id +
+                ", subject=" + subject.getName() +
+                ", user=" + user.getName() +
+                ", name='" + name + '\'' +
+                ", dateCreated=" + dateCreated +
+                ", content=" + fileFromDB +
+                '}';
     }
 }

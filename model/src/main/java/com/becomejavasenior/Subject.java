@@ -18,11 +18,8 @@ public abstract class Subject implements Serializable {
     @ManyToOne
     @JoinColumn(name="content_owner_id")
     private User user;
-//    @ManyToMany(cascade = CascadeType.ALL)
-//    @JoinTable(name = "subject_tag",
-//            joinColumns = { @JoinColumn(name = "subject_id") },
-//            inverseJoinColumns = { @JoinColumn(name = "tag_id") })
-    @Transient
+    @ManyToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+    @JoinTable(name = "subject_tag", joinColumns = @JoinColumn(name = "subject_id"), inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> tags;
     private boolean removed;
 
@@ -105,4 +102,13 @@ public abstract class Subject implements Serializable {
 //        result = 31 * result + (tags != null ? tags.hashCode() : 0);
 //        return result;
 //    }
+
+
+    @Override
+    public String toString() {
+        return "Subject{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

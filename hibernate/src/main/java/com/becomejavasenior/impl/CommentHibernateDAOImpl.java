@@ -1,31 +1,33 @@
 package com.becomejavasenior.impl;
 
 import com.becomejavasenior.AbstractHibernateDAO;
+import com.becomejavasenior.Comment;
 import com.becomejavasenior.DataBaseException;
-import com.becomejavasenior.User;
-import com.becomejavasenior.interfacedao.UserDAO;
+import com.becomejavasenior.interfacedao.CommentDAO;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * created by Alekseichenko Sergey <mononofuu@gmail.com>
  */
-
-@Repository("HibernateUserDAO")
+@Repository("HibernateCommentDAO")
 @Scope(value = "prototype")
-public class UserHibernateDAOImpl extends AbstractHibernateDAO<User> implements UserDAO {
+public class CommentHibernateDAOImpl extends AbstractHibernateDAO<Comment> implements CommentDAO{
+
     @Override
     public Class getObjectСlass() {
-        return User.class;
+        return Comment.class;
     }
 
     @Override
-    public User getUserByLogin(String login) throws DataBaseException {
+    public List<Comment> getAllCommentsBySubjectId(int id) throws DataBaseException {
         Criteria criteria = getCurrentSession().createCriteria(getObjectСlass());
-        criteria.add(Restrictions.eq("login", login));
-        return (User) criteria.uniqueResult();
+        criteria.add(Restrictions.eq("subject.id", id));
+        return criteria.list();
     }
 
     @Override

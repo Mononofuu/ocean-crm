@@ -59,6 +59,8 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
     public SubjectDAO subjectDAO;
     @Autowired
     public SubjectTagDAO subjectTagDAO;
+    @Autowired
+    private TagDAO tagDAO;
 
 
     @Override
@@ -519,5 +521,10 @@ public class DealDAOImpl extends AbstractJDBCDao<Deal> implements DealDAO{
     @Override
     public int findTotalUnsuccessClosedDeals() {
         return 0;
+    }
+
+    @Override
+    public List<Tag> readAllDealsTags() throws DataBaseException {
+        return tagDAO.readAll(SubjectType.DEAL_TAG);
     }
 }

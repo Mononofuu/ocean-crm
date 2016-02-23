@@ -11,16 +11,17 @@ public class Comment implements Serializable {
     private static final long serialVersionUID = 5409233407264547377L;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "subject_id")
     private Subject subject;
-    @Transient
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private User user;
+    @Column(name = "comment")
     private String text;
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="created_date")
+    @Column(name = "created_date", insertable = false)
     private Date dateCreated;
 
     public Comment() {
@@ -64,5 +65,16 @@ public class Comment implements Serializable {
 
     public void setDateCreated(Date dateCreated) {
         this.dateCreated = dateCreated;
+    }
+
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "id=" + id +
+                ", subject=" + subject.getName() +
+                ", user=" + user.getName() +
+                ", text='" + text + '\'' +
+                ", dateCreated=" + dateCreated +
+                '}';
     }
 }

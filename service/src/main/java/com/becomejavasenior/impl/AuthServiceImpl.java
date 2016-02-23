@@ -8,6 +8,7 @@ import com.becomejavasenior.interfacedao.UserDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKeyFactory;
@@ -26,6 +27,7 @@ import java.util.List;
 public class AuthServiceImpl implements AuthService {
     private static final Logger LOGGER = LogManager.getLogger(UserServiceImpl.class);
     @Autowired
+    @Qualifier(value = "HibernateUserDAO")
     public UserDAO userDAO;
     @Autowired
     private GrantsDAO grantsDAO;
