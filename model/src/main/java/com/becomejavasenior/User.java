@@ -31,7 +31,7 @@ public class User implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles;
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     private Language language;
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
