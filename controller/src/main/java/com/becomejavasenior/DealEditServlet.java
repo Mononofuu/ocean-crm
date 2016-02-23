@@ -221,7 +221,12 @@ public class DealEditServlet extends HttpServlet {
                     request.setAttribute("currencies", currencyList);
 
                     List<Comment> commentList = commentService.findCommentsBySubjectId(deal.getId());
-
+                    Comment comment;
+                    for (int i = 0; i < commentList.size(); i++) {
+                        comment = commentList.get(i);
+                        comment.setUser(commentService.getSubject(comment.getId()).getUser());
+                        commentList.set(i, comment);
+                    }
                     request.setAttribute("comments", commentList);
 
                     List<Task> taskList = taskService.getTasksBySubject(taskService.getSubject(id));

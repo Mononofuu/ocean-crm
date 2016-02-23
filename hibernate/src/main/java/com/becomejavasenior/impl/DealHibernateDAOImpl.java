@@ -1,9 +1,6 @@
 package com.becomejavasenior.impl;
 
-import com.becomejavasenior.AbstractHibernateDAO;
-import com.becomejavasenior.DataBaseException;
-import com.becomejavasenior.Deal;
-import com.becomejavasenior.DealFilters;
+import com.becomejavasenior.*;
 import com.becomejavasenior.interfacedao.DealDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -169,6 +166,12 @@ public class DealHibernateDAOImpl extends AbstractHibernateDAO<Deal> implements 
         criteria.add(Restrictions.eq("status.id", 6));
         return criteria.list().size();
 
+    }
+
+    @Override
+    public List<Tag> readAllDealsTags() throws DataBaseException {
+        //TODO
+        return null;
     }
 
     @Override
