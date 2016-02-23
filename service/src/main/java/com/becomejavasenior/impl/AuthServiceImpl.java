@@ -3,12 +3,12 @@ package com.becomejavasenior.impl;
 import com.becomejavasenior.*;
 import com.becomejavasenior.exception.IncorrectDataException;
 import com.becomejavasenior.interfacedao.GrantsDAO;
-import com.becomejavasenior.interfacedao.RoleDAO;
 import com.becomejavasenior.interfacedao.UserDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKeyFactory;
@@ -31,6 +31,8 @@ public class AuthServiceImpl implements AuthService {
     public UserDAO userDAO;
     @Autowired
     private GrantsDAO grantsDAO;
+    @Autowired
+    private ShaPasswordEncoder shaPasswordEncoder;
 
     public String getEncryptedPassword(String password, String salt)
             throws NoSuchAlgorithmException, InvalidKeySpecException {
@@ -71,18 +73,22 @@ public class AuthServiceImpl implements AuthService {
         return user.getPassword().equals(encryptedAttemptedPassword) ? user : null;
     }
 
-    public void registration(User user) throws DataBaseException {
-        if (alreadyRegistered(user)) {
-            LOGGER.error("User [" + user.getLogin() + "] already registered.");
-            throw new DataBaseException("User [" + user.getLogin() + "] already registered.");
+    public void registration(User user) throws ServiceException{
+        try {
+            if (alreadyRegistered(user)) {
+                LOGGER.error("User [" + user.getLogin() + "] already registered.");
+                throw new ServiceException("User [" + user.getLogin() + "] already registered.");
+            }
+            Grants grants = new Grants();
+            user.setPassword(shaPasswordEncoder.encodePassword(user.getPassword(), null));
+            grants.setUser(userDAO.create(user));
+            Role role = new Role();
+            role.setId(2);
+            grants.setRole(role);
+            grantsDAO.create(grants);
+        } catch (DataBaseException e) {
+            throw new ServiceException(e);
         }
-        ;
-        Grants grants = new Grants();
-        grants.setUser(userDAO.create(user));
-        Role role = new Role();
-        role.setId(2);
-        grants.setRole(role);
-        grantsDAO.create(grants);
     }
 
     private boolean alreadyRegistered(User user) throws DataBaseException {

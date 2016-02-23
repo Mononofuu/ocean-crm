@@ -1,9 +1,6 @@
 package com.becomejavasenior.impl;
 
-import com.becomejavasenior.DataBaseException;
-import com.becomejavasenior.Role;
-import com.becomejavasenior.User;
-import com.becomejavasenior.UserService;
+import com.becomejavasenior.*;
 import com.becomejavasenior.interfacedao.GrantsDAO;
 import com.becomejavasenior.interfacedao.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,42 +25,70 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User saveUser(User user) throws DataBaseException {
-        if (user.getId() == 0) {
-            return userDAO.create(user);
-        } else {
-            userDAO.update(user);
-            return userDAO.read(user.getId());
+    public User saveUser(User user) throws ServiceException {
+        try{
+            if (user.getId() == 0) {
+                return userDAO.create(user);
+            } else {
+                userDAO.update(user);
+                return userDAO.read(user.getId());
+            }
+        }catch (DataBaseException e){
+            throw new ServiceException(e);
         }
     }
 
     @Override
-    public void deleteUser(int id) throws DataBaseException {
-        userDAO.delete(id);
+    public void deleteUser(int id) throws ServiceException {
+        try {
+            userDAO.delete(id);
+        } catch (DataBaseException e) {
+            throw new ServiceException(e);
+        }
     }
 
     @Override
-    public User findUserById(int id) throws DataBaseException {
-        return userDAO.read(id);
+    public User findUserById(int id) throws ServiceException {
+        try {
+            return userDAO.read(id);
+        } catch (DataBaseException e) {
+            throw new ServiceException(e);
+        }
     }
 
     @Override
-    public List<User> getAllUsers() throws DataBaseException {
-        return userDAO.readAll();
+    public List<User> getAllUsers() throws ServiceException {
+        try {
+            return userDAO.readAll();
+        } catch (DataBaseException e) {
+            throw new ServiceException(e);
+        }
     }
 
     @Override
-    public List<User> getAllUsersLite() throws DataBaseException {
-        return userDAO.readAllLite();
+    public List<User> getAllUsersLite() throws ServiceException {
+        try {
+            return userDAO.readAllLite();
+        } catch (DataBaseException e) {
+            throw new ServiceException(e);
+        }
     }
 
     @Override
-    public User getUserByLogin(String login) throws DataBaseException {
-        return userDAO.getUserByLogin(login);
+    public User getUserByLogin(String login) throws ServiceException {
+        try {
+            return userDAO.getUserByLogin(login);
+        } catch (DataBaseException e) {
+            throw new ServiceException(e);
+        }
     }
 
     @Override
-    public Role getUserRole(User user) throws DataBaseException {
-        return grantsDAO.read(user.getId()).getRole();
+    public Role getUserRole(User user) throws ServiceException {
+        try {
+            return grantsDAO.read(user.getId()).getRole();
+        } catch (DataBaseException e) {
+            throw new ServiceException(e);
+        }
     }
 }

@@ -1,0 +1,83 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+.menu {
+    float: left;
+    width: 180px;
+    margin: 0;
+    padding: 0;
+}
+.menu li{
+    list-style: none;
+    border-bottom: 2px solid black;
+    position: relative;
+
+}   
+.menu a{
+    display: block;
+    text-decoration: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font: 14pt bold;
+    color: black;
+}
+.menu li .logo{
+    padding: 20px;
+    background-color:cadetblue;
+}
+
+.sub-menu, .profile{
+    display: none;
+    position:absolute;
+    z-index: 10;
+    left: 160px;
+    top: -2px;
+    width: 220px;
+    background-color:aliceblue;
+    border-radius: 0 10px 10px 10px;
+    border: 2px solid black;
+}
+.profile{
+    text-align: center;
+    width: 300px;
+    top:0;
+    left:180px;
+    border-radius: 0 10px 10px 0;
+}
+
+.profile>div>a{
+    display: inline-block;
+    width: 49.3%;
+    padding: 5px 0;
+    margin: 0;
+}
+.username{
+    padding: 5px 0;
+    font: bold italic 100% serif;
+    width: auto;
+}
+
+.sub-menu li:last-child{
+    border-bottom: 0px;
+}
+
+.menu a:hover{
+    color:snow;
+    background-color:cadetblue;
+    text-decoration: none;
+}
+.menu .header:hover{
+    color:black;
+}
+.header{
+    background-color:cadetblue;
+}
+.sub-menu li:last-child a{
+    border-radius: 0 0 10px 10px;
+}
+.sub-menu li:first-child a{
+    border-radius: 0 8px 0 0;
+}
+
+

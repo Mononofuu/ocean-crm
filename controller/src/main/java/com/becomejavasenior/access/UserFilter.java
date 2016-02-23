@@ -22,8 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Component
-@WebFilter(filterName = "UserFilter")
+//@Component
+//@WebFilter(filterName = "UserFilter")
 public class UserFilter implements Filter {
 
     private final static Logger LOGGER = LogManager.getLogger(UserFilter.class);

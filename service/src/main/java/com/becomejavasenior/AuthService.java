@@ -12,7 +12,7 @@ public interface AuthService {
 
     User authenticate(String attemptedPassword, String login) throws IncorrectDataException, NoSuchAlgorithmException, InvalidKeySpecException;
 
-    void registration(User user) throws DataBaseException;
+    void registration(User user) throws ServiceException;
 
     String getEncryptedPassword(String password, String salt)
             throws NoSuchAlgorithmException, InvalidKeySpecException;

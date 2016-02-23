@@ -37,7 +37,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             }else {
                 throw new UsernameNotFoundException("user not found");
             }
-        } catch (DataBaseException e) {
+        } catch (ServiceException e) {
             LOGGER.error(e);
             throw new UsernameNotFoundException("error reading user from DB");
         }

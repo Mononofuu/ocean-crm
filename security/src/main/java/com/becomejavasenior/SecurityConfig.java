@@ -16,20 +16,17 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
+    @Autowired
+    private ShaPasswordEncoder shaPasswordEncoder;
 
     @Bean
     public UserDetailsService userDetailsService(){
         return new UserDetailsServiceImpl();
     }
 
-    @Bean
-    public ShaPasswordEncoder shaPasswordEncoder(){
-        return new ShaPasswordEncoder();
-    }
-
     @Autowired
     public void registerGlobalAuthentication(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService()).passwordEncoder(shaPasswordEncoder());
+        auth.userDetailsService(userDetailsService()).passwordEncoder(shaPasswordEncoder);
     }
 
 
@@ -37,7 +34,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/resources/**", "/registration", "/rest/**").permitAll()
+                .antMatchers("/resources/**", "/users/add", "/rest/**").permitAll()
                 .antMatchers("/**").hasAnyAuthority("admin", "user");
         http.formLogin()
                 .loginPage("/signin")

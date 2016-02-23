@@ -62,7 +62,7 @@ public class RegistrationServlet extends HttpServlet {
         user.setPassword(shaPasswordEncoder.encodePassword(request.getParameter("password"), null));
         try {
             authService.registration(user);
-        } catch (DataBaseException e) {
+        } catch (ServiceException e) {
             LOGGER.error(e.getMessage());
             errors.add(e.getMessage());
             request.setAttribute("error", errors);

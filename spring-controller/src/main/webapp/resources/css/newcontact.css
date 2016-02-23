@@ -1,0 +1,108 @@
+body {
+    background-color: aliceblue;
+}
+
+.tablename {
+    display: block;
+    margin: 10px 0 0 20px;
+    font-weight: bold;
+}
+.frame {
+    background-color:gainsboro;
+    width: 350px;
+    padding-top: 15px;
+    padding-bottom: 10px;
+    padding-right: 10px;
+    margin-left: 20px;
+    margin-bottom: 20px;
+    border: 2px solid black;
+    border-radius: 10px;
+}
+
+.rightframe{
+    width: 210px;
+}
+.field {
+    display: block;
+    margin: 0px 15px 10px 15px;
+    width: 180px;
+    padding: 5px;
+}
+
+.phone, .phonetype {
+    display: inline-block;
+    margin-right: 0px;
+}
+
+.phonetype, .period {
+    width: 85px;
+    display: inline;
+    margin-right: 0px;
+}
+
+.time {
+    width: 70px;
+}
+
+.tags, .bigtext {
+    width: 320px;
+    display: inline-block;
+}
+
+.smaltext {
+    font-size: 12px;
+}
+
+.floatleft {
+    float: left;
+}
+
+.budget {
+    width: 100px;
+    display: inline;
+}
+
+.companyadd {
+    margin-top: 25px;
+}
+
+.button {
+    display: inline-block;
+    width: 150px;
+    background-color: darkseagreen;
+    font-size: 16px;
+    cursor: pointer;
+    text-decoration: none;
+    color: black;
+    text-align: center;
+    border: 2px solid black;
+    border-radius: 5px;
+    margin-left: 15px;
+    margin-bottom: 5px;
+    padding: 4px;
+}
+.button:hover{
+    background-color: seagreen;
+    color: snow;
+}
+
+.cancel {
+    width: 130px;
+    background-color: lavenderblush;
+    padding: 4px 10px;
+}
+.cancel:hover{
+    background-color: #8b211e;
+    color: snow;
+}
+
+.addbutton{
+    display: block;
+    width: 180px;
+}
+.companyselect{
+    margin: 20px 0 0 20px;
+    width: 220px;
+    
+}
+

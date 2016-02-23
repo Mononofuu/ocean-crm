@@ -1,0 +1,147 @@
+.window, .tab-pane, .autowindow{
+    border: 2px solid black;
+    border-radius: 10px;
+    margin: 10px 0 0 20px;
+    height:600px;
+    overflow: auto;
+}
+.window{
+    height: 650px;
+}
+.autowindow{
+    padding-top: 10px;
+    height: auto;
+    padding-bottom: 10px;
+}
+
+.addtask{
+    margin: 5px 0 0 80px;
+    position: absolute;
+    right: 20px;
+}
+.nav{
+    margin-top: 10px;
+}
+
+.element{
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 5px;
+    background-color: #88cbcd;
+    margin-bottom: 3px;
+    font-size: 0.7em;
+    overflow: hidden;
+    padding: 2px;
+}
+
+.overdue .element, .missed{
+    background-color: rgba(255, 146, 56, 0.47);
+}
+.todotomorow .element{
+    background-color: darkseagreen;
+    color: black;
+}
+.rowname{
+    text-align: center;
+}
+.no-gutter > [class*='col-'] {
+    padding-right:3px;
+    padding-left:0;
+}
+.small-gutter > [class*='col-'] {
+    padding-right: 0;
+    padding-left: 5px;
+}
+.small-gutter > [class*='col-']:first-child{
+    padding-left:15px;
+}
+
+.date, .contactdeal{
+    width:150px;
+}
+.time{
+    width: 110px;
+}
+.tab-content .tab-pane{
+    padding: 3px;
+}
+.monthtable, .align-table{
+    table-layout: fixed;
+    width:100%;
+}
+.monthtable td{
+    height: 80px;
+}
+.smalltext{
+    font-size: 0.6em;
+    padding: 1px;
+}
+
+.formlable{
+    padding: 0 0 3px 15px;
+}
+.resetbutton{
+    margin-left:30px;
+}
+.paging-nav {
+    text-align: center;
+    padding-top: 2px;
+}
+
+.paging-nav a {
+    margin: auto 1px;
+    text-decoration: none;
+    display: inline-block;
+    padding: 1px 7px;
+    background: #91b9e6;
+    color: white;
+    border-radius: 3px;
+}
+
+.paging-nav .selected-page {
+    background: #187ed5;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+.paging-nav,
+#tableData {
+    width: auto;
+    margin: 10px;
+    font-family: Arial, sans-serif;
+}
+
+.tg {
+    border-collapse: collapse;
+    border-spacing: 0;
+    border-color: #ccc;
+}
+
+.tg td {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    margin-left: 20px;
+    padding: 10px 5px;
+    overflow: hidden;
+    word-break: normal;
+    border: 1px solid #ccc;
+    color: #333;
+    background-color: #fff;
+}
+
+.tg th {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    font-weight: normal;
+    padding: 10px 5px;
+    overflow: hidden;
+    word-break: normal;
+    border: 1px solid #ccc;
+    color: #333;
+    background-color: #f0f0f0;
+}
+
+.tg {
+    background-color: #f9f9f9
+}
+
