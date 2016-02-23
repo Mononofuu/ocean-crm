@@ -63,6 +63,8 @@ public class NewTaskPrepareServlet extends HttpServlet {
             getServletContext().getRequestDispatcher("/jsp/newtask.jsp").forward(req,resp);
         } catch (DataBaseException e) {
             LOGGER.error(e);
+        } catch (ServiceException e) {
+            LOGGER.error(e);
         }
     }
 }

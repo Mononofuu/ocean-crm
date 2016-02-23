@@ -51,10 +51,12 @@ public class NewTaskServlet extends HttpServlet{
             getServletContext().getRequestDispatcher("/tasklist").forward(req,resp);
         } catch (DataBaseException e) {
             LOGGER.error(e);
+        } catch (ServiceException e) {
+            LOGGER.error(e);
         }
     }
 
-    private Task getTaskFromRequest(HttpServletRequest request)throws DataBaseException{
+    private Task getTaskFromRequest(HttpServletRequest request)throws DataBaseException, ServiceException{
         Task task = new Task();
         task.setUser(getUserFromRequest(request.getParameter("taskresponsible")));
         int subjectId = Integer.parseInt(request.getParameter("subject"));
@@ -119,7 +121,7 @@ public class NewTaskServlet extends HttpServlet{
         return task;
     }
 
-    private User getUserFromRequest(String id)throws DataBaseException{
+    private User getUserFromRequest(String id)throws ServiceException{
         User result=null;
         if(id!=null){
             int key = Integer.parseInt(id);

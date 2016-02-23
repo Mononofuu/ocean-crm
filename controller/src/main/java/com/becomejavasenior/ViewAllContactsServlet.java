@@ -72,6 +72,8 @@ public class ViewAllContactsServlet extends HttpServlet {
             req.setAttribute("users", userService.getAllUsers());
         } catch (DataBaseException e) {
             LOGGER.error(e);
+        } catch (ServiceException e) {
+            LOGGER.error(e);
         }
         getServletContext().getRequestDispatcher("/jsp/viewallcontacts.jsp").forward(req, resp);
     }

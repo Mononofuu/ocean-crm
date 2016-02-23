@@ -75,11 +75,13 @@ public class NewContactServlet extends HttpServlet {
             }
         } catch (DataBaseException e) {
             LOGGER.error(e);
+        } catch (ServiceException e) {
+            LOGGER.error(e);
         }
         getServletContext().getRequestDispatcher("/contactlist").forward(request, response);
     }
 
-    private User getUserFromRequest(String id) throws DataBaseException {
+    private User getUserFromRequest(String id) throws DataBaseException, ServiceException {
         User result = null;
         if (id != null) {
             int key = Integer.parseInt(id);
@@ -148,7 +150,7 @@ public class NewContactServlet extends HttpServlet {
         dealService.saveDeal(deal);
     }
 
-    private void saveTaskFromRequest(HttpServletRequest request, Contact contact) throws DataBaseException {
+    private void saveTaskFromRequest(HttpServletRequest request, Contact contact) throws DataBaseException, ServiceException {
         Task task = new Task();
         task.setSubject(contact);
         task.setUser(getUserFromRequest(request.getParameter("taskresponsible")));

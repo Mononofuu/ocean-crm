@@ -165,6 +165,8 @@ public class DealEditServlet extends HttpServlet {
                             } catch (DataBaseException e) {
                                 LOGGER.error("Error while updating deal");
                                 LOGGER.catching(e);
+                            } catch (ServiceException e) {
+                                LOGGER.error(e);
                             }
                             request.getRequestDispatcher("/dealedit?action=edit&id=" + request.getParameter("id")).forward(request, response);
                             break;
@@ -240,7 +242,10 @@ public class DealEditServlet extends HttpServlet {
                     request.setAttribute("tags", sb.toString());
 
                 } catch (DataBaseException e) {
-                    LOGGER.error(e);                }
+                    LOGGER.error(e);
+                } catch (ServiceException e) {
+                    LOGGER.catching(e);
+                }
                 request.getRequestDispatcher("jsp/dealedit.jsp").forward(request, response);
                 break;
         }

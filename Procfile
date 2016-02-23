@@ -1,2 +1,2 @@
-web:    java $JAVA_OPTS -jar target/dependency/webapp-runner.jar --port $PORT controller/target/*.war
+web:    java $JAVA_OPTS -jar target/dependency/webapp-runner.jar --port $PORT spring-controller/target/*.war
 

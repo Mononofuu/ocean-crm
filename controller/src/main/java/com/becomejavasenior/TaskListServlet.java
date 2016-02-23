@@ -95,6 +95,8 @@ public class TaskListServlet extends HttpServlet{
             LOGGER.error("Error when prepearing data for tasklist.jsp",e);
         } catch (ServletException e) {
             LOGGER.error("Error when prepearing data for tasklist.jsp",e);
+        } catch (ServiceException e) {
+            LOGGER.error(e);
         }
     }
 }

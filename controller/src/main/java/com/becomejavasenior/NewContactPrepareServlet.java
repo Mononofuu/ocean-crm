@@ -59,6 +59,8 @@ public class NewContactPrepareServlet extends HttpServlet {
             getServletContext().getRequestDispatcher("/jsp/newcontact.jsp").forward(request, response);
         } catch (DataBaseException e) {
             LOGGER.error("Error when prepearing data for newcontact.jsp", e);
+        } catch (ServiceException e) {
+            LOGGER.catching(e);
         }
     }
 }

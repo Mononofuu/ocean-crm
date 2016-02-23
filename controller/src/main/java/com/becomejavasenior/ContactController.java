@@ -121,6 +121,8 @@ public class ContactController extends HttpServlet {
                 } catch (DataBaseException e) {
                     logger.error("Error while editing contact");
                     logger.catching(e);
+                } catch (ServiceException e) {
+                    logger.error(e);
                 }
                 break;
             default:

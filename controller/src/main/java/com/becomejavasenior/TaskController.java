@@ -123,6 +123,8 @@ public class TaskController extends HttpServlet {
                 } catch (ParseException e) {
                     logger.error("Error parse date");
                     logger.catching(e);
+                } catch (ServiceException e) {
+                    logger.error(e);
                 }
                 break;
             case "delete":
@@ -157,6 +159,8 @@ public class TaskController extends HttpServlet {
                 } catch (DataBaseException e) {
                     logger.error("Error while editing task");
                     logger.catching(e);
+                } catch (ServiceException e) {
+                    logger.error(e);
                 }
                 break;
             default:

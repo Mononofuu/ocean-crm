@@ -90,6 +90,8 @@ public class NewCompany extends HttpServlet {
             } catch (DataBaseException e) {
                 logger.error("Error while getting Service");
                 logger.catching(e);
+            } catch (ServiceException e) {
+                logger.error(e);
             }
             resp.setContentType("application/json");
             resp.setCharacterEncoding("UTF-8");
@@ -245,6 +247,8 @@ public class NewCompany extends HttpServlet {
         } catch (DataBaseException e) {
             logger.error("Error while creating new company");
             logger.catching(e);
+        } catch (ServiceException e) {
+            logger.error(e);
         }
     }
 
@@ -258,7 +262,7 @@ public class NewCompany extends HttpServlet {
         }
     }
 
-    private Task getTaskFromRequest(HttpServletRequest request) throws DataBaseException {
+    private Task getTaskFromRequest(HttpServletRequest request) throws DataBaseException, ServiceException{
         Task task = new Task();
         Optional<String> taskUser = Optional.ofNullable(request.getParameter("taskuser"));
         if (taskUser.isPresent()) {

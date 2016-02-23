@@ -249,6 +249,8 @@ public class DealController extends HttpServlet {
             LOGGER.catching(e);
         } catch (ParseException e) {
             LOGGER.catching(e);
+        } catch (ServiceException e) {
+            LOGGER.error(e);
         }
     }
 
@@ -291,6 +293,8 @@ public class DealController extends HttpServlet {
             } catch (DataBaseException e) {
                 LOGGER.error("Error while getting json data");
                 LOGGER.catching(e);
+            } catch (ServiceException e) {
+                LOGGER.error(e);
             }
             try {
                 response.setContentType("application/json");
@@ -314,7 +318,7 @@ public class DealController extends HttpServlet {
         }
     }
 
-    private Task getTaskFromRequest(HttpServletRequest request, Deal createdDeal) throws DataBaseException {
+    private Task getTaskFromRequest(HttpServletRequest request, Deal createdDeal) throws DataBaseException, ServiceException {
         Task task = new Task();
         Optional<String> taskUser = Optional.ofNullable(request.getParameter("taskuser"));
         if (taskUser.isPresent()) {

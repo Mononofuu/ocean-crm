@@ -55,6 +55,7 @@
         <artifactId>maven-war-plugin</artifactId>
         <version>2.6</version>
         <configuration>
+          <failOnMissingWebXml>false</failOnMissingWebXml>
           <packagingExcludes>WEB-INF/lib/log4j-web-*.jar</packagingExcludes>
         </configuration>
       </plugin>
