@@ -9,9 +9,10 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Date;
 import java.util.List;
+
 @Entity
 @Table(name = "company")
-@PrimaryKeyJoinColumn(name="id")
+@PrimaryKeyJoinColumn(name = "id")
 @XmlRootElement
 public class Company extends Subject {
 
@@ -22,19 +23,17 @@ public class Company extends Subject {
     private String email;
     private URL web;
     private String address;
-    @Column(name = "date_created", insertable=false)
+    @Column(name = "date_created", insertable = false)
     private Date createdDate;
     @Column(name = "date_updated")
     private Date updatedDate;
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "subject_id")
     private List<Comment> comments;
     @Transient
     private List<File> files;
-//    @OneToMany(fetch = FetchType.EAGER, mappedBy = "subject")
-//    @Transient
-@OneToMany
-@JoinColumn(name = "subject_id")
+    @OneToMany
+    @JoinColumn(name = "subject_id")
     private List<Task> tasks;
     @OneToMany(fetch = FetchType.LAZY)
     private List<Contact> contacts;

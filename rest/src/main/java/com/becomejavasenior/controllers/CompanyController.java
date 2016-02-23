@@ -12,7 +12,7 @@ import java.util.List;
  * created by Alekseichenko Sergey <mononofuu@gmail.com>
  */
 @RestController
-@RequestMapping("/companies")
+@RequestMapping("rest/companies")
 public class CompanyController {
     @Autowired
     CompanyService companyService;
