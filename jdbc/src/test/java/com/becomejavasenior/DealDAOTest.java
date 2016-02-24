@@ -2,18 +2,17 @@ package com.becomejavasenior;
 
 
 import com.becomejavasenior.config.DAODataSourceConfig;
-import com.becomejavasenior.interfacedao.*;
-import org.junit.Assert;
+import com.becomejavasenior.interfacedao.CurrencyDAO;
+import com.becomejavasenior.interfacedao.DealDAO;
+import com.becomejavasenior.interfacedao.DealStatusDAO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.sql.Timestamp;
-import java.util.*;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -22,129 +21,38 @@ import static org.junit.Assert.assertEquals;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {DAODataSourceConfig.class})
+@ActiveProfiles("test")
 public class DealDAOTest {
     private final static String DEAL_NAME = "Test Deal";
-    private final static String COMPANY_NAME = "Test Company";
-    private final static String TAG = "testdealtag";
-    private final static String CURRENCY_NAME = "Dollar";
-    private final static String CURRENCY_CODE = "USD";
-    private final static String COMPANY_PHONE = "0442222222";
-    private final static String COMPANY_EMAIL = "test@test.com";
-    private final static String COMPANY_ADDRESS = "Ukraine";
-    private final static String COMPANY_WEB = "https://www.company.com.ua";
-    private final static String CONTACT_PHONE = "0999999999";
-    private Deal deal;
+    private final static int DOLLAR_ID = 1;
+    private final static int DEAL_STATUS_ID = 1;
+
     @Autowired
     private DealStatusDAO dealStatusDAO;
     @Autowired
     private CurrencyDAO currencyDAO;
     @Autowired
     private DealDAO dealDAO;
-    @Autowired
-    private CompanyDAO companyDAO;
-    @Autowired
-    private ContactDAO contactDAO;
-    @Autowired
-    private UserDAO userDAO;
-    @Autowired
-    private DealContactDAO dealContactDAO;
 
     @Test
-    public void CreateUpdateDeleteTest() throws DataBaseException {
-        deal = new Deal();
+    public void createUpdateDeleteTest() throws DataBaseException {
+        Deal deal = new Deal();
         deal.setName(DEAL_NAME);
         deal.setBudget(5000);
-
-        Set<Tag> tags = new HashSet<>();
-        for (int i = 0; i < 3; i++) {
-            Tag tag = new Tag();
-            tag.setName(TAG + i);
-            tags.add(tag);
-        }
-        deal.setTags(tags);
-
         DealStatus status;
-        status = dealStatusDAO.read(1);
+        status = dealStatusDAO.read(DEAL_STATUS_ID);
         deal.setStatus(status);
-
-        Currency currency = new Currency();
-        currency.setName(CURRENCY_NAME);
-        currency.setCode(CURRENCY_CODE);
-        currency = currencyDAO.create(currency);
+        Currency currency = currencyDAO.read(DOLLAR_ID);
         deal.setCurrency(currency);
-
-
-        deal.setDateWhenDealClose(null);
-        deal.setDateCreated(new Timestamp(new Date().getTime()));
-
-        Company company = new Company();
-        company.setName(COMPANY_NAME);
-        company.setPhoneNumber(COMPANY_PHONE);
-        company.setEmail(COMPANY_EMAIL);
-        company.setAddress(COMPANY_ADDRESS);
-        try {
-            company.setWeb(new URL(COMPANY_WEB));
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        company = companyDAO.create(company);
-        deal.setDealCompany(company);
-
-        Contact contact = new Contact();
-        contact.setName(COMPANY_NAME);
-        contact.setPhoneType(PhoneType.WORK_PHONE_NUMBER);
-        contact.setPhone(CONTACT_PHONE);
-        contact.setCompany(company);
-        contact = contactDAO.create(contact);
-
-        Contact contact2 = new Contact();
-        contact2.setName(COMPANY_NAME);
-        contact2.setPhoneType(PhoneType.WORK_PHONE_NUMBER);
-        contact2.setPhone(CONTACT_PHONE);
-        contact2.setCompany(company);
-        contact2 = contactDAO.create(contact2);
-
-
-        User user = userDAO.read(1);
-        deal.setMainContact(contact);
-
         Deal dbDeal = dealDAO.create(deal);
-
-        DealContact dealContact = new DealContact();
-        dealContact.setDeal(dbDeal);
-        dealContact.setContact(contact);
-
-        DealContact dealContact2 = new DealContact();
-        dealContact2.setDeal(dbDeal);
-        dealContact2.setContact(contact2);
-
-        List<Contact> dealContactList = new ArrayList<>();
-        dealContactList.add(contact);
-        dealContactList.add(contact2);
-
-        dealContactDAO.create(dealContact);
-        dealContactDAO.create(dealContact2);
-
         assertEquals(deal, dbDeal);
-
-        List<Contact> createdDealContactList = dealContactDAO.getAllContactsBySubjectId(dbDeal.getId());
-        Assert.assertEquals(dealContactList.size(), createdDealContactList.size());
     }
 
     @Test
     public void readAllTest() throws DataBaseException {
+        createUpdateDeleteTest();
         List<Deal> dealList = dealDAO.readAllLite();
-        System.out.println(dealList.size());
+        assertEquals(dealList.size(), 1);
     }
-
-    @Test
-    public void readTest() {
-        try {
-            System.out.println(dealDAO.readAllLite().size());
-        } catch (DataBaseException e) {
-            e.printStackTrace();
-        }
-    }
-
 
 }
