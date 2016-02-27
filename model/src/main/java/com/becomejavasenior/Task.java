@@ -1,6 +1,5 @@
 package com.becomejavasenior;
 
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -18,6 +17,7 @@ public class Task implements Serializable {
     @JoinColumn(name = "subject_id")
     private Subject subject;
     @ManyToOne
+    @JoinColumn(name="user_id")
     private User user;
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name="created_date")

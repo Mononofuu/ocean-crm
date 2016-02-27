@@ -115,7 +115,7 @@
                     <li><a href="#weekstasks" data-toggle="tab"><spring:message code="label.week"/></a></li>
                     <li><a href="#monthtasks" data-toggle="tab"><spring:message code="label.month"/></a></li>
                     <li><a href="#tasklist" data-toggle="tab"><spring:message code="label.list"/></a></li>
-                    <a class="btn btn-success addtask" href="new_task_prepare"><spring:message code="label.addtask"/></a>
+                    <a class="btn btn-success addtask" href="newtask"><spring:message code="label.addtask"/></a>
                 </ul>
 
                 <div class="tab-content">

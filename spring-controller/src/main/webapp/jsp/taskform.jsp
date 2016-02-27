@@ -5,6 +5,8 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page isELIgnored="false" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+
 -->
 <html>
 <head>
@@ -26,13 +28,14 @@
 
     <link href="../resources/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
     <link rel="stylesheet" href="../resources/css/bootstrap-datetimepicker.min.css"/>
+    <link href="../resources/css/crm-ocean.css" rel="stylesheet">
     <jsp:useBean id="datetime" class="java.util.Date"/>
 </head>
 <body>
 <div class="container">
     <div class="row">
         <div class="col-xs-5 window autowindow">
-            <form class="form-horizontal" action="newtask" method="post" id="newtaskform">
+            <form:form id="taskForm" name="taskForm" class="form-horizontal" method="post" action="/newtask" modelAttribute="taskForm">
                 <h4 align="center"><spring:message code="label.newtask"/></h4>
                 <div class="form-group">
                     <label class="col-sm-3 control-label" for="period"><spring:message code="label.period"/></label>
@@ -59,46 +62,39 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label" for="subject"><spring:message code="label.name"/></label>
                     <div class="col-sm-9">
-                        <select class="form-control" name="subject" id="subject">
-                            <option value="" disabled selected><spring:message code="label.select"/></option>
-                            <c:forEach var="deal" items="${deallist}">
-                                <option value="${deal.id}">${deal.name}</option>
-                            </c:forEach>
-                            <c:forEach var="contact" items="${contactlist}">
-                                <option value="${contact.id}">${contact.name}</option>
-                            </c:forEach>
-                            <c:forEach var="company" items="${companylist}">
-                                <option value="${company.id}">${company.name}</option>
-                            </c:forEach>
-                        </select>
+                        <form:select class="form-control" path="subject" id="subject">
+                            <form:option value="" label="...." />
+                            <form:options items="${deallist}" itemValue="id" itemLabel="name" />
+                            <form:options items="${contact}" itemValue="id" itemLabel="name" />
+                            <form:options items="${company}" itemValue="id" itemLabel="name" />
+                        </form:select>
+                    </div>
+                </div>
+                <spring:bind path="user">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label" for="user"><spring:message code="label.responsible"/></label>
+                    <div class="col-sm-9">
+                        <form:errors path="user" cssClass="label label-danger" />
+                        <form:select class="form-control" path="user" id="user">
+                            <form:option value="" label="...." />
+                            <form:options items="${userslist}" itemLabel="name" itemValue="id"/>
+                        </form:select>
+                    </div>
+                </div>
+                </spring:bind>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label" for="type"><spring:message code="label.tasktype"/></label>
+                    <div class="col-sm-9">
+                        <form:select class="form-control" path="type" id="type">
+                            <form:options items="${tasktypes}" />
+                        </form:select>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-3 control-label" for="taskresponsible"><spring:message code="label.responsible"/></label>
+                    <label class="col-sm-3 control-label" for="comment"><spring:message code="label.tasknote"/></label>
                     <div class="col-sm-9">
-                        <select class="form-control" name="taskresponsible" id="taskresponsible">
-                            <option value="" disabled selected><spring:message code="label.select"/></option>
-                            <c:forEach var="user" items="${userslist}">
-                                <option value="${user.id}">${user.name}</option>
-                            </c:forEach>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-3 control-label" for="tasktype"><spring:message code="label.tasktype"/></label>
-                    <div class="col-sm-9">
-                        <select class="form-control" name="tasktype" id="tasktype">
-                            <c:forEach var="tasktype" items="${tasktypes}">
-                                <option value="${tasktype}"><spring:message code="${tasktype.toString()}"/></option>
-                            </c:forEach>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-3 control-label" for="tasktext"><spring:message code="label.tasknote"/></label>
-                    <div class="col-sm-9">
-                            <textarea class="form-control" name="tasktext" id="tasktext" placeholder="<spring:message code="label.tasknote"/>"
-                                      rows="2"></textarea>
+                        <form:errors path="comment" cssClass="label label-danger" />
+                        <form:textarea class="form-control" path="comment" id="comment" rows="2" />
                     </div>
                 </div>
                 <div class="row">
@@ -106,9 +102,8 @@
                     <input class="btn btn-primary" type="submit" value="<spring:message code="label.add"/>" id="addtask">
                     <input class="btn resetbutton" type="reset" value="<spring:message code="label.reset"/>">
                 </div>
-
-            </form>
-        </div>
+            </form:form>
+        </sp>
     </div>
 </div>
 </body>
