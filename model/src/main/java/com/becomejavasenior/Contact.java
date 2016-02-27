@@ -25,11 +25,11 @@ public class Contact extends Subject {
     private Date createdDate;
     @Column(name = "date_updated")
     private Date updatedDate;
-    @Transient
+    @OneToMany(mappedBy = "subject", cascade=CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Comment> comments;
     @Transient
     private List<File> files;
-    @Transient
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "subject")
     private List<Task> tasks;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "mainContact")
     private List<Deal> deals;

@@ -35,7 +35,7 @@
 		<div class="row">
 			<div class="col-md-3 window">
 				<h4><spring:message code="label.filters"/></h4>
-				<form class="form-horizontal" action="contactlist" method="post">
+				<form class="form-horizontal" action="/contacts" method="post">
 					<div class="form-group">
 						<div class="col-sm-12">
 							<select class="form-control" size="4" name="filtername" id="filtername">
@@ -133,7 +133,7 @@
 					<li class="active"><a href="#all" data-toggle="tab"><spring:message code="label.all"/></a></li>
 					<li><a href="#contacts" data-toggle="tab"><spring:message code="label.contacts"/></a></li>
 					<li><a href="#companies" data-toggle="tab"><spring:message code="label.companyes"/></a></li>
-					<a class="btn btn-success addtask" href="new_contact_prepare"><spring:message code="label.addcontact"/></a>
+					<a class="btn btn-success addtask" href="/contacts/add"><spring:message code="label.addcontact"/></a>
 				</ul>
 				<div class="tab-content">
 					<div class="tab-pane active container-fluid" id="all">
@@ -213,7 +213,7 @@
 		</div>
 	</div>
 
-	<script type="text/javascript" src="/js/pagination.js"></script>
+	<script type="text/javascript" src="/resources/js/pagination.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function () {
 			$('#tableData1').paging({limit: 13});

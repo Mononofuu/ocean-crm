@@ -19,8 +19,8 @@
     </head>
     <body>
     <div class="form-inline">
-        <a href="<c:url value="/locale?lang=ru"/>">RU</a>
-        <a href="<c:url value="/locale?lang=en"/>">EN</a>
+        <a href="?language=ru">RU</a>
+        <a href="?language=en">EN</a>
     </div>
     <ul class="menu">
         <li>
@@ -40,7 +40,7 @@
             <a href="/dealslist"><spring:message code="label.deals"/></a>
         </li>
         <li>
-            <a href="/contactlist"><spring:message code="label.contacts"/></a>
+            <a href="/contacts"><spring:message code="label.contacts"/></a>
         </li>
         <li>
             <a href="/tasklist"><spring:message code="label.tasks"/></a>

@@ -17,7 +17,7 @@ public class Deal extends Subject {
     @ManyToOne
     @JoinColumn(name = "responsible_id")
     private User responsible;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "status_id")
     private DealStatus status;
     private int budget;
