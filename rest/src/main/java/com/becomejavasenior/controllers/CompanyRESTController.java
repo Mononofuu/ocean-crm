@@ -13,7 +13,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("rest/companies")
-public class CompanyController {
+public class CompanyRESTController {
     @Autowired
     CompanyService companyService;
 
