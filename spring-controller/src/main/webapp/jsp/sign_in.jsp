@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page isELIgnored="false" %>
 <html>
@@ -13,38 +14,42 @@
     </head>
     <body>
     <div class="form-inline">
-        <a href="<c:url value="/locale?lang=ru"/>">RU</a>
-        <a href="<c:url value="/locale?lang=en"/>">EN</a>
+        <a href="?language=ru">RU</a>
+        <a href="?language=en">EN</a>
     </div>
     <div class="container">
         <div class="row">
             <div class="col-xs-5 autowindow">
                 <c:url value="/j_spring_security_check" var="loginUrl"/>
                 <form class="form-horizontal" action="${loginUrl}" method="post">
-                    <h2 class="form-signin-heading">Please sign in</h2>
+                    <h2 class="form-signin-heading"><spring:message code="label.signin"/></h2>
                     <div class="form-group">
-                        <div class="col-sm-4">
-                            <label for="j_username" class="control-label">Email address</label>
+                        <div class="col-sm-5">
+                            <label for="j_username" class="control-label"><spring:message code="label.emaillogin"/></label>
                         </div>
-                        <div class="col-sm-8">
-                            <input name="j_username" type="text" id="j_username" class="form-control" placeholder="Email address" required autofocus>
+                        <div class="col-sm-7">
+                            <input name="j_username" type="text" id="j_username" class="form-control" placeholder='<spring:message code="label.emaillogin"/>' required autofocus>
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-4">
-                            <label for="j_password" class="control-label">Password</label>
+                        <div class="col-sm-5">
+                            <label for="j_password" class="control-label"><spring:message code="label.password"/></label>
                         </div>
-                        <div class="col-sm-8">
-                            <input name="j_password" type="password" id="j_password" class="form-control" placeholder="Password" required>
+                        <div class="col-sm-7">
+                            <input name="j_password" type="password" id="j_password" class="form-control" placeholder='<spring:message code="label.password"/>' required>
 
                         </div>
                     </div>
-                    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+                    <button class="btn btn-lg btn-primary btn-block" type="submit"><spring:message code="label.enter"/></button>
                     <button class="btn btn-lg btn-primary btn-block" onclick="location.href='/users/add'" type="button">
-                        Registration
+                        <spring:message code="label.registration"/>
                     </button>
                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                 </form>
+                <div class="alert alert-info" role="alert">
+                    <b>login</b> - testlogin<br>
+                    <b>password</b> - testpassword
+                </div>
                 <c:if test="${param.error!=null}">
                     <div class="alert alert-warning">
                         ${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}
