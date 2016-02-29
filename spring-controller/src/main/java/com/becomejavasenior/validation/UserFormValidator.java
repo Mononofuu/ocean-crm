@@ -17,11 +17,6 @@ import org.springframework.validation.Validator;
 @Component
 public class UserFormValidator implements Validator {
     private static final Logger LOGGER = LogManager.getLogger(UserFormValidator.class);
-
-    @Autowired
-    private EmailValidator emailValidator;
-    @Autowired
-    private PhoneNumberValidator phoneNumberValidator;
     @Autowired
     private UserService userService;
 
@@ -44,13 +39,13 @@ public class UserFormValidator implements Validator {
             errors.rejectValue("login", "label.errorreadingfromdb");
             LOGGER.error(e);
         }
-        if(!"".equals(user.getEmail())&&!emailValidator.valid(user.getEmail())){
+        if(user.getEmail()!=null&&!"".equals(user.getEmail())&&!PatternValidateUtil.validateEmail(user.getEmail())){
             errors.rejectValue("email", "label.incorrect.email");
         }
-        if(user.getPhoneHome()!=null&&!phoneNumberValidator.valid(user.getPhoneHome())){
+        if(user.getPhoneHome()!=null&&!PatternValidateUtil.validatePhone(user.getPhoneHome())){
             errors.rejectValue("phoneHome", "label.incorrect.phone");
         }
-        if(user.getPhoneWork()!=null&&!phoneNumberValidator.valid(user.getPhoneWork())){
+        if(user.getPhoneWork()!=null&&!PatternValidateUtil.validatePhone(user.getPhoneWork())){
             errors.rejectValue("phoneWork", "label.incorrect.phone");
         }
     }

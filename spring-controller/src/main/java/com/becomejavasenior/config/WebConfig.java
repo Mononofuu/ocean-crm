@@ -1,10 +1,13 @@
 package com.becomejavasenior.config;
 
+import com.becomejavasenior.formatters.DealStatusFormatter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.*;
@@ -21,9 +24,17 @@ import java.util.Locale;
 @ComponentScan("com.becomejavasenior")
 @Configuration
 public class WebConfig extends WebMvcConfigurerAdapter{
+    @Autowired
+    private DealStatusFormatter dealStatusFormatter;
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
+    }
+
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        registry.addFormatter(dealStatusFormatter);
     }
 
     @Bean
@@ -58,6 +69,7 @@ public class WebConfig extends WebMvcConfigurerAdapter{
     public MessageSource messageSource() {
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
         messageSource.setBasename("classpath:messages");
+        messageSource.setDefaultEncoding("UTF-8");
         return messageSource;
     }
 

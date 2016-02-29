@@ -1,11 +1,13 @@
 package com.becomejavasenior;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.Date;
 
 @Entity
 @Table(name = "task")
+@XmlRootElement
 public class Task implements Serializable {
 
     private static final long serialVersionUID = 5383049602322141163L;
