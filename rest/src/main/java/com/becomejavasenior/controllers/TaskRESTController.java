@@ -39,4 +39,9 @@ public class TaskRESTController {
     public void deleteTask(@PathVariable int id) throws DataBaseException {
         taskService.deleteTask(id);
     }
+
+    @RequestMapping(value = "/tasktypes", method = RequestMethod.GET)
+    public List<TaskType> getTaskTypes() throws DataBaseException {
+        return taskService.getAllTaskTypes();
+    }
 }

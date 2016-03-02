@@ -1,0 +1,16 @@
+.border {
+    border: 2px solid dimgrey;
+    border-radius: 5px;
+    background-color: #ededed;
+}
+
+.rectangle {
+    background: white;
+    border: solid 2px;
+    border-radius: 25px;
+    text-align: center;
+}
+
+.fieldset-color {
+    background: white;
+}

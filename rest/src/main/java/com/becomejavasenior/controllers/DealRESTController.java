@@ -70,4 +70,9 @@ public class DealRESTController {
         dealService.deleteDeal(id);
     }
 
+    @RequestMapping(value = "/dealstatuses", method = RequestMethod.GET)
+    @ResponseBody
+    public List<DealStatus> getDealStatuses() throws DataBaseException {
+        return dealService.getAllDealStatuses();
+    }
 }
