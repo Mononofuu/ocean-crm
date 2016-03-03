@@ -25,6 +25,7 @@ public class TaskHibernateDAOImpl extends AbstractHibernateDAO<Task> implements 
     public List<Task> getAllTasksBySubjectId(int id) throws DataBaseException {
         Criteria criteria = getCurrentSession().createCriteria(getObjectСlass());
         criteria.add(Restrictions.eq("subject.id", id));
+        criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         return criteria.list();
     }
 
@@ -40,6 +41,7 @@ public class TaskHibernateDAOImpl extends AbstractHibernateDAO<Task> implements 
         if (taskTypeId != null) {
             criteria.add(Restrictions.eq("type", TaskType.values()[Integer.parseInt(taskTypeId)]));
         }
+        criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         return criteria.list();
     }
 
@@ -47,6 +49,7 @@ public class TaskHibernateDAOImpl extends AbstractHibernateDAO<Task> implements 
     public List<Task> getAllTasksBySubject(Subject subject) throws DataBaseException {
         Criteria criteria = getCurrentSession().createCriteria(getObjectСlass());
         criteria.add(Restrictions.eq("subject", subject));
+        criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         return criteria.list();
     }
 

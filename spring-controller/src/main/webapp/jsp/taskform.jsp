@@ -40,7 +40,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label" for="period"><spring:message code="label.period"/></label>
                     <div class="col-sm-9">
-                        <select class="form-control" name="period" id="period">
+                        <select class="form-control" path="period" name="period" id="period">
                             <option value="today"><spring:message code="label.today"/></option>
                             <option value="allday"><spring:message code="label.allday"/></option>
                             <option value="tomorow"><spring:message code="label.tomorow"/></option>
@@ -53,29 +53,30 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label" for="datepicker"><spring:message code="label.orchoosedate"/></label>
                     <div class="col-sm-5">
-                        <input class="form-control" type="text" id="datepicker" name="duedate" placeholder="<spring:message code="label.date"/>">
+                        <input class="form-control" type="text" path="dueDate" id="datepicker" name="dueDate" placeholder="<spring:message code="label.date"/>">
                     </div>
                     <div class="col-sm-4">
-                        <input class="form-control" type="text" id="timepicker" name="duetime" placeholder="<spring:message code="label.time"/>">
+                        <input class="form-control" type="text" path="dueTime" id="timepicker" name="dueTime" placeholder="<spring:message code="label.time"/>">
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="col-sm-3 control-label" for="subject"><spring:message code="label.name"/></label>
+                <spring:bind path="task.subject">
+                    <div class="form-group">
+                    <label class="col-sm-3 control-label" for="subject"><spring:message code="label.connnectedwithsubject"/></label>
                     <div class="col-sm-9">
-                        <form:select class="form-control" path="subject" id="subject">
+                        <form:errors path="task.subject" cssClass="label label-danger" />
+                        <form:select class="form-control" path="task.subject" id="subject">
                             <form:option value="" label="...." />
-                            <form:options items="${deallist}" itemValue="id" itemLabel="name" />
-                            <form:options items="${contact}" itemValue="id" itemLabel="name" />
-                            <form:options items="${company}" itemValue="id" itemLabel="name" />
+                            <form:options items="${subjectlist}" itemValue="id" itemLabel="name" />
                         </form:select>
                     </div>
                 </div>
-                <spring:bind path="user">
+                </spring:bind>
+                <spring:bind path="task.user">
                 <div class="form-group">
                     <label class="col-sm-3 control-label" for="user"><spring:message code="label.responsible"/></label>
                     <div class="col-sm-9">
-                        <form:errors path="user" cssClass="label label-danger" />
-                        <form:select class="form-control" path="user" id="user">
+                        <form:errors path="task.user" cssClass="label label-danger" />
+                        <form:select class="form-control" path="task.user" id="user">
                             <form:option value="" label="...." />
                             <form:options items="${userslist}" itemLabel="name" itemValue="id"/>
                         </form:select>
@@ -85,16 +86,18 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label" for="type"><spring:message code="label.tasktype"/></label>
                     <div class="col-sm-9">
-                        <form:select class="form-control" path="type" id="type">
-                            <form:options items="${tasktypes}" />
+                        <form:select class="form-control" path="task.type" id="type">
+                            <c:forEach var="tasktype" items="${tasktypes}">
+                                <form:option value="${tasktype}"><spring:message code="${tasktype.toString()}"/></form:option>
+                            </c:forEach>
                         </form:select>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-3 control-label" for="comment"><spring:message code="label.tasknote"/></label>
+                    <label class="col-sm-3 control-label" for="task.comment"><spring:message code="label.tasknote"/></label>
                     <div class="col-sm-9">
-                        <form:errors path="comment" cssClass="label label-danger" />
-                        <form:textarea class="form-control" path="comment" id="comment" rows="2" />
+                        <form:errors path="task.comment" cssClass="label label-danger" />
+                        <form:textarea class="form-control" path="task.comment" id="comment" rows="2" />
                     </div>
                 </div>
                 <div class="row">

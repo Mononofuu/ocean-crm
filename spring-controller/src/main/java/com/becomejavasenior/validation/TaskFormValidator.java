@@ -20,15 +20,19 @@ public class TaskFormValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> aClass) {
-        return Task.class.equals(aClass);
+        return TaskFormHandler.class.equals(aClass);
     }
 
     @Override
     public void validate(Object o, Errors errors){
-        Task task = (Task) o;
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "comment", "label.notempty");
-        if(task.getUser()==null) {
-            errors.rejectValue("user", "label.notempty");
+        TaskFormHandler taskForm = (TaskFormHandler) o;
+
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "task.comment", "label.notempty");
+        if(taskForm.getTask().getUser()==null) {
+            errors.rejectValue("task.user", "label.notempty");
+        }
+        if(taskForm.getTask().getSubject()==null) {
+            errors.rejectValue("task.subject", "label.notempty");
         }
     }
 

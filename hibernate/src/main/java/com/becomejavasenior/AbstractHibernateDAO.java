@@ -53,12 +53,14 @@ public abstract class AbstractHibernateDAO<T> implements GenericDao<T>{
     @Override
     public List<T> readAll() throws DataBaseException {
         Criteria criteria = getCurrentSession().createCriteria(getObjectСlass());
+        criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         return (List<T>)criteria.list();
     }
 
     @Override
     public List<T> readAllLite() throws DataBaseException {
         Criteria criteria = getCurrentSession().createCriteria(getObjectСlass());
+        criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         return (List<T>)criteria.list();
     }
 

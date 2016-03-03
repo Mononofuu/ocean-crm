@@ -21,7 +21,8 @@ public class TaskValidator implements Validator{
         Task task = (Task) o;
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "comment", "label.notempty");
         if(task.getUser()==null){
-            errors.rejectValue("user", "label.responsiblemissed");
+            errors.setNestedPath("user");
+            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "label.notempty");
         }
         if(task.getSubject()==null){
             errors.rejectValue("subject", "label.subjectmissed");

@@ -1,6 +1,8 @@
 package com.becomejavasenior.config;
 
 import com.becomejavasenior.formatters.DealStatusFormatter;
+import com.becomejavasenior.formatters.SubjectFormatter;
+import com.becomejavasenior.formatters.UserFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -27,6 +29,12 @@ public class WebConfig extends WebMvcConfigurerAdapter{
     @Autowired
     private DealStatusFormatter dealStatusFormatter;
 
+    @Autowired
+    private UserFormatter userFormatter;
+
+    @Autowired
+    private SubjectFormatter subjectFormatter;
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
@@ -35,6 +43,8 @@ public class WebConfig extends WebMvcConfigurerAdapter{
     @Override
     public void addFormatters(FormatterRegistry registry) {
         registry.addFormatter(dealStatusFormatter);
+        registry.addFormatter(userFormatter);
+        registry.addFormatter(subjectFormatter);
     }
 
     @Bean

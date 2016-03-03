@@ -31,6 +31,7 @@
 </head>
 <body>
     <div class="container">
+        <form:form id="tasklistForm" name="tasklistForm" class="form-horizontal" method="post" action="/tasklist" modelAttribute="tasklistForm">
         <div class="row">
             <div class="col-sm-3 window">
                 <h4><spring:message code="label.filters"/></h4>
@@ -103,7 +104,7 @@
                             </select>
                         </div>
                     </div>
-            
+
                     <input class="btn btn-primary" type="submit" value="<spring:message code="label.submit"/>">
                     <input class="btn resetbutton" type="reset" value="<spring:message code="label.reset"/>">
                 </form>
@@ -208,6 +209,7 @@
                 </div>
             </div>
         </div>
+    </form:form>
     </div>
 </body>
 </html>
