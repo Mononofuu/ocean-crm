@@ -3,6 +3,7 @@ package com.becomejavasenior.controllers;
 import com.becomejavasenior.Contact;
 import com.becomejavasenior.ContactService;
 import com.becomejavasenior.DataBaseException;
+import com.becomejavasenior.PhoneType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -50,5 +51,9 @@ public class ContactRESTController {
         contactService.deleteContact(id);
     }
 
-
+    @RequestMapping(value = "/phonetypes", method = RequestMethod.GET)
+    @ResponseBody
+    public List<PhoneType> getPhoneTypes() throws DataBaseException {
+        return contactService.getAllPhoneTypes();
+    }
 }

@@ -39,7 +39,7 @@ public class Deal extends Subject {
     @OneToMany(mappedBy = "subject")
     private List<Task> tasks;
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="created_date", insertable = false)
+    @Column(name="created_date")
     private Date dateCreated;
 
     public Deal() {

@@ -10,8 +10,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <style>
-    <%@include file='../css/bootstrap.css' %>
-    <%@include file='../css/bootstrap-theme.css' %>
+    <%@include file='../resources/css/bootstrap.min.css' %>
+    <%@include file='../resources/css/bootstrap-theme.min.css' %>
 </style>
 
 <html>
@@ -49,8 +49,8 @@
 
 
         <div class="form-group">
-            <button class="btn btn-default" onclick="location.href= '/dealspyramid'"><spring:message code="label.pyramid"/></button>
-            <button class="btn btn-default" onclick="location.href= '/deal'"><spring:message code="label.adddeal"/></button>
+            <button class="btn btn-default" onclick="location.href= '/deals/pyramid'"><spring:message code="label.pyramid"/></button>
+            <button class="btn btn-default" onclick="location.href= '/deals/add'"><spring:message code="label.adddeal"/></button>
         </div>
 
 
