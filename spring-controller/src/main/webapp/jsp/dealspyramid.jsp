@@ -18,8 +18,8 @@
 </div>
 <div class="col-lg-10">
     <div class="row">
-        <button class="btn btn-success" onclick="location.href= '/dealspyramid'"><spring:message code="label.pyramid"/></button>
-        <button class="btn btn-default" onclick="location.href= '/dealslist'"><spring:message code="label.list"/></button>
+        <button class="btn btn-success" onclick="location.href= '/deals/pyramid'"><spring:message code="label.pyramid"/></button>
+        <button class="btn btn-default" onclick="location.href= '/deals'"><spring:message code="label.list"/></button>
     </div>
     <div class="row">
         <div class="col-md-3 border ">

@@ -1,203 +1,349 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
-<%@ page isELIgnored="false" %>
-<style>
-    <%@include file='../resources/css/newdeal.css' %>
-    <%@include file='../resources/css/bootstrap.min.css' %>
-</style>
 <!DOCTYPE html>
-
-<html ng-app="newDeal">
+<!--
+@author Alekseichenko Sergey
+-->
+<!--
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page isELIgnored="false" %>
+-->
+<html>
 <head>
     <title><spring:message code="label.adddeal"/></title>
-    <meta charset="utf-8">
-
-    <!-- LOAD JQUERY -->
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-    <%--<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.min.js"></script>--%>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
-    <!-- PROCESS FORM WITH AJAX (NEW) -->
-    <script src="../resources/js/newdeal.js"></script>
-    <script src="../resources/js/files.js"></script>
-
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <jsp:include page="menu.jsp"/>
+    <script src="../resources/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="../resources/js/tasklist.js" type="text/javascript"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.17/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.17/themes/smoothness/jquery-ui.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.8.7/jquery.timepicker.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.8.7/jquery.timepicker.css"/>
+    <link href="../resources/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/css/select2.min.css" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/js/select2.min.js"></script>
 </head>
 <body>
-<div class="col-lg-2">
-    <jsp:include page="menu.jsp"/>
-</div>
-<div ng-controller="DealController" class="col-lg-10">
-    <div class="row">
-        <form class="col-md-3" name="dealForm" ng-submit="processForm('deals')" novalidate>
-            <fieldset>
-                <legend><spring:message code="label.adddeal"/></legend>
-                <label><spring:message code="label.dealname"/></label>
-                <input class="form-control" type="text" name="dealname"
-                       ng-model="formData.dealname" required/>
-                <br/>
-                <label><spring:message code="label.creationdate"/></label>
-                <input class="form-control" type="date" name="dealcreated"
-                       ng-model="formData.dealcreated" required/>
-                <br/>
-                <label><spring:message code="label.tags"/></label>
-                <input class="form-control" type="text" name="dealtags"
-                       ng-model="formData.dealtags"/>
-                <br/>
-                <label><spring:message code="label.responsible"/></label>
-                <select class="form-control" name="dealresp" ng-model="formData.dealresp">
-                    <option ng-repeat="user in users" value="{{user.id}}">{{user.name}}</option>
-                </select>
-                <br/>
-                <label><spring:message code="label.budget"/></label>
-                <input class="form-control" type="text" name="dealbudget" pattern="[0-9]*"
-                       ng-model="formData.dealbudget" required/>
-                <br/>
-                <label><spring:message code="label.phase"/></label>
-                <select class="form-control" name="dealstatus" ng-model="formData.dealstatus" required>
-                    <option ng-repeat="status in dealStatuses" value="{{status.id}}">{{status.name}}</option>
-                </select>
-                <br/>
-                <label><spring:message code="label.dealnote"/></label>
-                <textarea class="form-control textarea" name="dealcomment"
-                          ng-model="formData.dealcomment"></textarea>
-                <br/>
-                <div id="selectedFiles"></div>
-                <br/>
-                <input class="form-control btn-success" type="file" name="dealfiles" id="files" multiple
-                       ng-model="files"><br/>
-            </fieldset>
-        </form>
-        <form class="col-md-3" name="contactForm" ng-submit="processForm('contacts')">
-            <fieldset>
-                <legend><spring:message code="label.addcontact"/></legend>
-                <a ng-click="removeContact(sc.id)" class="btn-info btn btn-block" ng-repeat="sc in selectedContacts"
-                >{{sc.name}}</a>
-                <label><spring:message code="label.choosecontact"/></label>
-                <select class="form-control" ng-model="selected" ng-change="selectContact(selected)">
-                    <option ng-repeat="contact in contacts" value="{{contact.id +','+ contact.name}}">
-                        {{contact.name}}
-                    </option>
-                </select>
-                <br/>
-                <label><spring:message code="label.ornew"/></label>
-                <br/>
-                <label><spring:message code="label.firstlastname"/></label>
-                <input class="form-control" type="text" name="contactname"
-                       ng-model="formData.contactname" required/>
-                <br/>
-                <label><spring:message code="label.company"/></label>
-                <select class="form-control" name="contactcompany" ng-model="formData.contactcompany">
-                    <option ng-repeat="company in companies" value="{{company.id}}">{{company.name}}</option>
-                </select>
-                <br/>
-                <label><spring:message code="label.position"/></label>
-                <input class="form-control" type="text" name="contactposition"
-                       ng-model="formData.contactposition"/>
-                <br/>
-                <label><spring:message code="label.phonetypenumber"/></label>
-                <div class="form-inline">
-                    <select class="form-control" style="padding-left: 1%; padding-right: 1%; width: 23%"
-                            name="contactphonetype" ng-model="formData.contactphonetype">
-                        <option ng-repeat="phoneType in phoneTypes" value="{{phoneType}}">{{phoneType}}</option>
-                    </select>
-                    <input class="form-control" type="text" style="padding-left: 1%;width: 75%" type="text"
-                           name="contactphonenumber" placeholder=
-                           <spring:message code="label.phonenumber"/>
-                                   ng-model="formData.contactphonenumber"/>
+<div class="container col-lg-10">
+    <form:form class="form-horizontal" action="/deals/add" method="post" modelAttribute="dealForm" id="newdealForm">
+        <div class="col-lg-3">
+            <div class="col-sm-12 panel panel-default">
+                <h4><spring:message code="label.createdeal"/></h4>
+                <spring:bind path="deal.name">
+                    <div class="form-group ${status.error ? 'has-error' : ''}">
+                        <div class="col-sm-12">
+                            <spring:message code="label.dealname" var="dealname"/>
+                            <form:input path="deal.name" class="form-control" type="text" name="newdealname"
+                                        id="newdealname" placeholder="${dealname}"/>
+                            <form:errors path="deal.name" class="control-label"/>
+                        </div>
+                    </div>
+                </spring:bind>
+                <spring:bind path="tags">
+                    <div class="form-group ${status.error ? 'has-error' : ''}">
+                        <div class="col-sm-12">
+                            <spring:message code="label.tags" var="tags"/>
+                            <form:input path="tags" class="form-control" type="text" name="tags" id="tags"
+                                        placeholder="${tags}"/>
+                            <form:errors path="tags" class="control-label"/>
+                        </div>
+                    </div>
+                </spring:bind>
+                <spring:bind path="userContactId">
+                    <div class="form-group ${status.error ? 'has-error' : ''}">
+                        <div class="col-sm-12">
+                            <form:select path="userContactId" class="form-control" name="responsible" id="responsible">
+                                <option value="" disabled selected><spring:message code="label.responsible"/></option>
+                                <c:forEach var="user" items="${userslist}">
+                                    <form:option value="${user.id}">${user.name}</form:option>
+                                </c:forEach>
+                            </form:select>
+                        </div>
+                    </div>
+                </spring:bind>
+                <spring:bind path="deal.budget">
+                    <div class="form-group ${status.error ? 'has-error' : ''}">
+                        <div class="col-sm-9">
+                            <spring:message code="label.budget" var="budget"/>
+                            <form:input path="deal.budget" class="form-control" type="number" value="${null}"
+                                        name="budget" id="budget" placeholder="${budget}"/>
+                            <form:errors path="deal.budget" class="control-label"/>
+                        </div>
+                        <div class="col-sm-2">
+                            <label for="budget"><spring:message code="label.uan"/></label>
+                        </div>
+                    </div>
+                </spring:bind>
+                <spring:bind path="deal.status">
+                    <div class="form-group ${status.error ? 'has-error' : ''}">
+                        <div class="col-sm-12">
+                            <form:select path="deal.status" class="form-control" name="dealtype" id="dealtype">
+                                <form:option value="" disabled="true" selected="true"><spring:message
+                                        code="label.phase"/></form:option>
+                                <c:forEach var="dealstatus" items="${dealstatuses}">
+                                    <form:option value="${dealstatus.id}"><spring:message
+                                            code="${dealstatus.toString()}"/></form:option>
+                                </c:forEach>
+                            </form:select>
+                            <form:errors path="deal.status" class="control-label"/>
+                        </div>
+                    </div>
+                </spring:bind>
+                <spring:bind path="dealComment">
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <spring:message code="label.comment" var="dealnote"/>
+                            <form:textarea path="dealComment" class="form-control" name="notes" id="notes"
+                                           placeholder="${dealnote}" rows="3"></form:textarea>
+                        </div>
+                    </div>
+                </spring:bind>
+                <div class="form-group col-xs-12">
+                    <input type="file" style="width: inherit; overflow: hidden;" min="1" max="10" name="file[]"
+                           id="file" multiple="true">
                 </div>
-                <br/>
-                <label>Email</label>
-                <input class="form-control" type="email" name="contactemail"
-                       ng-model="formData.contactemail"/>
-                <br/>
-                <label>Skype</label>
-                <input class="form-control" type="text" name="contactskype"
-                       ng-model="formData.contactskype"/>
-                <br/>
-                <button type="submit" ng-hide="contactForm.contactname.$invalid" ng-disabled="contactForm.$invalid"
-                        class="btn btn-sm btn-success btn-block">
-                    <span class="glyphicon"></span><spring:message code="label.createcontact"/>
-                </button>
-            </fieldset>
-        </form>
+                <input class="btn btn-primary" type="submit" value='<spring:message code="label.add"/>'>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="col-sm-12 panel panel-default">
+                <h4><spring:message code="label.addcontact"/></h4>
+                <h5><spring:message code="label.choosecontact"/></h5>
+                <spring:bind path="dealContactId">
+                    <div class="form-group ${status.error ? 'has-error' : ''}">
+                        <div class="col-sm-12">
+                            <form:select path="dealContactId" class="form-control" name="dealcontact" id="dealcontact">
+                                <option value="" disabled selected><spring:message code="label.contacts"/></option>
+                                <c:forEach var="contact" items="${contactlist}">
+                                    <option value="${contact.id}">${contact.name}</option>
+                                </c:forEach>
+                            </form:select>
+                        </div>
+                    </div>
+                </spring:bind>
+                <h5><spring:message code="label.ornew"/></h5>
+                <spring:bind path="contact.name">
+                    <div class="form-group ${status.error ? 'has-error' : ''}">
+                        <div class="col-sm-12">
+                            <spring:message code="label.namesurname" var="contactname"/>
+                            <form:input path="contact.name" class="form-control" type="text" name="newcontactname"
+                                        id="newcontactname" placeholder="${contactname}"/>
+                            <form:errors path="contact.name" class="control-label"/>
+                        </div>
+                    </div>
+                </spring:bind>
+                <spring:bind path="contactCompanyId">
+                    <div class="form-group ${status.error ? 'has-error' : ''}">
+                        <div class="col-sm-12">
+                            <form:select path="contactCompanyId" class="form-control" name="contactcompany"
+                                         id="contactcompany">
+                                <option value="" disabled selected><spring:message code="label.company"/></option>
+                                <c:forEach var="company" items="${companylist}">
+                                    <option value="${company.id}">${company.name}</option>
+                                </c:forEach>
+                            </form:select>
+                        </div>
+                    </div>
+                </spring:bind>
+                <spring:bind path="contact.post">
+                    <div class="form-group ${status.error ? 'has-error' : ''}">
+                        <div class="col-sm-12">
+                            <spring:message code="label.position" var="position"/>
+                            <form:input path="contact.post" class="form-control" type="text" name="position"
+                                        id="position" placeholder="${position}"/>
+                            <form:errors path="contact.post" class="control-label"/>
+                        </div>
+                    </div>
+                </spring:bind>
+                <spring:bind path="contact.phone">
+                    <div class="form-group ${status.error ? 'has-error' : ''}">
+                        <div class="col-sm-7">
+                            <spring:message code="label.phonenumber" var="phonenumber"/>
+                            <form:input path="contact.phone" class="form-control" type="text" name="phonenumber"
+                                        id="phonenumber" placeholder="${phonenumber}"/>
+                            <form:errors path="contact.phone" class="control-label"/>
+                        </div>
+                        <div class="col-sm-5">
+                            <form:select path="contact.phoneType" class="form-control" name="phonetype" id="phonetype">
+                                <option value=""><spring:message code="label.type"/></option>
+                                <c:forEach var="phonetype" items="${phonetypelist}">
+                                    <form:option value="${phonetype}"><spring:message
+                                            code="${phonetype.toString()}"/></form:option>
+                                </c:forEach>
+                            </form:select>
+                        </div>
+                    </div>
+                </spring:bind>
+                <spring:bind path="contact.email">
+                    <div class="form-group ${status.error ? 'has-error' : ''}">
+                        <div class="col-sm-12">
+                            <spring:message code="label.email" var="email"/>
+                            <form:input path="contact.email" class="form-control" type="text" name="email" id="email"
+                                        placeholder="${email}"/>
+                            <form:errors path="contact.email" class="control-label"/>
+                        </div>
+                    </div>
+                </spring:bind>
+                <spring:bind path="contact.skype">
+                    <div class="form-group ${status.error ? 'has-error' : ''}">
+                        <div class="col-sm-12">
+                            <spring:message code="label.skype" var="skype"/>
+                            <form:input path="contact.skype" class="form-control" type="text" name="skype" id="skype"
+                                        placeholder="${skype}"/>
+                            <form:errors path="contact.skype" class="control-label"/>
+                        </div>
+                    </div>
+                </spring:bind>
+                <input type="submit" class="btn btn-primary" name="savecontact"
+                       value='<spring:message code="label.addcontact"/>'>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="col-sm-12 panel panel-default">
+                <h4><spring:message code="label.addcompany"/></h4>
+                <h5><spring:message code="label.choosecompany"/></h5>
+                <spring:bind path="dealCompanyId">
+                    <div class="form-group ${status.error ? 'has-error' : ''}">
+                        <div class="col-sm-12">
+                            <form:select path="dealCompanyId" class="form-control" name="dealcompany" id="dealcompany">
+                                <option value="" disabled selected><spring:message code="label.company"/></option>
+                                <c:forEach var="company" items="${companylist}">
+                                    <option value="${company.id}">${company.name}</option>
+                                </c:forEach>
+                            </form:select>
+                        </div>
+                    </div>
+                </spring:bind>
+                <h5><spring:message code="label.ornew"/></h5>
+                <spring:bind path="company.name">
+                    <div class="form-group ${status.error ? 'has-error' : ''}">
+                        <div class="col-sm-12">
+                            <spring:message code="label.companyname" var="companyname"/>
+                            <form:input path="company.name" class="form-control" type="text" name="newcompanyname"
+                                        id="newdealname" placeholder="${companyname}"/>
+                            <form:errors path="company.name" class="control-label"/>
+                        </div>
+                    </div>
+                </spring:bind>
+                <spring:bind path="company.phoneNumber">
+                    <div class="form-group ${status.error ? 'has-error' : ''}">
+                        <div class="col-sm-12">
+                            <spring:message code="label.phonenumber" var="companyphone"/>
+                            <form:input path="company.phoneNumber" class="form-control" type="text"
+                                        name="newcompanyphone"
+                                        id="newcompanyphone" placeholder="${companyphone}"/>
+                            <form:errors path="company.phoneNumber" class="control-label"/>
+                        </div>
+                    </div>
+                </spring:bind>
+                <spring:bind path="company.email">
+                    <div class="form-group ${status.error ? 'has-error' : ''}">
+                        <div class="col-sm-12">
+                            <spring:message code="label.email" var="companyemail"/>
+                            <form:input path="company.email" class="form-control" type="text" name="newcompanyemail"
+                                        id="newcompanyemail" placeholder="${companyemail}"/>
+                            <form:errors path="company.email" class="control-label"/>
+                        </div>
+                    </div>
+                </spring:bind>
+                <spring:bind path="company.web">
+                    <div class="form-group ${status.error ? 'has-error' : ''}">
+                        <div class="col-sm-12">
+                            <spring:message code="label.web" var="companyweb"/>
+                            <form:input path="company.web" class="form-control" type="text" name="newcompanyweb"
+                                        id="newcompanyweb" placeholder="${companyweb}"/>
+                            <form:errors path="company.web" class="control-label"/>
+                        </div>
+                    </div>
+                </spring:bind>
+                <spring:bind path="company.address">
+                    <div class="form-group ${status.error ? 'has-error' : ''}">
+                        <div class="col-sm-12">
+                            <spring:message code="label.address" var="companyaddress"/>
+                            <form:input path="company.address" class="form-control" type="text" name="newcompanyaddress"
+                                        id="newcompanyaddress" placeholder="${companyaddress}"/>
+                            <form:errors path="company.address" class="control-label"/>
+                        </div>
+                    </div>
+                </spring:bind>
+                <input type="submit" class="btn btn-primary" name="savecompany"
+                       value='<spring:message code="label.addcompany"/>'>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="col-sm-12 panel panel-default">
+                <h4><spring:message code="label.addtask"/></h4>
+                <spring:bind path="taskPeriod">
+                    <div class="form-group ${status.error ? 'has-error' : ''}">
+                        <div class="col-sm-12">
+                            <form:select path="taskPeriod" class="form-control" name="taskPeriod" id="taskPeriod">
+                                <option value="" disabled selected><spring:message code="label.period"/></option>
+                                <form:option value="today"><spring:message code="label.today"/></form:option>
+                                <form:option value="allday"><spring:message code="label.allday"/></form:option>
+                                <form:option value="tomorow"><spring:message code="label.tomorow"/></form:option>
+                                <form:option value="nextweek"><spring:message code="label.nextweek"/></form:option>
+                                <form:option value="nextmonth"><spring:message code="label.nextmonth"/></form:option>
+                                <form:option value="nextyear"><spring:message code="label.nextyear"/></form:option>
+                            </form:select>
+                        </div>
+                    </div>
+                </spring:bind>
+                <h5><spring:message code="label.orchoosedate"/></h5>
+                <spring:bind path="dueDate">
+                    <div class="form-group ${status.error ? 'has-error' : ''}">
+                        <div class="col-sm-7">
+                            <spring:message code="label.date" var="dueDate"/>
+                            <form:input path="dueDate" class="form-control" type="text" id="datepicker" name="duedate"
+                                        placeholder="${dueDate}"/>
+                        </div>
+                        <div class="col-sm-5">
+                            <spring:message code="label.time" var="dueTime"/>
+                            <form:input path="dueTime" class="form-control" type="text" id="timepicker" name="duetime"
+                                        placeholder="${dueTime}"/>
+                        </div>
+                    </div>
+                </spring:bind>
 
-        <form class="col-md-3" name="companyForm" ng-submit="processForm('companies')">
-            <fieldset>
-                <legend><spring:message code="label.addcompany"/></legend>
-                <label><spring:message code="label.choosecompany"/></label>
-                <select class="form-control" name="dealcompany" ng-model="formData.dealcompany">
-                    <option ng-repeat="company in companies" value="{{company.id}}">{{company.name}}</option>
+                <spring:bind path="taskUserId">
+                    <div class="form-group ${status.error ? 'has-error' : ''}">
+                        <div class="col-sm-12">
+                            <form:select path="taskUserId" class="form-control" name="responsible" id="responsible">
+                                <option value="" disabled selected><spring:message code="label.responsible"/></option>
+                                <c:forEach var="user" items="${userslist}">
+                                    <form:option value="${user.id}">${user.name}</form:option>
+                                </c:forEach>
+                            </form:select>
+                        </div>
+                    </div>
+                </spring:bind>
+                <spring:bind path="task.type">
+                    <div class="form-group ${status.error ? 'has-error' : ''}">
+                        <div class="col-sm-12">
+                            <form:select path="task.type" class="form-control" name="type" id="type">
+                                <option value="" disabled selected><spring:message code="label.tasktype"/></option>
+                                <c:forEach var="type" items="${tasktypes}">
+                                    <form:option value="${type}"><spring:message
+                                            code="${type.toString()}"/></form:option>
+                                </c:forEach>
+                            </form:select>
+                        </div>
+                    </div>
+                </spring:bind>
+                <spring:bind path="task.comment">
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <spring:message code="label.tasknote" var="tasknote"/>
+                            <form:textarea path="task.comment" class="form-control" name="notes" id="notes"
+                                           placeholder="${tasknote}" rows="3"></form:textarea>
+                        </div>
+                    </div>
+                </spring:bind>
+            </div>
+        </div>
 
-                </select><br/>
-                <label><spring:message code="label.ornew"/></label>
-                <label><spring:message code="label.companyname"/></label>
-                <input class="form-control" type="text" name="companyname"
-                       ng-model="formData.companyname" required/>
-                <br/>
-                <label><spring:message code="label.phonenumber"/></label>
-                <input class="form-control" type="tel" name="companyphone"
-                       ng-model="formData.companyphone" required>
-                <br/>
-                <label><spring:message code="label.email"/></label>
-                <input class="form-control" type="email" name="companyemail"
-                       ng-model="formData.companyemail" required>
-                <br/>
-                <label><spring:message code="label.web"/></label>
-                <input class="form-control" type="url" name="companysite"
-                       ng-model="formData.companysite" required>
-                <br/>
-                <label><spring:message code="label.address"/></label>
-                <textarea class="form-control textarea" name="companyaddress"
-                          ng-model="formData.companyaddress"></textarea>
-                <br/>
-                <button type="submit" ng-hide="companyForm.companyname.$invalid" ng-disabled="companyForm.$invalid"
-                        class="btn btn-sm btn-success btn-block">
-                    <span class="glyphicon"></span><spring:message code="label.createcompany"/>
-                </button>
-            </fieldset>
-        </form>
-
-        <form class="col-md-3" name="taskForm" ng-init="formData.addTask=false">
-            <fieldset>
-                <legend><spring:message code="label.addtask"/></legend>
-                <input type="checkbox" ng-model="formData.addTask"><spring:message code="label.addtask"/>
-                <div ng-show="formData.addTask">
-                    <label><spring:message code="label.period"/></label>
-                    <select class="form-control" name="taskperiod" ng-model="formData.taskperiod">
-                        <option value="today"><spring:message code="label.today"/></option>
-                        <option value="allday"><spring:message code="label.allday"/></option>
-                        <option value="tomorow"><spring:message code="label.tomorow"/></option>
-                        <option value="nextweek"><spring:message code="label.nextweek"/></option>
-                        <option value="nextmonth"><spring:message code="label.nextmonth"/></option>
-                        <option value="nextyear"><spring:message code="label.nextyear"/></option>
-                    </select>
-                    <label><spring:message code="label.orchoosedate"/></label>
-                    <input class="form-control" type="datetime-local" name="taskduedate"
-                           ng-model="formData.taskduedate" required>
-                    <br/>
-                    <label><spring:message code="label.responsible"/></label>
-                    <select class="form-control" name="taskuser" ng-model="formData.taskuser" required>
-                        <option ng-repeat="user in users" value="{{user.id}}">{{user.name}}</option>
-                    </select>
-                    <br/>
-                    <label><spring:message code="label.tasktype"/></label>
-                    <select class="form-control" name="tasktype" ng-model="formData.tasktype">
-                        <option ng-repeat="taskType in taskTypes" value="{{taskType}}">{{taskType}}</option>
-                    </select>
-                    <br/>
-                    <label><spring:message code="label.tasknote"/></label>
-                    <textarea class="form-control textarea" name="taskcomment" placeholder=
-                    <spring:message code="label.tasknote"/>
-                            ng-model="formData.taskcomment"></textarea>
-                </div>
-            </fieldset>
-        </form>
-    </div>
-    <div class="row">
-        <button ng-disabled="dealForm.$invalid" type="submit" ng-click="processForm('deals')"
-                class="btn btn-lg btn-primary btn-block"><spring:message code="label.createdeal"/>
-        </button>
-    </div>
+    </form:form>
 </div>
 </body>
 </html>

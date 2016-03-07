@@ -37,7 +37,7 @@
             <a href="/dashboard"><spring:message code="label.dashboard"/></a>
         </li>
         <li>
-            <a href="/dealslist"><spring:message code="label.deals"/></a>
+            <a href="/deals"><spring:message code="label.deals"/></a>
         </li>
         <li>
             <a href="/contacts"><spring:message code="label.contacts"/></a>

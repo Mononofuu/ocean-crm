@@ -49,8 +49,8 @@
 
 
         <div class="form-group">
-            <button class="btn btn-default" onclick="location.href= '/dealspyramid'"><spring:message code="label.pyramid"/></button>
-            <button class="btn btn-default" onclick="location.href= '/deal'"><spring:message code="label.adddeal"/></button>
+            <button class="btn btn-default" onclick="location.href= '/deals/pyramid'"><spring:message code="label.pyramid"/></button>
+            <button class="btn btn-default" onclick="location.href= '/deals/add'"><spring:message code="label.adddeal"/></button>
         </div>
 
 
